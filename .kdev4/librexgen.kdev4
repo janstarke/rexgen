@@ -1,0 +1,34 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x12\x00l\x00i\x00b\x00r\x00e\x00x\x00g\x00e\x00n)
+
+[CMake]
+BuildDirs[$e]=$HOME/projects/librexgen/build
+CMakeDir=/usr/share/cmake-2.8/Modules
+Current CMake Binary=file:///usr/bin/cmake
+CurrentBuildDir=file:///home/jan/projects/librexgen/build
+CurrentBuildType=Debug
+ProjectRootRelative=./
+
+[Launch]
+Launch Configurations=Launch Configuration 0
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=New Native Application Configuration
+Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments='(a){1,2}'
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
+Dependency Action=Nothing
+EnvironmentGroup=default
+Executable=
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=librexgen,rexgen
+Use External Terminal=false
+Working Directory=file:///home/jan/projects/librexgen
+isExecutable=false
+
+[MakeBuilder]
+Number Of Jobs=1
