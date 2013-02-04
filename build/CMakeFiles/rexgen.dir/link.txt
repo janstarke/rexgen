@@ -1,1 +1,0 @@
-/usr/bin/c++   -g    CMakeFiles/rexgen.dir/rexgen.cpp.o  -o rexgen -rdynamic librexgen-0.1.0.so -llog4cpp -lunistring -Wl,-rpath,/home/jan/projects/librexgen/build 
