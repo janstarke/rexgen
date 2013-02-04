@@ -28,8 +28,8 @@
 #ifndef __librexgen_lua_h__
 #define __librexgen_lua_h__
 
-#include "unicode.h"
-#include "iterator/iterator.h"
+#include <librexgen/unicode.h>
+#include <librexgen/iterator/iterator.h>
 
 extern "C" {
 #include <lua5.2/lua.h>

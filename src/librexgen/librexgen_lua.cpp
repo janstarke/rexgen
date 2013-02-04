@@ -25,11 +25,11 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "librexgen_lua.h"
-#include "../librexgen/librexgen.h"
-#include "unicode.h"
-#include "iterator/iterator.h"
-#include "regex/regex.h"
+#include <librexgen/librexgen_lua.h>
+#include <librexgen/librexgen.h>
+#include <librexgen/unicode.h>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/regex/regex.h>
 #include <uniconv.h>
 
 #if REXGEN_DEBUG == 1

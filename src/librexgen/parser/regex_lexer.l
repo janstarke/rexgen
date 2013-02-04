@@ -5,14 +5,14 @@
 %option noyywrap
 %option nounput
 %{
-  #include "../../librexgen/regex/regex.h"
-  #include "../../librexgen/regex/regexalternatives.h"
-  #include "../../librexgen/regex/compoundregex.h"
-  #include "../../librexgen/regex/quantifier.h"
-  #include "../../librexgen/regex/terminalregex.h"
-  #include "../../librexgen/regex/classregex.h"
-  #include "../../librexgen/parser/rexgenparsercontext.h"
-  #include "../../librexgen/unicode.h"
+  #include <librexgen/regex/regex.h>
+  #include <librexgen/regex/regexalternatives.h>
+  #include <librexgen/regex/compoundregex.h>
+  #include <librexgen/regex/quantifier.h>
+  #include <librexgen/regex/terminalregex.h>
+  #include <librexgen/regex/classregex.h>
+  #include <librexgen/parser/rexgenparsercontext.h>
+  #include <librexgen/unicode.h>
   #include "parser.hpp"
   #include <cstdio>
   

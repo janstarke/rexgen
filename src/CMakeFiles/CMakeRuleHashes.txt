@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-6d99e62b07b719de2f55b226cc6eba46 librexgen/lexer.cpp
-2441a3f60600aa9af2133087af16c8a6 librexgen/parser.cpp

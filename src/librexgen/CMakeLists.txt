@@ -1,6 +1,7 @@
 find_package(BISON)
 find_package(FLEX)
-ADD_DEFINITIONS("-fPIC -g -DREXGEN_DEBUG=0 -DYYDEBUG=0 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
+ADD_DEFINITIONS("-fPIC -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
+ADD_DEFINITIONS("-I${CMAKE_CURRENT_BINARY_DIR}/../../")
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
   PROPERTIES 
   COMPILE_FLAGS "-Wno-unused-parameter")

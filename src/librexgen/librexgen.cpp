@@ -26,8 +26,8 @@
 */
 
 #include <sstream>
-#include "parser/rexgenparsercontext.h"
-#include "regex/regex.h"
+#include <librexgen/parser/rexgenparsercontext.h>
+#include <librexgen/regex/regex.h>
 using namespace std;
 
 int rexgen_parse(RexgenParserContext* context);

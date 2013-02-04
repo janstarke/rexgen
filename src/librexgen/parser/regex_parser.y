@@ -7,13 +7,13 @@
 %parse-param {RexgenParserContext* context}
 %{
   #include <iostream>
-  #include "../../librexgen/debug.h"
-  #include "../../librexgen/regex/regexalternatives.h"
-  #include "../../librexgen/regex/compoundregex.h"
-  #include "../../librexgen/regex/terminalregex.h"
-  #include "../../librexgen/regex/classregex.h"
-  #include "../../librexgen/regex/quantifier.h"
-  #include "../../librexgen/parser/rexgenparsercontext.h"
+  #include <librexgen/debug.h>
+  #include <librexgen/regex/regexalternatives.h>
+  #include <librexgen/regex/compoundregex.h>
+  #include <librexgen/regex/terminalregex.h>
+  #include <librexgen/regex/classregex.h>
+  #include <librexgen/regex/quantifier.h>
+  #include <librexgen/parser/rexgenparsercontext.h>
   #include "parser.hpp"
   
   #include <cstdio>

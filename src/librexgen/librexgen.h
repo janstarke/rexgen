@@ -27,7 +27,7 @@
 
 #ifndef __libregex_h__
 #define __libregex_h__
-#include "regex/regex.h"
+#include <librexgen/regex/regex.h>
 
 Regex* parse_regex(const char* regex);
 

@@ -32,3 +32,6 @@ isExecutable=false
 
 [MakeBuilder]
 Number Of Jobs=1
+
+[Project]
+VersionControlSupport=kdevsubversion
