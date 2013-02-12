@@ -32,15 +32,19 @@ using namespace std;
 
 int rexgen_parse(RexgenParserContext* context);
 
-Regex* parse_regex(const char* regex)
+Regex* parse_regex(const char* regex, bool ignoreCase)
 {
   const string re(regex);
     
   istringstream is(re);
   
-  RexgenParserContext context(&is);
+  RexgenParserContext context(&is, ignoreCase);
   if (rexgen_parse(&context) != 0) {
     return NULL;
   }
+#warning this must be handled with normal syntax error reporting
+  assert(! context.hasInvalidGroupReferences());
+  //IteratorState* state = new IteratorState(context.getGroups());
+  //Iterator* iter = context.result->iterator(state);
   return context.result;
 }

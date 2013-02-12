@@ -48,9 +48,9 @@ public:
   void appendRegex(Regex* regex);
   void getRawValue(string& target);
   RegexType getRegexType() const { return Compound; }
-  Iterator* iterator() const;
+  Iterator* iterator(IteratorState* state) const;
   
-  Iterator* singleIterator() const;
+  Iterator* singleIterator(IteratorState* state) const;
 };
 
 #endif // COMPOUNDREGEX_H

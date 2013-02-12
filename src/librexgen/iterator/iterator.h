@@ -36,7 +36,8 @@ class Iterator
 {
 public:
   Iterator(int _id):
-    LOGGER(log4cpp::Category::getRoot()), state(resetted), id(_id),
+    LOGGER(log4cpp::Category::getRoot()), state(resetted), 
+    id(_id),
     can_use_value(false) {}
   
   virtual bool hasNext() const { return false; }

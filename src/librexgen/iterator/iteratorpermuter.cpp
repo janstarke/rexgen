@@ -29,11 +29,12 @@
 #include <algorithm>
 #include "../debug.h"
 #include "../unicode.h"
+#include <librexgen/iterator/iteratorstate.h>
 
 using namespace std;
 
-IteratorPermuter::IteratorPermuter(int _id, const Regex* re, unsigned int min, unsigned int max)
-      : Iterator(_id), min_occurs(min), max_occurs(max), regex(re)
+IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max)
+      : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is)
 {
   initIterators();
   state = resetted;
@@ -91,7 +92,7 @@ void IteratorPermuter::next()
     }
     
     for_each(iterators.begin(), iterators.end(),[](Iterator* i){i->reset();});
-    Iterator* i = regex->singleIterator();
+    Iterator* i = regex->singleIterator(iteratorState);
     iterators.push_front(i);
     state = resetted;
   }
@@ -136,7 +137,7 @@ void IteratorPermuter::initIterators()
   for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
   iterators.clear();
   for (unsigned int n=0; n<min_occurs; ++n) {
-    Iterator* i = regex->singleIterator();
+    Iterator* i = regex->singleIterator(iteratorState);
     iterators.push_front(i);
   }
 }

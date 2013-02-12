@@ -27,6 +27,22 @@
 
 #include "classregex.h"
 
+  void ClassRegex::addCharacter(char_type ch, bool ignoreCase) {
+    characters.push_back(ch);
+    if (ignoreCase && islower(ch)) {
+      characters.push_back(toupper(ch));
+    }
+  }
+  void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
+    while (a <= b) { 
+      char_type ch = a++;
+      characters.push_back(ch);
+      if (ignoreCase && islower(ch)) {
+	characters.push_back(toupper(ch));
+      }
+    }
+  }
+
 int ClassRegex::appendContent(char_type* dst, ssize_t size, int level) const
 {
     int l, length = 0;
@@ -47,13 +63,13 @@ finish:
     return length;
 }
 
-Iterator* ClassRegex::iterator() const
+Iterator* ClassRegex::iterator(IteratorState* state) const
 {
   if (getMinOccurs() == 1 && getMaxOccurs() == 1)
   {
     return new ClassRegexIterator(getId(), characters.cbegin(), characters.cend());
   } else {
-    return new IteratorPermuter(getId(), this, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }
 

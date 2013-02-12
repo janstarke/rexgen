@@ -34,12 +34,14 @@
 #include <log4cpp/Category.hh>
 #include "../unicode.h"
 #include "../debug.h"
+#include <librexgen/iterator/iteratorstate.h>
 
 typedef enum {
   Compound,
   Alternative,
   Terminal,
-  Class
+  Class,
+  Reference
 } RegexType;
 
 class Regex  {
@@ -90,11 +92,14 @@ public:
   
   static char_type parseFirstCharacter(const char_type* s);
   
-  virtual Iterator* singleIterator() const = 0;
+  virtual Iterator* singleIterator(IteratorState* state) const = 0;  
+  virtual Iterator* iterator(IteratorState* state) const = 0;
   
-  virtual Iterator* iterator() const = 0;
+  Iterator* iterator() const { return iterator(new IteratorState()); };
   
   int getId() const { return id; }
+  
+  virtual int getGroupId() const { return -1; }
   
 protected:
   log4cpp::Category& LOGGER;

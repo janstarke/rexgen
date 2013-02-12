@@ -22,9 +22,9 @@ public:
   
   int appendContent(char_type* dst, ssize_t size, int level) const;
   
-  Iterator* iterator() const;
+  Iterator* iterator(IteratorState* state) const;
   
-  Iterator* singleIterator() const
+  Iterator* singleIterator(IteratorState* /* state */) const
     { return new TerminalRegexIterator(getId(), value); }
 private:
   char_type* value;

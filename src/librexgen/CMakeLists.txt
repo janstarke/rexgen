@@ -1,6 +1,6 @@
 find_package(BISON)
 find_package(FLEX)
-ADD_DEFINITIONS("-fPIC -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
+ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
 ADD_DEFINITIONS("-I${CMAKE_CURRENT_BINARY_DIR}/../../")
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
   PROPERTIES 
@@ -14,7 +14,7 @@ SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp PROPERTIES GEN
 
 ADD_FLEX_BISON_DEPENDENCY(regexlexer regexparser)
 
-set(librexgen_sources
+set(librexgen_sources iterator/groupreferenceiterator.cpp regex/groupreference.cpp
   librexgen.cpp
   librexgen_lua.cpp
   debug.cpp 

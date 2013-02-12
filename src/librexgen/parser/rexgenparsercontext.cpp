@@ -27,4 +27,34 @@
 
 
 #include "rexgenparsercontext.h"
+#include <algorithm>
+
+using namespace std;
+
+void RexgenParserContext::updateAllGroupReferences()
+{
+  for_each(groups.cbegin(), groups.cend(), [this](pair<int,Regex*> p) {
+    updateGroupReferences(p.second);
+  });
+}
+
+void RexgenParserContext::updateGroupReferences(const Regex* re)
+{
+  fprintf(stderr, "updateGroupReferences()\n");
+  for_each(groupRefs.begin(), groupRefs.end(), [re](pair<int,GroupReference*> gr) {
+    fprintf(stderr, "comparing: %d == %d?\n", gr.first, re->getGroupId());
+    if (gr.first == re->getGroupId()) {
+      fprintf(stderr, "updating %d -> %d\n", gr.first, re->getId());
+      gr.second->setRegex(re);
+    }
+  });
+}
+
+bool RexgenParserContext::hasInvalidGroupReferences() const
+{
+  bool invalids = false;
+  for_each(groupRefs.cbegin(), groupRefs.cend(), 
+    [&invalids](pair<int,GroupReference*> gr) { invalids |= (gr.second->getRegex() == NULL); });
+  return invalids;
+}
 

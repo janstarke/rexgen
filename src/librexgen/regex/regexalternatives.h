@@ -36,7 +36,8 @@
 
 class RegexAlternatives : public RegexContainer<deque<Regex*> >
 {
-public:  
+public:
+  RegexAlternatives(): RegexContainer(), groupId(-1) {}
   virtual ~RegexAlternatives();
   inline void addRegex(Regex *regex) { getChildren()->push_front(regex); }
   
@@ -45,12 +46,16 @@ public:
   
   inline int getMaxSize() const;
   
-  Iterator* iterator() const;
+  Iterator* iterator(IteratorState* state) const;
   
-  Iterator* singleIterator() const;
+  Iterator* singleIterator(IteratorState* state) const;
   
   Iterator* getContainerIterator();
+  
+  int getGroupId() const { return groupId; }
+  void setGroupId (int _id) { groupId = _id; }
 private:
+  int groupId;
 };
 
 #endif // REGEXALTERNATIVES_H

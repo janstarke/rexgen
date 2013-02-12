@@ -70,31 +70,31 @@ void CompoundRegex::appendRegex(Regex* regex) {
   LEAVE_METHOD;
 }
 
-Iterator* CompoundRegex::singleIterator() const
+Iterator* CompoundRegex::singleIterator(IteratorState* state) const
 {
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
   for (container_type::const_iterator iter = regexObjects.begin();
 	iter != regexObjects.end();iter++) {
-    cri->addChild((*iter)->iterator());
+    cri->addChild((*iter)->iterator(state));
   }
   return cri;
 }
 
-Iterator* CompoundRegex::iterator() const
+Iterator* CompoundRegex::iterator(IteratorState* state) const
 {
     if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return re->iterator();
+      return re->iterator(state);
     } else {
-      return new IteratorPermuter(re->getId(), re, getMinOccurs(), getMaxOccurs());
+      return new IteratorPermuter(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   }
 
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return singleIterator();
+    return singleIterator(state);
   } else {
-    return new IteratorPermuter(getId(), this, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }
 

@@ -52,29 +52,36 @@ int RegexAlternatives::getMaxSize() const
   return max * getMaxOccurs();
 }
 
-Iterator* RegexAlternatives::singleIterator() const
+Iterator* RegexAlternatives::singleIterator(IteratorState* state) const
 {
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
   for (auto iter = regexObjects.begin(); iter != regexObjects.end();iter++) {
-    rai->addChild((*iter)->iterator());
+    rai->addChild((*iter)->iterator(state));
   }
   return rai;
 }
 
-Iterator* RegexAlternatives::iterator() const
+Iterator* RegexAlternatives::iterator(IteratorState* state) const
 {
+  Iterator* iter = NULL;
   if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return re->iterator();
+      iter = re->iterator(state);
     } else {
-      return new IteratorPermuter(re->getId(), re, getMinOccurs(), getMaxOccurs());
+      iter = new IteratorPermuter(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+    }
+  } else {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      iter = singleIterator(state);
+    } else {
+      iter = new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
     }
   }
   
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return singleIterator();
-  } else {
-    return new IteratorPermuter(getId(), this, getMinOccurs(), getMaxOccurs());
+  if (getGroupId() > 0) {
+    state->registerIterator(getGroupId(), iter);
   }
+  
+  return iter;
 }

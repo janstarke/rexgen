@@ -39,7 +39,10 @@ class ClassRegexIterator : public Iterator
 {
 
 public:
-    ClassRegexIterator(int _id, vector<char_type>::const_iterator _begin, vector<char_type>::const_iterator _end)
+    ClassRegexIterator(int _id,
+		       vector<char_type>::const_iterator _begin,
+		       vector<char_type>::const_iterator _end
+		      )
       :Iterator(_id), begin(_begin), end(_end), current(begin) {}
   
     void reset();

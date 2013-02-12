@@ -11,6 +11,7 @@
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/terminalregex.h>
   #include <librexgen/regex/classregex.h>
+  #include <librexgen/regex/groupreference.h>
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/unicode.h>
   #include "parser.hpp"
@@ -74,7 +75,8 @@ UNICODECHAR	\\u[0-9a-fA-F]{4,4}
 LINEFEED	\\n
 CARRIAGERETURN	\\r
 SPECIAL		[ \t\r\n.,;:=/%&?<>-]
-ESCAPED		\\[^xnur]
+GROUPID		\\[0-9]+
+ESCAPED		\\[^xnur0-9]
 
 %s IN_QUANTIFIER
 %s IN_CLASS
@@ -92,6 +94,7 @@ ESCAPED		\\[^xnur]
 ")"			{ return T_END_GROUP; }
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
+{GROUPID}		{ yylval->integer = atoi(&yytext[1]); fprintf(stderr, "setting %d\n", yylval->integer);return T_GROUPID; }
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval->integer = atoi(yytext); return T_NUMBER; }

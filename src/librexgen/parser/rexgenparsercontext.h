@@ -30,7 +30,9 @@
 #define REXGENPARSERCONTEXT_H
 
 #include <iostream>
+#include <map>
 #include "../regex/regex.h"
+#include <librexgen/regex/groupreference.h>
 
 using namespace std;
 
@@ -38,25 +40,60 @@ class RexgenParserContext
 {
 
 public:
-  RexgenParserContext(istream* input = &cin) {
+  RexgenParserContext(istream* input = &cin, bool _ic = false)
+  : ic(_ic) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
+    groupId = 1;
     InitScanner();
   }
   
   virtual ~RexgenParserContext() {
     DestroyScanner();
   }
+  
+  void registerGroupReference(GroupReference* gr) {
+    fprintf(stderr, "registering ref %d\n", gr->getGroupId());
+    groupRefs[gr->getGroupId()] = gr;
+  }
+  
+  GroupReference* getGroupReference(int id) const {
+    fprintf(stderr, "returning reference to %d\n", id);
+    return groupRefs.at(id);
+  }
+  
+  void registerGroup(Regex* re) {
+    fprintf(stderr, "register regex %d as group %d\n", re->getId(), re->getGroupId());
+    groups[re->getGroupId()] = re;
+  }
+  Regex* getGroupRegex(int id) const {
+    fprintf(stderr, "returning regex of group %d\n", id);
+    return groups.at(id);
+  }
+  
+  const map<int, Regex*>& getGroups() const { return groups; }
+  
+  void updateAllGroupReferences();
+  void updateGroupReferences(const Regex* re);
+  bool hasInvalidGroupReferences() const;
 
   void* scanner;
   istream * is;
   Regex* result;
+  
+  int groupId;
+  
+  bool ignoreCase() const { return ic; }
 
 protected:
   void InitScanner();
   void DestroyScanner();
-
+  
+private:
+  const bool ic;
+  map<int, GroupReference*> groupRefs;
+  map<int, Regex*> groups;
 };
 
 #endif // REXGENPARSERCONTEXT_H

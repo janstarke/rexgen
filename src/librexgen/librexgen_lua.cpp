@@ -35,6 +35,9 @@
 #if REXGEN_DEBUG == 1
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
+#include <execinfo.h>
+#include <signal.h>
+#include <librexgen/stacktrace.h>
 #endif
 
 extern "C" {
@@ -55,6 +58,17 @@ static const luaL_Reg rexgen_lib [] = {
   {NULL, NULL}
 };
 
+#ifdef REXGEN_DEBUG
+#if REXGEN_DEBUG==1
+static void handler(int sig) {
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  print_stacktrace();
+  exit(1);
+}
+#endif
+#endif
+
 extern "C"
 int luaopen_rexgen(lua_State* L)
 {
@@ -68,6 +82,9 @@ int luaopen_rexgen(lua_State* L)
 #if REXGEN_DEBUG==1
   std::string initFileName = "log4cpp.properties";
   log4cpp::PropertyConfigurator::configure(initFileName);
+  
+  signal(SIGSEGV, handler);
+  signal(SIGABRT, handler);
 #endif
 #endif
   return 1;
@@ -89,7 +106,14 @@ int rexgen_iter(lua_State* L)
 extern "C" 
 int rexgen_parse_regex(lua_State* L) {
   char_type xml[1024];
-  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL));
+  bool ignoreCase = false;
+  if (lua_isboolean(L, 2)) {
+    ignoreCase = lua_toboolean(L, 2);
+  } else {
+    ignoreCase = false;
+  }
+  
+  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), ignoreCase);
   
   Iterator** iter = (Iterator**) lua_newuserdata(L, sizeof (Iterator *));
   luaL_getmetatable(L, "rexgen.iter");

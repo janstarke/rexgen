@@ -30,7 +30,7 @@
 #define REGEXALTERNATIVESITERATOR_H
 
 #include "iterator.h"
-#include "../regex/regexalternatives.h"
+#include <librexgen/regex/regexalternatives.h>
 #include <algorithm>
 #include <deque>
 #include "../unicode.h"

@@ -28,7 +28,8 @@
 #ifndef __libregex_h__
 #define __libregex_h__
 #include <librexgen/regex/regex.h>
+#include <librexgen/iterator/iterator.h>
 
-Regex* parse_regex(const char* regex);
+Regex* parse_regex(const char* regex, bool ignoreCase = false);
 
 #endif /* __libregex_h__ */

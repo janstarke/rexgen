@@ -43,11 +43,11 @@ finish:
     return length;
 }
 
-Iterator* TerminalRegex::iterator() const
+Iterator* TerminalRegex::iterator(IteratorState* state) const
 {
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
     return new TerminalRegexIterator(getId(), value);
   } else {
-    return new IteratorPermuter(getId(), this, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }

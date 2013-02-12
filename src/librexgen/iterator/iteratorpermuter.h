@@ -43,7 +43,7 @@ class IteratorPermuter : public Iterator
 public:
     virtual int value(char_type* dst, ssize_t size) const;
     virtual bool hasNext() const;
-    IteratorPermuter(int _id, const Regex* re, unsigned int min, unsigned int max);
+    IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
     ~IteratorPermuter()
     {
       for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
@@ -55,6 +55,7 @@ private:
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
   deque<Iterator *> iterators;
+  IteratorState* iteratorState;
   
   bool existsIteratorWithNextElement() const;
   

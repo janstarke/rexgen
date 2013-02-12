@@ -44,16 +44,8 @@ class ClassRegex : public Regex {
 public:
   
   virtual ~ClassRegex() {}
-  inline void addCharacter(char_type ch) {
-    //characters.push_back(ch);
-    characters.insert(characters.begin(), ch);
-  }
-  inline void addRange(char_type a, char_type b) {
-    while (a <= b) { 
-      //characters.push_back(a++);
-      characters.insert(characters.begin(), a++);
-    }
-  }
+  void addCharacter(char_type ch, bool ignoreCase);
+  void addRange(char_type a, char_type b, bool ignoreCase);
   
   RegexType getRegexType() const { return Class; }
   
@@ -61,9 +53,9 @@ public:
   
   virtual inline const char_type* getXmlTag() const { return _T("class"); }
   
-  Iterator* iterator() const;
+  Iterator* iterator(IteratorState* state) const;
   
-  Iterator* singleIterator() const 
+  Iterator* singleIterator(IteratorState* /* state */) const 
   { return new ClassRegexIterator(getId(), characters.cbegin(), characters.cend()); }
 private:
   vector<char_type> characters;
