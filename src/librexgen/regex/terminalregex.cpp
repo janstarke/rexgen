@@ -48,6 +48,6 @@ Iterator* TerminalRegex::iterator(IteratorState* state) const
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
     return new TerminalRegexIterator(getId(), value);
   } else {
-    return new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter<TerminalRegex>(getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }

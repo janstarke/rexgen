@@ -32,6 +32,14 @@
 #include "../debug.h"
 #include "../unicode.h"
 
+TerminalRegexIterator::TerminalRegexIterator(int _id, const char_type* _terminal)
+: Iterator(_id), terminal(_terminal)
+{
+  terminal_length = utf_strlen(_terminal);
+  assert (! canUseValue());
+  assert (hasNext());
+} 
+
 int TerminalRegexIterator::value(char_type* dst, ssize_t size) const
 {
   assert(canUseValue());

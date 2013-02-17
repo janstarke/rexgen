@@ -49,26 +49,20 @@ public:
     InitScanner();
   }
   
-  virtual ~RexgenParserContext() {
-    DestroyScanner();
-  }
+  virtual ~RexgenParserContext();
   
   void registerGroupReference(GroupReference* gr) {
-    fprintf(stderr, "registering ref %d\n", gr->getGroupId());
     groupRefs[gr->getGroupId()] = gr;
   }
   
   GroupReference* getGroupReference(int id) const {
-    fprintf(stderr, "returning reference to %d\n", id);
     return groupRefs.at(id);
   }
   
   void registerGroup(Regex* re) {
-    fprintf(stderr, "register regex %d as group %d\n", re->getId(), re->getGroupId());
     groups[re->getGroupId()] = re;
   }
   Regex* getGroupRegex(int id) const {
-    fprintf(stderr, "returning regex of group %d\n", id);
     return groups.at(id);
   }
   

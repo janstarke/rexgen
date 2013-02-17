@@ -67,24 +67,11 @@ public:
     return appendRawValue(dst, len, 0);
   }
   
-  inline int appendRawValue(char_type* dst, ssize_t size, int level) const {
+  int appendRawValue(char_type* dst, ssize_t size, int level) const {
     return xmlEncapsulate(dst, size, getXmlTag(), level);
   }
   
-  inline int appendSpace(char_type* dst, ssize_t size, int count) const {
-    int length = 0;
-    while (count > 0 && size>1) {
-      *dst = ' ';
-      ++dst;
-      --size;
-      --count;
-      ++length;
-    }
-    if (size >= 1) {
-      *dst = '\0';
-    }
-    return length;
-  }
+  int appendSpace(char_type* dst, ssize_t size, int count) const;
   
   virtual int appendContent(char_type* dst, ssize_t size, int level) const = 0;
   

@@ -40,11 +40,8 @@ void RexgenParserContext::updateAllGroupReferences()
 
 void RexgenParserContext::updateGroupReferences(const Regex* re)
 {
-  fprintf(stderr, "updateGroupReferences()\n");
   for_each(groupRefs.begin(), groupRefs.end(), [re](pair<int,GroupReference*> gr) {
-    fprintf(stderr, "comparing: %d == %d?\n", gr.first, re->getGroupId());
     if (gr.first == re->getGroupId()) {
-      fprintf(stderr, "updating %d -> %d\n", gr.first, re->getId());
       gr.second->setRegex(re);
     }
   });
@@ -56,5 +53,10 @@ bool RexgenParserContext::hasInvalidGroupReferences() const
   for_each(groupRefs.cbegin(), groupRefs.cend(), 
     [&invalids](pair<int,GroupReference*> gr) { invalids |= (gr.second->getRegex() == NULL); });
   return invalids;
+}
+
+RexgenParserContext::~RexgenParserContext()
+{
+  DestroyScanner();
 }
 

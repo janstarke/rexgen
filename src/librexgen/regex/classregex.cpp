@@ -69,7 +69,7 @@ Iterator* ClassRegex::iterator(IteratorState* state) const
   {
     return new ClassRegexIterator(getId(), characters.cbegin(), characters.cend());
   } else {
-    return new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter<ClassRegex>(getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }
 

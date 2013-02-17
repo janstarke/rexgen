@@ -69,13 +69,13 @@ Iterator* RegexAlternatives::iterator(IteratorState* state) const
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       iter = re->iterator(state);
     } else {
-      iter = new IteratorPermuter(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+      iter = new IteratorPermuter<Regex>(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   } else {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       iter = singleIterator(state);
     } else {
-      iter = new IteratorPermuter(getId(), this, state, getMinOccurs(), getMaxOccurs());
+      iter = new IteratorPermuter<RegexAlternatives>(getId(), this, state, getMinOccurs(), getMaxOccurs());
     }
   }
   

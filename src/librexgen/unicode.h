@@ -22,6 +22,8 @@ typedef uint8_t char_type;
 
 #define _T(STR) ( (char_type*) u8 ## STR )
 
+#define PRINTF_FORMAT "%U"
+
 #elif UTF_VARIANT==16
 
 #define UTF16
@@ -35,6 +37,8 @@ typedef uint16_t char_type;
 
 #define _T(STR) ( (char_type*) u ## STR )
 
+#define PRINTF_FORMAT "%lU"
+
 #elif UTF_VARIANT==32
 
 #define UTF32
@@ -47,6 +51,8 @@ typedef uint32_t char_type;
 #define utf_strconv_from_locale u32_strconv_from_locale
 
 #define _T(STR) ( (char_type*) U ## STR )
+
+#define PRINTF_FORMAT "%llU"
 
 #else
 #error "invalid value for UTF_VARIANT; valid would be one of 8, 16, 32"

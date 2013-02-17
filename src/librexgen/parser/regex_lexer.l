@@ -94,7 +94,7 @@ ESCAPED		\\[^xnur0-9]
 ")"			{ return T_END_GROUP; }
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
-{GROUPID}		{ yylval->integer = atoi(&yytext[1]); fprintf(stderr, "setting %d\n", yylval->integer);return T_GROUPID; }
+{GROUPID}		{ yylval->integer = atoi(&yytext[1]); return T_GROUPID; }
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval->integer = atoi(yytext); return T_NUMBER; }

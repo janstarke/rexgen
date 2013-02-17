@@ -41,7 +41,7 @@ static int parseHexChar(char c) {
 }
 
 static uint32_t parseHexString(const char_type* ptr, ssize_t length) {
-  unsigned int hexvalue;
+  unsigned int hexvalue = 0;
   while (*ptr != u'\0' && length>0) {
     const int v = parseHexChar(*ptr);
     if (v == -1) return -1;
@@ -93,15 +93,7 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
 int Regex::xmlEncapsulate(char_type* dst, ssize_t size, const char_type* clazz, int level) const {
     int l;
     int length = 0;
-    const char* format;
-    
-#if defined(UTF8)
-    format = "<%U id=\"%d\" min=\"%d\" max=\"%d\">\n";
-#elif defined(UTF16)
-    format = "<%lU id=\"%d\" min=\"%d\" max=\"%d\">\n";
-#else
-    format = "<%llU id=\"%d\" min=\"%d\" max=\"%d\">\n";
-#endif
+    const char* format = "<" PRINTF_FORMAT " id=\"%d\" min=\"%d\" max=\"%d\">\n";
     
     l = utf_snprintf(dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
     length += l;
@@ -119,16 +111,25 @@ int Regex::xmlEncapsulate(char_type* dst, ssize_t size, const char_type* clazz, 
     if ((size -= l) < 0) goto finish;
     dst += level;
 
-#if defined(UTF8)
-    format = "</%U>\n";
-#elif defined(UTF16)
-    format = "</%lU>\n";
-#else
-    format = "</%llU>\n";
-#endif
+    format = "</" PRINTF_FORMAT  ">\n";
 
     length += utf_snprintf(dst, size, format, getXmlTag());
 
 finish:
      return length;
+}
+
+int Regex::appendSpace(char_type* dst, ssize_t size, int count) const {
+  int length = 0;
+  while (count > 0 && size>1) {
+    *dst = ' ';
+    ++dst;
+    --size;
+    --count;
+    ++length;
+  }
+  if (size >= 1) {
+    *dst = '\0';
+  }
+  return length;
 }

@@ -1,6 +1,6 @@
 find_package(BISON)
 find_package(FLEX)
-ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
+ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -O2 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
 ADD_DEFINITIONS("-I${CMAKE_CURRENT_BINARY_DIR}/../../")
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
   PROPERTIES 
@@ -14,7 +14,7 @@ SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp PROPERTIES GEN
 
 ADD_FLEX_BISON_DEPENDENCY(regexlexer regexparser)
 
-set(librexgen_sources iterator/groupreferenceiterator.cpp regex/groupreference.cpp
+set(librexgen_sources
   librexgen.cpp
   librexgen_lua.cpp
   debug.cpp 
@@ -24,11 +24,12 @@ set(librexgen_sources iterator/groupreferenceiterator.cpp regex/groupreference.c
   regex/classregex.cpp
   regex/regex.cpp
   regex/terminalregex.cpp
-  iterator/iteratorpermuter.cpp
+  regex/groupreference.cpp
   iterator/classregexiterator.cpp
   iterator/terminalregexiterator.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
+  iterator/groupreferenceiterator.cpp
 
   parser/rexgenparsercontext.cpp
   ${BISON_regexparser_OUTPUTS}
