@@ -26,31 +26,28 @@
 */
 
 
-#include "terminalregexiterator.h"
+#include <librexgen/iterator/terminalregexiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/unicode.h>
 #include <assert.h>
 #include <algorithm>
-#include "../debug.h"
-#include "../unicode.h"
 
-TerminalRegexIterator::TerminalRegexIterator(int _id, const char_type* _terminal)
-: Iterator(_id), terminal(_terminal)
-{
+TerminalRegexIterator::TerminalRegexIterator(
+    int _id, const char_type* _terminal):Iterator(_id), terminal(_terminal) {
   terminal_length = utf_strlen(_terminal);
-  assert (! canUseValue());
-  assert (hasNext());
-} 
+  assert(!canUseValue());
+  assert(hasNext());
+}
 
-int TerminalRegexIterator::value(char_type* dst, ssize_t size) const
-{
+int TerminalRegexIterator::value(char_type* dst, ssize_t size) const {
   assert(canUseValue());
   utf_strncpy(dst, terminal, size);
   return std::min(size-1, terminal_length);
 }
 
-void TerminalRegexIterator::next()
-{
+void TerminalRegexIterator::next() {
   ENTER_METHOD;
-  //assert( hasNext() );
+  // assert( hasNext() );
   Iterator::next();
   if (state == resetted)
     state = usable;
@@ -60,22 +57,19 @@ void TerminalRegexIterator::next()
   LEAVE_METHOD;
 }
 
-bool TerminalRegexIterator::hasNext() const
-{
+bool TerminalRegexIterator::hasNext() const {
   ENTER_METHOD;
-  RETURN (state == resetted);
+  RETURN(state == resetted);
 }
 
-void TerminalRegexIterator::reset()
-{
-    Iterator::reset();
-    state = resetted;
-    assert(! canUseValue());
+void TerminalRegexIterator::reset() {
+  Iterator::reset();
+  state = resetted;
+  assert(!canUseValue());
 }
 
-int TerminalRegexIterator::toString(char_type* dst, ssize_t size) const
-{
+int TerminalRegexIterator::toString(char_type* dst, ssize_t size) const {
   return utf_snprintf(dst, size, "TerminalRegexIterator %d (value = '%s')",
-	       getId(),
-	       terminal);
+                      getId(),
+                      terminal);
 }

@@ -25,21 +25,21 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "classregexiterator.h"
+#include <librexgen/iterator/classregexiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/unicode.h>
+
 #include <assert.h>
-#include "../debug.h"
-#include "../unicode.h"
+#include <vector>
 
 
-void ClassRegexIterator::reset()
-{
+void ClassRegexIterator::reset() {
   Iterator::reset();
   state = resetted;
   current = begin;
 }
 
-int ClassRegexIterator::value(char_type* dst, ssize_t size) const
-{
+int ClassRegexIterator::value(char_type* dst, ssize_t size) const {
   ENTER_METHOD;
   assert(canUseValue());
   if (current == end || size < 2) {
@@ -51,10 +51,9 @@ int ClassRegexIterator::value(char_type* dst, ssize_t size) const
   RETURN(1);
 }
 
-void ClassRegexIterator::next()
-{
+void ClassRegexIterator::next() {
   ENTER_METHOD;
-  assert( hasNext() );
+  assert(hasNext());
   Iterator::next();
   if (current == end) {
     state = not_usable;
@@ -68,25 +67,23 @@ void ClassRegexIterator::next()
   LEAVE_METHOD;
 }
 
-bool ClassRegexIterator::hasNext() const
-{
+bool ClassRegexIterator::hasNext() const {
   ENTER_METHOD;
   if (state == resetted) {
     RETURN(true);
   }
-  
+
   if (current == end) {
     RETURN(false);
   }
-    
+
   vector<char_type>::const_iterator tmp = current;
   ++tmp;
-  RETURN (tmp != end);  
+  RETURN(tmp != end);
 }
 
-int ClassRegexIterator::toString(char_type* dst, ssize_t size) const
-{
+int ClassRegexIterator::toString(char_type* dst, ssize_t size) const {
   return utf_snprintf(dst, size, "ClassRegexIterator %d",
-	       getId());
+                      getId());
 }
 

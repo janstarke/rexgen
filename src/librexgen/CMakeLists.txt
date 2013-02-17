@@ -1,3 +1,6 @@
+include(cmake/cpplint.cmake)
+include(cmake/cppcheck.cmake)
+
 find_package(BISON)
 find_package(FLEX)
 ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -O2 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
@@ -32,11 +35,24 @@ set(librexgen_sources
   iterator/groupreferenceiterator.cpp
 
   parser/rexgenparsercontext.cpp
+)
+set(parser_sources
   ${BISON_regexparser_OUTPUTS}
   ${FLEX_regexlexer_OUTPUTS}
 )
+set(CPPCHECK_SUPPRESS ${parser_sources})
 
-add_library(${librexgen_libname} SHARED ${librexgen_sources})
+if(COMMAND add_cpplint)
+ add_cpplint(${librexgen_libname} ${librexgen_sources})
+endif(COMMAND add_cpplint)
+
+if(COMMAND add_cppcheck)
+ add_cppcheck(${librexgen_libname} ${librexgen_sources} ${parser_sources})
+endif(COMMAND add_cppcheck)
+
+add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
+add_dependencies(${librexgen_libname} ${librexgen_libname}_CPPLINT)
+add_dependencies(${librexgen_libname} ${librexgen_libname}_CPPCHECK)
 target_link_libraries(${librexgen_libname} 
   log4cpp unistring lua5.2)
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")

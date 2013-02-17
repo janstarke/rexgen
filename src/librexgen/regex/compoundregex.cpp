@@ -26,40 +26,39 @@
 */
 
 
-#include "compoundregex.h"
-#include "terminalregex.h"
-#include "../iterator/compoundregexiterator.h"
-#include "../debug.h"
+#include <librexgen/regex/compoundregex.h>
+#include <librexgen/regex/terminalregex.h>
+#include <librexgen/iterator/compoundregexiterator.h>
+#include <librexgen/debug.h>
 
-CompoundRegex::~CompoundRegex()
-{
+CompoundRegex::~CompoundRegex() {
   for (container_type::iterator iter = regexObjects.begin();
        iter != regexObjects.end();
-       iter++) {
+       ++iter) {
     delete *iter;
   }
 }
 
 void CompoundRegex::prependRegex(Regex* regex) {
   ENTER_METHOD;
-  
+
   /* optimization for terminals */
   if (regex->getRegexType() == Terminal) {
     if (regexObjects.size() > 0) {
       if (regexObjects[0]->getRegexType() == Terminal) {
-	TerminalRegex* tre = dynamic_cast<TerminalRegex*>(regexObjects[0]);
-	if (	regex->getMinOccurs() == 1
-	  &&	regex->getMaxOccurs() == 1
-	  &&	tre->getMinOccurs() == 1
-	  &&	tre->getMaxOccurs() == 1) {
-	  TerminalRegex* tre_new = dynamic_cast<TerminalRegex*>(regex);
-	  tre->prependSingleCharacter(tre_new->getValue());
-	  LEAVE_METHOD;
-	}
+        TerminalRegex* tre = reinterpret_cast<TerminalRegex*>(regexObjects[0]);
+        if (regex->getMinOccurs() == 1
+              && regex->getMaxOccurs() == 1
+              && tre->getMinOccurs() == 1
+              && tre->getMaxOccurs() == 1) {
+          TerminalRegex* tre_new = reinterpret_cast<TerminalRegex*>(regex);
+          tre->prependSingleCharacter(tre_new->getValue());
+          LEAVE_METHOD;
+        }
       }
     }
   }
-  
+
   regexObjects.push_front(regex);
   LEAVE_METHOD;
 }
@@ -70,31 +69,31 @@ void CompoundRegex::appendRegex(Regex* regex) {
   LEAVE_METHOD;
 }
 
-Iterator* CompoundRegex::singleIterator(IteratorState* state) const
-{
+Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
   for (container_type::const_iterator iter = regexObjects.begin();
-	iter != regexObjects.end();iter++) {
+       iter != regexObjects.end(); ++iter) {
     cri->addChild((*iter)->iterator(state));
   }
   return cri;
 }
 
-Iterator* CompoundRegex::iterator(IteratorState* state) const
-{
-    if (regexObjects.size() == 1) {
+Iterator* CompoundRegex::iterator(IteratorState* state) const {
+  if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return re->iterator(state);
     } else {
-      return new IteratorPermuter<Regex>(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+      return new IteratorPermuter<Regex>(
+        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   }
 
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
     return singleIterator(state);
   } else {
-    return new IteratorPermuter<CompoundRegex>(getId(), this, state, getMinOccurs(), getMaxOccurs());
+    return new IteratorPermuter<CompoundRegex>(
+      getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }
 

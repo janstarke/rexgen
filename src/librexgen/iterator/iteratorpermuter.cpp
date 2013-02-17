@@ -34,18 +34,16 @@
 using namespace std;
 
 IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max)
-      : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is)
-{
+  : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is) {
   initIterators();
   state = resetted;
 }
 
-int IteratorPermuter::value(char_type* dst, ssize_t size) const
-{
+int IteratorPermuter::value(char_type* dst, ssize_t size) const {
   ENTER_METHOD;
   assert(canUseValue());
   int length = 0;
-  
+
   /* handle optional values, such as ab{0,1}c */
   if (iterators.size() == 0) {
     *dst = 0;
@@ -61,52 +59,57 @@ int IteratorPermuter::value(char_type* dst, ssize_t size) const
   RETURN(length);
 }
 
-bool IteratorPermuter::hasNext() const
-{
+bool IteratorPermuter::hasNext() const {
   ENTER_METHOD;
-  
+
   if (state == resetted) {
     RETURN(true);
   }
-  
+
   if (iterators.size() < max_occurs) {
     RETURN(true);
   }
-  
+
   RETURN(existsIteratorWithNextElement());
 }
 
 
-void IteratorPermuter::next()
-{
+void IteratorPermuter::next() {
   ENTER_METHOD;
   //assert( hasNext() );
-  
+
   Iterator::next();
-  
+
   if (! existsIteratorWithNextElement()) {
     /* handle optional values, such as ab{0,1}c */
     if (state == resetted && iterators.size()==0) {
       state = usable;
       LEAVE_METHOD;
     }
-    
-    for_each(iterators.begin(), iterators.end(),[](Iterator* i){i->reset();});
+
+    for_each(iterators.begin(), iterators.end(),[](Iterator* i) {
+      i->reset();
+    });
     Iterator* i = regex->singleIterator(iteratorState);
     iterators.push_front(i);
     state = resetted;
   }
 
-  
+
   if (state == resetted) {
     state = usable;
-    for_each (iterators.begin(), iterators.end(), 
-      [&state](Iterator* i) { if (i->hasNext()) { i->next(); } else { state = not_usable; } });
+    for_each (iterators.begin(), iterators.end(),
+    [&state](Iterator* i) {
+      if (i->hasNext()) {
+        i->next();
+      } else {
+        state = not_usable;
+      }
+    });
     LEAVE_METHOD;
   }
-   
-  for(auto i=iterators.begin(); i!=iterators.end(); ++i)
-  { 
+
+  for(auto i=iterators.begin(); i!=iterators.end(); ++i) {
     if ((*i)->hasNext()) {
       (*i)->next();
       assert((*i)->canUseValue());
@@ -116,15 +119,14 @@ void IteratorPermuter::next()
       initSingleIterator(*i);
     }
   }
-  
+
   assert(canUseValue());
-  
+
   TRACE_INT("next2: current length: %d", iterators.size());
   LEAVE_METHOD;
 }
 
-void IteratorPermuter::reset()
-{
+void IteratorPermuter::reset() {
   ENTER_METHOD;
   Iterator::reset();
   initIterators();
@@ -132,9 +134,10 @@ void IteratorPermuter::reset()
   LEAVE_METHOD;
 }
 
-void IteratorPermuter::initIterators()
-{
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
+void IteratorPermuter::initIterators() {
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
+    delete i;
+  });
   iterators.clear();
   for (unsigned int n=0; n<min_occurs; ++n) {
     Iterator* i = regex->singleIterator(iteratorState);
@@ -142,8 +145,7 @@ void IteratorPermuter::initIterators()
   }
 }
 
-void IteratorPermuter::initSingleIterator(Iterator* iter)
-{
+void IteratorPermuter::initSingleIterator(Iterator* iter) {
   if (! iter->canUseValue()) {
     assert(iter->hasNext());
     if (iter->hasNext()) {
@@ -153,8 +155,7 @@ void IteratorPermuter::initSingleIterator(Iterator* iter)
   assert(iter->canUseValue());
 }
 
-bool IteratorPermuter::existsIteratorWithNextElement() const
-{
+bool IteratorPermuter::existsIteratorWithNextElement() const {
   ENTER_METHOD;
   for(auto i=iterators.cbegin(); i!=iterators.cend(); ++i) {
     if ((*i)->hasNext()) {
@@ -165,11 +166,10 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
 }
 
 
-int IteratorPermuter::toString(char_type* dst, ssize_t size) const
-{
+int IteratorPermuter::toString(char_type* dst, ssize_t size) const {
   return utf_snprintf(dst, size, "IteratorPermuter %d (min=%d, max=%d, current=%d)",
-	       getId(),
-	       min_occurs,
-	       max_occurs,
-		iterators.size());
+                      getId(),
+                      min_occurs,
+                      max_occurs,
+                      iterators.size());
 }

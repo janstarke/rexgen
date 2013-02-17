@@ -25,7 +25,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../regex/regex.h"
+#include <librexgen/regex/regex.h>
 
 int Regex::next_id = 0;
 
@@ -42,7 +42,7 @@ static int parseHexChar(char c) {
 
 static uint32_t parseHexString(const char_type* ptr, ssize_t length) {
   unsigned int hexvalue = 0;
-  while (*ptr != u'\0' && length>0) {
+  while (*ptr != u'\0' && length > 0) {
     const int v = parseHexChar(*ptr);
     if (v == -1) return -1;
     hexvalue = (hexvalue << 4) + v;
@@ -62,13 +62,17 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
    */
   if (c[0] == u'\\' && c[1] != u'\0') {
     switch (c[1]) {
-      case 'n': return u'\n';
-      case 'r': return u'\r';
-      case '0': return u'\0';
-      case 'x': return (char_type) parseHexString((c+2), 2);
-      case 'u':
+    case 'n':
+      return u'\n';
+    case 'r':
+      return u'\r';
+    case '0':
+      return u'\0';
+    case 'x':
+      return (char_type) parseHexString((c+2), 2);
+    case 'u':
 #if defined(UTF32)
-	return parseHexString((c+2), 4);
+      return parseHexString((c+2), 4);
 #else
       uint32_t codepoint[2];
       char_type buffer[4];
@@ -84,44 +88,47 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
 #endif
       return buffer[0];
 #endif
-      default:   return c[1];
-   }
+    default:
+      return c[1];
+    }
   }
   return c[0];
 }
 
-int Regex::xmlEncapsulate(char_type* dst, ssize_t size, const char_type* clazz, int level) const {
-    int l;
-    int length = 0;
-    const char* format = "<" PRINTF_FORMAT " id=\"%d\" min=\"%d\" max=\"%d\">\n";
-    
-    l = utf_snprintf(dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
-    length += l;
-    if ((size -= l) < 0) goto finish;
-    dst += l;
-    
-    
-    l = appendContent(dst, size, level+1);
-    length += l;
-    if ((size -= l) < 0) goto finish;
-    dst += l;
-    
-    l = appendSpace(dst, size, level);
-    length += l;
-    if ((size -= l) < 0) goto finish;
-    dst += level;
+int Regex::xmlEncapsulate(
+    char_type* dst, ssize_t size, const char_type* clazz, int level) const {
+  int l;
+  int length = 0;
+  const char* format = "<" PRINTF_FORMAT " id=\"%d\" min=\"%d\" max=\"%d\">\n";
 
-    format = "</" PRINTF_FORMAT  ">\n";
+  l = utf_snprintf(
+    dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
+  length += l;
+  if ((size -= l) < 0) goto finish;
+  dst += l;
 
-    length += utf_snprintf(dst, size, format, getXmlTag());
 
-finish:
-     return length;
+  l = appendContent(dst, size, level+1);
+  length += l;
+  if ((size -= l) < 0) goto finish;
+  dst += l;
+
+  l = appendSpace(dst, size, level);
+  length += l;
+  if ((size -= l) < 0) goto finish;
+  dst += level;
+
+  format = "</" PRINTF_FORMAT  ">\n";
+
+  length += utf_snprintf(dst, size, format, getXmlTag());
+
+  finish:
+  return length;
 }
 
 int Regex::appendSpace(char_type* dst, ssize_t size, int count) const {
   int length = 0;
-  while (count > 0 && size>1) {
+  while (count > 0 && size > 1) {
     *dst = ' ';
     ++dst;
     --size;

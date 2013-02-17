@@ -26,62 +26,60 @@
 */
 
 
-#include "regexalternatives.h"
+#include <librexgen/regex/regexalternatives.h>
+#include <librexgen/iterator/regexalternativesiterator.h>
 #include <algorithm>
-#include "../iterator/regexalternativesiterator.h"
 
-RegexAlternatives::~RegexAlternatives()
-{
+RegexAlternatives::~RegexAlternatives() {
   for (container_type::iterator iter = regexObjects.begin();
        iter != regexObjects.end();
-       iter++) {
+       ++iter) {
     delete (*iter);
   }
 }
 
-int RegexAlternatives::getMaxSize() const
-{
+int RegexAlternatives::getMaxSize() const {
   int max = 0;
   int __size = 0;
   for (container_type::const_iterator iter = regexObjects.begin();
-	iter != regexObjects.end();
-	iter++) {
+       iter != regexObjects.end();
+       ++iter) {
     __size = (*iter)->getMaxSize();
     max = std::max(__size, max);
   }
   return max * getMaxOccurs();
 }
 
-Iterator* RegexAlternatives::singleIterator(IteratorState* state) const
-{
+Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (auto iter = regexObjects.begin(); iter != regexObjects.end();iter++) {
+  for (auto iter = regexObjects.begin(); iter != regexObjects.end(); iter++) {
     rai->addChild((*iter)->iterator(state));
   }
   return rai;
 }
 
-Iterator* RegexAlternatives::iterator(IteratorState* state) const
-{
+Iterator* RegexAlternatives::iterator(IteratorState* state) const {
   Iterator* iter = NULL;
   if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       iter = re->iterator(state);
     } else {
-      iter = new IteratorPermuter<Regex>(re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+      iter = new IteratorPermuter<Regex>(
+        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   } else {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       iter = singleIterator(state);
     } else {
-      iter = new IteratorPermuter<RegexAlternatives>(getId(), this, state, getMinOccurs(), getMaxOccurs());
+      iter = new IteratorPermuter<RegexAlternatives>(
+        getId(), this, state, getMinOccurs(), getMaxOccurs());
     }
   }
-  
+
   if (getGroupId() > 0) {
     state->registerIterator(getGroupId(), iter);
   }
-  
+
   return iter;
 }

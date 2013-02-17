@@ -46,20 +46,22 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 
+#include <string>
+
 #ifdef YYDEBUG
 extern int rexgen_debug;
 #endif
 
 static const int BUFFER_SIZE = 4096;
 
-static const luaL_Reg rexgen_lib [] = {
-  { "parse_regex",	rexgen_parse_regex },
-  { "get_syntax_tree",	rexgen_get_syntax_tree },
+static const luaL_Reg rexgen_lib[] = {
+  { "parse_regex",      rexgen_parse_regex },
+  { "get_syntax_tree",  rexgen_get_syntax_tree },
   {NULL, NULL}
 };
 
 #ifdef REXGEN_DEBUG
-#if REXGEN_DEBUG==1
+#if REXGEN_DEBUG == 1
 static void handler(int sig) {
   // print out all the frames to stderr
   fprintf(stderr, "Error: signal %d:\n", sig);
@@ -70,19 +72,17 @@ static void handler(int sig) {
 #endif
 
 extern "C"
-int luaopen_rexgen(lua_State* L)
-{
-  
-#if YYDEBUG==1
-  rexgen_debug=1;
+int luaopen_rexgen(lua_State* L) {
+#if YYDEBUG == 1
+  rexgen_debug = 1;
 #endif
-  
+
   luaL_newlib(L, rexgen_lib);
 #ifdef REXGEN_DEBUG
-#if REXGEN_DEBUG==1
+#if REXGEN_DEBUG == 1
   std::string initFileName = "log4cpp.properties";
   log4cpp::PropertyConfigurator::configure(initFileName);
-  
+
   signal(SIGSEGV, handler);
   signal(SIGABRT, handler);
 #endif
@@ -91,9 +91,9 @@ int luaopen_rexgen(lua_State* L)
 }
 
 extern "C"
-int rexgen_iter(lua_State* L)
-{
-  Iterator *iter = *(Iterator **) lua_touserdata(L, lua_upvalueindex(1));
+int rexgen_iter(lua_State* L) {
+  Iterator *iter =
+    reinterpret_cast<Iterator*>(lua_touserdata(L, lua_upvalueindex(1)));
   if (iter->hasNext()) {
     iter->next();
     rexgen_value(L, iter);
@@ -103,7 +103,7 @@ int rexgen_iter(lua_State* L)
   }
 }
 
-extern "C" 
+extern "C"
 int rexgen_parse_regex(lua_State* L) {
   char_type xml[1024];
   bool ignoreCase = false;
@@ -112,34 +112,34 @@ int rexgen_parse_regex(lua_State* L) {
   } else {
     ignoreCase = false;
   }
-  
+
   Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), ignoreCase);
-  
-  Iterator** iter = (Iterator**) lua_newuserdata(L, sizeof (Iterator *));
+
+  Iterator** iter;
+  iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
   luaL_getmetatable(L, "rexgen.iter");
   lua_setmetatable(L, -2);
   *iter = re->iterator();
   lua_pushcclosure(L, rexgen_iter, 1);
-  
+
   int length = re->appendRawValue(xml, sizeof(xml)/sizeof(xml[0])-1);
   push_utf8_string(L, xml, length);
-  
+
   return 2;
 }
 
 extern "C"
 int rexgen_value(lua_State* L, const Iterator* iter) {
   char_type buffer[BUFFER_SIZE];
-  
+
   int length = iter->value(buffer, sizeof(buffer)/sizeof(buffer[0]));
   push_utf8_string(L, buffer, length);
-  
+
   return 1;
 }
 
 extern "C"
-int rexgen_get_syntax_tree(lua_State* L)
-{
+int rexgen_get_syntax_tree(lua_State* L) {
   char_type xml[1024];
   Regex* re = parse_regex(luaL_checklstring(L, 1, NULL));
   int length = re->appendRawValue(xml, sizeof(xml)/sizeof(xml[0])-1);
@@ -147,17 +147,18 @@ int rexgen_get_syntax_tree(lua_State* L)
   return 1;
 }
 
-void push_utf8_string(lua_State* L, char_type* str, int length)
-{
+void push_utf8_string(lua_State* L, char_type* str, int length) {
 #ifdef UTF8
   lua_pushlstring(L, str, length);
 #else
   /* convert buffer to UTF-8 */
   uint8_t dst[BUFFER_SIZE];
 #ifdef UTF16
-#define convert_to_utf8(s,d,resultbuf,lengthp) u16_to_u8(s, d, resultbuf, lengthp)
+#define convert_to_utf8(s, d, resultbuf, lengthp) \
+  u16_to_u8(s, d, resultbuf, lengthp)
 #else /* UTF32 */
-#define convert_to_utf8(s,d,resultbuf,lengthp) u32_to_u8(s, d, resultbuf, lengthp)
+#define convert_to_utf8(s, d, resultbuf, lengthp) \
+  u32_to_u8(s, d, resultbuf, lengthp)
 #endif
   size_t lengthp = sizeof(dst)/sizeof(dst[0]);
   /* uint8_t *res =  */

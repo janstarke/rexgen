@@ -34,7 +34,7 @@
 #if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
- * if you want the limit (max/min) macros for int types. 
+ * if you want the limit (max/min) macros for int types.
  */
 #ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS 1
@@ -51,7 +51,7 @@ typedef uint32_t flex_uint32_t;
 typedef signed char flex_int8_t;
 typedef short int flex_int16_t;
 typedef int flex_int32_t;
-typedef unsigned char flex_uint8_t; 
+typedef unsigned char flex_uint8_t;
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
 
@@ -183,8 +183,8 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 
-    #define YY_LESS_LINENO(n)
-    
+#define YY_LESS_LINENO(n)
+
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
 	do \
@@ -208,67 +208,66 @@ typedef size_t yy_size_t;
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
-struct yy_buffer_state
-	{
-	FILE *yy_input_file;
+struct yy_buffer_state {
+  FILE *yy_input_file;
 
-	char *yy_ch_buf;		/* input buffer */
-	char *yy_buf_pos;		/* current position in input buffer */
+  char *yy_ch_buf;		/* input buffer */
+  char *yy_buf_pos;		/* current position in input buffer */
 
-	/* Size of input buffer in bytes, not including room for EOB
-	 * characters.
-	 */
-	yy_size_t yy_buf_size;
+  /* Size of input buffer in bytes, not including room for EOB
+   * characters.
+   */
+  yy_size_t yy_buf_size;
 
-	/* Number of characters read into yy_ch_buf, not including EOB
-	 * characters.
-	 */
-	int yy_n_chars;
+  /* Number of characters read into yy_ch_buf, not including EOB
+   * characters.
+   */
+  int yy_n_chars;
 
-	/* Whether we "own" the buffer - i.e., we know we created it,
-	 * and can realloc() it to grow it, and should free() it to
-	 * delete it.
-	 */
-	int yy_is_our_buffer;
+  /* Whether we "own" the buffer - i.e., we know we created it,
+   * and can realloc() it to grow it, and should free() it to
+   * delete it.
+   */
+  int yy_is_our_buffer;
 
-	/* Whether this is an "interactive" input source; if so, and
-	 * if we're using stdio for input, then we want to use getc()
-	 * instead of fread(), to make sure we stop fetching input after
-	 * each newline.
-	 */
-	int yy_is_interactive;
+  /* Whether this is an "interactive" input source; if so, and
+   * if we're using stdio for input, then we want to use getc()
+   * instead of fread(), to make sure we stop fetching input after
+   * each newline.
+   */
+  int yy_is_interactive;
 
-	/* Whether we're considered to be at the beginning of a line.
-	 * If so, '^' rules will be active on the next match, otherwise
-	 * not.
-	 */
-	int yy_at_bol;
+  /* Whether we're considered to be at the beginning of a line.
+   * If so, '^' rules will be active on the next match, otherwise
+   * not.
+   */
+  int yy_at_bol;
 
-    int yy_bs_lineno; /**< The line count. */
-    int yy_bs_column; /**< The column count. */
-    
-	/* Whether to try to fill the input buffer when we reach the
-	 * end of it.
-	 */
-	int yy_fill_buffer;
+  int yy_bs_lineno; /**< The line count. */
+  int yy_bs_column; /**< The column count. */
 
-	int yy_buffer_status;
+  /* Whether to try to fill the input buffer when we reach the
+   * end of it.
+   */
+  int yy_fill_buffer;
+
+  int yy_buffer_status;
 
 #define YY_BUFFER_NEW 0
 #define YY_BUFFER_NORMAL 1
-	/* When an EOF's been seen but there's still some text to process
-	 * then we mark the buffer as YY_EOF_PENDING, to indicate that we
-	 * shouldn't try reading from the input source any more.  We might
-	 * still have a bunch of tokens to match, though, because of
-	 * possible backing-up.
-	 *
-	 * When we actually see the EOF, we change the status to "new"
-	 * (via rexgen_restart()), so that the user can continue scanning by
-	 * just pointing yyin at a new input file.
-	 */
+  /* When an EOF's been seen but there's still some text to process
+   * then we mark the buffer as YY_EOF_PENDING, to indicate that we
+   * shouldn't try reading from the input source any more.  We might
+   * still have a bunch of tokens to match, though, because of
+   * possible backing-up.
+   *
+   * When we actually see the EOF, we change the status to "new"
+   * (via rexgen_restart()), so that the user can continue scanning by
+   * just pointing yyin at a new input file.
+   */
 #define YY_BUFFER_EOF_PENDING 2
 
-	};
+};
 #endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
 /* We provide macros for accessing buffer states in case in the
@@ -362,89 +361,88 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
 #define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
-struct yy_trans_info
-	{
-	flex_int32_t yy_verify;
-	flex_int32_t yy_nxt;
-	};
-static yyconst flex_int16_t yy_accept[26] =
-    {   0,
-        0,    0,   14,   13,   12,    7,    8,   11,    9,   13,
-       10,    6,   11,    3,    4,    5,    0,    0,    0,    0,
-        0,    1,    0,    2,    0
-    } ;
+struct yy_trans_info {
+  flex_int32_t yy_verify;
+  flex_int32_t yy_nxt;
+};
+static yyconst flex_int16_t yy_accept[26] = {
+  0,
+  0,    0,   14,   13,   12,    7,    8,   11,    9,   13,
+  10,    6,   11,    3,    4,    5,    0,    0,    0,    0,
+  0,    1,    0,    2,    0
+} ;
 
-static yyconst flex_int32_t yy_ec[256] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    2,    2,    1,    3,
-        4,    1,    1,    1,    1,    1,    2,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    2,    1,    1,
-        1,    1,    2,    1,    6,    6,    6,    6,    6,    6,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        8,    9,   10,    1,    7,    1,    6,    6,    6,    6,
+static yyconst flex_int32_t yy_ec[256] = {
+  0,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    2,    2,    1,    3,
+  4,    1,    1,    1,    1,    1,    2,    5,    5,    5,
+  5,    5,    5,    5,    5,    5,    5,    2,    1,    1,
+  1,    1,    2,    1,    6,    6,    6,    6,    6,    6,
+  7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+  7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+  8,    9,   10,    1,    7,    1,    6,    6,    6,    6,
 
-        6,    6,    7,    7,    7,    7,    7,    7,    7,   11,
-        7,    7,    7,   12,    7,    7,   13,    7,    7,   14,
-        7,    7,    1,   15,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  6,    6,    7,    7,    7,    7,    7,    7,    7,   11,
+  7,    7,    7,   12,    7,    7,   13,    7,    7,   14,
+  7,    7,    1,   15,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1
-    } ;
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1
+} ;
 
-static yyconst flex_int32_t yy_meta[16] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1
-    } ;
+static yyconst flex_int32_t yy_meta[16] = {
+  0,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1
+} ;
 
-static yyconst flex_int16_t yy_base[27] =
-    {   0,
-        0,    0,   35,   36,   36,   36,   36,   29,   36,    5,
-       36,   36,   28,   36,   36,   36,   15,   17,   19,   21,
-       23,   36,   25,   36,   36,   31
-    } ;
+static yyconst flex_int16_t yy_base[27] = {
+  0,
+  0,    0,   35,   36,   36,   36,   36,   29,   36,    5,
+  36,   36,   28,   36,   36,   36,   15,   17,   19,   21,
+  23,   36,   25,   36,   36,   31
+} ;
 
-static yyconst flex_int16_t yy_def[27] =
-    {   0,
-       25,    1,   25,   25,   25,   25,   25,   25,   25,   26,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
-       25,   25,   25,   25,    0,   25
-    } ;
+static yyconst flex_int16_t yy_def[27] = {
+  0,
+  25,    1,   25,   25,   25,   25,   25,   25,   25,   26,
+  25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+  25,   25,   25,   25,    0,   25
+} ;
 
-static yyconst flex_int16_t yy_nxt[52] =
-    {   0,
-        4,    5,    6,    7,    8,    5,    5,    9,   10,   11,
-        5,    5,    5,    5,   12,   15,   16,   17,   18,   19,
-       19,   20,   20,   21,   21,   22,   22,   23,   23,   24,
-       24,   14,   13,   13,   25,    3,   25,   25,   25,   25,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
-       25
-    } ;
+static yyconst flex_int16_t yy_nxt[52] = {
+  0,
+  4,    5,    6,    7,    8,    5,    5,    9,   10,   11,
+  5,    5,    5,    5,   12,   15,   16,   17,   18,   19,
+  19,   20,   20,   21,   21,   22,   22,   23,   23,   24,
+  24,   14,   13,   13,   25,    3,   25,   25,   25,   25,
+  25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+  25
+} ;
 
-static yyconst flex_int16_t yy_chk[52] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,   10,   10,   10,   10,   17,
-       17,   18,   18,   19,   19,   20,   20,   21,   21,   23,
-       23,   26,   13,    8,    3,   25,   25,   25,   25,   25,
-       25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
-       25
-    } ;
+static yyconst flex_int16_t yy_chk[52] = {
+  0,
+  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+  1,    1,    1,    1,    1,   10,   10,   10,   10,   17,
+  17,   18,   18,   19,   19,   20,   20,   21,   21,   23,
+  23,   26,   13,    8,    3,   25,   25,   25,   25,   25,
+  25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
+  25
+} ;
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -455,26 +453,26 @@ static yyconst flex_int16_t yy_chk[52] =
 #define YY_RESTORE_YY_MORE_OFFSET
 #line 1 "regex_lexer.l"
 #line 8 "regex_lexer.l"
-  #include "../types.h"
-  #include "parser.hpp"
-  
-  static char hex2bin(const char c) {
-    if (c>='0' && c<='9') return c-'0';
-    if (c>='a' && c<='f') return c-'a';
-    if (c>='A' && c<='F') return c-'A';
-    return 0xff;
-  }
-  
-  static CHAR parseAnsiChar(const char* text) {
-    return (hex2bin(text[1])<<4) | (hex2bin(text[2]));
-  }
-  
-  static CHAR parseUnicodeChar(const char* text) {
-    return  (hex2bin(text[1])<<12)
-	  | (hex2bin(text[2])<<8)
-	  | (hex2bin(text[3])<<4)
-	  | (hex2bin(text[4]));
-  }
+#include "../types.h"
+#include "parser.hpp"
+
+static char hex2bin(const char c) {
+  if (c>='0' && c<='9') return c-'0';
+  if (c>='a' && c<='f') return c-'a';
+  if (c>='A' && c<='F') return c-'A';
+  return 0xff;
+}
+
+static CHAR parseAnsiChar(const char* text) {
+  return (hex2bin(text[1])<<4) | (hex2bin(text[2]));
+}
+
+static CHAR parseUnicodeChar(const char* text) {
+  return  (hex2bin(text[1])<<12)
+          | (hex2bin(text[2])<<8)
+          | (hex2bin(text[3])<<4)
+          | (hex2bin(text[4]));
+}
 #line 479 "/home/jan/projects/librexgen/lexer.cpp"
 
 #define INITIAL 0
@@ -492,51 +490,50 @@ static yyconst flex_int16_t yy_chk[52] =
 #endif
 
 /* Holds the entire state of the reentrant scanner. */
-struct yyguts_t
-    {
+struct yyguts_t {
 
-    /* User-defined. Not touched by flex. */
-    YY_EXTRA_TYPE yyextra_r;
+  /* User-defined. Not touched by flex. */
+  YY_EXTRA_TYPE yyextra_r;
 
-    /* The rest are the same as the globals declared in the non-reentrant scanner. */
-    FILE *yyin_r, *yyout_r;
-    size_t yy_buffer_stack_top; /**< index of top of stack. */
-    size_t yy_buffer_stack_max; /**< capacity of stack. */
-    YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
-    char yy_hold_char;
-    int yy_n_chars;
-    int yyleng_r;
-    char *yy_c_buf_p;
-    int yy_init;
-    int yy_start;
-    int yy_did_buffer_switch_on_eof;
-    int yy_start_stack_ptr;
-    int yy_start_stack_depth;
-    int *yy_start_stack;
-    yy_state_type yy_last_accepting_state;
-    char* yy_last_accepting_cpos;
+  /* The rest are the same as the globals declared in the non-reentrant scanner. */
+  FILE *yyin_r, *yyout_r;
+  size_t yy_buffer_stack_top; /**< index of top of stack. */
+  size_t yy_buffer_stack_max; /**< capacity of stack. */
+  YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */
+  char yy_hold_char;
+  int yy_n_chars;
+  int yyleng_r;
+  char *yy_c_buf_p;
+  int yy_init;
+  int yy_start;
+  int yy_did_buffer_switch_on_eof;
+  int yy_start_stack_ptr;
+  int yy_start_stack_depth;
+  int *yy_start_stack;
+  yy_state_type yy_last_accepting_state;
+  char* yy_last_accepting_cpos;
 
-    int yylineno_r;
-    int yy_flex_debug_r;
+  int yylineno_r;
+  int yy_flex_debug_r;
 
-    char *yytext_r;
-    int yy_more_flag;
-    int yy_more_len;
+  char *yytext_r;
+  int yy_more_flag;
+  int yy_more_len;
 
-    YYSTYPE * yylval_r;
+  YYSTYPE * yylval_r;
 
-    YYLTYPE * yylloc_r;
+  YYLTYPE * yylloc_r;
 
-    }; /* end struct yyguts_t */
+}; /* end struct yyguts_t */
 
 static int yy_init_globals (yyscan_t yyscanner );
 
-    /* This must go here because YYSTYPE and YYLTYPE are included
-     * from bison output in section 1.*/
-    #    define yylval yyg->yylval_r
-    
-    #    define yylloc yyg->yylloc_r
-    
+/* This must go here because YYSTYPE and YYLTYPE are included
+ * from bison output in section 1.*/
+#    define yylval yyg->yylval_r
+
+#    define yylloc yyg->yylloc_r
+
 int rexgen_lex_init (yyscan_t* scanner);
 
 int rexgen_lex_init_extra (YY_EXTRA_TYPE user_defined,yyscan_t* scanner);
@@ -574,10 +571,10 @@ YYSTYPE * rexgen_get_lval (yyscan_t yyscanner );
 
 void rexgen_set_lval (YYSTYPE * yylval_param ,yyscan_t yyscanner );
 
-       YYLTYPE *rexgen_get_lloc (yyscan_t yyscanner );
-    
-        void rexgen_set_lloc (YYLTYPE * yylloc_param ,yyscan_t yyscanner );
-    
+YYLTYPE *rexgen_get_lloc (yyscan_t yyscanner );
+
+void rexgen_set_lloc (YYLTYPE * yylloc_param ,yyscan_t yyscanner );
+
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
  */
@@ -659,7 +656,7 @@ static int input (yyscan_t yyscanner );
 			} \
 		}\
 \
-
+ 
 #endif
 
 /* No semi-colon after return; correct usage is to write "yyterminate();" -
@@ -689,7 +686,7 @@ static int input (yyscan_t yyscanner );
 #define YY_DECL_IS_OURS 1
 
 extern int rexgen_lex \
-               (YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
+(YYSTYPE * yylval_param,YYLTYPE * yylloc_param ,yyscan_t yyscanner);
 
 #define YY_DECL int rexgen_lex \
                (YYSTYPE * yylval_param, YYLTYPE * yylloc_param , yyscan_t yyscanner)
@@ -712,299 +709,284 @@ extern int rexgen_lex \
 
 /** The main scanner function which does all the work.
  */
-YY_DECL
-{
-	register yy_state_type yy_current_state;
-	register char *yy_cp, *yy_bp;
-	register int yy_act;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+YY_DECL {
+  register yy_state_type yy_current_state;
+  register char *yy_cp, *yy_bp;
+  register int yy_act;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 #line 38 "regex_lexer.l"
 
 #line 725 "/home/jan/projects/librexgen/lexer.cpp"
 
-    yylval = yylval_param;
+  yylval = yylval_param;
 
-    yylloc = yylloc_param;
+  yylloc = yylloc_param;
 
-	if ( !yyg->yy_init )
-		{
-		yyg->yy_init = 1;
+  if ( !yyg->yy_init ) {
+    yyg->yy_init = 1;
 
 #ifdef YY_USER_INIT
-		YY_USER_INIT;
+    YY_USER_INIT;
 #endif
 
-		if ( ! yyg->yy_start )
-			yyg->yy_start = 1;	/* first start state */
+    if ( ! yyg->yy_start )
+      yyg->yy_start = 1;	/* first start state */
 
-		if ( ! yyin )
-			yyin = stdin;
+    if ( ! yyin )
+      yyin = stdin;
 
-		if ( ! yyout )
-			yyout = stdout;
+    if ( ! yyout )
+      yyout = stdout;
 
-		if ( ! YY_CURRENT_BUFFER ) {
-			rexgen_ensure_buffer_stack (yyscanner);
-			YY_CURRENT_BUFFER_LVALUE =
-				rexgen__create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
-		}
+    if ( ! YY_CURRENT_BUFFER ) {
+      rexgen_ensure_buffer_stack (yyscanner);
+      YY_CURRENT_BUFFER_LVALUE =
+      rexgen__create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
+    }
 
-		rexgen__load_buffer_state(yyscanner );
-		}
+    rexgen__load_buffer_state(yyscanner );
+  }
 
-	while ( 1 )		/* loops until end-of-file is reached */
-		{
-		yy_cp = yyg->yy_c_buf_p;
+  while ( 1 ) {	/* loops until end-of-file is reached */
+    yy_cp = yyg->yy_c_buf_p;
 
-		/* Support of yytext. */
-		*yy_cp = yyg->yy_hold_char;
+    /* Support of yytext. */
+    *yy_cp = yyg->yy_hold_char;
 
-		/* yy_bp points to the position in yy_ch_buf of the start of
-		 * the current run.
-		 */
-		yy_bp = yy_cp;
+    /* yy_bp points to the position in yy_ch_buf of the start of
+     * the current run.
+     */
+    yy_bp = yy_cp;
 
-		yy_current_state = yyg->yy_start;
+    yy_current_state = yyg->yy_start;
 yy_match:
-		do
-			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
-			if ( yy_accept[yy_current_state] )
-				{
-				yyg->yy_last_accepting_state = yy_current_state;
-				yyg->yy_last_accepting_cpos = yy_cp;
-				}
-			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-				{
-				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 26 )
-					yy_c = yy_meta[(unsigned int) yy_c];
-				}
-			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-			++yy_cp;
-			}
-		while ( yy_base[yy_current_state] != 36 );
+    do {
+      register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+      if ( yy_accept[yy_current_state] ) {
+        yyg->yy_last_accepting_state = yy_current_state;
+        yyg->yy_last_accepting_cpos = yy_cp;
+      }
+      while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
+        yy_current_state = (int) yy_def[yy_current_state];
+        if ( yy_current_state >= 26 )
+          yy_c = yy_meta[(unsigned int) yy_c];
+      }
+      yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+      ++yy_cp;
+    } while ( yy_base[yy_current_state] != 36 );
 
 yy_find_action:
-		yy_act = yy_accept[yy_current_state];
-		if ( yy_act == 0 )
-			{ /* have to back up */
-			yy_cp = yyg->yy_last_accepting_cpos;
-			yy_current_state = yyg->yy_last_accepting_state;
-			yy_act = yy_accept[yy_current_state];
-			}
+    yy_act = yy_accept[yy_current_state];
+    if ( yy_act == 0 ) {
+      /* have to back up */
+      yy_cp = yyg->yy_last_accepting_cpos;
+      yy_current_state = yyg->yy_last_accepting_state;
+      yy_act = yy_accept[yy_current_state];
+    }
 
-		YY_DO_BEFORE_ACTION;
+    YY_DO_BEFORE_ACTION;
 
 do_action:	/* This label is used only to access EOF actions. */
 
-		switch ( yy_act )
-	{ /* beginning of action switch */
-			case 0: /* must back up */
-			/* undo the effects of YY_DO_BEFORE_ACTION */
-			*yy_cp = yyg->yy_hold_char;
-			yy_cp = yyg->yy_last_accepting_cpos;
-			yy_current_state = yyg->yy_last_accepting_state;
-			goto yy_find_action;
+    switch ( yy_act ) {
+      /* beginning of action switch */
+    case 0: /* must back up */
+      /* undo the effects of YY_DO_BEFORE_ACTION */
+      *yy_cp = yyg->yy_hold_char;
+      yy_cp = yyg->yy_last_accepting_cpos;
+      yy_current_state = yyg->yy_last_accepting_state;
+      goto yy_find_action;
 
-case 1:
-YY_RULE_SETUP
+    case 1:
+      YY_RULE_SETUP
 #line 39 "regex_lexer.l"
-{ *yylval = parseAnsiChar(yytext); return T_ANY_CHAR;}
-	YY_BREAK
-case 2:
-YY_RULE_SETUP
+      { *yylval = parseAnsiChar(yytext); return T_ANY_CHAR;}
+      YY_BREAK
+    case 2:
+      YY_RULE_SETUP
 #line 40 "regex_lexer.l"
-{ *yylval = parseUnicodeChar(yytext); return T_ANY_CHAR;}
-	YY_BREAK
-case 3:
-/* rule 3 can match eol */
-YY_RULE_SETUP
+      { *yylval = parseUnicodeChar(yytext); return T_ANY_CHAR;}
+      YY_BREAK
+    case 3:
+      /* rule 3 can match eol */
+      YY_RULE_SETUP
 #line 41 "regex_lexer.l"
-{ *yylval = (CHAR)yytext[1]; return T_ANY_CHAR; }
-	YY_BREAK
-case 4:
-YY_RULE_SETUP
+      { *yylval = (CHAR)yytext[1]; return T_ANY_CHAR; }
+      YY_BREAK
+    case 4:
+      YY_RULE_SETUP
 #line 42 "regex_lexer.l"
-{ *yylval = u'\n'; return T_ANY_CHAR; }
-	YY_BREAK
-case 5:
-YY_RULE_SETUP
+      { *yylval = u'\n'; return T_ANY_CHAR; }
+      YY_BREAK
+    case 5:
+      YY_RULE_SETUP
 #line 43 "regex_lexer.l"
-{ *yylval = u'\r'; return T_ANY_CHAR; }
-	YY_BREAK
-case 6:
-YY_RULE_SETUP
+      { *yylval = u'\r'; return T_ANY_CHAR; }
+      YY_BREAK
+    case 6:
+      YY_RULE_SETUP
 #line 44 "regex_lexer.l"
-{ return T_PIPE; }
-	YY_BREAK
-case 7:
-YY_RULE_SETUP
+      { return T_PIPE; }
+      YY_BREAK
+    case 7:
+      YY_RULE_SETUP
 #line 45 "regex_lexer.l"
-{ return T_BEGIN_CLASS; }
-	YY_BREAK
-case 8:
-YY_RULE_SETUP
+      { return T_BEGIN_CLASS; }
+      YY_BREAK
+    case 8:
+      YY_RULE_SETUP
 #line 46 "regex_lexer.l"
-{ return T_END_CLASS; }
-	YY_BREAK
-case 9:
-YY_RULE_SETUP
+      { return T_END_CLASS; }
+      YY_BREAK
+    case 9:
+      YY_RULE_SETUP
 #line 47 "regex_lexer.l"
-{ return T_BEGIN_GROUP; }
-	YY_BREAK
-case 10:
-YY_RULE_SETUP
+      { return T_BEGIN_GROUP; }
+      YY_BREAK
+    case 10:
+      YY_RULE_SETUP
 #line 48 "regex_lexer.l"
-{ return T_END_GROUP; }
-	YY_BREAK
-case 11:
-YY_RULE_SETUP
+      { return T_END_GROUP; }
+      YY_BREAK
+    case 11:
+      YY_RULE_SETUP
 #line 49 "regex_lexer.l"
-{ *yylval = atoi(yytext); return T_NUMBER; }
-	YY_BREAK
-case 12:
-YY_RULE_SETUP
+      { *yylval = atoi(yytext); return T_NUMBER; }
+      YY_BREAK
+    case 12:
+      YY_RULE_SETUP
 #line 50 "regex_lexer.l"
-{ *yylval = yytext[0]; return T_ANY_CHAR; }
-	YY_BREAK
-case 13:
-YY_RULE_SETUP
+      { *yylval = yytext[0]; return T_ANY_CHAR; }
+      YY_BREAK
+    case 13:
+      YY_RULE_SETUP
 #line 51 "regex_lexer.l"
-ECHO;
-	YY_BREAK
+      ECHO;
+      YY_BREAK
 #line 878 "/home/jan/projects/librexgen/lexer.cpp"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+    case YY_STATE_EOF(INITIAL):
+      yyterminate();
 
-	case YY_END_OF_BUFFER:
-		{
-		/* Amount of text matched not including the EOB char. */
-		int yy_amount_of_matched_text = (int) (yy_cp - yyg->yytext_ptr) - 1;
+    case YY_END_OF_BUFFER: {
+      /* Amount of text matched not including the EOB char. */
+      int yy_amount_of_matched_text = (int) (yy_cp - yyg->yytext_ptr) - 1;
 
-		/* Undo the effects of YY_DO_BEFORE_ACTION. */
-		*yy_cp = yyg->yy_hold_char;
-		YY_RESTORE_YY_MORE_OFFSET
+      /* Undo the effects of YY_DO_BEFORE_ACTION. */
+      *yy_cp = yyg->yy_hold_char;
+      YY_RESTORE_YY_MORE_OFFSET
 
-		if ( YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_NEW )
-			{
-			/* We're scanning a new file or input source.  It's
-			 * possible that this happened because the user
-			 * just pointed yyin at a new source and called
-			 * rexgen_lex().  If so, then we have to assure
-			 * consistency between YY_CURRENT_BUFFER and our
-			 * globals.  Here is the right place to do so, because
-			 * this is the first action (other than possibly a
-			 * back-up) that will match for the new input source.
-			 */
-			yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
-			YY_CURRENT_BUFFER_LVALUE->yy_input_file = yyin;
-			YY_CURRENT_BUFFER_LVALUE->yy_buffer_status = YY_BUFFER_NORMAL;
-			}
+      if ( YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_NEW ) {
+        /* We're scanning a new file or input source.  It's
+         * possible that this happened because the user
+         * just pointed yyin at a new source and called
+         * rexgen_lex().  If so, then we have to assure
+         * consistency between YY_CURRENT_BUFFER and our
+         * globals.  Here is the right place to do so, because
+         * this is the first action (other than possibly a
+         * back-up) that will match for the new input source.
+         */
+        yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
+        YY_CURRENT_BUFFER_LVALUE->yy_input_file = yyin;
+        YY_CURRENT_BUFFER_LVALUE->yy_buffer_status = YY_BUFFER_NORMAL;
+      }
 
-		/* Note that here we test for yy_c_buf_p "<=" to the position
-		 * of the first EOB in the buffer, since yy_c_buf_p will
-		 * already have been incremented past the NUL character
-		 * (since all states make transitions on EOB to the
-		 * end-of-buffer state).  Contrast this with the test
-		 * in input().
-		 */
-		if ( yyg->yy_c_buf_p <= &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] )
-			{ /* This was really a NUL. */
-			yy_state_type yy_next_state;
+      /* Note that here we test for yy_c_buf_p "<=" to the position
+       * of the first EOB in the buffer, since yy_c_buf_p will
+       * already have been incremented past the NUL character
+       * (since all states make transitions on EOB to the
+       * end-of-buffer state).  Contrast this with the test
+       * in input().
+       */
+      if ( yyg->yy_c_buf_p <= &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] ) {
+        /* This was really a NUL. */
+        yy_state_type yy_next_state;
 
-			yyg->yy_c_buf_p = yyg->yytext_ptr + yy_amount_of_matched_text;
+        yyg->yy_c_buf_p = yyg->yytext_ptr + yy_amount_of_matched_text;
 
-			yy_current_state = yy_get_previous_state( yyscanner );
+        yy_current_state = yy_get_previous_state( yyscanner );
 
-			/* Okay, we're now positioned to make the NUL
-			 * transition.  We couldn't have
-			 * yy_get_previous_state() go ahead and do it
-			 * for us because it doesn't know how to deal
-			 * with the possibility of jamming (and we don't
-			 * want to build jamming into it because then it
-			 * will run more slowly).
-			 */
+        /* Okay, we're now positioned to make the NUL
+         * transition.  We couldn't have
+         * yy_get_previous_state() go ahead and do it
+         * for us because it doesn't know how to deal
+         * with the possibility of jamming (and we don't
+         * want to build jamming into it because then it
+         * will run more slowly).
+         */
 
-			yy_next_state = yy_try_NUL_trans( yy_current_state , yyscanner);
+        yy_next_state = yy_try_NUL_trans( yy_current_state , yyscanner);
 
-			yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
+        yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
 
-			if ( yy_next_state )
-				{
-				/* Consume the NUL. */
-				yy_cp = ++yyg->yy_c_buf_p;
-				yy_current_state = yy_next_state;
-				goto yy_match;
-				}
+        if ( yy_next_state ) {
+          /* Consume the NUL. */
+          yy_cp = ++yyg->yy_c_buf_p;
+          yy_current_state = yy_next_state;
+          goto yy_match;
+        }
 
-			else
-				{
-				yy_cp = yyg->yy_c_buf_p;
-				goto yy_find_action;
-				}
-			}
+        else {
+          yy_cp = yyg->yy_c_buf_p;
+          goto yy_find_action;
+        }
+      }
 
-		else switch ( yy_get_next_buffer( yyscanner ) )
-			{
-			case EOB_ACT_END_OF_FILE:
-				{
-				yyg->yy_did_buffer_switch_on_eof = 0;
+      else switch ( yy_get_next_buffer( yyscanner ) ) {
+        case EOB_ACT_END_OF_FILE: {
+          yyg->yy_did_buffer_switch_on_eof = 0;
 
-				if ( rexgen_wrap(yyscanner ) )
-					{
-					/* Note: because we've taken care in
-					 * yy_get_next_buffer() to have set up
-					 * yytext, we can now set up
-					 * yy_c_buf_p so that if some total
-					 * hoser (like flex itself) wants to
-					 * call the scanner after we return the
-					 * YY_NULL, it'll still work - another
-					 * YY_NULL will get returned.
-					 */
-					yyg->yy_c_buf_p = yyg->yytext_ptr + YY_MORE_ADJ;
+          if ( rexgen_wrap(yyscanner ) ) {
+            /* Note: because we've taken care in
+             * yy_get_next_buffer() to have set up
+             * yytext, we can now set up
+             * yy_c_buf_p so that if some total
+             * hoser (like flex itself) wants to
+             * call the scanner after we return the
+             * YY_NULL, it'll still work - another
+             * YY_NULL will get returned.
+             */
+            yyg->yy_c_buf_p = yyg->yytext_ptr + YY_MORE_ADJ;
 
-					yy_act = YY_STATE_EOF(YY_START);
-					goto do_action;
-					}
+            yy_act = YY_STATE_EOF(YY_START);
+            goto do_action;
+          }
 
-				else
-					{
-					if ( ! yyg->yy_did_buffer_switch_on_eof )
-						YY_NEW_FILE;
-					}
-				break;
-				}
+          else {
+            if ( ! yyg->yy_did_buffer_switch_on_eof )
+              YY_NEW_FILE;
+          }
+          break;
+        }
 
-			case EOB_ACT_CONTINUE_SCAN:
-				yyg->yy_c_buf_p =
-					yyg->yytext_ptr + yy_amount_of_matched_text;
+        case EOB_ACT_CONTINUE_SCAN:
+          yyg->yy_c_buf_p =
+            yyg->yytext_ptr + yy_amount_of_matched_text;
 
-				yy_current_state = yy_get_previous_state( yyscanner );
+          yy_current_state = yy_get_previous_state( yyscanner );
 
-				yy_cp = yyg->yy_c_buf_p;
-				yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
-				goto yy_match;
+          yy_cp = yyg->yy_c_buf_p;
+          yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
+          goto yy_match;
 
-			case EOB_ACT_LAST_MATCH:
-				yyg->yy_c_buf_p =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars];
+        case EOB_ACT_LAST_MATCH:
+          yyg->yy_c_buf_p =
+            &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars];
 
-				yy_current_state = yy_get_previous_state( yyscanner );
+          yy_current_state = yy_get_previous_state( yyscanner );
 
-				yy_cp = yyg->yy_c_buf_p;
-				yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
-				goto yy_find_action;
-			}
-		break;
-		}
+          yy_cp = yyg->yy_c_buf_p;
+          yy_bp = yyg->yytext_ptr + YY_MORE_ADJ;
+          goto yy_find_action;
+        }
+      break;
+    }
 
-	default:
-		YY_FATAL_ERROR(
-			"fatal flex scanner internal error--no action found" );
-	} /* end of action switch */
-		} /* end of scanning one token */
+    default:
+      YY_FATAL_ERROR(
+        "fatal flex scanner internal error--no action found" );
+    } /* end of action switch */
+  } /* end of scanning one token */
 } /* end of rexgen_lex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1014,167 +996,154 @@ case YY_STATE_EOF(INITIAL):
  *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
  *	EOB_ACT_END_OF_FILE - end of file
  */
-static int yy_get_next_buffer (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	register char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
-	register char *source = yyg->yytext_ptr;
-	register int number_to_move, i;
-	int ret_val;
+static int yy_get_next_buffer (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  register char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
+  register char *source = yyg->yytext_ptr;
+  register int number_to_move, i;
+  int ret_val;
 
-	if ( yyg->yy_c_buf_p > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars + 1] )
-		YY_FATAL_ERROR(
-		"fatal flex scanner internal error--end of buffer missed" );
+  if ( yyg->yy_c_buf_p > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars + 1] )
+    YY_FATAL_ERROR(
+      "fatal flex scanner internal error--end of buffer missed" );
 
-	if ( YY_CURRENT_BUFFER_LVALUE->yy_fill_buffer == 0 )
-		{ /* Don't try to fill the buffer, so this is an EOF. */
-		if ( yyg->yy_c_buf_p - yyg->yytext_ptr - YY_MORE_ADJ == 1 )
-			{
-			/* We matched a single character, the EOB, so
-			 * treat this as a final EOF.
-			 */
-			return EOB_ACT_END_OF_FILE;
-			}
+  if ( YY_CURRENT_BUFFER_LVALUE->yy_fill_buffer == 0 ) {
+    /* Don't try to fill the buffer, so this is an EOF. */
+    if ( yyg->yy_c_buf_p - yyg->yytext_ptr - YY_MORE_ADJ == 1 ) {
+      /* We matched a single character, the EOB, so
+       * treat this as a final EOF.
+       */
+      return EOB_ACT_END_OF_FILE;
+    }
 
-		else
-			{
-			/* We matched some text prior to the EOB, first
-			 * process it.
-			 */
-			return EOB_ACT_LAST_MATCH;
-			}
-		}
+    else {
+      /* We matched some text prior to the EOB, first
+       * process it.
+       */
+      return EOB_ACT_LAST_MATCH;
+    }
+  }
 
-	/* Try to read more data. */
+  /* Try to read more data. */
 
-	/* First move last chars to start of buffer. */
-	number_to_move = (int) (yyg->yy_c_buf_p - yyg->yytext_ptr) - 1;
+  /* First move last chars to start of buffer. */
+  number_to_move = (int) (yyg->yy_c_buf_p - yyg->yytext_ptr) - 1;
 
-	for ( i = 0; i < number_to_move; ++i )
-		*(dest++) = *(source++);
+  for ( i = 0; i < number_to_move; ++i )
+    *(dest++) = *(source++);
 
-	if ( YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_EOF_PENDING )
-		/* don't do the read, it's not guaranteed to return an EOF,
-		 * just force an EOF
-		 */
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars = 0;
+  if ( YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_EOF_PENDING )
+    /* don't do the read, it's not guaranteed to return an EOF,
+     * just force an EOF
+     */
+    YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars = 0;
 
-	else
-		{
-			int num_to_read =
-			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
+  else {
+    int num_to_read =
+      YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
-		while ( num_to_read <= 0 )
-			{ /* Not enough room in the buffer - grow it. */
+    while ( num_to_read <= 0 ) {
+      /* Not enough room in the buffer - grow it. */
 
-			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+      /* just a shorter name for the current buffer */
+      YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
 
-			int yy_c_buf_p_offset =
-				(int) (yyg->yy_c_buf_p - b->yy_ch_buf);
+      int yy_c_buf_p_offset =
+        (int) (yyg->yy_c_buf_p - b->yy_ch_buf);
 
-			if ( b->yy_is_our_buffer )
-				{
-				int new_size = b->yy_buf_size * 2;
+      if ( b->yy_is_our_buffer ) {
+        int new_size = b->yy_buf_size * 2;
 
-				if ( new_size <= 0 )
-					b->yy_buf_size += b->yy_buf_size / 8;
-				else
-					b->yy_buf_size *= 2;
+        if ( new_size <= 0 )
+          b->yy_buf_size += b->yy_buf_size / 8;
+        else
+          b->yy_buf_size *= 2;
 
-				b->yy_ch_buf = (char *)
-					/* Include room in for 2 EOB chars. */
-					rexgen_realloc((void *) b->yy_ch_buf,b->yy_buf_size + 2 ,yyscanner );
-				}
-			else
-				/* Can't grow it, we don't own it. */
-				b->yy_ch_buf = 0;
+        b->yy_ch_buf = (char *)
+                       /* Include room in for 2 EOB chars. */
+                       rexgen_realloc((void *) b->yy_ch_buf,b->yy_buf_size + 2 ,yyscanner );
+      } else
+        /* Can't grow it, we don't own it. */
+        b->yy_ch_buf = 0;
 
-			if ( ! b->yy_ch_buf )
-				YY_FATAL_ERROR(
-				"fatal error - scanner input buffer overflow" );
+      if ( ! b->yy_ch_buf )
+        YY_FATAL_ERROR(
+          "fatal error - scanner input buffer overflow" );
 
-			yyg->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
+      yyg->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
-			num_to_read = YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
-						number_to_move - 1;
+      num_to_read = YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
+                    number_to_move - 1;
 
-			}
+    }
 
-		if ( num_to_read > YY_READ_BUF_SIZE )
-			num_to_read = YY_READ_BUF_SIZE;
+    if ( num_to_read > YY_READ_BUF_SIZE )
+      num_to_read = YY_READ_BUF_SIZE;
 
-		/* Read in more data. */
-		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			yyg->yy_n_chars, (size_t) num_to_read );
+    /* Read in more data. */
+    YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
+              yyg->yy_n_chars, (size_t) num_to_read );
 
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
-		}
+    YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
+  }
 
-	if ( yyg->yy_n_chars == 0 )
-		{
-		if ( number_to_move == YY_MORE_ADJ )
-			{
-			ret_val = EOB_ACT_END_OF_FILE;
-			rexgen_restart(yyin  ,yyscanner);
-			}
+  if ( yyg->yy_n_chars == 0 ) {
+    if ( number_to_move == YY_MORE_ADJ ) {
+      ret_val = EOB_ACT_END_OF_FILE;
+      rexgen_restart(yyin  ,yyscanner);
+    }
 
-		else
-			{
-			ret_val = EOB_ACT_LAST_MATCH;
-			YY_CURRENT_BUFFER_LVALUE->yy_buffer_status =
-				YY_BUFFER_EOF_PENDING;
-			}
-		}
+    else {
+      ret_val = EOB_ACT_LAST_MATCH;
+      YY_CURRENT_BUFFER_LVALUE->yy_buffer_status =
+        YY_BUFFER_EOF_PENDING;
+    }
+  }
 
-	else
-		ret_val = EOB_ACT_CONTINUE_SCAN;
+  else
+    ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((yy_size_t) (yyg->yy_n_chars + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
-		/* Extend the array by 50%, plus the number we really need. */
-		yy_size_t new_size = yyg->yy_n_chars + number_to_move + (yyg->yy_n_chars >> 1);
-		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) rexgen_realloc((void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf,new_size ,yyscanner );
-		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
-	}
+  if ((yy_size_t) (yyg->yy_n_chars + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+    /* Extend the array by 50%, plus the number we really need. */
+    yy_size_t new_size = yyg->yy_n_chars + number_to_move + (yyg->yy_n_chars >> 1);
+    YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) rexgen_realloc((void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf,new_size ,yyscanner );
+    if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
+      YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
+  }
 
-	yyg->yy_n_chars += number_to_move;
-	YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
-	YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
+  yyg->yy_n_chars += number_to_move;
+  YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+  YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;
 
-	yyg->yytext_ptr = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[0];
+  yyg->yytext_ptr = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[0];
 
-	return ret_val;
+  return ret_val;
 }
 
 /* yy_get_previous_state - get the state just before the EOB char was reached */
 
-    static yy_state_type yy_get_previous_state (yyscan_t yyscanner)
-{
-	register yy_state_type yy_current_state;
-	register char *yy_cp;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+static yy_state_type yy_get_previous_state (yyscan_t yyscanner) {
+  register yy_state_type yy_current_state;
+  register char *yy_cp;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	yy_current_state = yyg->yy_start;
+  yy_current_state = yyg->yy_start;
 
-	for ( yy_cp = yyg->yytext_ptr + YY_MORE_ADJ; yy_cp < yyg->yy_c_buf_p; ++yy_cp )
-		{
-		register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
-		if ( yy_accept[yy_current_state] )
-			{
-			yyg->yy_last_accepting_state = yy_current_state;
-			yyg->yy_last_accepting_cpos = yy_cp;
-			}
-		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-			{
-			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 26 )
-				yy_c = yy_meta[(unsigned int) yy_c];
-			}
-		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-		}
+  for ( yy_cp = yyg->yytext_ptr + YY_MORE_ADJ; yy_cp < yyg->yy_c_buf_p; ++yy_cp ) {
+    register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
+    if ( yy_accept[yy_current_state] ) {
+      yyg->yy_last_accepting_state = yy_current_state;
+      yyg->yy_last_accepting_cpos = yy_cp;
+    }
+    while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
+      yy_current_state = (int) yy_def[yy_current_state];
+      if ( yy_current_state >= 26 )
+        yy_c = yy_meta[(unsigned int) yy_c];
+    }
+    yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+  }
 
-	return yy_current_state;
+  return yy_current_state;
 }
 
 /* yy_try_NUL_trans - try to make a transition on the NUL character
@@ -1182,102 +1151,96 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
  * synopsis
  *	next_state = yy_try_NUL_trans( current_state );
  */
-    static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state , yyscan_t yyscanner)
-{
-	register int yy_is_jam;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner; /* This var may be unused depending upon options. */
-	register char *yy_cp = yyg->yy_c_buf_p;
+static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state , yyscan_t yyscanner) {
+  register int yy_is_jam;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner; /* This var may be unused depending upon options. */
+  register char *yy_cp = yyg->yy_c_buf_p;
 
-	register YY_CHAR yy_c = 1;
-	if ( yy_accept[yy_current_state] )
-		{
-		yyg->yy_last_accepting_state = yy_current_state;
-		yyg->yy_last_accepting_cpos = yy_cp;
-		}
-	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-		{
-		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 26 )
-			yy_c = yy_meta[(unsigned int) yy_c];
-		}
-	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 25);
+  register YY_CHAR yy_c = 1;
+  if ( yy_accept[yy_current_state] ) {
+    yyg->yy_last_accepting_state = yy_current_state;
+    yyg->yy_last_accepting_cpos = yy_cp;
+  }
+  while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state ) {
+    yy_current_state = (int) yy_def[yy_current_state];
+    if ( yy_current_state >= 26 )
+      yy_c = yy_meta[(unsigned int) yy_c];
+  }
+  yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+  yy_is_jam = (yy_current_state == 25);
 
-	return yy_is_jam ? 0 : yy_current_state;
+  return yy_is_jam ? 0 : yy_current_state;
 }
 
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
-    static int yyinput (yyscan_t yyscanner)
+static int yyinput (yyscan_t yyscanner)
 #else
-    static int input  (yyscan_t yyscanner)
+static int input  (yyscan_t yyscanner)
 #endif
 
 {
-	int c;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  int c;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	*yyg->yy_c_buf_p = yyg->yy_hold_char;
+  *yyg->yy_c_buf_p = yyg->yy_hold_char;
 
-	if ( *yyg->yy_c_buf_p == YY_END_OF_BUFFER_CHAR )
-		{
-		/* yy_c_buf_p now points to the character we want to return.
-		 * If this occurs *before* the EOB characters, then it's a
-		 * valid NUL; if not, then we've hit the end of the buffer.
-		 */
-		if ( yyg->yy_c_buf_p < &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] )
-			/* This was really a NUL. */
-			*yyg->yy_c_buf_p = '\0';
+  if ( *yyg->yy_c_buf_p == YY_END_OF_BUFFER_CHAR ) {
+    /* yy_c_buf_p now points to the character we want to return.
+     * If this occurs *before* the EOB characters, then it's a
+     * valid NUL; if not, then we've hit the end of the buffer.
+     */
+    if ( yyg->yy_c_buf_p < &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] )
+      /* This was really a NUL. */
+      *yyg->yy_c_buf_p = '\0';
 
-		else
-			{ /* need more input */
-			int offset = yyg->yy_c_buf_p - yyg->yytext_ptr;
-			++yyg->yy_c_buf_p;
+    else {
+      /* need more input */
+      int offset = yyg->yy_c_buf_p - yyg->yytext_ptr;
+      ++yyg->yy_c_buf_p;
 
-			switch ( yy_get_next_buffer( yyscanner ) )
-				{
-				case EOB_ACT_LAST_MATCH:
-					/* This happens because yy_g_n_b()
-					 * sees that we've accumulated a
-					 * token and flags that we need to
-					 * try matching the token before
-					 * proceeding.  But for input(),
-					 * there's no matching to consider.
-					 * So convert the EOB_ACT_LAST_MATCH
-					 * to EOB_ACT_END_OF_FILE.
-					 */
+      switch ( yy_get_next_buffer( yyscanner ) ) {
+      case EOB_ACT_LAST_MATCH:
+        /* This happens because yy_g_n_b()
+         * sees that we've accumulated a
+         * token and flags that we need to
+         * try matching the token before
+         * proceeding.  But for input(),
+         * there's no matching to consider.
+         * So convert the EOB_ACT_LAST_MATCH
+         * to EOB_ACT_END_OF_FILE.
+         */
 
-					/* Reset buffer status. */
-					rexgen_restart(yyin ,yyscanner);
+        /* Reset buffer status. */
+        rexgen_restart(yyin ,yyscanner);
 
-					/*FALLTHROUGH*/
+        /*FALLTHROUGH*/
 
-				case EOB_ACT_END_OF_FILE:
-					{
-					if ( rexgen_wrap(yyscanner ) )
-						return EOF;
+      case EOB_ACT_END_OF_FILE: {
+        if ( rexgen_wrap(yyscanner ) )
+          return EOF;
 
-					if ( ! yyg->yy_did_buffer_switch_on_eof )
-						YY_NEW_FILE;
+        if ( ! yyg->yy_did_buffer_switch_on_eof )
+          YY_NEW_FILE;
 #ifdef __cplusplus
-					return yyinput(yyscanner);
+        return yyinput(yyscanner);
 #else
-					return input(yyscanner);
+        return input(yyscanner);
 #endif
-					}
+      }
 
-				case EOB_ACT_CONTINUE_SCAN:
-					yyg->yy_c_buf_p = yyg->yytext_ptr + offset;
-					break;
-				}
-			}
-		}
+      case EOB_ACT_CONTINUE_SCAN:
+        yyg->yy_c_buf_p = yyg->yytext_ptr + offset;
+        break;
+      }
+    }
+  }
 
-	c = *(unsigned char *) yyg->yy_c_buf_p;	/* cast for 8-bit char's */
-	*yyg->yy_c_buf_p = '\0';	/* preserve yytext */
-	yyg->yy_hold_char = *++yyg->yy_c_buf_p;
+  c = *(unsigned char *) yyg->yy_c_buf_p;	/* cast for 8-bit char's */
+  *yyg->yy_c_buf_p = '\0';	/* preserve yytext */
+  yyg->yy_hold_char = *++yyg->yy_c_buf_p;
 
-	return c;
+  return c;
 }
 #endif	/* ifndef YY_NO_INPUT */
 
@@ -1286,63 +1249,59 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
  * @param yyscanner The scanner object.
  * @note This function does not reset the start condition to @c INITIAL .
  */
-    void rexgen_restart  (FILE * input_file , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+void rexgen_restart  (FILE * input_file , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	if ( ! YY_CURRENT_BUFFER ){
-        rexgen_ensure_buffer_stack (yyscanner);
-		YY_CURRENT_BUFFER_LVALUE =
-            rexgen__create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
-	}
+  if ( ! YY_CURRENT_BUFFER ) {
+    rexgen_ensure_buffer_stack (yyscanner);
+    YY_CURRENT_BUFFER_LVALUE =
+      rexgen__create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
+  }
 
-	rexgen__init_buffer(YY_CURRENT_BUFFER,input_file ,yyscanner);
-	rexgen__load_buffer_state(yyscanner );
+  rexgen__init_buffer(YY_CURRENT_BUFFER,input_file ,yyscanner);
+  rexgen__load_buffer_state(yyscanner );
 }
 
 /** Switch to a different input buffer.
  * @param new_buffer The new input buffer.
  * @param yyscanner The scanner object.
  */
-    void rexgen__switch_to_buffer  (YY_BUFFER_STATE  new_buffer , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+void rexgen__switch_to_buffer  (YY_BUFFER_STATE  new_buffer , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	/* TODO. We should be able to replace this entire function body
-	 * with
-	 *		rexgen_pop_buffer_state();
-	 *		rexgen_push_buffer_state(new_buffer);
+  /* TODO. We should be able to replace this entire function body
+   * with
+   *		rexgen_pop_buffer_state();
+   *		rexgen_push_buffer_state(new_buffer);
      */
-	rexgen_ensure_buffer_stack (yyscanner);
-	if ( YY_CURRENT_BUFFER == new_buffer )
-		return;
+  rexgen_ensure_buffer_stack (yyscanner);
+  if ( YY_CURRENT_BUFFER == new_buffer )
+    return;
 
-	if ( YY_CURRENT_BUFFER )
-		{
-		/* Flush out information for old buffer. */
-		*yyg->yy_c_buf_p = yyg->yy_hold_char;
-		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = yyg->yy_c_buf_p;
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
-		}
+  if ( YY_CURRENT_BUFFER ) {
+    /* Flush out information for old buffer. */
+    *yyg->yy_c_buf_p = yyg->yy_hold_char;
+    YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = yyg->yy_c_buf_p;
+    YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
+  }
 
-	YY_CURRENT_BUFFER_LVALUE = new_buffer;
-	rexgen__load_buffer_state(yyscanner );
+  YY_CURRENT_BUFFER_LVALUE = new_buffer;
+  rexgen__load_buffer_state(yyscanner );
 
-	/* We don't actually know whether we did this switch during
-	 * EOF (rexgen_wrap()) processing, but the only time this flag
-	 * is looked at is after rexgen_wrap() is called, so it's safe
-	 * to go ahead and always set it.
-	 */
-	yyg->yy_did_buffer_switch_on_eof = 1;
+  /* We don't actually know whether we did this switch during
+   * EOF (rexgen_wrap()) processing, but the only time this flag
+   * is looked at is after rexgen_wrap() is called, so it's safe
+   * to go ahead and always set it.
+   */
+  yyg->yy_did_buffer_switch_on_eof = 1;
 }
 
-static void rexgen__load_buffer_state  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
-	yyg->yytext_ptr = yyg->yy_c_buf_p = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
-	yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
-	yyg->yy_hold_char = *yyg->yy_c_buf_p;
+static void rexgen__load_buffer_state  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
+  yyg->yytext_ptr = yyg->yy_c_buf_p = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
+  yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
+  yyg->yy_hold_char = *yyg->yy_c_buf_p;
 }
 
 /** Allocate and initialize an input buffer state.
@@ -1351,109 +1310,106 @@ static void rexgen__load_buffer_state  (yyscan_t yyscanner)
  * @param yyscanner The scanner object.
  * @return the allocated buffer state.
  */
-    YY_BUFFER_STATE rexgen__create_buffer  (FILE * file, int  size , yyscan_t yyscanner)
-{
-	YY_BUFFER_STATE b;
-    
-	b = (YY_BUFFER_STATE) rexgen_alloc(sizeof( struct yy_buffer_state ) ,yyscanner );
-	if ( ! b )
-		YY_FATAL_ERROR( "out of dynamic memory in rexgen__create_buffer()" );
+YY_BUFFER_STATE rexgen__create_buffer  (FILE * file, int  size , yyscan_t yyscanner) {
+  YY_BUFFER_STATE b;
 
-	b->yy_buf_size = size;
+  b = (YY_BUFFER_STATE) rexgen_alloc(sizeof( struct yy_buffer_state ) ,yyscanner );
+  if ( ! b )
+    YY_FATAL_ERROR( "out of dynamic memory in rexgen__create_buffer()" );
 
-	/* yy_ch_buf has to be 2 characters longer than the size given because
-	 * we need to put in 2 end-of-buffer characters.
-	 */
-	b->yy_ch_buf = (char *) rexgen_alloc(b->yy_buf_size + 2 ,yyscanner );
-	if ( ! b->yy_ch_buf )
-		YY_FATAL_ERROR( "out of dynamic memory in rexgen__create_buffer()" );
+  b->yy_buf_size = size;
 
-	b->yy_is_our_buffer = 1;
+  /* yy_ch_buf has to be 2 characters longer than the size given because
+   * we need to put in 2 end-of-buffer characters.
+   */
+  b->yy_ch_buf = (char *) rexgen_alloc(b->yy_buf_size + 2 ,yyscanner );
+  if ( ! b->yy_ch_buf )
+    YY_FATAL_ERROR( "out of dynamic memory in rexgen__create_buffer()" );
 
-	rexgen__init_buffer(b,file ,yyscanner);
+  b->yy_is_our_buffer = 1;
 
-	return b;
+  rexgen__init_buffer(b,file ,yyscanner);
+
+  return b;
 }
 
 /** Destroy the buffer.
  * @param b a buffer created with rexgen__create_buffer()
  * @param yyscanner The scanner object.
  */
-    void rexgen__delete_buffer (YY_BUFFER_STATE  b , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+void rexgen__delete_buffer (YY_BUFFER_STATE  b , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	if ( ! b )
-		return;
+  if ( ! b )
+    return;
 
-	if ( b == YY_CURRENT_BUFFER ) /* Not sure if we should pop here. */
-		YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) 0;
+  if ( b == YY_CURRENT_BUFFER ) /* Not sure if we should pop here. */
+    YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) 0;
 
-	if ( b->yy_is_our_buffer )
-		rexgen_free((void *) b->yy_ch_buf ,yyscanner );
+  if ( b->yy_is_our_buffer )
+    rexgen_free((void *) b->yy_ch_buf ,yyscanner );
 
-	rexgen_free((void *) b ,yyscanner );
+  rexgen_free((void *) b ,yyscanner );
 }
 
 #ifndef __cplusplus
 extern int isatty (int );
 #endif /* __cplusplus */
-    
+
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a rexgen_restart() or at EOF.
  */
-    static void rexgen__init_buffer  (YY_BUFFER_STATE  b, FILE * file , yyscan_t yyscanner)
+static void rexgen__init_buffer  (YY_BUFFER_STATE  b, FILE * file , yyscan_t yyscanner)
 
 {
-	int oerrno = errno;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  int oerrno = errno;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	rexgen__flush_buffer(b ,yyscanner);
+  rexgen__flush_buffer(b ,yyscanner);
 
-	b->yy_input_file = file;
-	b->yy_fill_buffer = 1;
+  b->yy_input_file = file;
+  b->yy_fill_buffer = 1;
 
-    /* If b is the current buffer, then rexgen__init_buffer was _probably_
-     * called from rexgen_restart() or through yy_get_next_buffer.
-     * In that case, we don't want to reset the lineno or column.
-     */
-    if (b != YY_CURRENT_BUFFER){
-        b->yy_bs_lineno = 1;
-        b->yy_bs_column = 0;
-    }
+  /* If b is the current buffer, then rexgen__init_buffer was _probably_
+   * called from rexgen_restart() or through yy_get_next_buffer.
+   * In that case, we don't want to reset the lineno or column.
+   */
+  if (b != YY_CURRENT_BUFFER) {
+    b->yy_bs_lineno = 1;
+    b->yy_bs_column = 0;
+  }
 
-        b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
-    
-	errno = oerrno;
+  b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
+
+  errno = oerrno;
 }
 
 /** Discard all buffered characters. On the next scan, YY_INPUT will be called.
  * @param b the buffer state to be flushed, usually @c YY_CURRENT_BUFFER.
  * @param yyscanner The scanner object.
  */
-    void rexgen__flush_buffer (YY_BUFFER_STATE  b , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if ( ! b )
-		return;
+void rexgen__flush_buffer (YY_BUFFER_STATE  b , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  if ( ! b )
+    return;
 
-	b->yy_n_chars = 0;
+  b->yy_n_chars = 0;
 
-	/* We always need two end-of-buffer characters.  The first causes
-	 * a transition to the end-of-buffer state.  The second causes
-	 * a jam in that state.
-	 */
-	b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;
-	b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
+  /* We always need two end-of-buffer characters.  The first causes
+   * a transition to the end-of-buffer state.  The second causes
+   * a jam in that state.
+   */
+  b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;
+  b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;
 
-	b->yy_buf_pos = &b->yy_ch_buf[0];
+  b->yy_buf_pos = &b->yy_ch_buf[0];
 
-	b->yy_at_bol = 1;
-	b->yy_buffer_status = YY_BUFFER_NEW;
+  b->yy_at_bol = 1;
+  b->yy_buffer_status = YY_BUFFER_NEW;
 
-	if ( b == YY_CURRENT_BUFFER )
-		rexgen__load_buffer_state(yyscanner );
+  if ( b == YY_CURRENT_BUFFER )
+    rexgen__load_buffer_state(yyscanner );
 }
 
 /** Pushes the new state onto the stack. The new state becomes
@@ -1462,134 +1418,129 @@ extern int isatty (int );
  *  @param new_buffer The new state.
  *  @param yyscanner The scanner object.
  */
-void rexgen_push_buffer_state (YY_BUFFER_STATE new_buffer , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if (new_buffer == NULL)
-		return;
+void rexgen_push_buffer_state (YY_BUFFER_STATE new_buffer , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  if (new_buffer == NULL)
+    return;
 
-	rexgen_ensure_buffer_stack(yyscanner);
+  rexgen_ensure_buffer_stack(yyscanner);
 
-	/* This block is copied from rexgen__switch_to_buffer. */
-	if ( YY_CURRENT_BUFFER )
-		{
-		/* Flush out information for old buffer. */
-		*yyg->yy_c_buf_p = yyg->yy_hold_char;
-		YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = yyg->yy_c_buf_p;
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
-		}
+  /* This block is copied from rexgen__switch_to_buffer. */
+  if ( YY_CURRENT_BUFFER ) {
+    /* Flush out information for old buffer. */
+    *yyg->yy_c_buf_p = yyg->yy_hold_char;
+    YY_CURRENT_BUFFER_LVALUE->yy_buf_pos = yyg->yy_c_buf_p;
+    YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
+  }
 
-	/* Only push if top exists. Otherwise, replace top. */
-	if (YY_CURRENT_BUFFER)
-		yyg->yy_buffer_stack_top++;
-	YY_CURRENT_BUFFER_LVALUE = new_buffer;
+  /* Only push if top exists. Otherwise, replace top. */
+  if (YY_CURRENT_BUFFER)
+    yyg->yy_buffer_stack_top++;
+  YY_CURRENT_BUFFER_LVALUE = new_buffer;
 
-	/* copied from rexgen__switch_to_buffer. */
-	rexgen__load_buffer_state(yyscanner );
-	yyg->yy_did_buffer_switch_on_eof = 1;
+  /* copied from rexgen__switch_to_buffer. */
+  rexgen__load_buffer_state(yyscanner );
+  yyg->yy_did_buffer_switch_on_eof = 1;
 }
 
 /** Removes and deletes the top of the stack, if present.
  *  The next element becomes the new top.
  *  @param yyscanner The scanner object.
  */
-void rexgen_pop_buffer_state (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if (!YY_CURRENT_BUFFER)
-		return;
+void rexgen_pop_buffer_state (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  if (!YY_CURRENT_BUFFER)
+    return;
 
-	rexgen__delete_buffer(YY_CURRENT_BUFFER ,yyscanner);
-	YY_CURRENT_BUFFER_LVALUE = NULL;
-	if (yyg->yy_buffer_stack_top > 0)
-		--yyg->yy_buffer_stack_top;
+  rexgen__delete_buffer(YY_CURRENT_BUFFER ,yyscanner);
+  YY_CURRENT_BUFFER_LVALUE = NULL;
+  if (yyg->yy_buffer_stack_top > 0)
+    --yyg->yy_buffer_stack_top;
 
-	if (YY_CURRENT_BUFFER) {
-		rexgen__load_buffer_state(yyscanner );
-		yyg->yy_did_buffer_switch_on_eof = 1;
-	}
+  if (YY_CURRENT_BUFFER) {
+    rexgen__load_buffer_state(yyscanner );
+    yyg->yy_did_buffer_switch_on_eof = 1;
+  }
 }
 
 /* Allocates the stack if it does not exist.
  *  Guarantees space for at least one push.
  */
-static void rexgen_ensure_buffer_stack (yyscan_t yyscanner)
-{
-	int num_to_alloc;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+static void rexgen_ensure_buffer_stack (yyscan_t yyscanner) {
+  int num_to_alloc;
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-	if (!yyg->yy_buffer_stack) {
+  if (!yyg->yy_buffer_stack) {
 
-		/* First allocation is just for 2 elements, since we don't know if this
-		 * scanner will even need a stack. We use 2 instead of 1 to avoid an
-		 * immediate realloc on the next call.
+    /* First allocation is just for 2 elements, since we don't know if this
+     * scanner will even need a stack. We use 2 instead of 1 to avoid an
+     * immediate realloc on the next call.
          */
-		num_to_alloc = 1;
-		yyg->yy_buffer_stack = (struct yy_buffer_state**)rexgen_alloc
-								(num_to_alloc * sizeof(struct yy_buffer_state*)
-								, yyscanner);
-		if ( ! yyg->yy_buffer_stack )
-			YY_FATAL_ERROR( "out of dynamic memory in rexgen_ensure_buffer_stack()" );
-								  
-		memset(yyg->yy_buffer_stack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
-				
-		yyg->yy_buffer_stack_max = num_to_alloc;
-		yyg->yy_buffer_stack_top = 0;
-		return;
-	}
+    num_to_alloc = 1;
+    yyg->yy_buffer_stack = (struct yy_buffer_state**)rexgen_alloc
+                           (num_to_alloc * sizeof(struct yy_buffer_state*)
+                            , yyscanner);
+    if ( ! yyg->yy_buffer_stack )
+      YY_FATAL_ERROR( "out of dynamic memory in rexgen_ensure_buffer_stack()" );
 
-	if (yyg->yy_buffer_stack_top >= (yyg->yy_buffer_stack_max) - 1){
+    memset(yyg->yy_buffer_stack, 0, num_to_alloc * sizeof(struct yy_buffer_state*));
 
-		/* Increase the buffer to prepare for a possible push. */
-		int grow_size = 8 /* arbitrary grow size */;
+    yyg->yy_buffer_stack_max = num_to_alloc;
+    yyg->yy_buffer_stack_top = 0;
+    return;
+  }
 
-		num_to_alloc = yyg->yy_buffer_stack_max + grow_size;
-		yyg->yy_buffer_stack = (struct yy_buffer_state**)rexgen_realloc
-								(yyg->yy_buffer_stack,
-								num_to_alloc * sizeof(struct yy_buffer_state*)
-								, yyscanner);
-		if ( ! yyg->yy_buffer_stack )
-			YY_FATAL_ERROR( "out of dynamic memory in rexgen_ensure_buffer_stack()" );
+  if (yyg->yy_buffer_stack_top >= (yyg->yy_buffer_stack_max) - 1) {
 
-		/* zero only the new slots.*/
-		memset(yyg->yy_buffer_stack + yyg->yy_buffer_stack_max, 0, grow_size * sizeof(struct yy_buffer_state*));
-		yyg->yy_buffer_stack_max = num_to_alloc;
-	}
+    /* Increase the buffer to prepare for a possible push. */
+    int grow_size = 8 /* arbitrary grow size */;
+
+    num_to_alloc = yyg->yy_buffer_stack_max + grow_size;
+    yyg->yy_buffer_stack = (struct yy_buffer_state**)rexgen_realloc
+                           (yyg->yy_buffer_stack,
+                            num_to_alloc * sizeof(struct yy_buffer_state*)
+                            , yyscanner);
+    if ( ! yyg->yy_buffer_stack )
+      YY_FATAL_ERROR( "out of dynamic memory in rexgen_ensure_buffer_stack()" );
+
+    /* zero only the new slots.*/
+    memset(yyg->yy_buffer_stack + yyg->yy_buffer_stack_max, 0, grow_size * sizeof(struct yy_buffer_state*));
+    yyg->yy_buffer_stack_max = num_to_alloc;
+  }
 }
 
 /** Setup the input buffer state to scan directly from a user-specified character buffer.
  * @param base the character buffer
  * @param size the size in bytes of the character buffer
  * @param yyscanner The scanner object.
- * @return the newly allocated buffer state object. 
+ * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE rexgen__scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscanner)
-{
-	YY_BUFFER_STATE b;
-    
-	if ( size < 2 ||
-	     base[size-2] != YY_END_OF_BUFFER_CHAR ||
-	     base[size-1] != YY_END_OF_BUFFER_CHAR )
-		/* They forgot to leave room for the EOB's. */
-		return 0;
+YY_BUFFER_STATE rexgen__scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscanner) {
+  YY_BUFFER_STATE b;
 
-	b = (YY_BUFFER_STATE) rexgen_alloc(sizeof( struct yy_buffer_state ) ,yyscanner );
-	if ( ! b )
-		YY_FATAL_ERROR( "out of dynamic memory in rexgen__scan_buffer()" );
+  if ( size < 2 ||
+       base[size-2] != YY_END_OF_BUFFER_CHAR ||
+       base[size-1] != YY_END_OF_BUFFER_CHAR )
+    /* They forgot to leave room for the EOB's. */
+    return 0;
 
-	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
-	b->yy_buf_pos = b->yy_ch_buf = base;
-	b->yy_is_our_buffer = 0;
-	b->yy_input_file = 0;
-	b->yy_n_chars = b->yy_buf_size;
-	b->yy_is_interactive = 0;
-	b->yy_at_bol = 1;
-	b->yy_fill_buffer = 0;
-	b->yy_buffer_status = YY_BUFFER_NEW;
+  b = (YY_BUFFER_STATE) rexgen_alloc(sizeof( struct yy_buffer_state ) ,yyscanner );
+  if ( ! b )
+    YY_FATAL_ERROR( "out of dynamic memory in rexgen__scan_buffer()" );
 
-	rexgen__switch_to_buffer(b ,yyscanner );
+  b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
+  b->yy_buf_pos = b->yy_ch_buf = base;
+  b->yy_is_our_buffer = 0;
+  b->yy_input_file = 0;
+  b->yy_n_chars = b->yy_buf_size;
+  b->yy_is_interactive = 0;
+  b->yy_at_bol = 1;
+  b->yy_fill_buffer = 0;
+  b->yy_buffer_status = YY_BUFFER_NEW;
 
-	return b;
+  rexgen__switch_to_buffer(b ,yyscanner );
+
+  return b;
 }
 
 /** Setup the input buffer state to scan a string. The next call to rexgen_lex() will
@@ -1600,10 +1551,9 @@ YY_BUFFER_STATE rexgen__scan_buffer  (char * base, yy_size_t  size , yyscan_t yy
  * @note If you want to scan bytes that may contain NUL values, then use
  *       rexgen__scan_bytes() instead.
  */
-YY_BUFFER_STATE rexgen__scan_string (yyconst char * yystr , yyscan_t yyscanner)
-{
-    
-	return rexgen__scan_bytes(yystr,strlen(yystr) ,yyscanner);
+YY_BUFFER_STATE rexgen__scan_string (yyconst char * yystr , yyscan_t yyscanner) {
+
+  return rexgen__scan_bytes(yystr,strlen(yystr) ,yyscanner);
 }
 
 /** Setup the input buffer state to scan the given bytes. The next call to rexgen_lex() will
@@ -1613,44 +1563,42 @@ YY_BUFFER_STATE rexgen__scan_string (yyconst char * yystr , yyscan_t yyscanner)
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE rexgen__scan_bytes  (yyconst char * yybytes, int  _yybytes_len , yyscan_t yyscanner)
-{
-	YY_BUFFER_STATE b;
-	char *buf;
-	yy_size_t n;
-	int i;
-    
-	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = _yybytes_len + 2;
-	buf = (char *) rexgen_alloc(n ,yyscanner );
-	if ( ! buf )
-		YY_FATAL_ERROR( "out of dynamic memory in rexgen__scan_bytes()" );
+YY_BUFFER_STATE rexgen__scan_bytes  (yyconst char * yybytes, int  _yybytes_len , yyscan_t yyscanner) {
+  YY_BUFFER_STATE b;
+  char *buf;
+  yy_size_t n;
+  int i;
 
-	for ( i = 0; i < _yybytes_len; ++i )
-		buf[i] = yybytes[i];
+  /* Get memory for full buffer, including space for trailing EOB's. */
+  n = _yybytes_len + 2;
+  buf = (char *) rexgen_alloc(n ,yyscanner );
+  if ( ! buf )
+    YY_FATAL_ERROR( "out of dynamic memory in rexgen__scan_bytes()" );
 
-	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
+  for ( i = 0; i < _yybytes_len; ++i )
+    buf[i] = yybytes[i];
 
-	b = rexgen__scan_buffer(buf,n ,yyscanner);
-	if ( ! b )
-		YY_FATAL_ERROR( "bad buffer in rexgen__scan_bytes()" );
+  buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
 
-	/* It's okay to grow etc. this buffer, and we should throw it
-	 * away when we're done.
-	 */
-	b->yy_is_our_buffer = 1;
+  b = rexgen__scan_buffer(buf,n ,yyscanner);
+  if ( ! b )
+    YY_FATAL_ERROR( "bad buffer in rexgen__scan_bytes()" );
 
-	return b;
+  /* It's okay to grow etc. this buffer, and we should throw it
+   * away when we're done.
+   */
+  b->yy_is_our_buffer = 1;
+
+  return b;
 }
 
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
 #endif
 
-static void yy_fatal_error (yyconst char* msg , yyscan_t yyscanner)
-{
-    	(void) fprintf( stderr, "%s\n", msg );
-	exit( YY_EXIT_FAILURE );
+static void yy_fatal_error (yyconst char* msg , yyscan_t yyscanner) {
+  (void) fprintf( stderr, "%s\n", msg );
+  exit( YY_EXIT_FAILURE );
 }
 
 /* Redefine yyless() so it works in section 3 code. */
@@ -1675,113 +1623,103 @@ static void yy_fatal_error (yyconst char* msg , yyscan_t yyscanner)
 /** Get the user-defined data for this scanner.
  * @param yyscanner The scanner object.
  */
-YY_EXTRA_TYPE rexgen_get_extra  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yyextra;
+YY_EXTRA_TYPE rexgen_get_extra  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yyextra;
 }
 
 /** Get the current line number.
  * @param yyscanner The scanner object.
  */
-int rexgen_get_lineno  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    
-        if (! YY_CURRENT_BUFFER)
-            return 0;
-    
-    return yylineno;
+int rexgen_get_lineno  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+
+  if (! YY_CURRENT_BUFFER)
+    return 0;
+
+  return yylineno;
 }
 
 /** Get the current column number.
  * @param yyscanner The scanner object.
  */
-int rexgen_get_column  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    
-        if (! YY_CURRENT_BUFFER)
-            return 0;
-    
-    return yycolumn;
+int rexgen_get_column  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+
+  if (! YY_CURRENT_BUFFER)
+    return 0;
+
+  return yycolumn;
 }
 
 /** Get the input stream.
  * @param yyscanner The scanner object.
  */
-FILE *rexgen_get_in  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yyin;
+FILE *rexgen_get_in  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yyin;
 }
 
 /** Get the output stream.
  * @param yyscanner The scanner object.
  */
-FILE *rexgen_get_out  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yyout;
+FILE *rexgen_get_out  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yyout;
 }
 
 /** Get the length of the current token.
  * @param yyscanner The scanner object.
  */
-int rexgen_get_leng  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yyleng;
+int rexgen_get_leng  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yyleng;
 }
 
 /** Get the current token.
  * @param yyscanner The scanner object.
  */
 
-char *rexgen_get_text  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yytext;
+char *rexgen_get_text  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yytext;
 }
 
 /** Set the user-defined data. This data is never touched by the scanner.
  * @param user_defined The data to be associated with this scanner.
  * @param yyscanner The scanner object.
  */
-void rexgen_set_extra (YY_EXTRA_TYPE  user_defined , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yyextra = user_defined ;
+void rexgen_set_extra (YY_EXTRA_TYPE  user_defined , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yyextra = user_defined ;
 }
 
 /** Set the current line number.
  * @param line_number
  * @param yyscanner The scanner object.
  */
-void rexgen_set_lineno (int  line_number , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+void rexgen_set_lineno (int  line_number , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-        /* lineno is only valid if an input buffer exists. */
-        if (! YY_CURRENT_BUFFER )
-           yy_fatal_error( "rexgen_set_lineno called with no buffer" , yyscanner); 
-    
-    yylineno = line_number;
+  /* lineno is only valid if an input buffer exists. */
+  if (! YY_CURRENT_BUFFER )
+    yy_fatal_error( "rexgen_set_lineno called with no buffer" , yyscanner);
+
+  yylineno = line_number;
 }
 
 /** Set the current column.
  * @param line_number
  * @param yyscanner The scanner object.
  */
-void rexgen_set_column (int  column_no , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+void rexgen_set_column (int  column_no , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-        /* column is only valid if an input buffer exists. */
-        if (! YY_CURRENT_BUFFER )
-           yy_fatal_error( "rexgen_set_column called with no buffer" , yyscanner); 
-    
-    yycolumn = column_no;
+  /* column is only valid if an input buffer exists. */
+  if (! YY_CURRENT_BUFFER )
+    yy_fatal_error( "rexgen_set_column called with no buffer" , yyscanner);
+
+  yycolumn = column_no;
 }
 
 /** Set the input stream. This does not discard the current
@@ -1790,56 +1728,48 @@ void rexgen_set_column (int  column_no , yyscan_t yyscanner)
  * @param yyscanner The scanner object.
  * @see rexgen__switch_to_buffer
  */
-void rexgen_set_in (FILE *  in_str , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yyin = in_str ;
+void rexgen_set_in (FILE *  in_str , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yyin = in_str ;
 }
 
-void rexgen_set_out (FILE *  out_str , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yyout = out_str ;
+void rexgen_set_out (FILE *  out_str , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yyout = out_str ;
 }
 
-int rexgen_get_debug  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yy_flex_debug;
+int rexgen_get_debug  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yy_flex_debug;
 }
 
-void rexgen_set_debug (int  bdebug , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yy_flex_debug = bdebug ;
+void rexgen_set_debug (int  bdebug , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yy_flex_debug = bdebug ;
 }
 
 /* Accessor methods for yylval and yylloc */
 
-YYSTYPE * rexgen_get_lval  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yylval;
+YYSTYPE * rexgen_get_lval  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yylval;
 }
 
-void rexgen_set_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yylval = yylval_param;
+void rexgen_set_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yylval = yylval_param;
 }
 
-YYLTYPE *rexgen_get_lloc  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    return yylloc;
+YYLTYPE *rexgen_get_lloc  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  return yylloc;
 }
-    
-void rexgen_set_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    yylloc = yylloc_param;
+
+void rexgen_set_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  yylloc = yylloc_param;
 }
-    
+
 /* User-visible API */
 
 /* rexgen_lex_init is special because it creates the scanner itself, so it is
@@ -1850,22 +1780,22 @@ void rexgen_set_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
 int rexgen_lex_init(yyscan_t* ptr_yy_globals)
 
 {
-    if (ptr_yy_globals == NULL){
-        errno = EINVAL;
-        return 1;
-    }
+  if (ptr_yy_globals == NULL) {
+    errno = EINVAL;
+    return 1;
+  }
 
-    *ptr_yy_globals = (yyscan_t) rexgen_alloc ( sizeof( struct yyguts_t ), NULL );
+  *ptr_yy_globals = (yyscan_t) rexgen_alloc ( sizeof( struct yyguts_t ), NULL );
 
-    if (*ptr_yy_globals == NULL){
-        errno = ENOMEM;
-        return 1;
-    }
+  if (*ptr_yy_globals == NULL) {
+    errno = ENOMEM;
+    return 1;
+  }
 
-    /* By setting to 0xAA, we expose bugs in yy_init_globals. Leave at 0x00 for releases. */
-    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+  /* By setting to 0xAA, we expose bugs in yy_init_globals. Leave at 0x00 for releases. */
+  memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
 
-    return yy_init_globals ( *ptr_yy_globals );
+  return yy_init_globals ( *ptr_yy_globals );
 }
 
 /* rexgen_lex_init_extra has the same functionality as rexgen_lex_init, but follows the
@@ -1879,92 +1809,90 @@ int rexgen_lex_init(yyscan_t* ptr_yy_globals)
 int rexgen_lex_init_extra(YY_EXTRA_TYPE yy_user_defined,yyscan_t* ptr_yy_globals )
 
 {
-    struct yyguts_t dummy_yyguts;
+  struct yyguts_t dummy_yyguts;
 
-    rexgen_set_extra (yy_user_defined, &dummy_yyguts);
+  rexgen_set_extra (yy_user_defined, &dummy_yyguts);
 
-    if (ptr_yy_globals == NULL){
-        errno = EINVAL;
-        return 1;
-    }
-	
-    *ptr_yy_globals = (yyscan_t) rexgen_alloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
-	
-    if (*ptr_yy_globals == NULL){
-        errno = ENOMEM;
-        return 1;
-    }
-    
-    /* By setting to 0xAA, we expose bugs in
-    yy_init_globals. Leave at 0x00 for releases. */
-    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
-    
-    rexgen_set_extra (yy_user_defined, *ptr_yy_globals);
-    
-    return yy_init_globals ( *ptr_yy_globals );
+  if (ptr_yy_globals == NULL) {
+    errno = EINVAL;
+    return 1;
+  }
+
+  *ptr_yy_globals = (yyscan_t) rexgen_alloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
+
+  if (*ptr_yy_globals == NULL) {
+    errno = ENOMEM;
+    return 1;
+  }
+
+  /* By setting to 0xAA, we expose bugs in
+  yy_init_globals. Leave at 0x00 for releases. */
+  memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
+
+  rexgen_set_extra (yy_user_defined, *ptr_yy_globals);
+
+  return yy_init_globals ( *ptr_yy_globals );
 }
 
-static int yy_init_globals (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    /* Initialization is the same as for the non-reentrant scanner.
-     * This function is called from rexgen_lex_destroy(), so don't allocate here.
-     */
+static int yy_init_globals (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+  /* Initialization is the same as for the non-reentrant scanner.
+   * This function is called from rexgen_lex_destroy(), so don't allocate here.
+   */
 
-    yyg->yy_buffer_stack = 0;
-    yyg->yy_buffer_stack_top = 0;
-    yyg->yy_buffer_stack_max = 0;
-    yyg->yy_c_buf_p = (char *) 0;
-    yyg->yy_init = 0;
-    yyg->yy_start = 0;
+  yyg->yy_buffer_stack = 0;
+  yyg->yy_buffer_stack_top = 0;
+  yyg->yy_buffer_stack_max = 0;
+  yyg->yy_c_buf_p = (char *) 0;
+  yyg->yy_init = 0;
+  yyg->yy_start = 0;
 
-    yyg->yy_start_stack_ptr = 0;
-    yyg->yy_start_stack_depth = 0;
-    yyg->yy_start_stack =  NULL;
+  yyg->yy_start_stack_ptr = 0;
+  yyg->yy_start_stack_depth = 0;
+  yyg->yy_start_stack =  NULL;
 
-/* Defined in main.c */
+  /* Defined in main.c */
 #ifdef YY_STDINIT
-    yyin = stdin;
-    yyout = stdout;
+  yyin = stdin;
+  yyout = stdout;
 #else
-    yyin = (FILE *) 0;
-    yyout = (FILE *) 0;
+  yyin = (FILE *) 0;
+  yyout = (FILE *) 0;
 #endif
 
-    /* For future reference: Set errno on error, since we are called by
-     * rexgen_lex_init()
-     */
-    return 0;
+  /* For future reference: Set errno on error, since we are called by
+   * rexgen_lex_init()
+   */
+  return 0;
 }
 
 /* rexgen_lex_destroy is for both reentrant and non-reentrant scanners. */
-int rexgen_lex_destroy  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+int rexgen_lex_destroy  (yyscan_t yyscanner) {
+  struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-    /* Pop the buffer stack, destroying each element. */
-	while(YY_CURRENT_BUFFER){
-		rexgen__delete_buffer(YY_CURRENT_BUFFER ,yyscanner );
-		YY_CURRENT_BUFFER_LVALUE = NULL;
-		rexgen_pop_buffer_state(yyscanner);
-	}
+  /* Pop the buffer stack, destroying each element. */
+  while(YY_CURRENT_BUFFER) {
+    rexgen__delete_buffer(YY_CURRENT_BUFFER ,yyscanner );
+    YY_CURRENT_BUFFER_LVALUE = NULL;
+    rexgen_pop_buffer_state(yyscanner);
+  }
 
-	/* Destroy the stack itself. */
-	rexgen_free(yyg->yy_buffer_stack ,yyscanner);
-	yyg->yy_buffer_stack = NULL;
+  /* Destroy the stack itself. */
+  rexgen_free(yyg->yy_buffer_stack ,yyscanner);
+  yyg->yy_buffer_stack = NULL;
 
-    /* Destroy the start condition stack. */
-        rexgen_free(yyg->yy_start_stack ,yyscanner );
-        yyg->yy_start_stack = NULL;
+  /* Destroy the start condition stack. */
+  rexgen_free(yyg->yy_start_stack ,yyscanner );
+  yyg->yy_start_stack = NULL;
 
-    /* Reset the globals. This is important in a non-reentrant scanner so the next time
-     * rexgen_lex() is called, initialization will occur. */
-    yy_init_globals( yyscanner);
+  /* Reset the globals. This is important in a non-reentrant scanner so the next time
+   * rexgen_lex() is called, initialization will occur. */
+  yy_init_globals( yyscanner);
 
-    /* Destroy the main struct (reentrant only). */
-    rexgen_free ( yyscanner , yyscanner );
-    yyscanner = NULL;
-    return 0;
+  /* Destroy the main struct (reentrant only). */
+  rexgen_free ( yyscanner , yyscanner );
+  yyscanner = NULL;
+  return 0;
 }
 
 /*
@@ -1972,45 +1900,40 @@ int rexgen_lex_destroy  (yyscan_t yyscanner)
  */
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy (char* s1, yyconst char * s2, int n , yyscan_t yyscanner)
-{
-	register int i;
-	for ( i = 0; i < n; ++i )
-		s1[i] = s2[i];
+static void yy_flex_strncpy (char* s1, yyconst char * s2, int n , yyscan_t yyscanner) {
+  register int i;
+  for ( i = 0; i < n; ++i )
+    s1[i] = s2[i];
 }
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
-{
-	register int n;
-	for ( n = 0; s[n]; ++n )
-		;
+static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner) {
+  register int n;
+  for ( n = 0; s[n]; ++n )
+    ;
 
-	return n;
+  return n;
 }
 #endif
 
-void *rexgen_alloc (yy_size_t  size , yyscan_t yyscanner)
-{
-	return (void *) malloc( size );
+void *rexgen_alloc (yy_size_t  size , yyscan_t yyscanner) {
+  return (void *) malloc( size );
 }
 
-void *rexgen_realloc  (void * ptr, yy_size_t  size , yyscan_t yyscanner)
-{
-	/* The cast to (char *) in the following accommodates both
-	 * implementations that use char* generic pointers, and those
-	 * that use void* generic pointers.  It works with the latter
-	 * because both ANSI C and C++ allow castless assignment from
-	 * any pointer type to void*, and deal with argument conversions
-	 * as though doing an assignment.
-	 */
-	return (void *) realloc( (char *) ptr, size );
+void *rexgen_realloc  (void * ptr, yy_size_t  size , yyscan_t yyscanner) {
+  /* The cast to (char *) in the following accommodates both
+   * implementations that use char* generic pointers, and those
+   * that use void* generic pointers.  It works with the latter
+   * because both ANSI C and C++ allow castless assignment from
+   * any pointer type to void*, and deal with argument conversions
+   * as though doing an assignment.
+   */
+  return (void *) realloc( (char *) ptr, size );
 }
 
-void rexgen_free (void * ptr , yyscan_t yyscanner)
-{
-	free( (char *) ptr );	/* see rexgen_realloc() for (char *) cast */
+void rexgen_free (void * ptr , yyscan_t yyscanner) {
+  free( (char *) ptr );	/* see rexgen_realloc() for (char *) cast */
 }
 
 #define YYTABLES_NAME "yytables"

@@ -26,37 +26,35 @@
 */
 
 
-#include "rexgenparsercontext.h"
+#include <librexgen/parser/rexgenparsercontext.h>
 #include <algorithm>
+#include <utility>
 
-using namespace std;
-
-void RexgenParserContext::updateAllGroupReferences()
-{
-  for_each(groups.cbegin(), groups.cend(), [this](pair<int,Regex*> p) {
+void RexgenParserContext::updateAllGroupReferences() {
+  for_each(groups.cbegin(), groups.cend(), [this](pair<int, Regex*> p) {
     updateGroupReferences(p.second);
   });
 }
 
-void RexgenParserContext::updateGroupReferences(const Regex* re)
-{
-  for_each(groupRefs.begin(), groupRefs.end(), [re](pair<int,GroupReference*> gr) {
+void RexgenParserContext::updateGroupReferences(const Regex* re) {
+  for_each(groupRefs.begin(), groupRefs.end(),
+      [re](pair<int, GroupReference*> gr) {
     if (gr.first == re->getGroupId()) {
       gr.second->setRegex(re);
     }
   });
 }
 
-bool RexgenParserContext::hasInvalidGroupReferences() const
-{
+bool RexgenParserContext::hasInvalidGroupReferences() const {
   bool invalids = false;
-  for_each(groupRefs.cbegin(), groupRefs.cend(), 
-    [&invalids](pair<int,GroupReference*> gr) { invalids |= (gr.second->getRegex() == NULL); });
+  for_each(groupRefs.cbegin(), groupRefs.cend(),
+  [&invalids](pair<int, GroupReference*> gr) {
+    invalids |= (gr.second->getRegex() == NULL);
+  });
   return invalids;
 }
 
-RexgenParserContext::~RexgenParserContext()
-{
+RexgenParserContext::~RexgenParserContext() {
   DestroyScanner();
 }
 

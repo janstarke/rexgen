@@ -26,92 +26,84 @@
 */
 
 
-#include "compoundregexiterator.h"
+#include <librexgen/iterator/compoundregexiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/unicode.h>
 #include <assert.h>
-#include "../debug.h"
 #include <algorithm>
-#include "../unicode.h"
-
-using namespace std;
 
 CompoundRegexIterator::CompoundRegexIterator(int _id)
-  : Iterator(_id)
-{
+  : Iterator(_id) {
 }
 
-void CompoundRegexIterator::reset()
-{
+void CompoundRegexIterator::reset() {
   Iterator::reset();
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {i->reset();});
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
+    i->reset();
+  });
   state = resetted;
 }
 
-void CompoundRegexIterator::next()
-{
-  assert( hasNext() );
-  
+void CompoundRegexIterator::next() {
+  assert(hasNext());
+
   bool found_next = false;
   Iterator::next();
   state = not_usable;
-  for (auto i = iterators.begin(); i!=iterators.end(); ++i)
-  {
-    if ((*i)->canUseValue() && ! found_next)
-    {
+  for (auto i = iterators.begin(); i != iterators.end(); ++i) {
+    if ((*i)->canUseValue() && !found_next) {
       if ((*i)->hasNext()) {
-	(*i)->next();
-	found_next = true;
-	state = usable;
+        (*i)->next();
+        found_next = true;
+        state = usable;
       } else {
-	(*i)->reset();
-	if ((*i)->hasNext()) {
-	  (*i)->next();
-	  state = usable;
-	}
+        (*i)->reset();
+        if ((*i)->hasNext()) {
+          (*i)->next();
+          state = usable;
+        }
       }
-    } else if (! (*i)->canUseValue())
-    {
+    } else if (!(*i)->canUseValue()) {
       if ((*i)->hasNext()) {
-	(*i)->next();
-	state = usable;
+        (*i)->next();
+        state = usable;
       }
     }
   }
 }
 
-int CompoundRegexIterator::value(char_type* dst, ssize_t size) const
-{
- assert(canUseValue());
- int length = 0;
- for_each(iterators.begin(), iterators.end(),
-   [&length, &dst, &size](Iterator* i){
-      int l = i->value(dst, size);
-      dst += l;
-      size -= l;
-      length += l;
+int CompoundRegexIterator::value(char_type* dst, ssize_t size) const {
+  assert(canUseValue());
+  int length = 0;
+  for_each(iterators.begin(), iterators.end(),
+  [&length, &dst, &size](Iterator* i) {
+    int l = i->value(dst, size);
+    dst += l;
+    size -= l;
+    length += l;
   });
   return length;
 }
 
-bool CompoundRegexIterator::hasNext() const
-{
+bool CompoundRegexIterator::hasNext() const {
   bool has_next = false;
   if (state == not_usable) {
     return false;
   }
-  for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i){has_next |= i->hasNext();});
+  for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {
+    has_next |= i->hasNext();
+  });
   return has_next;
 }
 
-void CompoundRegexIterator::addChild(Iterator* i)
-{
+void CompoundRegexIterator::addChild(Iterator* i) {
   iterators.push_back(i);
 }
 
-int CompoundRegexIterator::toString(char_type* dst, ssize_t size) const
-{
+int CompoundRegexIterator::toString(char_type* dst, ssize_t size) const {
   return utf_snprintf(dst, size, "CompoundRegexIterator %d (%d children)",
-	       getId(),
-	       iterators.size());
+                      getId(),
+                      iterators.size());
 }
 
 

@@ -25,45 +25,43 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "regexalternativesiterator.h"
+#include <librexgen/iterator/regexalternativesiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/unicode.h>
 #include <assert.h>
 #include <cstring>
-#include <vector>
-#include "../debug.h"
-#include "../unicode.h"
+#include <deque>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
-: Iterator(_id), iter(iterators.begin())
-{
+  : Iterator(_id), iter(iterators.begin()) {
   state = resetted;
 }
 
 
-void RegexAlternativesIterator::reset()
-{
+void RegexAlternativesIterator::reset() {
   ENTER_METHOD;
   Iterator::reset();
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {i->reset();});
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
+    i->reset();
+  });
   iter = iterators.begin();
   state = resetted;
   LEAVE_METHOD;
 }
 
-int RegexAlternativesIterator::value(char_type* dst, ssize_t size) const
-{
+int RegexAlternativesIterator::value(char_type* dst, ssize_t size) const {
   ENTER_METHOD;
   assert(canUseValue());
   assert(iter != iterators.end());
-  RETURN ((*iter)->value(dst, size));
+  RETURN((*iter)->value(dst, size));
 }
 
 
-void RegexAlternativesIterator::next()
-{
+void RegexAlternativesIterator::next() {
   ENTER_METHOD;
-  assert( hasNext() );
+  assert(hasNext());
   Iterator::next();
-  
+
   if (state == resetted) {
     iter = iterators.begin();
     assert((*iter)->hasNext());
@@ -72,13 +70,13 @@ void RegexAlternativesIterator::next()
     state = usable;
     LEAVE_METHOD;
   }
-  
+
   if ((*iter)->hasNext()) {
     ((*iter)->next());
     state = usable;
     LEAVE_METHOD;
   }
-  
+
   /* use the next iterator */
   ++iter;
   if (iter == iterators.end()) {
@@ -86,7 +84,7 @@ void RegexAlternativesIterator::next()
     assert(canUseValue());
     LEAVE_METHOD;
   }
-  
+
   if ((*iter)->hasNext()) {
     (*iter)->next();
     state = usable;
@@ -94,63 +92,58 @@ void RegexAlternativesIterator::next()
     state = not_usable;
     assert(canUseValue());
   }
-  
+
   assert(canUseValue());
   LEAVE_METHOD;
 }
 
-bool RegexAlternativesIterator::hasNext() const
-{
+bool RegexAlternativesIterator::hasNext() const {
   ENTER_METHOD;
   if (iterators.size() == 0 || state == not_usable) {
     /* if we don't have any iterator, you cannot call next() */
     RETURN(false);
   }
-  
+
   if (state == resetted) {
     /* we can return true here,
      * because we know that we have at least one iterator
      */
     RETURN(true);
   }
-  
+
   if (iter == iterators.end()) {
     RETURN(false);
   }
-  
-  if ((*iter)->hasNext()) { 
+
+  if ((*iter)->hasNext()) {
     RETURN(true);
   } else {
     deque<Iterator*>::iterator tmp = iter;
     ++tmp;
     RETURN(tmp != iterators.end());
   }
-  
 }
 
-void RegexAlternativesIterator::addChild(Iterator* i)
-{
+void RegexAlternativesIterator::addChild(Iterator* i) {
   ENTER_METHOD;
   iterators.push_back(i);
   iter = iterators.begin();
   LEAVE_METHOD;
 }
 
-bool RegexAlternativesIterator::canUseValue() const
-{
-    if (! Iterator::canUseValue() ) {
-      return false;
-    }
-    if (iter == iterators.end()) {
-      return false;
-    }
-    return ((*iter)->canUseValue());
+bool RegexAlternativesIterator::canUseValue() const {
+  if (!Iterator::canUseValue()) {
+    return false;
+  }
+  if (iter == iterators.end()) {
+    return false;
+  }
+  return ((*iter)->canUseValue());
 }
 
 
-int RegexAlternativesIterator::toString(char_type* dst, ssize_t size) const
-{
+int RegexAlternativesIterator::toString(char_type* dst, ssize_t size) const {
   return utf_snprintf(dst, size, "RegexAlternativesIterator %d (%d children)",
-	       getId(),
-	       iterators.size());
+                      getId(),
+                      iterators.size());
 }
