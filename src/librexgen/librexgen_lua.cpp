@@ -33,8 +33,6 @@
 #include <uniconv.h>
 
 #if REXGEN_DEBUG == 1
-#include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
 #include <execinfo.h>
 #include <signal.h>
 #include <librexgen/stacktrace.h>
@@ -80,10 +78,7 @@ int luaopen_rexgen(lua_State* L) {
   luaL_newlib(L, rexgen_lib);
 #ifdef REXGEN_DEBUG
 #if REXGEN_DEBUG == 1
-  std::string initFileName = "log4cpp.properties";
-  log4cpp::PropertyConfigurator::configure(initFileName);
-
-  signal(SIGSEGV, handler);
+  //signal(SIGSEGV, handler);
   signal(SIGABRT, handler);
 #endif
 #endif
@@ -93,7 +88,7 @@ int luaopen_rexgen(lua_State* L) {
 extern "C"
 int rexgen_iter(lua_State* L) {
   Iterator *iter =
-    reinterpret_cast<Iterator*>(lua_touserdata(L, lua_upvalueindex(1)));
+    * reinterpret_cast<Iterator**>(lua_touserdata(L, lua_upvalueindex(1)));
   if (iter->hasNext()) {
     iter->next();
     rexgen_value(L, iter);

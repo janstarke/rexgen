@@ -1,3 +1,5 @@
+#!/usr/bin/lua5.2
+package.cpath = '${CMAKE_INSTALL_PREFIX}/lib/lib?.so'
 local rexgen = require 'rexgen'
 
 if (#arg ~= 1 and #arg ~= 2) then
@@ -24,7 +26,7 @@ end
 
 local words, tree = rexgen.parse_regex(regex, ignoreCase)
 
----[[
+--[[
 print(tree)
 --]]
 

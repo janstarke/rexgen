@@ -28,7 +28,6 @@
 
 #ifndef ITERATOR_H
 #define ITERATOR_H
-#include <log4cpp/Category.hh>
 #include <assert.h>
 #include "../unicode.h"
 
@@ -36,12 +35,12 @@ class Iterator
 {
 public:
   Iterator(int _id):
-    LOGGER(log4cpp::Category::getRoot()), state(resetted), 
+    state(resetted), 
     id(_id),
     can_use_value(false) {}
   
   virtual bool hasNext() const { return false; }
-  virtual void next() {}
+  virtual void next() {};
   virtual int value(char_type* /* dst */, ssize_t /* size */ ) const { return 0; }
   virtual void reset() { state = resetted; }
   
@@ -51,7 +50,6 @@ public:
   virtual int toString(char_type* /* dst */, ssize_t /* size */) { return 0; }
   
 protected:
-  log4cpp::Category& LOGGER;
   
   enum {
     resetted,

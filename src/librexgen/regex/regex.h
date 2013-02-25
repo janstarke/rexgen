@@ -31,7 +31,6 @@
 #include "quantifier.h"
 #include "../iterator/iterator.h"
 #include <iostream>
-#include <log4cpp/Category.hh>
 #include "../unicode.h"
 #include "../debug.h"
 #include <librexgen/iterator/iteratorstate.h>
@@ -46,7 +45,7 @@ typedef enum {
 
 class Regex  {
 public:
-  Regex() : LOGGER(log4cpp::Category::getRoot()), quantifier(1,1) {id=createId();}
+  Regex() : quantifier(1,1) {id=createId();}
   
   inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
   inline unsigned int getMaxOccurs() const { return quantifier.getMax(); }
@@ -89,7 +88,6 @@ public:
   virtual int getGroupId() const { return -1; }
   
 protected:
-  log4cpp::Category& LOGGER;
   
   virtual int createId() {
     return ++next_id;

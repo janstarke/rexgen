@@ -21,64 +21,54 @@ char* spaces(char c, int s);
 #if REXGEN_DEBUG==1
 #define ENTER_METHOD do {		\
   enter_level();			\
-  if (LOGGER.isDebugEnabled()) {	\
     size_t len = 0;			\
     int s = 0;				\
-    LOGGER.debug("%2d %s%s:%d::%s() BEGIN",\
+    fprintf(stderr, "%2d %s%s:%d::%s() BEGIN\n",\
 		 get_level(),		\
 		 spaces('+',get_level()),\
 		 abi::__cxa_demangle(typeid(*this).name(), 0, &len, &s), \
 		 getId(), __FUNCTION__);		\
-  }					\
 } while(0)
 
 #define LEAVE_METHOD do {		\
-  if (LOGGER.isDebugEnabled()) {	\
     size_t len = 0;			\
     int s = 0;				\
-    LOGGER.debug("%2d %s%s:%d::%s()",	\
+    fprintf(stderr, "%2d %s%s:%d::%s()\n",	\
 		get_level(),		\
 		spaces('-',get_level()),\
 		 abi::__cxa_demangle(typeid(*this).name(), 0, &len, &s), \
 		 getId(), __FUNCTION__);	\
-  }					\
-  leave_level();			\
+  leave_level();                        \
   return;				\
 } while (0)
 
 #define RETURN(res) do {		\
   int x = res;				\
-  if (LOGGER.isDebugEnabled()) {	\
     size_t len = 0;			\
     int s = 0;				\
-    LOGGER.debug("%2d %s%s:%d::%s() = %d",	\
+    fprintf(stderr, "%2d %s%s:%d::%s() = %d\n",	\
 		get_level(),		\
 		spaces('-',get_level()),\
 		 abi::__cxa_demangle(typeid(*this).name(), 0, &len, &s), \
 		 getId(), __FUNCTION__, x);	\
-  }					\
   leave_level();			\
   return x;				\
 } while (0)
 
 #define TRACE0(msg) do {		\
-  if (LOGGER.isDebugEnabled()) {	\
     size_t len = 0;			\
     int s = 0;				\
-    LOGGER.debug("%s::%s(): %s",	\
+    fprintf(stderr, "%s::%s(): %s\n",	\
 		 abi::__cxa_demangle(typeid(*this).name(), 0, &len, &s), \
 		 __FUNCTION__, msg);		\
-  }					\
   } while (0)
   
 #define TRACE_INT(msg, d) do {		\
-  if (LOGGER.isDebugEnabled()) {	\
     size_t len = 0;			\
     int s = 0;				\
-    LOGGER.debug("%s::%s(): " #msg,	\
+    fprintf(stderr, "%s::%s(): " #msg "\n",	\
 		 abi::__cxa_demangle(typeid(*this).name(), 0, &len, &s), \
 		 __FUNCTION__, d );		\
-  }					\
   } while (0)
 
 #else /* ! REXGEN_DEBUG != 1 */

@@ -153,7 +153,7 @@ void IteratorPermuter<REGEX>::next()
   
   assert(canUseValue());
   
-  TRACE_INT("next2: current length: %d", iterators.size());
+  TRACE_INT("next2: current length: %d", (int)iterators.size());
   LEAVE_METHOD;
 }
 
