@@ -135,7 +135,7 @@ void IteratorPermuter<REGEX>::next()
   if (state == resetted) {
     state = usable;
     for_each (iterators.begin(), iterators.end(), 
-      [&state](Iterator* i) { if (i->hasNext()) { i->next(); } else { state = not_usable; } });
+      [&](Iterator* i) { if (i->hasNext()) { i->next(); } else { state = not_usable; } });
     LEAVE_METHOD;
   }
    

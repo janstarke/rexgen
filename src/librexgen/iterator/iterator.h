@@ -28,8 +28,9 @@
 
 #ifndef ITERATOR_H
 #define ITERATOR_H
+
 #include <assert.h>
-#include "../unicode.h"
+#include <librexgen/unicode.h>
 
 class Iterator
 {
@@ -38,6 +39,7 @@ public:
     state(resetted), 
     id(_id),
     can_use_value(false) {}
+  virtual ~Iterator() {}
   
   virtual bool hasNext() const { return false; }
   virtual void next() {};
