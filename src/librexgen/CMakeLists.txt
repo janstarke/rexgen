@@ -2,7 +2,19 @@
 #include(cmake/cppcheck.cmake)
 
 find_package(BISON)
+set(bison_required_version 2.5)
+if(${BISON_VERSION} MATCHES ${bison_required_version})
+else(${BISON_VERSION} MATCHES ${bison_required_version})
+  message(FATAL_ERROR "${librexgen_libname} requires at least bison ${bison_required_version}")
+endif(${BISON_VERSION} MATCHES ${bison_required_version})
+
 find_package(FLEX)
+set(flex_required_version 2.5)
+if(${BISON_VERSION} MATCHES ${flex_required_version})
+else(${BISON_VERSION} MATCHES ${flex_required_version})
+  message(FATAL_ERROR "${librexgen_libname} requires at least flex ${flex_required_version}")
+endif(${BISON_VERSION} MATCHES ${flex_required_version})
+
 ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -O2 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
 ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
