@@ -12,8 +12,6 @@ set(flex_required_version 2.5)
 check_version(${flex_required_version} ${FLEX_VERSION}
   "${librexgen_libname} requires at least flex ${flex_required_version}")
 
-ADD_DEFINITIONS("-fPIC -DREXGEN_DEBUG=0 -O2 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline ")
-ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
   PROPERTIES 
   COMPILE_FLAGS "-Wno-unused-parameter")
@@ -26,9 +24,15 @@ SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp PROPERTIES GEN
 
 ADD_FLEX_BISON_DEPENDENCY(regexlexer regexparser)
 
+if(USE_LUA)
+  set(lua_sources librexgen_lua.cpp)
+else()
+  set(lua_sources "")
+endif(USE_LUA)
+
 set(librexgen_sources
   librexgen.cpp
-  librexgen_lua.cpp
+  ${lua_sources}
   debug.cpp 
 
   regex/compoundregex.cpp
@@ -63,26 +67,18 @@ endif(COMMAND add_cppcheck)
 
 add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
 
+if (USE_LUA)
+  target_link_libraries(${librexgen_libname} unistring lua5.2)
+else()
+  target_link_libraries(${librexgen_libname} unistring)
+endif(USE_LUA)
 
-target_link_libraries(${librexgen_libname} unistring lua5.2)
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
-
-configure_file("${PROJECT_SOURCE_DIR}/rexgen/rexgen_tmpl.lua" "${PROJECT_SOURCE_DIR}/rexgen/rexgen.lua")
+set_target_properties(${librexgen_libname} PROPERTIES LINK_FLAGS ${CMAKE_SHARED_LINKER_FLAGS})
 
 install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)
-install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen/rexgen.lua" DESTINATION bin)
 
-if(CMAKE_HOST_UNIX)
-
-    install(CODE "
-    EXECUTE_PROCESS(COMMAND ln -sf lib${librexgen_libname}.so librexgen.so
-       WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/lib
-       )
-    ")
-
-    install(CODE "
-    EXECUTE_PROCESS(COMMAND ln -sf rexgen.lua rexgen
-       WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin       
-       )
-    ")
-endif(CMAKE_HOST_UNIX)
+if (USE_LUA)
+  configure_file("${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen_tmpl.lua" "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua")
+  install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua" DESTINATION bin)
+endif(USE_LUA)

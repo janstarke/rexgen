@@ -49,6 +49,7 @@ public:
     int value(char_type* dst, ssize_t size) const;
     void next();
     bool hasNext() const;
+    
     int toString(char_type* dst, ssize_t size) const;
 private:
   vector<char_type>::const_iterator begin, end;

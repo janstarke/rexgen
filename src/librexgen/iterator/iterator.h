@@ -37,8 +37,7 @@ class Iterator
 public:
   Iterator(int _id):
     state(resetted), 
-    id(_id),
-    can_use_value(false) {}
+    id(_id) {}
   virtual ~Iterator() {}
   
   virtual bool hasNext() const { return false; }
@@ -49,7 +48,7 @@ public:
   virtual bool canUseValue() const { return (state == usable); }
   
   int getId() const { return id; }
-  virtual int toString(char_type* /* dst */, ssize_t /* size */) { return 0; }
+  virtual int toString(char_type* /* dst */, ssize_t /* size */) const { return 0; }
   
 protected:
   
@@ -61,7 +60,6 @@ protected:
   
 private:
   const int id;
-  bool can_use_value;
 };
 
 #endif // ITERATOR_H

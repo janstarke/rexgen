@@ -28,11 +28,11 @@
 #ifndef __Regex_h__
 #define __Regex_h__
 
-#include "quantifier.h"
-#include "../iterator/iterator.h"
+#include <librexgen/regex/quantifier.h>
+#include <librexgen/iterator/iterator.h>
 #include <iostream>
-#include "../unicode.h"
-#include "../debug.h"
+#include <librexgen/unicode.h>
+#include <librexgen/debug.h>
 #include <librexgen/iterator/iteratorstate.h>
 
 typedef enum {
@@ -46,6 +46,7 @@ typedef enum {
 class Regex  {
 public:
   Regex() : quantifier(1,1) {id=createId();}
+  virtual ~Regex() {}
   
   inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
   inline unsigned int getMaxOccurs() const { return quantifier.getMax(); }
