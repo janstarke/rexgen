@@ -32,6 +32,7 @@
 #include "iterator.h"
 #include <string.h>
 #include "../debug.h"
+#include <vector>
 
 
 class TerminalRegexIterator : public Iterator
@@ -41,7 +42,7 @@ public:
   TerminalRegexIterator(int _id, const char_type* _terminal);
     
     void next();
-    int value(char_type* dst, ssize_t size) const;
+    void value(string_type& dst) const;
     bool hasNext() const;
     void reset();
     int toString(char_type* dst, ssize_t size) const;

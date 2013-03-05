@@ -41,7 +41,7 @@ public:
   virtual ~RegexAlternatives();
   inline void addRegex(Regex *regex) { getChildren()->push_front(regex); }
   
-  virtual inline const char_type* getXmlTag() const { return _T("alternative"); } 
+  virtual inline const char_type* getXmlTag() const { return _C("alternative"); } 
   RegexType getRegexType() const { return Alternative; }
   
   inline int getMaxSize() const;

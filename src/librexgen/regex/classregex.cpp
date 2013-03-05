@@ -67,9 +67,9 @@ int ClassRegex::appendContent(char_type* dst, ssize_t size, int level) const {
 Iterator* ClassRegex::iterator(IteratorState* state) const {
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
     return new ClassRegexIterator(
-      getId(), characters.cbegin(), characters.cend());
+      getId(), &characters[0], characters.size());
   } else {
-    return new IteratorPermuter<ClassRegex>(
+    return new IteratorPermuter(
       getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }

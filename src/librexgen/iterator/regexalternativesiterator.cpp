@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <cstring>
 #include <deque>
+#include <vector>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : Iterator(_id), iter(iterators.begin()) {
@@ -49,11 +50,12 @@ void RegexAlternativesIterator::reset() {
   LEAVE_METHOD;
 }
 
-int RegexAlternativesIterator::value(char_type* dst, ssize_t size) const {
+void RegexAlternativesIterator::value(string_type& dst) const {
   ENTER_METHOD;
   assert(canUseValue());
   assert(iter != iterators.end());
-  RETURN((*iter)->value(dst, size));
+  (*iter)->value(dst);
+  LEAVE_METHOD;
 }
 
 

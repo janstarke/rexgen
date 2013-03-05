@@ -41,7 +41,7 @@ set(librexgen_sources
   regex/regex.cpp
   regex/terminalregex.cpp
   regex/groupreference.cpp
-  iterator/classregexiterator.cpp
+  iterator/iteratorpermuter.cpp
   iterator/terminalregexiterator.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
@@ -65,18 +65,24 @@ if(COMMAND add_cppcheck)
  add_dependencies(${librexgen_libname} ${librexgen_libname}_CPPCHECK)
 endif(COMMAND add_cppcheck)
 
-add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
+#add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
+add_library(${librexgen_slibname} STATIC ${librexgen_sources} ${parser_sources})
 
-if (USE_LUA)
-  target_link_libraries(${librexgen_libname} unistring lua5.2)
-else()
-  target_link_libraries(${librexgen_libname} unistring)
-endif(USE_LUA)
+#if (USE_LUA)
+#  target_link_libraries(${librexgen_libname} unistring lua5.2)
+#else()
+#  target_link_libraries(${librexgen_libname} unistring)
+#endif(USE_LUA)
 
-set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
-set_target_properties(${librexgen_libname} PROPERTIES LINK_FLAGS ${CMAKE_SHARED_LINKER_FLAGS})
+#set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
+set_target_properties(${librexgen_slibname} PROPERTIES PREFIX "lib")
+set_target_properties(${librexgen_slibname} PROPERTIES LINK_FLAGS "-static")
+if(ENABLE_PROFILE)
+  set_target_properties(${librexgen_slibname} PROPERTIES LINK_FLAGS "-pg -static")
+endif(ENABLE_PROFILE)
 
-install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)
+#install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)
+install(TARGETS ${librexgen_slibname} ARCHIVE DESTINATION lib)
 
 if (USE_LUA)
   configure_file("${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen_tmpl.lua" "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua")

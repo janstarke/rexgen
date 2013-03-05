@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012, Jan Starke <jan.starke@outofbed.org>
+    Copyright (c) 2013, Jan Starke <jan.starke@outofbed.org>
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -25,65 +25,46 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <librexgen/iterator/classregexiterator.h>
-#include <librexgen/debug.h>
+
+#ifndef SIMPLESTRING_H
+#define SIMPLESTRING_H
+
 #include <librexgen/unicode.h>
 
-#include <assert.h>
-#include <vector>
-
-
-void ClassRegexIterator::reset() {
-  Iterator::reset();
-  state = resetted;
-  current = begin;
-}
-
-int ClassRegexIterator::value(char_type* dst, ssize_t size) const {
-  ENTER_METHOD;
-  assert(canUseValue());
-  if (current == end || size < 2) {
-    RETURN(0);
+class SimpleString
+{
+public:
+  SimpleString(unsigned int msize=256)
+    :max_size(msize), current_size(0) {
+      buffer = new char_type[msize];
   }
-  *dst = *(current);
-  dst++;
-  *dst = '\0';
-  RETURN(1);
-}
-
-void ClassRegexIterator::next() {
-  ENTER_METHOD;
-  assert(hasNext());
-  Iterator::next();
-  if (current == end) {
-    state = not_usable;
-  } else {
-    if (state == resetted) {
-      state = usable;
-    } else {
-      ++current;
+  virtual ~SimpleString() {
+    delete[] buffer;
+  }
+  
+  void push_back(char_type ch) {
+    if (current_size < max_size) {
+      buffer[current_size] = ch;
+      current_size++;
     }
   }
-  LEAVE_METHOD;
-}
-
-bool ClassRegexIterator::hasNext() const {
-  ENTER_METHOD;
-  if (state == resetted) {
-    RETURN(true);
+  
+  unsigned int size() {
+    return current_size;
   }
-
-  if (current == end) {
-    RETURN(false);
+  
+  void clear() {
+    current_size = 0;
   }
+  
+  char_type& operator[](unsigned int index) {
+    return buffer[index];
+  }
+  
+private:
+  unsigned int max_size;
+  unsigned int current_size;
+  char_type* buffer;
+};
 
-  vector<char_type>::const_iterator tmp = current;
-  ++tmp;
-  RETURN(tmp != end);
-}
-
-int ClassRegexIterator::toString(char_type* dst, ssize_t size) const {
-  return utf_snprintf(dst, size, "ClassRegexIterator %d",
-                      getId());
-}
-
+#endif // SIMPLESTRING_H

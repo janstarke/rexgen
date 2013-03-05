@@ -42,7 +42,7 @@ public:
   
   virtual bool hasNext() const { return false; }
   virtual void next() {};
-  virtual int value(char_type* /* dst */, ssize_t /* size */ ) const { return 0; }
+  virtual void value(string_type& /* dst */ ) const { }
   virtual void reset() { state = resetted; }
   
   virtual bool canUseValue() const { return (state == usable); }

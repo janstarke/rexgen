@@ -39,10 +39,11 @@ TerminalRegexIterator::TerminalRegexIterator(
   assert(hasNext());
 }
 
-int TerminalRegexIterator::value(char_type* dst, ssize_t size) const {
+void TerminalRegexIterator::value(string_type& dst) const {
   assert(canUseValue());
-  utf_strncpy(dst, terminal, size);
-  return std::min(size-1, terminal_length);
+  for (ssize_t n = 0; n < terminal_length; ++n) {
+    dst.push_back(terminal[n]);
+  }
 }
 
 void TerminalRegexIterator::next() {

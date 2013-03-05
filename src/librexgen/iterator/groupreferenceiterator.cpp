@@ -50,9 +50,10 @@ void GroupReferenceIterator::next() {
   LEAVE_METHOD;
 }
 
-int GroupReferenceIterator::value(char_type* dst, ssize_t size) const {
+void GroupReferenceIterator::value(string_type& dst) const {
   ENTER_METHOD;
-  RETURN(groupRef->value(dst, size));
+  groupRef->value(dst);
+  LEAVE_METHOD;
 }
 
 void GroupReferenceIterator::reset() {

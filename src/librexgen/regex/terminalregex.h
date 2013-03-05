@@ -1,8 +1,8 @@
 #ifndef __TerminalRegex_h__
 #define __TerminalRegex_h__
 
-#include "regex.h"
-#include "../iterator/terminalregexiterator.h"
+#include <librexgen/regex/regex.h>
+#include <librexgen/iterator/terminalregexiterator.h>
 
 class TerminalRegex : public Regex {
 public:
@@ -16,7 +16,7 @@ public:
   
   inline const char_type* getValue() const { return value; }
   
-  inline const char_type* getXmlTag() const { return _T("terminal"); }
+  inline const char_type* getXmlTag() const { return _C("terminal"); }
   
   RegexType getRegexType() const { return Terminal; }
   

@@ -33,6 +33,7 @@
 #include <librexgen/regex/regexalternatives.h>
 #include <algorithm>
 #include <deque>
+#include <vector>
 #include "../unicode.h"
 
 using namespace std;
@@ -50,7 +51,7 @@ public:
     
     void reset();
     void next();
-    int value(char_type* dst, ssize_t size) const;
+    void value(string_type& dst) const;
     bool hasNext() const;
     
     void addChild(Iterator* re);

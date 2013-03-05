@@ -42,7 +42,7 @@ class CompoundRegex : public RegexContainer<deque<Regex*> >
 public:
   virtual ~CompoundRegex();
   
-  virtual inline const char_type* getXmlTag() const { return _T("compound"); }
+  virtual inline const char_type* getXmlTag() const { return _C("compound"); }
   
   void prependRegex(Regex* regex);
   void appendRegex(Regex* regex);

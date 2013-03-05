@@ -31,6 +31,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <uniconv.h>
+#include <vector>
 
 #if REXGEN_DEBUG == 1
 #include <execinfo.h>
@@ -125,10 +126,11 @@ int rexgen_parse_regex(lua_State* L) {
 
 extern "C"
 int rexgen_value(lua_State* L, const Iterator* iter) {
-  char_type buffer[BUFFER_SIZE];
+  string_type buffer;
 
-  int length = iter->value(buffer, sizeof(buffer)/sizeof(buffer[0]));
-  push_utf8_string(L, buffer, length);
+  iter->value(buffer);
+  buffer.push_back('\0');
+  push_utf8_string(L, &buffer[0], buffer.size());
 
   return 1;
 }

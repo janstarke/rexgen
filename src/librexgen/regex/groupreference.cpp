@@ -36,7 +36,7 @@ Iterator* GroupReference::iterator(IteratorState* state) const {
     return new GroupReferenceIterator(
       getId(), state->getIterator(groupRef->getGroupId()));
   } else {
-    return new IteratorPermuter<GroupReference>(
+    return new IteratorPermuter(
       getId(), this, state, getMinOccurs(), getMaxOccurs());
   }
 }

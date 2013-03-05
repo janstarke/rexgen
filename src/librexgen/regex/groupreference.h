@@ -39,7 +39,7 @@ public:
     virtual Iterator* singleIterator(IteratorState* state) const;
     virtual int appendContent(char_type* dst, ssize_t size, int level) const;
     RegexType getRegexType() const { return Reference; }
-    const char_type* getXmlTag() const { return _T("ref"); }
+    const char_type* getXmlTag() const { return _C("ref"); }
     GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
     
     int getGroupId() const { return groupId; }

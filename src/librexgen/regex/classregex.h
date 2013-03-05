@@ -56,7 +56,7 @@ public:
   Iterator* iterator(IteratorState* state) const;
   
   Iterator* singleIterator(IteratorState* /* state */) const 
-  { return new ClassRegexIterator(getId(), characters.cbegin(), characters.cend()); }
+  { return new ClassRegexIterator(getId(), &characters[0], characters.size()); }
 private:
   vector<char_type> characters;
 };

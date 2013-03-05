@@ -72,17 +72,10 @@ void CompoundRegexIterator::next() {
   }
 }
 
-int CompoundRegexIterator::value(char_type* dst, ssize_t size) const {
+void CompoundRegexIterator::value(string_type& dst) const {
   assert(canUseValue());
-  int length = 0;
   for_each(iterators.begin(), iterators.end(),
-  [&length, &dst, &size](Iterator* i) {
-    int l = i->value(dst, size);
-    dst += l;
-    size -= l;
-    length += l;
-  });
-  return length;
+  [&dst](Iterator* i) { i->value(dst); });
 }
 
 bool CompoundRegexIterator::hasNext() const {

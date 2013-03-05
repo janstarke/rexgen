@@ -31,6 +31,7 @@
 
 #include "iterator.h"
 #include <deque>
+#include <vector>
 #include <algorithm>
 #include "../regex/regex.h"
 #include "../unicode.h"
@@ -49,7 +50,7 @@ public:
     
     void reset();
     void next();
-    int value(char_type* dst, ssize_t count) const;
+    void value(string_type& dst) const;
     bool hasNext() const;
     
     void addChild(Iterator* i);

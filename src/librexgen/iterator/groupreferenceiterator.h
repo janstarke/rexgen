@@ -31,6 +31,8 @@
 
 #include "iterator.h"
 #include <librexgen/regex/regex.h>
+#include <vector>
+#include <librexgen/unicode.h>
 
 
 class GroupReferenceIterator : public Iterator
@@ -42,7 +44,7 @@ public:
   
     virtual bool hasNext() const;
     virtual void next();
-    virtual int value(char_type* , ssize_t ) const;
+    virtual void value(string_type& dst) const;
     virtual void reset();
     
 private:

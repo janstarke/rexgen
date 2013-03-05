@@ -29,9 +29,9 @@
 #ifndef CLASSREGEXITERATOR_H
 #define CLASSREGEXITERATOR_H
 
-#include "iterator.h"
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/unicode.h>
 #include <vector>
-#include "../unicode.h"
 
 using namespace std;
 
@@ -40,20 +40,29 @@ class ClassRegexIterator : public Iterator
 
 public:
     ClassRegexIterator(int _id,
-		       vector<char_type>::const_iterator _begin,
-		       vector<char_type>::const_iterator _end
+                       const char_type* classcontent,
+                       size_t size
 		      )
-      :Iterator(_id), begin(_begin), end(_end), current(begin) {}
+    :Iterator(_id), begin(classcontent), current(classcontent-1), end(classcontent+size){}
   
-    void reset();
-    int value(char_type* dst, ssize_t size) const;
-    void next();
-    bool hasNext() const;
+   void reset() { current = begin - 1; }
     
-    int toString(char_type* dst, ssize_t size) const;
+    inline void value(string_type& dst) const {
+      if (current != end) { 
+        dst.push_back(*current);
+      }      
+    }
+    inline void next() {assert(hasNext()); ++current;}
+    inline bool hasNext() const { return  (current+1 < end); }
+    inline bool canUseValue() const { return (current>=begin && current<end); }
+    
+    int toString(char_type* dst, ssize_t size) const {
+      return utf_snprintf(dst, size, "ClassRegexIterator %d",
+                          getId());}
 private:
-  vector<char_type>::const_iterator begin, end;
-  vector<char_type>::const_iterator current;
+  const char_type *begin;
+  const char_type *current;
+  const char_type *end;
 };
 
 #endif // CLASSREGEXITERATOR_H
