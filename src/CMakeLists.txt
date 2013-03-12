@@ -8,6 +8,7 @@ set(librexgen_minor 1)
 set(librexgen_release 0)
 set(librexgen_version ${librexgen_major}.${librexgen_minor}.${librexgen_release})
 set(librexgen_libname rexgen-${librexgen_version})
+set(librexgen_slibname "rexgen-${librexgen_version}s")
 
 set(rexgen_exename "${prj}")
 
@@ -28,9 +29,6 @@ ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 
 if(ENABLE_PROFILE)
   ADD_DEFINITIONS("-g -pg")
-  #SET(${CMAKE_EXE_LINKER_FLAGS} "-ABCpg")
-  #SET(${CMAKE_SHARED_LINKER_FLAGS} "-ABCpg")
-  #SET(${LINK_FLAGS} "-ABCpg")
 endif(ENABLE_PROFILE)
 
 add_subdirectory(librexgen)

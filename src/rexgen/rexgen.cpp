@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <uniconv.h>
 #include <locale.h>
+#include <vector>
 
 using namespace std;
 #ifdef YYDEBUG
@@ -93,9 +94,8 @@ const char* parse_arguments(int argc, char** argv) {
 
 int main(int argc, char** argv) {
   char_type xml[1024];
-  char_type buffer[512];
+  string_type buffer;
   const char* format;
-  int len;
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
@@ -122,10 +122,11 @@ int main(int argc, char** argv) {
   format = PRINTF_FORMAT "\n";
   while (iter->hasNext()) {
     iter->next();
-    len = iter->value(buffer, sizeof(buffer)/sizeof(buffer[0])-1);
-    buffer[len] = '\0';
+    buffer.clear();
+    iter->value(buffer);
+    buffer.push_back('\0');
 
-    ulc_fprintf(stdout, format, buffer);
+    ulc_fprintf(stdout, format, &buffer[0]);
   }
   delete regex;
   return 0;
