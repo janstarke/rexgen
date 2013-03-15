@@ -3,12 +3,18 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/unicode.h>
+#include <librexgen/simplestring.h>
 #include <cstdio>
-#include <execinfo.h>
 #include <signal.h>
-#include <uniconv.h>
 #include <locale.h>
-#include <vector>
+#ifdef _WIN32
+#else
+#include <uniconv.h>
+#include <execinfo.h>
+typedef char TCHAR;
+#endif
+
+static char regex_buffer[512];
 
 using namespace std;
 #ifdef YYDEBUG
@@ -20,27 +26,15 @@ static void usage() {
   cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
   cerr << "   -t:   print syntax tree" << endl;
   cerr << "   -i:   ignore case" << endl;
+#ifndef _WIN32
   cerr << "Locale: " << locale_charset() << endl;
+#endif
 }
 
 static struct {
   bool display_tree;
   bool ignore_case;
 } rexgen_options;
-
-
-static void handler(int sig) {
-  void *array[10];
-  size_t size;
-
-  // get void*'s for all entries on the stack
-  size = backtrace(array, 10);
-
-  // print out all the frames to stderr
-  fprintf(stderr, "Error: signal %d:\n", sig);
-  backtrace_symbols_fd(array, size, 2);
-  exit(1);
-}
 
 static void setlocale() {
   const char* defaultLocale = "en_US.UTF8";
@@ -60,12 +54,21 @@ static void setlocale() {
   }
 }
 
-const char* parse_arguments(int argc, char** argv) {
-  const char* regex = NULL;
+const char* parse_arguments(int argc, TCHAR** argv) {
+  const char* regex = nullptr;
   for (int n=1; n<argc; ++n) {
     if (argv[n][0] != '-') {
       if (regex == NULL) {
-        regex = argv[n];
+        TCHAR* src = argv[n];
+        char* dst = regex_buffer;
+        size_t n = sizeof(regex_buffer)/sizeof(regex_buffer[0]);
+        while(*dst++ = (char)*src++) {
+          if (--n <= 0) {
+            *dst = 0;
+            break;
+          }
+        }
+        regex = regex_buffer;
       } else {
         fprintf(stderr, "more than one regex given\n");
         usage();
@@ -92,29 +95,38 @@ const char* parse_arguments(int argc, char** argv) {
   return regex;
 }
 
-int main(int argc, char** argv) {
+int _tmain(int argc, _TCHAR* argv[]) {
   char_type xml[1024];
-  string_type buffer;
+  SimpleString buffer;
   const char* format;
+  int len;
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
 #endif 
 #endif
   
-  signal(SIGSEGV, handler);
-  signal(SIGABRT, handler);  
   setlocale();
   
-  Regex* regex = parse_regex(parse_arguments(argc, argv));
+  const char* regex_str = parse_arguments(argc, argv);
+  if (regex_str == nullptr) {
+    usage();
+    return 1;
+  }
+
+  Regex* regex = parse_regex(regex_str);
   if (regex == NULL) {
     return 1;
   }
   
   if (rexgen_options.display_tree) {
     regex->appendRawValue(xml, sizeof(xml)/sizeof(xml[0]));
+#ifdef _WIN32
+	cout << "result:" << endl << xml << endl;
+#else
     format = "result:\n" PRINTF_FORMAT "\n";
     ulc_fprintf(stdout, format, xml);
+#endif
   }
     
   Iterator* iter = regex->iterator();
@@ -122,11 +134,14 @@ int main(int argc, char** argv) {
   format = PRINTF_FORMAT "\n";
   while (iter->hasNext()) {
     iter->next();
-    buffer.clear();
     iter->value(buffer);
-    buffer.push_back('\0');
+    buffer.push_back(0);
 
-    ulc_fprintf(stdout, format, &buffer[0]);
+#ifdef _WIN32
+    _tprintf(_T("%s\n"), &buffer[0]);
+#else
+    ulc_fprintf(stdout, format, buffer);
+#endif
   }
   delete regex;
   return 0;
