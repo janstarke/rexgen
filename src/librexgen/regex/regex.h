@@ -67,15 +67,15 @@ public:
     return appendRawValue(dst, len, 0);
   }
   
-  int appendRawValue(char_type* dst, ssize_t size, int level) const {
+  int appendRawValue(char_type* dst, size_t size, int level) const {
     return xmlEncapsulate(dst, size, getXmlTag(), level);
   }
   
-  int appendSpace(char_type* dst, ssize_t size, int count) const;
+  int appendSpace(char_type* dst, size_t size, int count) const;
   
-  virtual int appendContent(char_type* dst, ssize_t size, int level) const = 0;
+  virtual int appendContent(char_type* dst, size_t size, int level) const = 0;
   
-  virtual int xmlEncapsulate(char_type* dst, ssize_t size, const char_type* clazz, int level) const;
+  virtual int xmlEncapsulate(char_type* dst, size_t size, const char_type* clazz, int level) const;
   
   static char_type parseFirstCharacter(const char_type* s);
   

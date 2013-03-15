@@ -143,9 +143,3 @@ bool RegexAlternativesIterator::canUseValue() const {
   return ((*iter)->canUseValue());
 }
 
-
-int RegexAlternativesIterator::toString(char_type* dst, ssize_t size) const {
-  return utf_snprintf(dst, size, "RegexAlternativesIterator %d (%d children)",
-                      getId(),
-                      iterators.size());
-}

@@ -49,7 +49,7 @@ public:
     return __size * getMaxOccurs();
   }
   
-  virtual int appendContent(char_type* dst, ssize_t dst_size, int level) const {
+  virtual int appendContent(char_type* dst, size_t dst_size, int level) const {
     typename T::const_iterator iter = regexObjects.begin();
     int l, length = 0;
     while(iter != regexObjects.end()) {

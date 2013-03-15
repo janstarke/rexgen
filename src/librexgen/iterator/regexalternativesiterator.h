@@ -55,7 +55,6 @@ public:
     bool hasNext() const;
     
     void addChild(Iterator* re);
-    virtual int toString(char_type* dst, ssize_t size) const;
 private:  
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;

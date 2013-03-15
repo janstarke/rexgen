@@ -29,7 +29,9 @@
 #define __libregex_h__
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
+#include <librexgen/parser/osdepend.h>
 
+EXPORT
 Regex* parse_regex(const char* regex, bool ignoreCase = false);
 
 #endif /* __libregex_h__ */

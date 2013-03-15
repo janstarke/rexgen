@@ -150,11 +150,3 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
   RETURN(false);
 }
 
-int IteratorPermuter::toString(char_type* dst, ssize_t size) const
-{
-  return utf_snprintf(dst, size, "IteratorPermuter %d (min=%d, max=%d, current=%d)",
-                      getId(),
-                      min_occurs,
-                      max_occurs,
-                      iterators.size());
-}

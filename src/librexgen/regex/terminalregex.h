@@ -3,6 +3,7 @@
 
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/terminalregexiterator.h>
+#include <librexgen/unicode.h>
 
 class TerminalRegex : public Regex {
 public:
@@ -20,7 +21,7 @@ public:
   
   RegexType getRegexType() const { return Terminal; }
   
-  int appendContent(char_type* dst, ssize_t size, int level) const;
+  int appendContent(char_type* dst, size_t size, int level) const;
   
   Iterator* iterator(IteratorState* state) const;
   

@@ -48,13 +48,18 @@ Iterator* GroupReference::singleIterator(IteratorState* state) const {
 }
 
 int GroupReference::appendContent(
-    char_type* dst, ssize_t size, int level) const {
+    char_type* dst, size_t size, int level) const {
   int l, length = 0;
   l = appendSpace(dst, size, level);
   length += l;
   if ((size -= l) < 0) goto finish;
   dst += l;
-  length += utf_snprintf(dst, size, "%d\n", groupRef->getId());
+
+#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+  length += utf_snprintf(dst, size, _T("%d\n"), groupRef->getId());
+#else
+   length += utf_snprintf(dst, size, "%d\n", groupRef->getId());
+#endif
   finish:
   return length;
 }

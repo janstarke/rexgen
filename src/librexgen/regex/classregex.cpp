@@ -45,9 +45,9 @@ void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
   }
 }
 
-int ClassRegex::appendContent(char_type* dst, ssize_t size, int level) const {
+int ClassRegex::appendContent(char_type* dst, size_t size, int level) const {
   int l, length = 0;
-  typename vector<char_type>::const_iterator iter = characters.begin();
+  auto iter = characters.begin();
 
   l = appendSpace(dst, size, level);
   length += l;
@@ -58,8 +58,12 @@ int ClassRegex::appendContent(char_type* dst, ssize_t size, int level) const {
     --size;
     ++length;
   }
+#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+  l = utf_snprintf(dst, size, _T("\n"));
+#else
   l = utf_snprintf(dst, size, "\n");
-  length += std::min(l, static_cast<int>(size));
+#endif
+  length += min(l, static_cast<int>(size));
   finish:
   return length;
 }

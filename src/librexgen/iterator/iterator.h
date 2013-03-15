@@ -48,7 +48,6 @@ public:
   virtual bool canUseValue() const { return (state == usable); }
   
   int getId() const { return id; }
-  virtual int toString(char_type* /* dst */, ssize_t /* size */) const { return 0; }
   
 protected:
   

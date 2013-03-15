@@ -14,6 +14,7 @@
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/unicode.h>
+  #include <librexgen/parser/osdepend.h>
   #include "parser.hpp"
   #include <cstdio>
   
@@ -35,7 +36,7 @@
     if (c>='0' && c<='9') return c-'0';
     if (c>='a' && c<='f') return (10+c-'a');
     if (c>='A' && c<='F') return (10+c-'A');
-    return 0xff;
+    return (char)0xff;
   }
   
   static char parseAnsiChar(const char* text) {
@@ -43,15 +44,16 @@
   }
   
   static char_type parseUnicodeChar(const char* text) {
-    uint32_t codepoint[2];
+    unsigned __int32 codepoint[2];
     codepoint[0] = (hex2bin(text[2])<<12)
 	  | (hex2bin(text[3])<<8)
 	  | (hex2bin(text[4])<<4)
 	  | (hex2bin(text[5]));
     codepoint[1] = 0;
-    ulc_fprintf(stdout, "UNICODE: %08x (%llU)\n", codepoint[0], codepoint);
 #if defined(UTF32)
 	return codepoint[0];
+#elif defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+	return (char_type)(0x0000ffff & codepoint[0]);
 #else
       char_type buffer[4];
       size_t length = 0;
@@ -85,8 +87,8 @@ ESCAPED		\\[^xnur0-9]
 {ANSICHAR}		{ yylval->character = parseAnsiChar(yytext); return T_ANY_CHAR;}
 {UNICODECHAR}		{ yylval->character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
 {ESCAPED}		{ yylval->character = (char)yytext[1]; return T_ANY_CHAR; }
-{LINEFEED}		{ yylval->character = u'\n'; return T_ANY_CHAR; }
-{CARRIAGERETURN}	{ yylval->character = u'\r'; return T_ANY_CHAR; }
+{LINEFEED}		{ yylval->character = '\n'; return T_ANY_CHAR; }
+{CARRIAGERETURN}	{ yylval->character = '\r'; return T_ANY_CHAR; }
 "|"			{ return T_PIPE; }
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"			{ BEGIN(INITIAL); return T_END_CLASS; }

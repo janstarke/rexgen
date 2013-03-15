@@ -41,7 +41,7 @@ TerminalRegexIterator::TerminalRegexIterator(
 
 void TerminalRegexIterator::value(string_type& dst) const {
   assert(canUseValue());
-  for (ssize_t n = 0; n < terminal_length; ++n) {
+  for (size_t n = 0; n < terminal_length; ++n) {
     dst.push_back(terminal[n]);
   }
 }
@@ -69,8 +69,3 @@ void TerminalRegexIterator::reset() {
   assert(!canUseValue());
 }
 
-int TerminalRegexIterator::toString(char_type* dst, ssize_t size) const {
-  return utf_snprintf(dst, size, "TerminalRegexIterator %d (value = '%s')",
-                      getId(),
-                      terminal);
-}

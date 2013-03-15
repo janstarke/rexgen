@@ -55,10 +55,6 @@ public:
     inline void next() {assert(hasNext()); ++current;}
     inline bool hasNext() const { return  (current+1 < end); }
     inline bool canUseValue() const { return (current>=begin && current<end); }
-    
-    int toString(char_type* dst, ssize_t size) const {
-      return utf_snprintf(dst, size, "ClassRegexIterator %d",
-                          getId());}
 private:
   const char_type *begin;
   const char_type *current;

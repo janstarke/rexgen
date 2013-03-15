@@ -40,16 +40,15 @@ static int parseHexChar(char c) {
   return -1;
 }
 
-static uint32_t parseHexString(const char_type* ptr, ssize_t length) {
+static unsigned __int32 parseHexString(const char_type* ptr, size_t length) {
   unsigned int hexvalue = 0;
-  while (*ptr != u'\0' && length > 0) {
+  while (*ptr != 0 && length > 0) {
     const int v = parseHexChar(*ptr);
     if (v == -1) return -1;
     hexvalue = (hexvalue << 4) + v;
     ptr++;
     length--;
   }
-  printf("HEXVALUE: %04x\n", hexvalue);
   return hexvalue;
 }
 
@@ -60,21 +59,24 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
   /*
    * handle special sequences like \x, \u, \n, \r and so on
    */
-  if (c[0] == u'\\' && c[1] != u'\0') {
+  if (c[0] == '\\' && c[1] != '\0') {
     switch (c[1]) {
     case 'n':
-      return u'\n';
+      return '\n';
     case 'r':
-      return u'\r';
+      return '\r';
     case '0':
-      return u'\0';
+      return '\0';
     case 'x':
       return (char_type) parseHexString((c+2), 2);
     case 'u':
 #if defined(UTF32)
       return parseHexString((c+2), 4);
+#elif defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+		/* zero out the leading bytes */
+		return (char_type) (0x0000ffff & parseHexString((c+2), 4));
 #else
-      uint32_t codepoint[2];
+      unsigned __int32 codepoint[2];
       char_type buffer[4];
       size_t length = 0;
       codepoint[0] = parseHexString((c+2), 4);
@@ -96,10 +98,14 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
 }
 
 int Regex::xmlEncapsulate(
-    char_type* dst, ssize_t size, const char_type* clazz, int level) const {
+    char_type* dst, size_t size, const char_type* clazz, int level) const {
   int l;
   int length = 0;
+#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+  const wchar_t* format = _T("<%s id=\"%d\" min=\"%d\" max=\"%d\">\n");
+#else
   const char* format = "<" PRINTF_FORMAT " id=\"%d\" min=\"%d\" max=\"%d\">\n";
+#endif
 
   l = utf_snprintf(
     dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
@@ -118,7 +124,11 @@ int Regex::xmlEncapsulate(
   if ((size -= l) < 0) goto finish;
   dst += level;
 
+#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
+  format = _T("</%s>\n");
+#else
   format = "</" PRINTF_FORMAT  ">\n";
+#endif
 
   length += utf_snprintf(dst, size, format, getXmlTag());
 
@@ -126,7 +136,7 @@ int Regex::xmlEncapsulate(
   return length;
 }
 
-int Regex::appendSpace(char_type* dst, ssize_t size, int count) const {
+int Regex::appendSpace(char_type* dst, size_t size, int count) const {
   int length = 0;
   while (count > 0 && size > 1) {
     *dst = ' ';

@@ -29,6 +29,7 @@
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <algorithm>
+using namespace std;
 
 RegexAlternatives::~RegexAlternatives() {
   for (container_type::iterator iter = regexObjects.begin();
@@ -39,15 +40,15 @@ RegexAlternatives::~RegexAlternatives() {
 }
 
 int RegexAlternatives::getMaxSize() const {
-  int max = 0;
+  int __max = 0;
   int __size = 0;
   for (container_type::const_iterator iter = regexObjects.begin();
        iter != regexObjects.end();
        ++iter) {
     __size = (*iter)->getMaxSize();
-    max = std::max(__size, max);
+    __max = max(__size, __max);
   }
-  return max * getMaxOccurs();
+  return __max * getMaxOccurs();
 }
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {

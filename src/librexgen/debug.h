@@ -1,8 +1,9 @@
 #ifndef __debug_h__
 #define __debug_h__
 
+#ifndef _WIN32
 #include <cxxabi.h>
-
+#endif
 
 void enter_level();
 void leave_level();

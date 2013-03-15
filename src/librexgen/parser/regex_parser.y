@@ -15,6 +15,7 @@
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/parser/rexgenparsercontext.h>
+  #include <librexgen/parser/osdepend.h>
   #include "parser.hpp"
   
   #include <cstdio>
@@ -138,7 +139,7 @@ SimpleRegex: T_ANY_CHAR {
 ClassRegex:  T_BEGIN_CLASS ClassContent T_END_CLASS { $$ = $2; };
 ClassContent: T_HYPHEN ClassContentWithoutHyphen {
   ClassRegex* re = $2;
-  re->addCharacter(u'-', false);
+  re->addCharacter('-', false);
   $$ = re; };
 ClassContent: ClassContentWithoutHyphen { $$ = $1; };
 ClassContentWithoutHyphen:

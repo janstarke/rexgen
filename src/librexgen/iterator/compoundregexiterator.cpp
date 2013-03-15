@@ -93,10 +93,4 @@ void CompoundRegexIterator::addChild(Iterator* i) {
   iterators.push_back(i);
 }
 
-int CompoundRegexIterator::toString(char_type* dst, ssize_t size) const {
-  return utf_snprintf(dst, size, "CompoundRegexIterator %d (%d children)",
-                      getId(),
-                      iterators.size());
-}
-
 

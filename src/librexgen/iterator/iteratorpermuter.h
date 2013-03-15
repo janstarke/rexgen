@@ -50,7 +50,6 @@ public:
     }
     void next();
     void reset();
-    int toString(char_type* dst, ssize_t size) const;
 private:
   bool existsIteratorWithNextElement() const;
   

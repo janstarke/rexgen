@@ -1,16 +1,37 @@
 #ifndef __unicode_h__
 #define __unicode_h__
-
-#include <unistdio.h>
-#include <unistr.h>
-#include <uniconv.h>
+#include <cstdarg>
 
 class SimpleString;
 
-#include <string>
-#include <vector>
-using std::basic_string;
-using std::vector;
+#ifdef _WIN32
+#include <tchar.h>
+
+#ifndef UNICODE
+#error UNICODE is not defined
+#endif
+
+#ifndef _UNICODE
+#error _UNICODE is not defined
+#endif
+
+typedef wchar_t char_type;
+#define utf_snprintf(buffer,count,format,...) _snwprintf((buffer),(count),format,__VA_ARGS__)
+#define utf_strlen wcslen
+#define utf_strncat wcsncat
+#define utf_strncpy wcsncpy
+#define utf_strconv_from_locale u8_strconv_from_locale
+
+//#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( _T ## STR )))
+#define _C(STR) ( (const char_type*) _T(STR) )
+
+#define PRINTF_FORMAT "%s"
+
+
+#else /* ! _WIN32 */
+#include <unistdio.h>
+#include <unistr.h>
+#include <uniconv.h>
 
 #ifndef UTF_VARIANT
 #define UTF_VARIANT 32
@@ -67,6 +88,8 @@ typedef uint32_t char_type;
 #else
 #error "invalid value for UTF_VARIANT; valid would be one of 8, 16, 32"
 #endif /* UTF_VARIANT */
+
+#endif /* _WIN32 */
 
 typedef SimpleString string_type;
 

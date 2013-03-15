@@ -27,6 +27,7 @@
 
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
+#include <librexgen/parser/osdepend.h>
 #include <sstream>
 #include <string>
 
@@ -34,6 +35,7 @@ using std::istringstream;
 
 int rexgen_parse(RexgenParserContext* context);
 
+EXPORT
 Regex* parse_regex(const char* regex, bool ignoreCase) {
   const string re(regex);
 
@@ -43,7 +45,7 @@ Regex* parse_regex(const char* regex, bool ignoreCase) {
   if (rexgen_parse(&context) != 0) {
     return NULL;
   }
-#warning this must be handled with normal syntax error reporting
+#pragma message("this must be handled with normal syntax error reporting")
   assert(!context.hasInvalidGroupReferences());
   // IteratorState* state = new IteratorState(context.getGroups());
   // Iterator* iter = context.result->iterator(state);

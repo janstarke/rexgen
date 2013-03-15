@@ -45,10 +45,9 @@ public:
     void value(string_type& dst) const;
     bool hasNext() const;
     void reset();
-    int toString(char_type* dst, ssize_t size) const;
 private:
   const char_type* terminal;
-  ssize_t terminal_length;
+  size_t terminal_length;
 };
 
 #endif // TERMINALREGEXITERATOR_H

@@ -49,7 +49,7 @@ public:
   
   RegexType getRegexType() const { return Class; }
   
-  virtual int appendContent(char_type* dst, ssize_t size, int level) const;
+  virtual int appendContent(char_type* dst, size_t size, int level) const;
   
   virtual inline const char_type* getXmlTag() const { return _T("class"); }
   
