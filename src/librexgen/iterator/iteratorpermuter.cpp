@@ -95,8 +95,7 @@ void IteratorPermuter::next()
     LEAVE_METHOD;
   }
   
-  const unsigned int size = iterators.size();
-  while(current < size) {
+  while(current < occurs) {
     if (iterators[current]->hasNext()) {
       break;
     }

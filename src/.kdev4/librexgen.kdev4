@@ -23,13 +23,13 @@ Name=New Native Application Configuration
 Type=Native Application
 
 [Launch][Launch Configuration 0][Data]
-Arguments='a{1,3}'
+Arguments='(abc){1,3}'
 Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
 Dependency Action=Nothing
 EnvironmentGroup=default
 Executable=
 External Terminal=konsole --noclose --workdir %workdir -e %exe
-Project Target=librexgen,rexgen
+Project Target=src,rexgen,rexgen
 Use External Terminal=false
 Working Directory=file:///home/jan/projects/librexgen
 isExecutable=false
