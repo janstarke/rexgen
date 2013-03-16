@@ -51,16 +51,18 @@ public:
   
   virtual int appendContent(char_type* dst, size_t dst_size, int level) const {
     typename T::const_iterator iter = regexObjects.begin();
-    int l, length = 0;
+    size_t l, length = 0;
     while(iter != regexObjects.end()) {
       l = appendSpace(dst, dst_size, level);
+      if (dst_size <= l) break;
       length += l;
-      if ((dst_size -= l) < 0) break;
+      dst_size -= l;
       dst += l;
       
       l = (*iter)->appendRawValue(dst, dst_size, level);
       length += l;
-      if ((dst_size -= l) < 0) break;
+      if (dst_size <= l) break;
+      dst_size -= l;
       dst += l;
       
       iter++;

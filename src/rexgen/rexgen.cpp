@@ -7,11 +7,11 @@
 #include <cstdio>
 #include <signal.h>
 #include <locale.h>
-#ifdef _WIN32
-#else
+
+#if ! defined(_WIN32)
+typedef char _TCHAR;
 #include <uniconv.h>
 #include <execinfo.h>
-typedef char TCHAR;
 #endif
 
 static char regex_buffer[512];
@@ -54,16 +54,16 @@ static void setlocale() {
   }
 }
 
-const char* parse_arguments(int argc, TCHAR** argv) {
+const char* parse_arguments(int argc, _TCHAR** argv) {
   const char* regex = nullptr;
   for (int n=1; n<argc; ++n) {
     if (argv[n][0] != '-') {
       if (regex == NULL) {
-        TCHAR* src = argv[n];
+        _TCHAR* src = argv[n];
         char* dst = regex_buffer;
-        size_t n = sizeof(regex_buffer)/sizeof(regex_buffer[0]);
-        while(*dst++ = (char)*src++) {
-          if (--n <= 0) {
+        size_t buffer_size = sizeof(regex_buffer)/sizeof(regex_buffer[0]);
+        while((*dst++ = (char)*src++) != 0) {
+          if (--buffer_size <= 0) {
             *dst = 0;
             break;
           }
@@ -99,7 +99,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
   char_type xml[1024];
   SimpleString buffer;
   const char* format;
-  int len;
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
@@ -140,7 +139,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #ifdef _WIN32
     _tprintf(_T("%s\n"), &buffer[0]);
 #else
-    ulc_fprintf(stdout, format, buffer);
+    ulc_fprintf(stdout, format, &buffer[0]);
 #endif
   }
   delete regex;

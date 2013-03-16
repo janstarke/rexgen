@@ -49,15 +49,16 @@ void TerminalRegex::setValue(const char_type* v) {
 
 int TerminalRegex::appendContent(
     char_type* dst, size_t size, int level) const {
-  int l, length = 0;
+  size_t l, length = 0;
 #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
   const wchar_t* format = _T("%s\n");
 #else
   const char* format = PRINTF_FORMAT "\n";
 #endif
   l = appendSpace(dst, size, level);
+  if (size <= l) goto finish;
+  size -= l;
   length += l;
-  if ((size -= l) < 0) goto finish;
   dst += l;
 
   length += utf_snprintf(dst, size, format, value);

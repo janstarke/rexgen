@@ -49,10 +49,11 @@ Iterator* GroupReference::singleIterator(IteratorState* state) const {
 
 int GroupReference::appendContent(
     char_type* dst, size_t size, int level) const {
-  int l, length = 0;
+  size_t l, length = 0;
   l = appendSpace(dst, size, level);
+  if (size <= l) goto finish;
   length += l;
-  if ((size -= l) < 0) goto finish;
+  size -= l;
   dst += l;
 
 #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)

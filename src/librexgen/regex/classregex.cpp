@@ -46,12 +46,13 @@ void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
 }
 
 int ClassRegex::appendContent(char_type* dst, size_t size, int level) const {
-  int l, length = 0;
+  size_t l, length = 0;
   auto iter = characters.begin();
 
   l = appendSpace(dst, size, level);
+  if (size <= l) goto finish;
   length += l;
-  if ((size -= l) < 0) goto finish;
+  size -= l;
   dst += l;
   while (iter != characters.end() && size > 2) {
     *dst++ = *iter++;
@@ -63,7 +64,7 @@ int ClassRegex::appendContent(char_type* dst, size_t size, int level) const {
 #else
   l = utf_snprintf(dst, size, "\n");
 #endif
-  length += min(l, static_cast<int>(size));
+  length += min(l, size);
   finish:
   return length;
 }

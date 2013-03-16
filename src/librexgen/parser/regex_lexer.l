@@ -44,7 +44,7 @@
   }
   
   static char_type parseUnicodeChar(const char* text) {
-    unsigned __int32 codepoint[2];
+    char32_t codepoint[2];
     codepoint[0] = (hex2bin(text[2])<<12)
 	  | (hex2bin(text[3])<<8)
 	  | (hex2bin(text[4])<<4)

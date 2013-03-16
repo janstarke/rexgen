@@ -40,8 +40,8 @@ static int parseHexChar(char c) {
   return -1;
 }
 
-static unsigned __int32 parseHexString(const char_type* ptr, size_t length) {
-  unsigned int hexvalue = 0;
+static char32_t parseHexString(const char_type* ptr, size_t length) {
+  char32_t hexvalue = 0;
   while (*ptr != 0 && length > 0) {
     const int v = parseHexChar(*ptr);
     if (v == -1) return -1;
@@ -99,7 +99,7 @@ char_type Regex::parseFirstCharacter(const char_type* c) {
 
 int Regex::xmlEncapsulate(
     char_type* dst, size_t size, const char_type* clazz, int level) const {
-  int l;
+  size_t l;
   int length = 0;
 #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
   const wchar_t* format = _T("<%s id=\"%d\" min=\"%d\" max=\"%d\">\n");
@@ -109,19 +109,22 @@ int Regex::xmlEncapsulate(
 
   l = utf_snprintf(
     dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
+  if (size <= l) goto finish;
+  size -= l;
   length += l;
-  if ((size -= l) < 0) goto finish;
   dst += l;
 
 
   l = appendContent(dst, size, level+1);
+  if (size <= l) goto finish;
+  size -= l;
   length += l;
-  if ((size -= l) < 0) goto finish;
   dst += l;
 
   l = appendSpace(dst, size, level);
+  if (size <= l) goto finish;
+  size -= l;
   length += l;
-  if ((size -= l) < 0) goto finish;
   dst += level;
 
 #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
