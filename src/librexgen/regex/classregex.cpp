@@ -29,10 +29,37 @@
 #include <algorithm>
 #include <vector>
 
+bool ClassRegex::contains(char_type ch) const
+{
+  for (auto iter = characters.cbegin(); iter != characters.cend(); ++iter) {
+    if (*iter == ch) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void ClassRegex::__append_character(char_type ch)
+{
+  if (! contains(ch)) {
+    characters.push_back(ch);
+  }
+}
+void ClassRegex::__insert_character(char_type ch)
+{
+  if (! contains(ch)) {
+    characters.insert(characters.begin(), ch);
+  }
+}
+
 void ClassRegex::addCharacter(char_type ch, bool ignoreCase) {
-  characters.push_back(ch);
-  if (ignoreCase && islower(ch)) {
-    characters.push_back(toupper(ch));
+  __insert_character(ch);
+  if (ignoreCase) {
+    if (islower(ch)) {
+      __insert_character(toupper(ch));
+    } else if (isupper(ch)) {
+      __insert_character(tolower(ch));
+    }
   }
 }
 void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
@@ -40,7 +67,7 @@ void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
     char_type ch = a++;
     characters.push_back(ch);
     if (ignoreCase && islower(ch)) {
-      characters.push_back(toupper(ch));
+      __append_character(toupper(ch));
     }
   }
 }

@@ -133,6 +133,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   format = PRINTF_FORMAT "\n";
   while (iter->hasNext()) {
     iter->next();
+    buffer.clear();
     iter->value(buffer);
     buffer.push_back(0);
 

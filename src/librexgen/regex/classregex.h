@@ -46,6 +46,7 @@ public:
   virtual ~ClassRegex() {}
   void addCharacter(char_type ch, bool ignoreCase);
   void addRange(char_type a, char_type b, bool ignoreCase);
+  bool contains(char_type ch) const;
   
   RegexType getRegexType() const { return Class; }
   
@@ -58,6 +59,8 @@ public:
   Iterator* singleIterator(IteratorState* /* state */) const 
   { return new ClassRegexIterator(getId(), &characters[0], characters.size()); }
 private:
+  void __insert_character(char_type ch);
+  void __append_character(char_type ch);
   vector<char_type> characters;
 };
 
