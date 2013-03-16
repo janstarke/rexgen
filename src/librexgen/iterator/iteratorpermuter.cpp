@@ -67,7 +67,9 @@ void IteratorPermuter::next()
   ENTER_METHOD;
   
   if (state == resetted) {
-    for_each(iterators.begin(), iterators.end(), [](Iterator* i) {i->next();});
+    bool has_next = false;
+    for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {i->next();has_next |= i->hasNext();});
+    hasNextElement = has_next;
     state = usable;
     LEAVE_METHOD;
   } else if (state == usable && occurs == 0) {
@@ -81,7 +83,7 @@ void IteratorPermuter::next()
   }
   
   hasNextElement = (occurs < max_occurs);
-  
+
   if (iterators[current]->hasNext()) {
     iterators[current]->next();
     if (current != 0) {
@@ -95,30 +97,31 @@ void IteratorPermuter::next()
     LEAVE_METHOD;
   }
   
+  /* find some iterator with a next element */
   while(current < occurs) {
     if (iterators[current]->hasNext()) {
       break;
     }
     ++current;
   }
-  if (current >= occurs) {
+  if (current >= occurs) { /* we must switch to the next length (if allowed) */
     assert (current == occurs);
-    if (occurs < max_occurs) {
-      ++occurs;
-    } else {
+    if (occurs >= max_occurs) { /* no more elements left */
       state = not_usable; LEAVE_METHOD;
     }
-  } else {
+    hasNextElement = iterators[occurs]->hasNext();
+    ++occurs;
+  } else { /* select next element */
     iterators[current]->next();
   }
   
+  /* reset all iterators left to the current one */
   while(current > 0) {
     --current;
     iterators[current]->reset();
     iterators[current]->next();
-    hasNextElement = true;
+    hasNextElement |= iterators[current]->hasNext();;
   }
-  assert(current == 0);
   
   assert(canUseValue());
   
