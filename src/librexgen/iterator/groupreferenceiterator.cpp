@@ -61,3 +61,7 @@ void GroupReferenceIterator::reset() {
   state = resetted;
 }
 
+Iterator::size_type GroupReferenceIterator::size() const {
+  return groupRef->size();
+}
+

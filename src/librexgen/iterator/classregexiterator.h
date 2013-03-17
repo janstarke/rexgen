@@ -43,7 +43,7 @@ public:
                        const char_type* classcontent,
                        size_t size
 		      )
-    :Iterator(_id), begin(classcontent), current(classcontent-1), end(classcontent+size){}
+    :Iterator(_id), begin(classcontent), current(classcontent-1), end(classcontent+size), __size(size){}
   
    void reset() { current = begin - 1; }
     
@@ -55,10 +55,12 @@ public:
     inline void next() {assert(hasNext()); ++current;}
     inline bool hasNext() const { return  (current+1 < end); }
     inline bool canUseValue() const { return (current>=begin && current<end); }
+    Iterator::size_type size() const { return __size; }
 private:
   const char_type *begin;
   const char_type *current;
   const char_type *end;
+  const Iterator::size_type __size;
 };
 
 #endif // CLASSREGEXITERATOR_H

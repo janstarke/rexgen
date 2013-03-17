@@ -143,3 +143,10 @@ bool RegexAlternativesIterator::canUseValue() const {
   return ((*iter)->canUseValue());
 }
 
+Iterator::size_type RegexAlternativesIterator::size() const {
+  Iterator::size_type s = 0;
+  for_each(iterators.begin(), iterators.end(), [&s](Iterator* i) {
+    s += i->size();
+  });
+  return s;
+}

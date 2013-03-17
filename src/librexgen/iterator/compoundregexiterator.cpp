@@ -93,4 +93,12 @@ void CompoundRegexIterator::addChild(Iterator* i) {
   iterators.push_back(i);
 }
 
+Iterator::size_type CompoundRegexIterator::size() const {
+  Iterator::size_type s = 0;
+  for_each(iterators.begin(), iterators.end(), [&s](Iterator* i) {
+    s *= i->size();
+  });
+  return s;
+}
+
 

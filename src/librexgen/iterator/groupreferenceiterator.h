@@ -46,6 +46,8 @@ public:
     virtual void next();
     virtual void value(string_type& dst) const;
     virtual void reset();
+
+    Iterator::size_type size() const;
     
 private:
   const Iterator* groupRef;

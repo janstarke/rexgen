@@ -58,6 +58,8 @@ public:
   
   Iterator* singleIterator(IteratorState* /* state */) const 
   { return new ClassRegexIterator(getId(), &characters[0], characters.size()); }
+
+  Iterator::size_type size() const { return characters.size();}
 private:
   void __insert_character(char_type ch);
   void __append_character(char_type ch);

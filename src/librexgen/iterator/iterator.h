@@ -35,6 +35,8 @@
 class Iterator
 {
 public:
+  typedef unsigned long long int size_type;
+
   Iterator(int _id):
     state(resetted), 
     id(_id) {}
@@ -48,6 +50,8 @@ public:
   virtual bool canUseValue() const { return (state == usable); }
   
   int getId() const { return id; }
+
+  virtual size_type size() const = 0;
   
 protected:
   

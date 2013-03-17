@@ -45,6 +45,7 @@ public:
     void value(string_type& dst) const;
     bool hasNext() const;
     void reset();
+    Iterator::size_type size() const { return 1; }
 private:
   const char_type* terminal;
   size_t terminal_length;

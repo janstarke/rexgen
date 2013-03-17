@@ -55,6 +55,7 @@ public:
     bool hasNext() const;
     
     void addChild(Iterator* re);
+    Iterator::size_type size() const;
 private:  
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;

@@ -34,8 +34,8 @@ hasNextElement(true), occurs(min_occurs)
   for (unsigned int n=0; n<max_occurs; ++n) {
     iterators.push_back(regex->singleIterator(iteratorState));
   }
-  current = 0;
-  state = resetted;
+  reset();
+  __size = size();
 }
 
 void IteratorPermuter::value(string_type& dst) const
@@ -59,73 +59,28 @@ bool IteratorPermuter::hasNext() const
     RETURN(true);
   }
   
-  RETURN(hasNextElement);
+  //RETURN(hasNextElement);
+  RETURN(existsIteratorWithNextElement());
 }
 
 void IteratorPermuter::next()
 {
   ENTER_METHOD;
   
-  if (state == resetted) {
-    bool has_next = false;
-    for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {i->next();has_next |= i->hasNext();});
-    hasNextElement = has_next;
-    state = usable;
-    LEAVE_METHOD;
-  } else if (state == usable && occurs == 0) {
-    if (occurs < max_occurs) {
-      ++occurs;
-      current = 0;
-    } else {
-      state = not_usable;
-    }
-    LEAVE_METHOD;
-  }
+  /* special case handling for resetted state */
+  if (state == resetted) { state = usable; LEAVE_METHOD; }
   
-  hasNextElement = (occurs < max_occurs);
-
-  if (iterators[current]->hasNext()) {
-    iterators[current]->next();
-    if (current != 0) {
-      hasNextElement = true;
-    } else {
-      if (! hasNextElement) {
-        hasNextElement = existsIteratorWithNextElement();
-      }
-    }
-    state = usable;
-    LEAVE_METHOD;
-  }
+  /* special case handling for quantifier which starts with 0, i.e. {0,3} */
+  if (state == usable && occurs == 0) { ++occurs; LEAVE_METHOD; }
   
-  /* find some iterator with a next element */
-  while(current < occurs) {
-    if (iterators[current]->hasNext()) {
-      break;
-    }
-    ++current;
+  unsigned int n = 0;
+  for (; ! iterators[n]->hasNext() && n<occurs; ++n) {
+    iterators[n]->reset();
+    iterators[n]->next();
   }
-  if (current >= occurs) { /* we must switch to the next length (if allowed) */
-    assert (current == occurs);
-    if (occurs >= max_occurs) { /* no more elements left */
-      state = not_usable; LEAVE_METHOD;
-    }
-    hasNextElement = iterators[occurs]->hasNext();
-    ++occurs;
-  } else { /* select next element */
-    iterators[current]->next();
-  }
-  
-  /* reset all iterators left to the current one */
-  while(current > 0) {
-    --current;
-    iterators[current]->reset();
-    iterators[current]->next();
-    hasNextElement |= iterators[current]->hasNext();;
-  }
-  
-  assert(canUseValue());
-  
-  TRACE_INT("next2: current length: %d", (int)occurs);
+  if (n == max_occurs) { state = not_usable; LEAVE_METHOD; }
+  if (n == occurs)  { ++occurs; }
+  else              { iterators[n]->next(); }
   LEAVE_METHOD;
 }
 
@@ -133,11 +88,14 @@ void IteratorPermuter::reset()
 {
   ENTER_METHOD;
   Iterator::reset();
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {i->reset();});
+
+  bool has_next = false;
+  for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {i->next();has_next |= i->hasNext();});
+  hasNextElement = has_next;
+
   occurs = min_occurs;
   current = 0;
   state = resetted;
-  hasNextElement = true;
   LEAVE_METHOD;
 }
 
@@ -152,3 +110,12 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
   RETURN(false);
 }
 
+Iterator::size_type IteratorPermuter::size() const {
+  if (iterators.size() == 0) { return 0; }
+  Iterator::size_type single_size = iterators[0]->size();
+  Iterator::size_type s = 0;
+  for (int e=min_occurs; e<=max_occurs; ++e) {
+    s += _Pow_int(s, e);
+  }
+  return s;
+}

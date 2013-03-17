@@ -50,11 +50,14 @@ public:
     }
     void next();
     void reset();
+
+    Iterator::size_type size() const;
 private:
   bool existsIteratorWithNextElement() const;
   
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
+  Iterator::size_type __size;
   vector<Iterator *> iterators;
   IteratorState* iteratorState;
   bool hasNextElement;
