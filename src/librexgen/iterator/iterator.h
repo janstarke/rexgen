@@ -43,7 +43,7 @@ public:
   virtual ~Iterator() {}
   
   virtual bool hasNext() const { return false; }
-  virtual void next() {};
+  virtual bool next() = 0;
   virtual void value(string_type& /* dst */ ) const { }
   virtual void reset() { state = resetted; }
   

@@ -48,7 +48,7 @@ public:
     {
       for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
     }
-    void next();
+    bool next();
     void reset();
 
     Iterator::size_type size() const;

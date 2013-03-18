@@ -49,7 +49,7 @@ public:
     }
     
     void reset();
-    void next();
+    bool next();
     void value(string_type& dst) const;
     bool hasNext() const;
     

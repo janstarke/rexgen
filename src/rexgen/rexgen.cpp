@@ -98,7 +98,6 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 int _tmain(int argc, _TCHAR* argv[]) {
   char_type xml[1024];
   SimpleString buffer;
-  const char* format;
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
@@ -123,24 +122,26 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #ifdef _WIN32
 	cout << "result:" << endl << xml << endl;
 #else
-    format = "result:\n" PRINTF_FORMAT "\n";
-    ulc_fprintf(stdout, format, xml);
+    ulc_fprintf(stdout, "result:\n" PRINTF_FORMAT "\n", xml);
 #endif
   }
     
   Iterator* iter = regex->iterator();
 
-  format = PRINTF_FORMAT "\n";
-  while (iter->hasNext()) {
-    iter->next();
+  while (iter->next()) {
     buffer.clear();
     iter->value(buffer);
+    buffer.push_back('\n');
     buffer.push_back(0);
 
 #ifdef _WIN32
-    _tprintf(_T("%s\n"), &buffer[0]);
+#ifdef UNICODE
+    fputws(&buffer[0], stdout);
 #else
-    ulc_fprintf(stdout, format, &buffer[0]);
+    fputs(&buffer[0], stdout);
+#endif
+#else
+    ulc_fprintf(stdout, PRINTF_FORMAT, &buffer[0]);
 #endif
   }
   delete regex;

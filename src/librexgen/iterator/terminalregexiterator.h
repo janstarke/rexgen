@@ -41,7 +41,7 @@ public:
   
   TerminalRegexIterator(int _id, const char_type* _terminal);
     
-    void next();
+    bool next();
     void value(string_type& dst) const;
     bool hasNext() const;
     void reset();

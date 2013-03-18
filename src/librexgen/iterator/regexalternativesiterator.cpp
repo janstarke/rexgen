@@ -52,51 +52,33 @@ void RegexAlternativesIterator::reset() {
 
 void RegexAlternativesIterator::value(string_type& dst) const {
   ENTER_METHOD;
+  /*
   assert(canUseValue());
   assert(iter != iterators.end());
+  */
   (*iter)->value(dst);
   LEAVE_METHOD;
 }
 
 
-void RegexAlternativesIterator::next() {
+bool RegexAlternativesIterator::next() {
   ENTER_METHOD;
-  assert(hasNext());
-  Iterator::next();
 
   if (state == resetted) {
-    iter = iterators.begin();
-    assert((*iter)->hasNext());
-    (*iter)->next();
-    assert((*iter)->canUseValue());
     state = usable;
-    LEAVE_METHOD;
+    RETURN(true);
   }
 
-  if ((*iter)->hasNext()) {
-    ((*iter)->next());
-    state = usable;
-    LEAVE_METHOD;
+  if ((*iter)->next()) {
+    return true;
   }
-
-  /* use the next iterator */
   ++iter;
   if (iter == iterators.end()) {
-    state = not_usable;
-    assert(canUseValue());
-    LEAVE_METHOD;
+    iter = iterators.begin();
+    return false;
   }
-
-  if ((*iter)->hasNext()) {
-    (*iter)->next();
-    state = usable;
-  } else {
-    state = not_usable;
-    assert(canUseValue());
-  }
-
-  assert(canUseValue());
-  LEAVE_METHOD;
+  (*iter)->next();
+  RETURN (true);
 }
 
 bool RegexAlternativesIterator::hasNext() const {
@@ -130,6 +112,7 @@ void RegexAlternativesIterator::addChild(Iterator* i) {
   ENTER_METHOD;
   iterators.push_back(i);
   iter = iterators.begin();
+  i->next();
   LEAVE_METHOD;
 }
 

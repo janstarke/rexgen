@@ -34,6 +34,10 @@
 
 CompoundRegexIterator::CompoundRegexIterator(int _id)
   : Iterator(_id) {
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
+    i->reset();
+    i->next();
+  });
 }
 
 void CompoundRegexIterator::reset() {
@@ -44,32 +48,16 @@ void CompoundRegexIterator::reset() {
   state = resetted;
 }
 
-void CompoundRegexIterator::next() {
-  assert(hasNext());
-
+bool CompoundRegexIterator::next() {
   bool found_next = false;
-  Iterator::next();
-  state = not_usable;
+  state = usable;
+  if (state == resetted) { return true; }
   for (auto i = iterators.begin(); i != iterators.end(); ++i) {
-    if ((*i)->canUseValue() && !found_next) {
-      if ((*i)->hasNext()) {
-        (*i)->next();
-        found_next = true;
-        state = usable;
-      } else {
-        (*i)->reset();
-        if ((*i)->hasNext()) {
-          (*i)->next();
-          state = usable;
-        }
-      }
-    } else if (!(*i)->canUseValue()) {
-      if ((*i)->hasNext()) {
-        (*i)->next();
-        state = usable;
-      }
+    if ((*i)->next()) {
+      return true;
     }
   }
+  return false;
 }
 
 void CompoundRegexIterator::value(string_type& dst) const {

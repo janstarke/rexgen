@@ -52,7 +52,7 @@ public:
         dst.push_back(*current);
       }      
     }
-    inline void next() {assert(hasNext()); ++current;}
+    inline bool next() { ++current; if (current >= end) { current = begin; return false;} return true; }
     inline bool hasNext() const { return  (current+1 < end); }
     inline bool canUseValue() const { return (current>=begin && current<end); }
     Iterator::size_type size() const { return __size; }

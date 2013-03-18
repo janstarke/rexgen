@@ -43,7 +43,7 @@ public:
       : Iterator(_id), groupRef(re) {};
   
     virtual bool hasNext() const;
-    virtual void next();
+    virtual bool next();
     virtual void value(string_type& dst) const;
     virtual void reset();
 

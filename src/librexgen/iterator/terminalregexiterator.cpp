@@ -46,16 +46,11 @@ void TerminalRegexIterator::value(string_type& dst) const {
   }
 }
 
-void TerminalRegexIterator::next() {
+bool TerminalRegexIterator::next() {
   ENTER_METHOD;
-  // assert( hasNext() );
-  Iterator::next();
-  if (state == resetted)
-    state = usable;
-  else
-    state = not_usable;
-  assert(canUseValue());
-  LEAVE_METHOD;
+  bool res = (state == resetted);
+  state = usable;
+  RETURN(res);
 }
 
 bool TerminalRegexIterator::hasNext() const {

@@ -34,20 +34,11 @@ bool GroupReferenceIterator::hasNext() const {
   RETURN(state == resetted);
 }
 
-void GroupReferenceIterator::next() {
+bool GroupReferenceIterator::next() {
   ENTER_METHOD;
-  switch (state) {
-  case resetted:
-    state = usable;
-    break;
-  case usable:
-    state = not_usable;
-    break;
-  default:
-    state = not_usable;
-    break;
-  }
-  LEAVE_METHOD;
+  bool res = (state == resetted);
+  state = usable;
+  RETURN(res);
 }
 
 void GroupReferenceIterator::value(string_type& dst) const {

@@ -63,25 +63,21 @@ bool IteratorPermuter::hasNext() const
   RETURN(existsIteratorWithNextElement());
 }
 
-void IteratorPermuter::next()
+bool IteratorPermuter::next()
 {
   ENTER_METHOD;
   
   /* special case handling for resetted state */
-  if (state == resetted) { state = usable; LEAVE_METHOD; }
+  if (state == resetted) { state = usable; RETURN(true); }
   
   /* special case handling for quantifier which starts with 0, i.e. {0,3} */
-  if (state == usable && occurs == 0) { ++occurs; LEAVE_METHOD; }
+  if (state == usable && occurs == 0) { ++occurs; RETURN(true); }
   
   unsigned int n = 0;
-  for (; ! iterators[n]->hasNext() && n<occurs; ++n) {
-    iterators[n]->reset();
-    iterators[n]->next();
-  }
-  if (n == max_occurs) { state = not_usable; LEAVE_METHOD; }
+  for (; n<occurs; ++n) { if (iterators[n]->next()) break; }
+  if (n == max_occurs) { occurs = min_occurs; RETURN(false); }
   if (n == occurs)  { ++occurs; }
-  else              { iterators[n]->next(); }
-  LEAVE_METHOD;
+  RETURN(true);
 }
 
 void IteratorPermuter::reset()
@@ -114,7 +110,7 @@ Iterator::size_type IteratorPermuter::size() const {
   if (iterators.size() == 0) { return 0; }
   Iterator::size_type single_size = iterators[0]->size();
   Iterator::size_type s = 0;
-  for (int e=min_occurs; e<=max_occurs; ++e) {
+  for (unsigned int e=min_occurs; e<=max_occurs; ++e) {
     s += _Pow_int(s, e);
   }
   return s;
