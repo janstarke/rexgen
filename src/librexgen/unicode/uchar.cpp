@@ -68,7 +68,7 @@ void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
       }
       break;
     case CHARSET_UTF16:
-#pragma message "TODO: create UTF16 conversion"
+#pragma message ("TODO: create UTF16 conversion")
       dst->char_length = 2;
       dst->character.ucs2.low = 0;
       dst->character.ucs2.high = 

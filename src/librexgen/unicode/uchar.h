@@ -30,6 +30,7 @@
 #define __uchar_h__
 
 #include <librexgen/unicode.h>
+#include <librexgen/parser/osdepend.h>
 
 enum charset : uint8_t {
   CHARSET_ANSI,

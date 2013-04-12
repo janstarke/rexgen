@@ -9,6 +9,10 @@ inline int isatty(int fd ) { return _isatty(fd); }
 
 #define EXPORT __declspec (dllexport)
 
+typedef unsigned __int8 uint8_t;
+typedef unsigned __int16 uint16_t;
+typedef unsigned __int32 uint32_t;
+
 #else /* ! defined(_WIN32) */
 
 #define EXPORT
