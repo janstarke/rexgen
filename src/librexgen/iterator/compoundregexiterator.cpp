@@ -49,7 +49,6 @@ void CompoundRegexIterator::reset() {
 }
 
 bool CompoundRegexIterator::next() {
-  bool found_next = false;
   state = usable;
   if (state == resetted) { return true; }
   for (auto i = iterators.begin(); i != iterators.end(); ++i) {
@@ -60,7 +59,7 @@ bool CompoundRegexIterator::next() {
   return false;
 }
 
-void CompoundRegexIterator::value(string_type& dst) const {
+void CompoundRegexIterator::value(SimpleString& dst) const {
   assert(canUseValue());
   for_each(iterators.begin(), iterators.end(),
   [&dst](Iterator* i) { i->value(dst); });
@@ -79,14 +78,6 @@ bool CompoundRegexIterator::hasNext() const {
 
 void CompoundRegexIterator::addChild(Iterator* i) {
   iterators.push_back(i);
-}
-
-Iterator::size_type CompoundRegexIterator::size() const {
-  Iterator::size_type s = 0;
-  for_each(iterators.begin(), iterators.end(), [&s](Iterator* i) {
-    s *= i->size();
-  });
-  return s;
 }
 
 

@@ -25,50 +25,60 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <librexgen/regex/terminalregex.h>
-#include <librexgen/iterator/iteratorpermuter.h>
-#include <librexgen/unicode.h>
-#include <vector>
+#include <librexgen/parser/parse_escapes.h>
 
-
-void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for_each((tre->value.cbegin()), (tre->value.cend()),
-    [&](const uchar_t ch){value.insert(value.begin(), ch); });
+static uint8_t parseHexChar(char c) {
+  if (c >= '0' && c <= '9') {
+    return ((c) - '0');
+  } else if (c >= 'a' && c <= 'f') {
+    return ((c) - 'a' + 10);
+  } else if (c >= 'A' && c <= 'F') {
+    return ((c) - 'A' + 10);
+  }
+  return -1;
 }
 
-Iterator* TerminalRegex::iterator(IteratorState* state) const {
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return new TerminalRegexIterator(getId(), &value[0], value.size());
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
+static uint32_t parseHexString(const char* ptr, size_t length) {
+  char32_t hexvalue = 0;
+  while (*ptr != 0 && length > 0) {
+    const uint8_t v = parseHexChar(*ptr);
+    if (v == -1) return -1;
+    hexvalue = (hexvalue << 4) + v;
+    ptr++;
+    length--;
   }
+  return hexvalue;
 }
 
-int TerminalRegex::appendContent(
-  char_type* dst, size_t size, int level) const {
-    size_t l, length = 0;
-    #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-    const wchar_t* format = _T("%s\n");
-    #else
-    const char* format = PRINTF_FORMAT "\n";
-    #endif
-    l = appendSpace(dst, size, level);
-    if (size <= l) goto finish;
-    size -= l;
-    length += l;
-    dst += l;
-    
-    length += utf_snprintf(dst, size, format, nullptr);
-    finish:
-    return length;
-  }
+/**
+ * returns the codepoint of the character; e.g.
+ * 'A'          => 0x0041
+ * '\n'         => 0x000a
+ * '\r'         => 0x000d
+ * '\xAA'       => 0x00AA
+ * '\uUUUU'     => 0xUUUU
+ */
+uint16_t parseFirstCharacter(const char* c) {
+  uint16_t codepoint;
   
-/*
-void TerminalRegex::setValue(const char_type* v) {
-  delete value;
-  size_t size = utf_strlen(v)+1;
-  value = new char_type[size];
-  utf_strncpy(value, v, size);
+  if (c[0] == '\0') {
+    return c[0];
+  }
+  if (c[0] == '\\' && c[1] != '\0') {
+    switch (c[1]) {
+      case 'n':
+        return '\n';
+      case 'r':
+        return '\r';
+      case '0':
+        return '\0';
+      case 'x':
+        return (char_type) parseHexString((c+2), 2);
+      case 'u':
+        return parseHexString((c+2), 4);
+      default:
+        return c[1];
+    }
+  }
+  return c[0];
 }
-*/

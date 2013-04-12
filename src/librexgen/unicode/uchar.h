@@ -25,50 +25,54 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <librexgen/regex/terminalregex.h>
-#include <librexgen/iterator/iteratorpermuter.h>
+
+#ifndef __uchar_h__
+#define __uchar_h__
+
 #include <librexgen/unicode.h>
-#include <vector>
 
+enum charset : uint8_t {
+  CHARSET_ANSI,
+  CHARSET_UTF8,
+  CHARSET_UTF16,
+  CHARSET_UTF32
+};
 
-void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for_each((tre->value.cbegin()), (tre->value.cend()),
-    [&](const uchar_t ch){value.insert(value.begin(), ch); });
-}
-
-Iterator* TerminalRegex::iterator(IteratorState* state) const {
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return new TerminalRegexIterator(getId(), &value[0], value.size());
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
-  }
-}
-
-int TerminalRegex::appendContent(
-  char_type* dst, size_t size, int level) const {
-    size_t l, length = 0;
-    #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-    const wchar_t* format = _T("%s\n");
-    #else
-    const char* format = PRINTF_FORMAT "\n";
-    #endif
-    l = appendSpace(dst, size, level);
-    if (size <= l) goto finish;
-    size -= l;
-    length += l;
-    dst += l;
-    
-    length += utf_snprintf(dst, size, format, nullptr);
-    finish:
-    return length;
-  }
+struct uchar_t{
+  charset variant;
+  uint8_t char_length;
   
-/*
-void TerminalRegex::setValue(const char_type* v) {
-  delete value;
-  size_t size = utf_strlen(v)+1;
-  value = new char_type[size];
-  utf_strncpy(value, v, size);
-}
-*/
+  /* this one is needed for simple iteration in in UTF8 and UTF16*/
+  uint16_t codepoint;
+  
+  union {
+    byte    bytes[4];
+    struct {
+      uint8_t  pad[3];
+      char     value;
+    } ansi;
+    struct {
+      char16_t low;
+      char16_t high;
+    } ucs2;
+    struct {
+      char32_t value;
+    } ucs4;
+  }character;
+};
+
+void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
+
+uint8_t uchar_to_ansi(const uchar_t& uch, byte* ansi_dst);
+
+uint8_t uchar_to_utf8(const uchar_t& uch, byte* utf8_dst);
+
+uint8_t uchar_to_utf16(const uchar_t& uch, byte* utf16_dst);
+
+uint8_t uchar_to_utf32(const uchar_t& uch, byte* utf32_dst);
+
+uint8_t uchar_to_utf(const uchar_t& uch, byte* dst);
+
+bool uchar_isascii(const uchar_t& uch);
+
+#endif

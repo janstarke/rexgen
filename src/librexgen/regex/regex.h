@@ -77,8 +77,6 @@ public:
   
   virtual int xmlEncapsulate(char_type* dst, size_t size, const char_type* clazz, int level) const;
   
-  static char_type parseFirstCharacter(const char_type* s);
-  
   virtual Iterator* singleIterator(IteratorState* state) const = 0;  
   virtual Iterator* iterator(IteratorState* state) const = 0;
   

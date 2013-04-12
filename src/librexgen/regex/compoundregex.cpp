@@ -52,7 +52,7 @@ void CompoundRegex::prependRegex(Regex* regex) {
               && tre->getMinOccurs() == 1
               && tre->getMaxOccurs() == 1) {
           TerminalRegex* tre_new = reinterpret_cast<TerminalRegex*>(regex);
-          tre->prependSingleCharacter(tre_new->getValue());
+          tre->prepend(tre_new);
           LEAVE_METHOD;
         }
       }

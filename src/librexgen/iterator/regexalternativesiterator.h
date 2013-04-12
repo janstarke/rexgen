@@ -51,11 +51,10 @@ public:
     
     void reset();
     bool next();
-    void value(string_type& dst) const;
+    void value(SimpleString& dst) const;
     bool hasNext() const;
     
     void addChild(Iterator* re);
-    Iterator::size_type size() const;
 private:  
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;

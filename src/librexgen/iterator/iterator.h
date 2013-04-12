@@ -31,11 +31,11 @@
 
 #include <assert.h>
 #include <librexgen/unicode.h>
+#include <librexgen/unicode/simple_string.h>
 
 class Iterator
 {
 public:
-  typedef unsigned long long int size_type;
 
   Iterator(int _id):
     state(resetted), 
@@ -44,14 +44,12 @@ public:
   
   virtual bool hasNext() const { return false; }
   virtual bool next() = 0;
-  virtual void value(string_type& /* dst */ ) const { }
+  virtual void value(SimpleString& /* dst */ ) const { }
   virtual void reset() { state = resetted; }
   
   virtual bool canUseValue() const { return (state == usable); }
   
   int getId() const { return id; }
-
-  virtual size_type size() const = 0;
   
 protected:
   

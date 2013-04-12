@@ -130,7 +130,7 @@ int rexgen_value(lua_State* L, const Iterator* iter) {
 
   iter->value(buffer);
   buffer.push_back('\0');
-  push_utf8_string(L, &buffer[0], buffer.size());
+  //push_utf8_string(L, &buffer[0], buffer.size());
 
   return 1;
 }
@@ -146,7 +146,7 @@ int rexgen_get_syntax_tree(lua_State* L) {
 
 void push_utf8_string(lua_State* L, char_type* str, int length) {
 #ifdef UTF8
-  lua_pushlstring(L, str, length);
+  lua_pushlstring(L, (char*)str, length);
 #else
   /* convert buffer to UTF-8 */
   uint8_t dst[BUFFER_SIZE];

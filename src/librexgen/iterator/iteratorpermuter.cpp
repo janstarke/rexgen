@@ -35,10 +35,9 @@ hasNextElement(true), occurs(min_occurs)
     iterators.push_back(regex->singleIterator(iteratorState));
   }
   reset();
-  __size = size();
 }
 
-void IteratorPermuter::value(string_type& dst) const
+void IteratorPermuter::value(SimpleString& dst) const
 {
   ENTER_METHOD;
   for (unsigned int n=0; n<occurs; ++n) {
@@ -104,14 +103,4 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
     }
   }
   RETURN(false);
-}
-
-Iterator::size_type IteratorPermuter::size() const {
-  if (iterators.size() == 0) { return 0; }
-  Iterator::size_type single_size = iterators[0]->size();
-  Iterator::size_type s = 0;
-  for (unsigned int e=min_occurs; e<=max_occurs; ++e) {
-    s += _Pow_int(s, e);
-  }
-  return s;
 }

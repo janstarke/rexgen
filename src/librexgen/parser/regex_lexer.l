@@ -43,30 +43,11 @@
     return (hex2bin(text[2])<<4) | (hex2bin(text[3]));
   }
   
-  static char_type parseUnicodeChar(const char* text) {
-    char32_t codepoint[2];
-    codepoint[0] = (hex2bin(text[2])<<12)
+  static uint32_t parseUnicodeChar(const char* text) {
+    return (hex2bin(text[2])<<12)
 	  | (hex2bin(text[3])<<8)
 	  | (hex2bin(text[4])<<4)
 	  | (hex2bin(text[5]));
-    codepoint[1] = 0;
-#if defined(UTF32)
-	return codepoint[0];
-#elif defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-	return (char_type)(0x0000ffff & codepoint[0]);
-#else
-      char_type buffer[4];
-      size_t length = 0;
-#if defined(UTF8)
-      u32_to_u8(codepoint, 1, buffer, &length);
-#elif defined(UTF16)
-      u32_to_u16(codepoint, 1, buffer, &length);
-#else
-#error "no encoding defined"
-#endif
-      return buffer[0];
-#endif
-
   }
 %}
 

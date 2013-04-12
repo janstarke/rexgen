@@ -3,19 +3,27 @@
 
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/terminalregexiterator.h>
+#include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/unicode.h>
+#include <librexgen/unicode/uchar.h>
+#include <vector>
+
+using std::vector;
 
 class TerminalRegex : public Regex {
-public:
-  inline TerminalRegex(): value(_T("")) {}
-  
-  ~TerminalRegex() { delete value; }
+public:  
+  TerminalRegex(uint32_t ch, charset encoding) {
+    uchar_t uch;
+    codepoint_to_uchar(&uch, ch, encoding);
+    value.push_back(uch);
+  }
 
-  inline TerminalRegex(char_type c): value(new char_type[2]) {value[0]=c; value[1]='\0';}
-  void prependSingleCharacter(const char_type* v);
-  void setValue(const char_type* v);
+  void prepend(const TerminalRegex* tre);
+  /*
+  void setValue(const char* v);
+  */
   
-  inline const char_type* getValue() const { return value; }
+  inline const char_type* getValue() const { return nullptr; }
   
   inline const char_type* getXmlTag() const { return _C("terminal"); }
   
@@ -26,9 +34,9 @@ public:
   Iterator* iterator(IteratorState* state) const;
   
   Iterator* singleIterator(IteratorState* /* state */) const
-    { return new TerminalRegexIterator(getId(), value); }
+    { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
 private:
-  char_type* value;
+  vector<uchar_t> value;
 };
-
+  
 #endif

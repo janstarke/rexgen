@@ -33,21 +33,34 @@
 #include <string.h>
 #include "../debug.h"
 #include <vector>
-
+#include <librexgen/unicode.h>
+#include <librexgen/simplestring.h>
 
 class TerminalRegexIterator : public Iterator
 {
 public:
   
-  TerminalRegexIterator(int _id, const char_type* _terminal);
+  TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
+    : Iterator(_id) {
+    terminal = new byte[elements*sizeof(uchar_t)];
+    terminal_length = 0;
+    for (size_t n = 0; n < elements; ++n) {
+      terminal_length += uchar_to_utf(_terminal[n], &terminal[terminal_length]);
+    }
+  }
+  
+  ~TerminalRegexIterator() { delete[] terminal; }
     
-    bool next();
-    void value(string_type& dst) const;
-    bool hasNext() const;
-    void reset();
-    Iterator::size_type size() const { return 1; }
+  bool next() {
+    const bool res = (state == resetted);
+    state = usable;
+    return res;
+  }
+  void value(SimpleString& dst) const { dst.append(terminal, terminal_length); }
+  bool hasNext() const { return state == resetted; }
+  void reset() { state = resetted; }
 private:
-  const char_type* terminal;
+  byte* terminal;
   size_t terminal_length;
 };
 

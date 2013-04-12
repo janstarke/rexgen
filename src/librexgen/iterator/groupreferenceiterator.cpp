@@ -41,7 +41,7 @@ bool GroupReferenceIterator::next() {
   RETURN(res);
 }
 
-void GroupReferenceIterator::value(string_type& dst) const {
+void GroupReferenceIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
   groupRef->value(dst);
   LEAVE_METHOD;
@@ -51,8 +51,3 @@ void GroupReferenceIterator::reset() {
   Iterator::reset();
   state = resetted;
 }
-
-Iterator::size_type GroupReferenceIterator::size() const {
-  return groupRef->size();
-}
-

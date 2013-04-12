@@ -26,43 +26,86 @@
 */
 
 
-#ifndef SIMPLESTRING_H
-#define SIMPLESTRING_H
+#ifndef SIMPLE_STRING_H
+#define SIMPLE_STRING_H
 
-#include <librexgen/unicode.h>
 #include <cstdio>
-#include <cstring>
+#include "uchar.h"
 
-class SimpleString {
+template <class CHAR>
+class simple_string
+{
 public:
-  SimpleString(size_t msize=256)
+  simple_string(size_t msize=256)
     :max_size(msize), current_size(0) {
-      buffer = new byte[msize];
-  }
-  virtual ~SimpleString() { delete[] buffer; }
-  
-  void push_back(byte ch) {
+      buffer = new CHAR[msize];
+    }
+  ~simple_string() { delete[] buffer; }
+    
+  void push_back(CHAR ch) {
     if (current_size < max_size) {
       buffer[current_size] = ch;
-      current_size++;
+      ++current_size;
+    }
+  }
+  void push_front(CHAR ch) {
+    if (current_size < max_size) {
+      for (size_t idx = current_size; idx > 0; idx--) {
+        buffer[idx] = buffer[idx-1];
+      }
+      buffer[0] = ch;
+      ++current_size;
     }
   }
   
-  void append(const byte* ch, size_t length) {
-    if (length < max_size-current_size) {
-      memcpy(&buffer[current_size], ch, length);
-      current_size += length;
-    }
+  virtual size_t size() const { return current_size; }
+  virtual void clear() { current_size = 0; }
+  
+  size_t print(FILE* stream) {
+    return fwrite(buffer, current_size, sizeof(CHAR), stream);
   }
-  
-  unsigned int size() { return current_size; }
-  void clear() { current_size = 0; }
-  void print(FILE* stream) const {fwrite(buffer, sizeof(*buffer), current_size, stream);}
-  
 private:
   size_t max_size;
   size_t current_size;
-  byte* buffer;
+  CHAR* buffer;
 };
 
-#endif // SIMPLESTRING_H
+template <>
+class simple_string <uchar_t> {
+  simple_string(size_t msize=256)
+  :max_size(msize), current_size(0) {
+    buffer = new char[msize];
+    end = buffer;
+  }
+  ~simple_string() { delete[] buffer; }
+  
+  void push_back(uchar_t ch) {
+    if (current_size+ch.char_length <= max_size) {
+      current_size += uchar_to_utf(ch, &buffer[current_size]);
+    }
+  }
+  void push_front(uchar_t ch) {
+    uint8_t len = ch.char_length;
+    size_t idx;
+    if (current_size+len <= max_size) {
+      for (idx = current_size+len-1; idx >= len; idx--) {
+        buffer[idx] = buffer[idx-len];
+      }
+      current_size += uchar_to_utf(ch, &buffer[idx]);
+    }
+  }
+  
+  virtual size_t size() const { return current_size; }
+  virtual void clear() { current_size = 0; }
+  
+  size_t print(FILE* stream) {
+    return fwrite(buffer, current_size, sizeof(char), stream);
+  }  
+private:
+  size_t max_size;
+  size_t current_size;
+  char* end;
+  char* buffer;
+};
+
+#endif // SIMPLE_STRING_H

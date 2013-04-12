@@ -41,7 +41,7 @@ class IteratorPermuter : public Iterator
 {
 
 public:
-    void value(string_type& dst) const;
+  void value(SimpleString& dst) const;
     bool hasNext() const;
     IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
     ~IteratorPermuter()
@@ -51,13 +51,11 @@ public:
     bool next();
     void reset();
 
-    Iterator::size_type size() const;
 private:
   bool existsIteratorWithNextElement() const;
   
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
-  Iterator::size_type __size;
   vector<Iterator *> iterators;
   IteratorState* iteratorState;
   bool hasNextElement;

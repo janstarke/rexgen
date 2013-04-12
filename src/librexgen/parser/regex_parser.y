@@ -36,7 +36,7 @@
 %start T_RegexAlternatives
 
 %union {
-  char_type		character;
+  uint32_t		character;
   int 			integer;
   int 			groupId;
   Regex* 		regex;
@@ -128,11 +128,11 @@ PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
 
 SimpleRegex: T_ANY_CHAR {
   if (context->ignoreCase()) {
-    ClassRegex* re = new ClassRegex();
+    ClassRegex* re = new ClassRegex(context->encoding());
     re->addCharacter($1, context->ignoreCase());
     $$=re;
   } else {
-    $$ = new TerminalRegex($1);
+    $$ = new TerminalRegex($1, context->encoding());
   }
 };
 
@@ -144,7 +144,7 @@ ClassContent: T_HYPHEN ClassContentWithoutHyphen {
 ClassContent: ClassContentWithoutHyphen { $$ = $1; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR
-  { ClassRegex* re = new ClassRegex();
+  { ClassRegex* re = new ClassRegex(context->encoding());
     re->addCharacter($1, context->ignoreCase());
     $$=re; };
 ClassContentWithoutHyphen:
@@ -152,7 +152,7 @@ ClassContentWithoutHyphen:
   { ClassRegex* re = (ClassRegex*) $2; re->addCharacter((char)$1, context->ignoreCase()); $$=re; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR T_HYPHEN T_ANY_CHAR
-  { ClassRegex* re = new ClassRegex(); re->addRange($1, $3, context->ignoreCase()); $$=re; }
+  { ClassRegex* re = new ClassRegex(context->encoding()); re->addRange($1, $3, context->ignoreCase()); $$=re; }
 |  T_ANY_CHAR T_HYPHEN T_ANY_CHAR ClassContentWithoutHyphen
   { ClassRegex* re = $4; re->addRange((char)$1, (char)$3, context->ignoreCase()); $$=re; };
   

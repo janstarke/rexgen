@@ -1,4 +1,4 @@
-/*
+  /*
     Copyright (c) 2012, Jan Starke <jan.starke@outofbed.org>
     All rights reserved.
 
@@ -50,7 +50,7 @@ void RegexAlternativesIterator::reset() {
   LEAVE_METHOD;
 }
 
-void RegexAlternativesIterator::value(string_type& dst) const {
+void RegexAlternativesIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
   /*
   assert(canUseValue());
@@ -126,10 +126,3 @@ bool RegexAlternativesIterator::canUseValue() const {
   return ((*iter)->canUseValue());
 }
 
-Iterator::size_type RegexAlternativesIterator::size() const {
-  Iterator::size_type s = 0;
-  for_each(iterators.begin(), iterators.end(), [&s](Iterator* i) {
-    s += i->size();
-  });
-  return s;
-}

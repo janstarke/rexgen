@@ -59,7 +59,7 @@ int GroupReference::appendContent(
 #if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
   length += utf_snprintf(dst, size, _T("%d\n"), groupRef->getId());
 #else
-   length += utf_snprintf(dst, size, "%d\n", groupRef->getId());
+  length += utf_snprintf(dst, size, "%d\n", groupRef->getId());
 #endif
   finish:
   return length;

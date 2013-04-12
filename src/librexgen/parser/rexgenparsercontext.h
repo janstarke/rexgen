@@ -33,6 +33,7 @@
 #include <map>
 #include "../regex/regex.h"
 #include <librexgen/regex/groupreference.h>
+#include <librexgen/unicode/uchar.h>
 
 using namespace std;
 
@@ -40,8 +41,8 @@ class RexgenParserContext
 {
 
 public:
-  RexgenParserContext(istream* input = &cin, bool _ic = false)
-  : ic(_ic) {
+  RexgenParserContext(istream* input = &cin, bool _ic = false, charset _enc=CHARSET_UTF8)
+  : ic(_ic), enc(_enc) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
@@ -79,6 +80,7 @@ public:
   int groupId;
   
   bool ignoreCase() const { return ic; }
+  charset encoding() const { return enc; }
 
 protected:
   void InitScanner();
@@ -86,6 +88,7 @@ protected:
   
 private:
   const bool ic;
+  const charset enc;
   map<int, GroupReference*> groupRefs;
   map<int, Regex*> groups;
 };

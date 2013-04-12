@@ -13,7 +13,7 @@ set(librexgen_slibname "rexgen-${librexgen_version}s")
 set(rexgen_exename "${prj}")
 
 OPTION (USE_LUA "create API for lua" ON)
-OPTION (ENABLE_PROFILE "enable profiling" ON)
+OPTION (ENABLE_PROFILE "enable profiling" OFF)
 
 if (USE_LUA)
   find_library(log4cpp libunistring liblua5.2)

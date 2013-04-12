@@ -31,6 +31,7 @@
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/unicode.h>
+#include <librexgen/unicode/uchar.h>
 #include <vector>
 
 using namespace std;
@@ -40,27 +41,49 @@ class ClassRegexIterator : public Iterator
 
 public:
     ClassRegexIterator(int _id,
-                       const char_type* classcontent,
-                       size_t size
+                       const uchar_t* classcontent,
+                       size_t elements
 		      )
-    :Iterator(_id), begin(classcontent), current(classcontent-1), end(classcontent+size), __size(size){}
-  
-   void reset() { current = begin - 1; }
-    
-    inline void value(string_type& dst) const {
-      if (current != end) { 
-        dst.push_back(*current);
-      }      
+    :Iterator(_id) {
+      buffer = new byte[elements*sizeof(char32_t)];
+      buffer_length = 0;
+      for (size_t n=0; n<elements; ++n) {
+        byte* ptr = &buffer[buffer_length];
+        buffer_length += uchar_to_utf(classcontent[n], ptr);
+        ptrs.push_back(ptr);
+        lengths.push_back(classcontent[n].char_length);
+      }
+      reset();
     }
-    inline bool next() { ++current; if (current >= end) { current = begin; return false;} return true; }
-    inline bool hasNext() const { return  (current+1 < end); }
-    inline bool canUseValue() const { return (current>=begin && current<end); }
-    Iterator::size_type size() const { return __size; }
+    virtual ~ClassRegexIterator() {delete[] buffer;}
+  
+   void reset() { state = resetted; current = 0;}
+    
+    inline void value(SimpleString& dst) const {
+      dst.append(ptrs[current], lengths[current]);
+    }
+    
+    bool next() {
+      if (state == resetted) {
+        state = usable;
+        return true;
+      }
+      ++current;
+      if (current >= ptrs.size()) {
+        current = 0;
+        return false;
+      }
+      return true;
+    }
+    
+    inline bool hasNext() const { return  (current+1 < ptrs.size()); }
+    inline bool canUseValue() const { return (current<ptrs.size()); }
 private:
-  const char_type *begin;
-  const char_type *current;
-  const char_type *end;
-  const Iterator::size_type __size;
+  byte *buffer;
+  size_t buffer_length;
+  vector<byte*> ptrs;
+  vector<uint8_t> lengths;
+  unsigned int current;
 };
 
 #endif // CLASSREGEXITERATOR_H

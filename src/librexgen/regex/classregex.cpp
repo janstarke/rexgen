@@ -26,48 +26,67 @@
 */
 
 #include <librexgen/regex/classregex.h>
+#include <librexgen/unicode/uchar.h>
 #include <algorithm>
 #include <vector>
 
-bool ClassRegex::contains(char_type ch) const
+bool ClassRegex::contains(const uchar_t& ch) const
 {
   for (auto iter = characters.cbegin(); iter != characters.cend(); ++iter) {
-    if (*iter == ch) {
+    if ((*iter).codepoint == ch.codepoint) {
       return true;
     }
   }
   return false;
 }
 
-void ClassRegex::__append_character(char_type ch)
+void ClassRegex::__append_character(const uchar_t& ch)
 {
   if (! contains(ch)) {
     characters.push_back(ch);
   }
 }
-void ClassRegex::__insert_character(char_type ch)
+void ClassRegex::__insert_character(const uchar_t& ch)
 {
   if (! contains(ch)) {
     characters.insert(characters.begin(), ch);
   }
 }
 
-void ClassRegex::addCharacter(char_type ch, bool ignoreCase) {
+void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
   __insert_character(ch);
-  if (ignoreCase) {
-    if (islower(ch)) {
-      __insert_character(toupper(ch));
-    } else if (isupper(ch)) {
-      __insert_character(tolower(ch));
+  if (ignoreCase && uchar_isascii(ch)) {
+    uchar_t uch;
+    
+    if (islower(ch.character.ansi.value)) {
+      codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
+      __insert_character(uch);
+    } 
+    
+    else if (isupper(ch.character.ansi.value)) {
+      codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
+      __insert_character(uch);
     }
   }
 }
-void ClassRegex::addRange(char_type a, char_type b, bool ignoreCase) {
-  while (a <= b) {
-    char_type ch = a++;
+void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignoreCase) {
+  uint16_t a = uch_a.codepoint;
+  while (a <= uch_b.codepoint) {
+    uchar_t ch;
+    uchar_t uch;
+    codepoint_to_uchar(&ch, a++, uch_a.variant);
     characters.push_back(ch);
-    if (ignoreCase && islower(ch)) {
-      __append_character(toupper(ch));
+    
+    if (ignoreCase && uchar_isascii(ch)) {
+      if (islower(ch.character.ansi.value)) {
+        codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
+        __append_character(uch);
+      }
+      
+      else if (isupper(ch.character.ansi.value)) {
+        codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
+        __append_character(uch);
+      }
     }
   }
 }
@@ -82,7 +101,8 @@ int ClassRegex::appendContent(char_type* dst, size_t size, int level) const {
   size -= l;
   dst += l;
   while (iter != characters.end() && size > 2) {
-    *dst++ = *iter++;
+    *dst++ = (*iter).character.ansi.value;
+    ++iter;
     --size;
     ++length;
   }

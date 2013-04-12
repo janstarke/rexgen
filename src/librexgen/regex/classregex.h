@@ -32,21 +32,38 @@
 #include "regex.h"
 #include <vector>
 #include <string>
-#include "../iterator/classregexiterator.h"
-#include "../iterator/iteratorpermuter.h"
-#include "../unicode.h"
-
+#include <librexgen/iterator/classregexiterator.h>
+#include <librexgen/iterator/iteratorpermuter.h>
+#include <librexgen/unicode.h>
+#include <librexgen/unicode/uchar.h>
 
 using namespace std;
-class ClassRegexIterator;
+
 class ClassRegex : public Regex {
-  friend class ClassRegexIterator;
 public:
+  ClassRegex(charset variant) : encoding(variant){ }
   
-  virtual ~ClassRegex() {}
-  void addCharacter(char_type ch, bool ignoreCase);
-  void addRange(char_type a, char_type b, bool ignoreCase);
-  bool contains(char_type ch) const;
+  void addCharacter(const uchar_t& ch, bool ignoreCase);
+  inline void addCharacter(char ch, bool ignoreCase) {
+    uchar_t uch;
+    codepoint_to_uchar(&uch, ch, encoding);
+    addCharacter(uch, ignoreCase);
+  }
+  
+  void addRange(const uchar_t& a, const uchar_t& b, bool ignoreCase);
+  void addRange(const char& a, const char& b, bool ignoreCase) {
+    uchar_t uch_a, uch_b;
+    codepoint_to_uchar(&uch_a, a, encoding);
+    codepoint_to_uchar(&uch_b, b, encoding);
+    addRange(uch_a, uch_b, ignoreCase);
+  }
+  
+  bool contains(const uchar_t& ch) const;
+  bool contains(char ch) const {
+    uchar_t uch;
+    codepoint_to_uchar(&uch, ch, encoding);
+    return contains(uch);
+  }
   
   RegexType getRegexType() const { return Class; }
   
@@ -59,11 +76,11 @@ public:
   Iterator* singleIterator(IteratorState* /* state */) const 
   { return new ClassRegexIterator(getId(), &characters[0], characters.size()); }
 
-  Iterator::size_type size() const { return characters.size();}
 private:
-  void __insert_character(char_type ch);
-  void __append_character(char_type ch);
-  vector<char_type> characters;
+  void __insert_character(const uchar_t& ch);
+  void __append_character(const uchar_t& ch);
+  vector<uchar_t> characters;
+  const charset encoding;
 };
 
 #endif // CLASSREGEX_H

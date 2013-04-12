@@ -133,16 +133,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     iter->value(buffer);
     buffer.push_back('\n');
     buffer.push_back(0);
-
-#ifdef _WIN32
-#ifdef UNICODE
-    fputws(&buffer[0], stdout);
-#else
-    fputs(&buffer[0], stdout);
-#endif
-#else
-    ulc_fprintf(stdout, PRINTF_FORMAT, &buffer[0]);
-#endif
+    buffer.print(stdout);
   }
   delete regex;
   return 0;

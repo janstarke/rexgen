@@ -42,10 +42,10 @@ set(librexgen_sources
   regex/terminalregex.cpp
   regex/groupreference.cpp
   iterator/iteratorpermuter.cpp
-  iterator/terminalregexiterator.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
   iterator/groupreferenceiterator.cpp
+  unicode/uchar.cpp
 
   parser/rexgenparsercontext.cpp
 )
