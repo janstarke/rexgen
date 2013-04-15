@@ -26,6 +26,9 @@ static void usage() {
   cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
   cerr << "   -t:   print syntax tree" << endl;
   cerr << "   -i:   ignore case" << endl;
+  cerr << "   -u8:  encode values in UTF-8" << endl;
+  cerr << "   -u16: encode values in UTF-16" << endl;
+  cerr << "   -u32: encode values in UTF-32" << endl;
 #ifndef _WIN32
   cerr << "Locale: " << locale_charset() << endl;
 #endif
@@ -34,6 +37,7 @@ static void usage() {
 static struct {
   bool display_tree;
   bool ignore_case;
+  int utf_variant;
 } rexgen_options;
 
 static void setlocale() {
@@ -86,6 +90,16 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case 't':
         rexgen_options.display_tree = true;
         break;
+      case 'u': /* unicode encoding */
+        rexgen_options.utf_variant = _tstoi(&(argv[n][2]));
+        if (rexgen_options.utf_variant == 8 ||
+            rexgen_options.utf_variant == 16 ||
+            rexgen_options.utf_variant == 32) {
+          break;
+        }
+        cerr << "invalid output encoding specified" << endl;
+        usage();
+        exit(1);
       default:
         fprintf(stderr, "invalid argument: %s\n", argv[n]);
         usage();
@@ -105,7 +119,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
   
   setlocale();
-  
+  rexgen_options.utf_variant = 8; /* use UTF-8 by default */
   const char* regex_str = parse_arguments(argc, argv);
   if (regex_str == nullptr) {
     usage();
@@ -120,7 +134,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   if (rexgen_options.display_tree) {
     regex->appendRawValue(xml, sizeof(xml)/sizeof(xml[0]));
 #ifdef _WIN32
-	cout << "result:" << endl << xml << endl;
+	std::cout << "result:" << endl << xml << endl;
 #else
     ulc_fprintf(stdout, "result:\n" PRINTF_FORMAT "\n", xml);
 #endif
@@ -132,7 +146,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     buffer.clear();
     iter->value(buffer);
     buffer.push_back('\n');
-    buffer.push_back(0);
+    buffer.terminate();
     buffer.print(stdout);
   }
   delete regex;

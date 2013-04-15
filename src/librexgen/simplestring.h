@@ -47,6 +47,10 @@ public:
       current_size++;
     }
   }
+
+  void terminate() {
+    buffer[current_size] = 0;
+  }
   
   void append(const byte* ch, size_t length) {
     if (length < max_size-current_size) {
@@ -57,7 +61,7 @@ public:
   
   unsigned int size() { return current_size; }
   void clear() { current_size = 0; }
-  void print(FILE* stream) const {fwrite(buffer, sizeof(*buffer), current_size, stream);}
+  void print(FILE* stream) const { fwrite(buffer, sizeof(*buffer), current_size, stream); }
   
 private:
   size_t max_size;
