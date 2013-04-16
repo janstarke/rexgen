@@ -32,7 +32,7 @@ class CompoundRegexIterator : public Iterator
 {
 
 public:  
-    CompoundRegexIterator(int id);
+    CompoundRegexIterator(int id, bool rnd = true);
     
     virtual ~CompoundRegexIterator() {
       for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
@@ -45,7 +45,10 @@ public:
     
     void addChild(Iterator* i);
 private:
-  deque<Iterator* > iterators;
+  void shuffle() {random_shuffle(rnd_iterators.begin(), rnd_iterators.end());}
+  vector<Iterator* > iterators;
+  vector<unsigned int> rnd_iterators;
+  const bool randomize;
 };
 
 #endif // COMPOUNDREGEXITERATOR_H

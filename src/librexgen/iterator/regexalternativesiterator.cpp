@@ -42,10 +42,6 @@ void RegexAlternativesIterator::reset() {
 
 void RegexAlternativesIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
-  /*
-  assert(canUseValue());
-  assert(iter != iterators.end());
-  */
   (*iter)->value(dst);
   LEAVE_METHOD;
 }

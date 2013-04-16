@@ -21,13 +21,21 @@
 #include <librexgen/unicode.h>
 #include <assert.h>
 #include <algorithm>
+#include <cstdlib>
 
-CompoundRegexIterator::CompoundRegexIterator(int _id)
-  : Iterator(_id) {
+CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
+  : Iterator(_id), randomize(rnd) {
   for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
     i->reset();
     i->next();
   });
+
+  if (randomize) {
+    for (unsigned int n = 0; n<iterators.size(); ++n) {
+      rnd_iterators.push_back(n);
+    }
+    shuffle();
+  }
 }
 
 void CompoundRegexIterator::reset() {
@@ -35,12 +43,23 @@ void CompoundRegexIterator::reset() {
   for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
     i->reset();
   });
+
+  if (randomize) {
+    shuffle();
+  }
   state = resetted;
 }
 
 bool CompoundRegexIterator::next() {
-  state = usable;
-  if (state == resetted) { return true; }
+  if (state == resetted) { state = usable; return true; }
+  if (randomize) {
+    for (auto rnd_i = rnd_iterators.begin(); rnd_i != rnd_iterators.end(); ++rnd_i) {
+      if (iterators[*rnd_i]->next()) {
+        return true;
+      }
+    }
+    return false;
+  }
   for (auto i = iterators.begin(); i != iterators.end(); ++i) {
     if ((*i)->next()) {
       return true;
@@ -67,7 +86,14 @@ bool CompoundRegexIterator::hasNext() const {
 }
 
 void CompoundRegexIterator::addChild(Iterator* i) {
+  rnd_iterators.push_back(iterators.size());
+  if (randomize) {
+    shuffle();
+  }
   iterators.push_back(i);
+  i->reset();
+  i->next();
 }
+
 
 
