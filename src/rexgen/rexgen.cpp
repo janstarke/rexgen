@@ -136,7 +136,11 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
         rexgen_options.display_tree = true;
         break;
       case 'u': /* unicode encoding */
+#ifdef _WIN32
         rexgen_options.utf_variant = _tstoi(&(argv[n][2]));
+#else
+        rexgen_options.utf_variant = atoi(&(argv[n][2]));
+#endif
         if (rexgen_options.utf_variant == 8 ||
             rexgen_options.utf_variant == 16 ||
             rexgen_options.utf_variant == 32) {

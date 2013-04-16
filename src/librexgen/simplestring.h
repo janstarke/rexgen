@@ -70,9 +70,13 @@ public:
   }
 
   SimpleString& append(int n) {
-    char buffer[32];
-    _itoa_s(n, buffer, sizeof(buffer)/sizeof(buffer[0])-1, 10);
-    return append(buffer);
+    char buf[32];
+#ifdef _WIN32
+    _itoa_s(n, buf, sizeof(buf)/sizeof(buf[0])-1, 10);
+#else
+    snprintf(buf, sizeof(buf)-1, "%d", n);
+#endif
+    return append(buf);
   }
   
   unsigned int size() { return current_size; }
