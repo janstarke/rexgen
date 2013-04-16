@@ -2,8 +2,6 @@
 #define __unicode_h__
 #include <cstdarg>
 
-class SimpleString;
-
 /* for readability issues:
  *   we use 'char' for characters; one character per 'char'-value
  *   we use 'byte' for binary values, which may contain
@@ -60,9 +58,5 @@ typedef uint32_t char_type;
 #define PRINTF_FORMAT "%llU"
 
 #endif /* _WIN32 */
-
-typedef SimpleString string_type;
-
-#include <librexgen/simplestring.h>
 
 #endif /* __unicode_h__ */

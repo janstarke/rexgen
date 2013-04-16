@@ -91,29 +91,13 @@ void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignor
   }
 }
 
-int ClassRegex::appendContent(char_type* dst, size_t size, int level) const {
-  size_t l, length = 0;
+void ClassRegex::appendContent(SimpleString& dst, int level) const {
   auto iter = characters.begin();
 
-  l = appendSpace(dst, size, level);
-  if (size <= l) goto finish;
-  length += l;
-  size -= l;
-  dst += l;
-  while (iter != characters.end() && size > 2) {
-    *dst++ = (*iter).character.ansi.value;
-    ++iter;
-    --size;
-    ++length;
-  }
-#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-  l = utf_snprintf(dst, size, _T("\n"));
-#else
-  l = utf_snprintf(dst, size, "\n");
-#endif
-  length += min(l, size);
-  finish:
-  return length;
+  appendSpace(dst, level);
+
+  for_each(characters.begin(), characters.end(), [&dst](uchar_t c){dst.push_back(c);});
+  dst.newline();
 }
 
 Iterator* ClassRegex::iterator(IteratorState* state) const {

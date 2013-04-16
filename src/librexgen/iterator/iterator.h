@@ -31,7 +31,7 @@
 
 #include <assert.h>
 #include <librexgen/unicode.h>
-#include <librexgen/unicode/simple_string.h>
+#include <librexgen/simplestring.h>
 
 class Iterator
 {

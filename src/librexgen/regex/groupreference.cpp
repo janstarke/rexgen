@@ -29,6 +29,7 @@
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/groupreferenceiterator.h>
+#include <librexgen/simplestring.h>
 
 Iterator* GroupReference::iterator(IteratorState* state) const {
   assert(groupRef != NULL);
@@ -47,20 +48,8 @@ Iterator* GroupReference::singleIterator(IteratorState* state) const {
     getId(), state->getIterator(groupRef->getGroupId()));
 }
 
-int GroupReference::appendContent(
-    char_type* dst, size_t size, int level) const {
-  size_t l, length = 0;
-  l = appendSpace(dst, size, level);
-  if (size <= l) goto finish;
-  length += l;
-  size -= l;
-  dst += l;
-
-#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-  length += utf_snprintf(dst, size, _T("%d\n"), groupRef->getId());
-#else
-  length += utf_snprintf(dst, size, "%d\n", groupRef->getId());
-#endif
-  finish:
-  return length;
+void GroupReference::appendContent(
+    SimpleString& dst, int level) const {
+  appendSpace(dst, level);
+  dst.append(groupRef->getId());
 }

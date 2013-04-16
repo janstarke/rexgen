@@ -34,6 +34,7 @@
 #include <librexgen/unicode.h>
 #include <librexgen/debug.h>
 #include <librexgen/iterator/iteratorstate.h>
+#include <librexgen/simplestring.h>
 
 typedef enum {
   Compound,
@@ -56,26 +57,26 @@ public:
   
   inline void setQuantifier(const Quantifier& q) { quantifier = q; }
     
-  virtual const char_type* getXmlTag() const = 0;
+  virtual const char* getXmlTag() const = 0;
   virtual RegexType getRegexType() const = 0;
   
   virtual inline int getMaxSize() const {
     return getMaxOccurs();
   }
   
-  inline int appendRawValue(char_type* dst, int len) const {
-    return appendRawValue(dst, len, 0);
+  inline void appendRawValue(SimpleString& dst) const {
+    appendRawValue(dst, 0);
   }
   
-  int appendRawValue(char_type* dst, size_t size, int level) const {
-    return xmlEncapsulate(dst, size, getXmlTag(), level);
+  inline void appendRawValue(SimpleString& dst, int level) const {
+    return xmlEncapsulate(dst, getXmlTag(), level);
   }
   
-  int appendSpace(char_type* dst, size_t size, int count) const;
+  void appendSpace(SimpleString& dst, int count) const;
   
-  virtual int appendContent(char_type* dst, size_t size, int level) const = 0;
+  virtual void appendContent(SimpleString& dst, int level) const = 0;
   
-  virtual int xmlEncapsulate(char_type* dst, size_t size, const char_type* clazz, int level) const;
+  virtual void xmlEncapsulate(SimpleString& dst, const char* clazz, int level) const;
   
   virtual Iterator* singleIterator(IteratorState* state) const = 0;  
   virtual Iterator* iterator(IteratorState* state) const = 0;

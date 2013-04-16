@@ -31,6 +31,7 @@
 #include "regex.h"
 #include <algorithm>
 #include "../debug.h"
+#include <librexgen/simplestring.h>
 
 using namespace std;
 
@@ -49,25 +50,12 @@ public:
     return __size * getMaxOccurs();
   }
   
-  virtual int appendContent(char_type* dst, size_t dst_size, int level) const {
-    typename T::const_iterator iter = regexObjects.begin();
-    size_t l, length = 0;
-    while(iter != regexObjects.end()) {
-      l = appendSpace(dst, dst_size, level);
-      if (dst_size <= l) break;
-      length += l;
-      dst_size -= l;
-      dst += l;
-      
-      l = (*iter)->appendRawValue(dst, dst_size, level);
-      length += l;
-      if (dst_size <= l) break;
-      dst_size -= l;
-      dst += l;
-      
-      iter++;
-    }
-    return length;
+  void appendContent(SimpleString& dst, int level) const {
+    for_each(regexObjects.cbegin(), regexObjects.cend(),
+      [&](const Regex* re) {
+        appendSpace(dst, level);
+        re->appendRawValue(dst, level);
+    });
   }
   
   unsigned int size() { return getChildren()->size(); }

@@ -59,8 +59,22 @@ struct uchar_t{
     struct {
       char32_t value;
     } ucs4;
-  }character;
+  } character;
 };
+
+inline const byte* firstByteAddressOf(const uchar_t& c) {
+  return & (c.character.bytes[
+    sizeof(c.character.bytes)/sizeof(c.character.bytes[0]) - c.char_length]);
+}
+
+inline uchar_t char_to_uchar(char ch) {
+  uchar_t u;
+  u.character.ucs4.value = 0;
+  u.character.ansi.value = ch;
+  u.variant = CHARSET_ANSI;
+  u.char_length = 1;
+  return u;
+}
 
 void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
 

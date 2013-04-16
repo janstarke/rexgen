@@ -36,6 +36,7 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/unicode.h>
 #include <librexgen/unicode/uchar.h>
+#include <librexgen/simplestring.h>
 
 using namespace std;
 
@@ -67,9 +68,9 @@ public:
   
   RegexType getRegexType() const { return Class; }
   
-  virtual int appendContent(char_type* dst, size_t size, int level) const;
+  void appendContent(SimpleString& dst, int level) const;
   
-  virtual inline const char_type* getXmlTag() const { return _T("class"); }
+  virtual inline const char* getXmlTag() const { return "class"; }
   
   Iterator* iterator(IteratorState* state) const;
   

@@ -34,6 +34,7 @@
 #include "regexcontainer.h"
 #include "../iterator/iteratorpermuter.h"
 #include "../unicode.h"
+#include <librexgen/simplestring.h>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ class CompoundRegex : public RegexContainer<deque<Regex*> >
 public:
   virtual ~CompoundRegex();
   
-  virtual inline const char_type* getXmlTag() const { return _C("compound"); }
+  virtual inline const char* getXmlTag() const { return "compound"; }
   
   void prependRegex(Regex* regex);
   void appendRegex(Regex* regex);

@@ -33,6 +33,7 @@
 #include <deque>
 #include "regexcontainer.h"
 #include "../iterator/iteratorpermuter.h"
+#include <librexgen/simplestring.h>
 
 class RegexAlternatives : public RegexContainer<deque<Regex*> >
 {
@@ -41,7 +42,7 @@ public:
   virtual ~RegexAlternatives();
   inline void addRegex(Regex *regex) { getChildren()->push_front(regex); }
   
-  virtual inline const char_type* getXmlTag() const { return _C("alternative"); } 
+  virtual inline const char* getXmlTag() const { return "alternative"; } 
   RegexType getRegexType() const { return Alternative; }
   
   inline int getMaxSize() const;

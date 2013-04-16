@@ -30,16 +30,17 @@
 #define GROUPREFERENCE_H
 
 #include <librexgen/regex/regex.h>
+#include <librexgen/simplestring.h>
 
 class GroupReference : public Regex
 {
 
 public:
-    virtual Iterator* iterator(IteratorState* state) const;
-    virtual Iterator* singleIterator(IteratorState* state) const;
-    virtual int appendContent(char_type* dst, size_t size, int level) const;
+    Iterator* iterator(IteratorState* state) const;
+    Iterator* singleIterator(IteratorState* state) const;
+    void appendContent(SimpleString& dst, int level) const;
     RegexType getRegexType() const { return Reference; }
-    const char_type* getXmlTag() const { return _C("ref"); }
+    const char* getXmlTag() const { return "ref"; }
     GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
     
     int getGroupId() const { return groupId; }

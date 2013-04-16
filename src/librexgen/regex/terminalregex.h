@@ -25,11 +25,11 @@ public:
   
   inline const char_type* getValue() const { return nullptr; }
   
-  inline const char_type* getXmlTag() const { return _C("terminal"); }
+  inline const char* getXmlTag() const { return "terminal"; }
   
   RegexType getRegexType() const { return Terminal; }
   
-  int appendContent(char_type* dst, size_t size, int level) const;
+  void appendContent(SimpleString& dst, int level) const;
   
   Iterator* iterator(IteratorState* state) const;
   

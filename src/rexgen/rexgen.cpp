@@ -110,8 +110,8 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
-  char_type xml[1024];
   SimpleString buffer;
+  SimpleString syntaxTree;
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
@@ -132,12 +132,9 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
   
   if (rexgen_options.display_tree) {
-    regex->appendRawValue(xml, sizeof(xml)/sizeof(xml[0]));
-#ifdef _WIN32
-	std::cout << "result:" << endl << xml << endl;
-#else
-    ulc_fprintf(stdout, "result:\n" PRINTF_FORMAT "\n", xml);
-#endif
+    regex->appendRawValue(syntaxTree);
+    syntaxTree.terminate();
+    syntaxTree.print(stdout);
   }
     
   Iterator* iter = regex->iterator();

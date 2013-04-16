@@ -43,18 +43,7 @@ public:
     ClassRegexIterator(int _id,
                        const uchar_t* classcontent,
                        size_t elements
-		      )
-    :Iterator(_id) {
-      buffer = new byte[elements*sizeof(char32_t)];
-      buffer_length = 0;
-      for (size_t n=0; n<elements; ++n) {
-        byte* ptr = &buffer[buffer_length];
-        buffer_length += uchar_to_utf(classcontent[n], ptr);
-        ptrs.push_back(ptr);
-        lengths.push_back(classcontent[n].char_length);
-      }
-      reset();
-    }
+		      );
     virtual ~ClassRegexIterator() {delete[] buffer;}
   
    void reset() { state = resetted; current = 0;}
@@ -63,18 +52,7 @@ public:
       dst.append(ptrs[current], lengths[current]);
     }
     
-    bool next() {
-      if (state == resetted) {
-        state = usable;
-        return true;
-      }
-      ++current;
-      if (current >= ptrs.size()) {
-        current = 0;
-        return false;
-      }
-      return true;
-    }
+    bool next();
     
     inline bool hasNext() const { return  (current+1 < ptrs.size()); }
     inline bool canUseValue() const { return (current<ptrs.size()); }

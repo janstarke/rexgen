@@ -29,10 +29,11 @@
 #ifndef SIMPLESTRING_H
 #define SIMPLESTRING_H
 
+#include <librexgen/unicode/uchar.h>
 #include <librexgen/unicode.h>
 #include <cstdio>
 #include <cstring>
-
+#include <cstdlib>
 class SimpleString {
 public:
   SimpleString(size_t msize=256)
@@ -41,22 +42,47 @@ public:
   }
   virtual ~SimpleString() { delete[] buffer; }
   
-  void push_back(byte ch) {
+  SimpleString& newline() {
+    return push_back('\n');
+  }
+
+  SimpleString& push_back(byte ch) {
     if (current_size < max_size) {
       buffer[current_size] = ch;
       current_size++;
     }
+    return *this;
   }
 
-  void terminate() {
+  SimpleString& push_back(const uchar_t& c) {
+    append(firstByteAddressOf(c), c.char_length);
+    return *this;
+  }
+
+  SimpleString& terminate() {
     buffer[current_size] = 0;
+    return *this;
   }
   
-  void append(const byte* ch, size_t length) {
+  SimpleString& append(const byte* ch, size_t length) {
     if (length < max_size-current_size) {
       memcpy(&buffer[current_size], ch, length);
       current_size += length;
     }
+    return *this;
+  }
+
+  SimpleString& append(const char* ch) {
+     while (*ch != '\0') {
+       push_back(char_to_uchar(*ch++));
+     }
+     return *this;
+  }
+
+  SimpleString& append(int n) {
+    char buffer[32];
+    _itoa_s(n, buffer, sizeof(buffer)/sizeof(buffer[0])-1, 10);
+    return append(buffer);
   }
   
   unsigned int size() { return current_size; }

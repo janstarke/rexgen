@@ -29,59 +29,29 @@
 
 int Regex::next_id = 0;
 
-int Regex::xmlEncapsulate(
-    char_type* dst, size_t size, const char_type* clazz, int level) const {
-  size_t l;
-  int length = 0;
-#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-  const wchar_t* format = _T("<%s id=\"%d\" min=\"%d\" max=\"%d\">\n");
-#else
-  const char* format = "<" PRINTF_FORMAT " id=\"%d\" min=\"%d\" max=\"%d\">\n";
-#endif
-
-  l = utf_snprintf(
-    dst, size, format, clazz, getId(), getMinOccurs(), getMaxOccurs());
-  if (size <= l) goto finish;
-  size -= l;
-  length += l;
-  dst += l;
-
-
-  l = appendContent(dst, size, level+1);
-  if (size <= l) goto finish;
-  size -= l;
-  length += l;
-  dst += l;
-
-  l = appendSpace(dst, size, level);
-  if (size <= l) goto finish;
-  size -= l;
-  length += l;
-  dst += level;
-
-#if defined(_WIN32) && defined(UNICODE) && defined(_UNICODE)
-  format = _T("</%s>\n");
-#else
-  format = "</" PRINTF_FORMAT  ">\n";
-#endif
-
-  length += utf_snprintf(dst, size, format, getXmlTag());
-
-  finish:
-  return length;
+void Regex::xmlEncapsulate(
+    SimpleString& dst, const char* clazz, int level) const {
+  dst .push_back('<')
+      .append(clazz)
+      .append(" id=\"")
+      .append(getId())
+      .append("\" min=\"")
+      .append(getMinOccurs())
+      .append("\" max=\"")
+      .append(getMaxOccurs())
+      .append("\">")
+      .newline();
+  appendContent(dst, level+1);
+  appendSpace(dst, level);
+  dst .append("</")
+      .append(clazz)
+      .append(">")
+      .newline();
 }
 
-int Regex::appendSpace(char_type* dst, size_t size, int count) const {
-  int length = 0;
-  while (count > 0 && size > 1) {
-    *dst = ' ';
-    ++dst;
-    --size;
+void Regex::appendSpace(SimpleString& dst, int count) const {
+  while (count > 0) {
+    dst.push_back(' ');
     --count;
-    ++length;
   }
-  if (size >= 1) {
-    *dst = '\0';
-  }
-  return length;
 }
