@@ -82,8 +82,6 @@ void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignor
 }
 
 void ClassRegex::appendContent(SimpleString& dst, int level) const {
-  auto iter = characters.begin();
-
   appendSpace(dst, level);
 
   for_each(characters.begin(), characters.end(), [&dst](uchar_t c){dst.push_back(c);});

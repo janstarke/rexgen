@@ -83,6 +83,9 @@ public:
   void clear() { current_size = 0; }
   void print(FILE* stream) const { fwrite(buffer, sizeof(*buffer), current_size, stream); }
   
+  const byte* __get_buffer_address() const { return buffer; }
+  size_t __get_buffer_size() const { return current_size; }
+  
 private:
   size_t max_size;
   size_t current_size;

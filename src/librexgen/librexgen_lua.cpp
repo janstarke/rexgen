@@ -1,35 +1,26 @@
 /*
-    Copyright (c) 2012, Jan Starke <jan.starke@outofbed.org>
-    All rights reserved.
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
-        * Redistributions of source code must retain the above copyright
-        notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-        * Neither the name of the <organization> nor the
-        names of its contributors may be used to endorse or promote products
-        derived from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY Jan Starke <jan.starke@outofbed.org> ''AS IS'' AND ANY
-    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL Jan Starke <jan.starke@outofbed.org> BE LIABLE FOR ANY
-    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ *  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>
+ * 
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/
+ */
 
 #include <librexgen/librexgen_lua.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/unicode.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
+#include <librexgen/simplestring.h>
 #include <uniconv.h>
 #include <vector>
 
@@ -101,7 +92,7 @@ int rexgen_iter(lua_State* L) {
 
 extern "C"
 int rexgen_parse_regex(lua_State* L) {
-  char_type xml[1024];
+  SimpleString xml;
   bool ignoreCase = false;
   if (lua_isboolean(L, 2)) {
     ignoreCase = lua_toboolean(L, 2);
@@ -118,48 +109,33 @@ int rexgen_parse_regex(lua_State* L) {
   *iter = re->iterator();
   lua_pushcclosure(L, rexgen_iter, 1);
 
-  int length = re->appendRawValue(xml, sizeof(xml)/sizeof(xml[0])-1);
-  push_utf8_string(L, xml, length);
+  re->appendRawValue(xml);
+  xml.terminate();
+  push_utf8_string(L, xml);
 
   return 2;
 }
 
 extern "C"
 int rexgen_value(lua_State* L, const Iterator* iter) {
-  string_type buffer;
+  SimpleString buffer;
 
   iter->value(buffer);
-  buffer.push_back('\0');
-  //push_utf8_string(L, &buffer[0], buffer.size());
+  buffer.terminate();
+  push_utf8_string(L, buffer);
 
   return 1;
 }
 
 extern "C"
 int rexgen_get_syntax_tree(lua_State* L) {
-  char_type xml[1024];
+  SimpleString xml;
   Regex* re = parse_regex(luaL_checklstring(L, 1, NULL));
-  int length = re->appendRawValue(xml, sizeof(xml)/sizeof(xml[0])-1);
-  push_utf8_string(L, xml, length);
+  re->appendRawValue(xml);
+  push_utf8_string(L, xml);
   return 1;
 }
 
-void push_utf8_string(lua_State* L, char_type* str, int length) {
-#ifdef UTF8
-  lua_pushlstring(L, (char*)str, length);
-#else
-  /* convert buffer to UTF-8 */
-  uint8_t dst[BUFFER_SIZE];
-#ifdef UTF16
-#define convert_to_utf8(s, d, resultbuf, lengthp) \
-  u16_to_u8(s, d, resultbuf, lengthp)
-#else /* UTF32 */
-#define convert_to_utf8(s, d, resultbuf, lengthp) \
-  u32_to_u8(s, d, resultbuf, lengthp)
-#endif
-  size_t lengthp = sizeof(dst)/sizeof(dst[0]);
-  /* uint8_t *res =  */
-  convert_to_utf8(str, length, dst, &lengthp);
-  lua_pushlstring(L, (const char*) dst, lengthp);
-#endif
+void push_utf8_string(lua_State* L, const SimpleString& str) {
+  lua_pushlstring(L, (const char*)str.__get_buffer_address(), str.__get_buffer_size());
 }

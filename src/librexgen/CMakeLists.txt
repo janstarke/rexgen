@@ -45,6 +45,7 @@ set(librexgen_sources
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
   iterator/groupreferenceiterator.cpp
+  iterator/classregexiterator.cpp
   unicode/uchar.cpp
 
   parser/rexgenparsercontext.cpp
