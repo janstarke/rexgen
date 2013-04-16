@@ -20,15 +20,19 @@
 ClassRegexIterator::ClassRegexIterator(
   int _id,
   const uchar_t* classcontent,
-  size_t elements)
-  :Iterator(_id) {
+  size_t elements,
+  bool rnd )
+  :Iterator(_id), randomize(rnd) {
     buffer = new byte[elements*sizeof(char32_t)];
     buffer_length = 0;
     for (size_t n=0; n<elements; ++n) {
       byte* ptr = &buffer[buffer_length];
       buffer_length += uchar_to_utf(classcontent[n], ptr);
-      ptrs.push_back(ptr);
-      lengths.push_back(classcontent[n].char_length);
+      const class_character c = {
+        ptr,
+        classcontent[n].char_length
+      };
+      characters.push_back(c);
     }
     reset();
 }
@@ -39,8 +43,11 @@ bool ClassRegexIterator::next() {
     return true;
   }
   ++current;
-  if (current >= ptrs.size()) {
+  if (current >= characters.size()) {
     current = 0;
+    if (randomize) {
+      shuffle();
+    }
     return false;
   }
   return true;

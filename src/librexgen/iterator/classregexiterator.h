@@ -23,6 +23,9 @@
 #include <librexgen/unicode.h>
 #include <librexgen/unicode/uchar.h>
 #include <vector>
+#include <algorithm>
+
+using std::random_shuffle;
 
 using namespace std;
 
@@ -32,26 +35,33 @@ class ClassRegexIterator : public Iterator
 public:
     ClassRegexIterator(int _id,
                        const uchar_t* classcontent,
-                       size_t elements
+                       size_t elements,
+                       bool rnd = true
 		      );
     virtual ~ClassRegexIterator() {delete[] buffer;}
   
-   void reset() { state = resetted; current = 0;}
+    inline void reset() { state = resetted; current = 0; if(randomize) {shuffle();}}
     
     inline void value(SimpleString& dst) const {
-      dst.append(ptrs[current], lengths[current]);
+      dst.append(characters[current].ptr, characters[current].length);
     }
     
     bool next();
     
-    inline bool hasNext() const { return  (current+1 < ptrs.size()); }
-    inline bool canUseValue() const { return (current<ptrs.size()); }
+    inline bool hasNext() const { return  (current+1 < characters.size()); }
+    inline bool canUseValue() const { return (current<characters.size()); }
 private:
+  inline void shuffle() { random_shuffle(characters.begin(), characters.end()); }
+
+  struct class_character {
+    byte* ptr;
+    uint8_t length;
+  };
   byte *buffer;
   size_t buffer_length;
-  vector<byte*> ptrs;
-  vector<uint8_t> lengths;
+  vector<class_character> characters;
   unsigned int current;
+  const bool randomize;
 };
 
 #endif // CLASSREGEXITERATOR_H
