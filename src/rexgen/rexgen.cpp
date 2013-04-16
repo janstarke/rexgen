@@ -1,3 +1,19 @@
+/*
+    Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/
+*/
 
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
@@ -7,6 +23,7 @@
 #include <cstdio>
 #include <signal.h>
 #include <locale.h>
+#include "terms.h"
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -23,12 +40,19 @@ extern int rexgen_debug;
 #endif
 #endif
 static void usage() {
+  cerr  << "rexgen  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>" << endl
+        << "This program comes with ABSOLUTELY NO WARRANTY; for details run rexgen with '-w'." << endl
+        << "This is free software, and you are welcome to redistribute it" << endl
+        << "under certain conditions; run rexgen with `-c' for details." << endl << endl;
   cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
   cerr << "   -t:   print syntax tree" << endl;
   cerr << "   -i:   ignore case" << endl;
   cerr << "   -u8:  encode values in UTF-8" << endl;
   cerr << "   -u16: encode values in UTF-16" << endl;
-  cerr << "   -u32: encode values in UTF-32" << endl;
+  cerr << "   -u32: encode values in UTF-32" << endl << endl;
+  cerr << "   -w:   display warranty information" << endl;
+  cerr << "   -c:   display redistribution conditions" << endl;
+
 #ifndef _WIN32
   cerr << "Locale: " << locale_charset() << endl;
 #endif
@@ -58,6 +82,21 @@ static void setlocale() {
   }
 }
 
+static void display_warranty() {
+  cout  << "THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY" << endl
+        << "APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT" << endl
+        << "HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY" << endl
+        << "OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO," << endl
+        << "THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR" << endl
+        << "PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM" << endl
+        << "IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF" << endl
+        << "ALL NECESSARY SERVICING, REPAIR OR CORRECTION." << endl;
+}
+
+static void display_conditions() {
+  cout << terms_and_conditions << endl;
+}
+
 const char* parse_arguments(int argc, _TCHAR** argv) {
   const char* regex = nullptr;
   for (int n=1; n<argc; ++n) {
@@ -84,6 +123,12 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case '-':
         n = argc;
         break;
+      case 'c':
+        display_conditions();
+        exit(0);
+      case 'w':
+        display_warranty();
+        exit(0);
       case 'i':
         rexgen_options.ignore_case = true;
         break;
