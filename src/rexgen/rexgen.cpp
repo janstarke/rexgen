@@ -52,10 +52,6 @@ static void usage() {
   cerr << "   -u32: encode values in UTF-32" << endl << endl;
   cerr << "   -w:   display warranty information" << endl;
   cerr << "   -c:   display redistribution conditions" << endl;
-
-#ifndef _WIN32
-  cerr << "Locale: " << locale_charset() << endl;
-#endif
 }
 
 static struct {
