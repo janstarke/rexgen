@@ -45,7 +45,7 @@ public:
   }
 
   SimpleString& push_back(const uchar_t& c) {
-    append(firstByteAddressOf(c), c.char_length);
+    fast_append(firstByteAddressOf(c), c.char_length);
     return *this;
   }
 
@@ -62,13 +62,13 @@ public:
     return *this;
   }
   
-  inline void fast_append(const byte* ch, const size_t& length) {
+  void fast_append(const byte* ch, const size_t& length) {
     if (length < max_size-current_size) {
-      switch(length) {
+      switch (length) {
         case 4: buffer[current_size++] = *ch++;
         case 3: buffer[current_size++] = *ch++;
         case 2: buffer[current_size++] = *ch++;
-        case 1: buffer[current_size++] = *ch++;
+        case 1: buffer[current_size++] = *ch;
       }
     }
   }
