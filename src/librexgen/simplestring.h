@@ -54,12 +54,23 @@ public:
     return *this;
   }
   
-  SimpleString& append(const byte* ch, size_t length) {
+  SimpleString& append(const byte* ch, const size_t& length) {
     if (length < max_size-current_size) {
       memcpy(&buffer[current_size], ch, length);
       current_size += length;
     }
     return *this;
+  }
+  
+  inline void fast_append(const byte* ch, const size_t& length) {
+    if (length < max_size-current_size) {
+      switch(length) {
+        case 4: buffer[current_size++] = *ch++;
+        case 3: buffer[current_size++] = *ch++;
+        case 2: buffer[current_size++] = *ch++;
+        case 1: buffer[current_size++] = *ch++;
+      }
+    }
   }
 
   SimpleString& append(const char* ch) {

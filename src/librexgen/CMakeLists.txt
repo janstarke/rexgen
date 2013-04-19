@@ -69,8 +69,10 @@ endif(COMMAND add_cppcheck)
 add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
 
 if (USE_LUA)
-  target_link_libraries(${librexgen_libname} lua5.2)
+  target_link_libraries(${librexgen_libname} lua5.2 )
 endif(USE_LUA)
+
+target_link_libraries(${librexgen_libname} pthread )
 
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
 

@@ -38,29 +38,31 @@ public:
                        size_t elements,
                        bool rnd = true
 		      );
-    virtual ~ClassRegexIterator() {delete[] buffer;}
+    virtual ~ClassRegexIterator() {}
   
-    inline void reset() { state = resetted; current = 0; if(randomize) {shuffle();}}
+  inline void reset() { if(randomize) {shuffle();} current = first;}
     
     inline void value(SimpleString& dst) const {
-      dst.append(characters[current].ptr, characters[current].length);
+      dst.fast_append(current->value, current->length);
     }
     
     bool next();
     
-    inline bool hasNext() const { return  (current+1 < characters.size()); }
-    inline bool canUseValue() const { return (current<characters.size()); }
+    inline bool hasNext() const { return  (current < last); }
+    inline bool canUseValue() const { return (current<=last); }
 private:
-  inline void shuffle() { random_shuffle(characters.begin(), characters.end()); }
+  inline void shuffle() {
+    random_shuffle(characters.begin(), characters.end()); 
+    first = &(*characters.begin());
+    last = &(*characters.rbegin());
+  }
 
-  struct class_character {
-    byte* ptr;
+  struct buffered_character {
+    byte value[4];
     uint8_t length;
   };
-  byte *buffer;
-  size_t buffer_length;
-  vector<class_character> characters;
-  unsigned int current;
+  buffered_character *current = nullptr, *first = nullptr, *last = nullptr;
+  vector<buffered_character> characters;
   const bool randomize;
 };
 

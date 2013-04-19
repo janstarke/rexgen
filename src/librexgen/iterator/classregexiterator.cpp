@@ -23,31 +23,22 @@ ClassRegexIterator::ClassRegexIterator(
   size_t elements,
   bool rnd )
   :Iterator(_id), randomize(rnd) {
-    buffer = new byte[elements*sizeof(char32_t)];
-    buffer_length = 0;
-    for (size_t n=0; n<elements; ++n) {
-      byte* ptr = &buffer[buffer_length];
-      buffer_length += uchar_to_utf(classcontent[n], ptr);
-      const class_character c = {
-        ptr,
-        classcontent[n].char_length
-      };
+    for (size_t n=0; n<elements; ++n) {      
+      buffered_character c;
+      c.length = uchar_to_utf(classcontent[n], &(c.value[0]));
       characters.push_back(c);
     }
+    first = &(*characters.begin());
+    last = &(*characters.rbegin());
     reset();
+    current = first-1;
+    state = usable;
 }
 
 bool ClassRegexIterator::next() {
-  if (state == resetted) {
-    state = usable;
-    return true;
-  }
   ++current;
-  if (current >= characters.size()) {
-    current = 0;
-    if (randomize) {
-      shuffle();
-    }
+  if (current > last) {
+    reset();
     return false;
   }
   return true;
