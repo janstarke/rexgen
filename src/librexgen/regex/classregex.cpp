@@ -17,6 +17,7 @@
 
 #include <librexgen/regex/classregex.h>
 #include <librexgen/unicode/uchar.h>
+#include <librexgen/iterator/asciiclassregexiterator.h>
 #include <algorithm>
 #include <vector>
 
@@ -88,10 +89,18 @@ void ClassRegex::appendContent(SimpleString& dst, int level) const {
   dst.newline();
 }
 
+Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const
+{
+  if (canUseAsciiIterator)  {
+    return new AsciiClassRegexIterator(getId(), &characters[0], characters.size());
+  } else {
+    return new ClassRegexIterator(getId(), &characters[0], characters.size());
+  }
+}
+
 Iterator* ClassRegex::iterator(IteratorState* state) const {
   if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return new ClassRegexIterator(
-      getId(), &characters[0], characters.size());
+    return singleIterator(state);
   } else {
     return new IteratorPermuter(
       getId(), this, state, getMinOccurs(), getMaxOccurs());

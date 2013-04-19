@@ -39,6 +39,7 @@ public:
     uchar_t uch;
     codepoint_to_uchar(&uch, ch, encoding);
     addCharacter(uch, ignoreCase);
+    canUseAsciiIterator &= (uch.char_length == 1);
   }
   
   void addRange(const uchar_t& a, const uchar_t& b, bool ignoreCase);
@@ -64,14 +65,14 @@ public:
   
   Iterator* iterator(IteratorState* state) const;
   
-  Iterator* singleIterator(IteratorState* /* state */) const 
-  { return new ClassRegexIterator(getId(), &characters[0], characters.size()); }
+  Iterator* singleIterator(IteratorState* /* state */) const; 
 
 private:
   void __insert_character(const uchar_t& ch);
   void __append_character(const uchar_t& ch);
   vector<uchar_t> characters;
   const charset encoding;
+  bool canUseAsciiIterator = true;
 };
 
 #endif // CLASSREGEX_H
