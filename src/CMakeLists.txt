@@ -22,7 +22,7 @@ endif(USE_LUA)
 SET(BUILD_SHARED_LIBS ON)
 
 ADD_DEFINITIONS("-DREXGEN_DEBUG=0 -DNDEBUG")
-ADD_DEFINITIONS("-fPIC -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+ADD_DEFINITIONS("-O3 -std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(librexgen)

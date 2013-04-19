@@ -20,7 +20,6 @@
 
 #include <map>
 #include <algorithm>
-#include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 
 using namespace std;
@@ -37,8 +36,12 @@ public:
     return groupIterators.at(id);
   }
   
+  void setRandomize(bool rnd) { randomize = rnd; }
+  bool getRandomize() const { return randomize; }
+  
 private:
   map<int, const Iterator*> groupIterators;
+  bool randomize = false;
 };
 
 #endif // ITERATORSTATE_H

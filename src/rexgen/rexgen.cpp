@@ -47,6 +47,7 @@ static void usage() {
   cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
   cerr << "   -t:   print syntax tree" << endl;
   cerr << "   -i:   ignore case" << endl;
+  cerr << "   -r:   randomize order of values (will be slower)" << endl;
   cerr << "   -u8:  encode values in UTF-8" << endl;
   cerr << "   -u16: encode values in UTF-16" << endl;
   cerr << "   -u32: encode values in UTF-32" << endl << endl;
@@ -58,6 +59,7 @@ static struct {
   bool display_tree;
   bool ignore_case;
   int utf_variant;
+  bool randomize = false;
 } rexgen_options;
 
 static void setlocale() {
@@ -131,6 +133,9 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case 't':
         rexgen_options.display_tree = true;
         break;
+      case 'r':
+        rexgen_options.randomize = true;
+        break;
       case 'u': /* unicode encoding */
 #ifdef _WIN32
         rexgen_options.utf_variant = _tstoi(&(argv[n][2]));
@@ -182,15 +187,14 @@ int _tmain(int argc, _TCHAR* argv[]) {
     syntaxTree.print(stdout);
   }
     
-  Iterator* iter = regex->iterator();
+  Iterator* iter = regex->iterator(rexgen_options.randomize);
 
   while (iter->next()) {
-    buffer.clear();
     iter->value(buffer);
     buffer.push_back('\n');
-    buffer.terminate();
     buffer.print(stdout);
   }
+  buffer.print(stdout, true);
   delete regex;
   return 0;
 }

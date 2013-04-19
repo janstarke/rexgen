@@ -26,7 +26,7 @@
 #include <cstdlib>
 class SimpleString {
 public:
-  SimpleString(size_t msize=256)
+  SimpleString(size_t msize=512)
     :max_size(msize), current_size(0) {
       buffer = new byte[msize];
   }
@@ -92,7 +92,12 @@ public:
   
   unsigned int size() { return current_size; }
   void clear() { current_size = 0; }
-  void print(FILE* stream) const { fwrite(buffer, sizeof(*buffer), current_size, stream); }
+  void print(FILE* stream, bool force = false) {
+    if (current_size > (max_size / 2) || force) {
+    fwrite(buffer, sizeof(*buffer), current_size, stream);
+    clear();
+    }
+  }
   
   const byte* __get_buffer_address() const { return buffer; }
   size_t __get_buffer_size() const { return current_size; }

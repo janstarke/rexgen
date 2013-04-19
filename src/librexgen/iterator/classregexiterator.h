@@ -20,6 +20,7 @@
 #define CLASSREGEXITERATOR_H
 
 #include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/unicode.h>
 #include <librexgen/unicode/uchar.h>
 #include <vector>
@@ -34,9 +35,9 @@ class ClassRegexIterator : public Iterator
 
 public:
     ClassRegexIterator(int _id,
+                       IteratorState* iterstate,
                        const uchar_t* classcontent,
-                       size_t elements,
-                       bool rnd = true
+                       size_t elements
 		      );
     virtual ~ClassRegexIterator() {}
   

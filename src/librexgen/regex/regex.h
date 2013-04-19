@@ -18,12 +18,12 @@
 #ifndef __Regex_h__
 #define __Regex_h__
 
+#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/regex/quantifier.h>
 #include <librexgen/iterator/iterator.h>
 #include <iostream>
 #include <librexgen/unicode.h>
 #include <librexgen/debug.h>
-#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/simplestring.h>
 
 typedef enum {
@@ -71,7 +71,11 @@ public:
   virtual Iterator* singleIterator(IteratorState* state) const = 0;  
   virtual Iterator* iterator(IteratorState* state) const = 0;
   
-  Iterator* iterator() const { return iterator(new IteratorState()); };
+  Iterator* iterator(bool randomize = true) const {
+    IteratorState* state = new IteratorState();
+    state->setRandomize(randomize);
+    return iterator(state);
+  }
   
   int getId() const { return id; }
   
