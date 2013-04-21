@@ -21,8 +21,10 @@
 
 #include <iostream>
 #include <map>
+#include <cstdio>
 #include "../regex/regex.h"
 #include <librexgen/regex/groupreference.h>
+#include <librexgen/regex/streamregex.h>
 #include <librexgen/unicode/uchar.h>
 
 using namespace std;
@@ -31,8 +33,8 @@ class RexgenParserContext
 {
 
 public:
-  RexgenParserContext(istream* input = &cin, bool _ic = false, charset _enc=CHARSET_UTF8)
-  : ic(_ic), enc(_enc) {
+  RexgenParserContext(istream* input = &cin, bool _ic = false, charset _enc=CHARSET_UTF8, FILE* in=nullptr)
+  : ic(_ic), enc(_enc), infile(in) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
@@ -71,6 +73,18 @@ public:
   
   bool ignoreCase() const { return ic; }
   charset encoding() const { return enc; }
+  FILE* getInFile() const { return infile; }
+  
+  Regex* getStreamRegex() {
+    if (streamRegex == nullptr) {
+      streamRegex = new StreamRegex(infile);
+      return streamRegex;
+    } else {
+      GroupReference* gr = new GroupReference(streamRegex->getId());
+      gr->setRegex(streamRegex);
+      return gr;
+    }
+  }
 
 protected:
   void InitScanner();
@@ -79,8 +93,10 @@ protected:
 private:
   const bool ic;
   const charset enc;
+  FILE* infile;
   map<int, GroupReference*> groupRefs;
   map<int, Regex*> groups;
+  StreamRegex* streamRegex = nullptr;
 };
 
 #endif // REXGENPARSERCONTEXT_H

@@ -24,6 +24,7 @@
 #include <signal.h>
 #include <locale.h>
 #include "terms.h"
+#include <cstdio>
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -45,14 +46,16 @@ static void usage() {
         << "This is free software, and you are welcome to redistribute it" << endl
         << "under certain conditions; run rexgen with `-c' for details." << endl << endl;
   cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
-  cerr << "   -t:   print syntax tree" << endl;
-  cerr << "   -i:   ignore case" << endl;
-  cerr << "   -r:   randomize order of values (will be slower)" << endl;
-  cerr << "   -u8:  encode values in UTF-8" << endl;
-  cerr << "   -u16: encode values in UTF-16" << endl;
-  cerr << "   -u32: encode values in UTF-32" << endl << endl;
-  cerr << "   -w:   display warranty information" << endl;
-  cerr << "   -c:   display redistribution conditions" << endl;
+  cerr << "   -t:        print syntax tree" << endl;
+  cerr << "   -i:        ignore case" << endl;
+  cerr << "   -r:        randomize order of values (will be slower)" << endl;
+  cerr << "   -f <file>: read from file; use - to read from stdin" << endl;
+  cerr << "              you can use \\0 to refer to the current line" << endl;
+  cerr << "   -u8:       encode values in UTF-8" << endl;
+  cerr << "   -u16:      encode values in UTF-16" << endl;
+  cerr << "   -u32:      encode values in UTF-32" << endl << endl;
+  cerr << "   -w:        display warranty information" << endl;
+  cerr << "   -c:        display redistribution conditions" << endl;
 }
 
 static struct {
@@ -60,6 +63,7 @@ static struct {
   bool ignore_case;
   int utf_variant;
   bool randomize = false;
+  const char* infile = nullptr;
 } rexgen_options;
 
 static void setlocale() {
@@ -127,6 +131,10 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case 'w':
         display_warranty();
         exit(0);
+      case 'f':
+        ++n;
+        rexgen_options.infile = argv[n];
+        break;
       case 'i':
         rexgen_options.ignore_case = true;
         break;
@@ -162,6 +170,8 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 int _tmain(int argc, _TCHAR* argv[]) {
   SimpleString buffer;
   SimpleString syntaxTree;
+  FILE* infile = nullptr;
+  
 #ifdef YYDEBUG
 #if YYDEBUG == 1
   rexgen_debug = 1;
@@ -175,9 +185,25 @@ int _tmain(int argc, _TCHAR* argv[]) {
     usage();
     return 1;
   }
+  
+  if (rexgen_options.infile != nullptr) {
+    if (0 == strcmp(rexgen_options.infile, "-")) {
+      infile = stdin;
+    } else {
+      infile = fopen(rexgen_options.infile, "r");
+      if (infile == nullptr) {
+        perror("unable to open input file");
+        return 1;
+      }
+    }
+  }
 
-  Regex* regex = parse_regex(regex_str);
-  if (regex == NULL) {
+  Regex* regex = parse_regex(regex_str,
+                             rexgen_options.ignore_case,
+                             CHARSET_UTF8,
+                             infile
+                            );
+  if (regex == nullptr) {
     return 1;
   }
   
@@ -196,5 +222,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
   buffer.print(stdout, true);
   delete regex;
+  
   return 0;
 }

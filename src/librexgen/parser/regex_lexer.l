@@ -74,7 +74,8 @@ UNICODECHAR	\\u[0-9a-fA-F]{4,4}
 LINEFEED	\\n
 CARRIAGERETURN	\\r
 SPECIAL		[ \t\r\n.,;:=/%&?<>-]
-GROUPID		\\[0-9]+
+GROUPID		\\[1-9]
+STREAM          \\0
 ESCAPED		\\[^xnur0-9]
 
 %s IN_QUANTIFIER
@@ -94,6 +95,7 @@ ESCAPED		\\[^xnur0-9]
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
 {GROUPID}		{ yylval->integer = atoi(&yytext[1]); return T_GROUPID; }
+{STREAM}                { yylval->integer = atoi(&yytext[1]); return T_STREAM; }
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval->integer = atoi(yytext); return T_NUMBER; }

@@ -25,13 +25,15 @@
 #include <librexgen/unicode.h>
 #include <librexgen/debug.h>
 #include <librexgen/simplestring.h>
+#include <librexgen/iterator/topiterator.h>
 
 typedef enum {
   Compound,
   Alternative,
   Terminal,
   Class,
-  Reference
+  Reference,
+  Stream
 } RegexType;
 
 class Regex  {
@@ -74,7 +76,8 @@ public:
   Iterator* iterator(bool randomize = true) const {
     IteratorState* state = new IteratorState();
     state->setRandomize(randomize);
-    return iterator(state);
+    //return iterator(state);
+    return new TopIterator(getId(), iterator(state), state);
   }
   
   int getId() const { return id; }

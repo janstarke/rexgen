@@ -20,18 +20,19 @@
 #include <librexgen/parser/osdepend.h>
 #include <sstream>
 #include <string>
+#include <cstdio>
 
 using std::istringstream;
 
 int rexgen_parse(RexgenParserContext* context);
 
 EXPORT
-Regex* parse_regex(const char* regex, bool ignoreCase) {
+Regex* parse_regex(const char* regex, bool ignoreCase, charset enc, FILE* infile) {
   const string re(regex);
 
   istringstream is(re);
 
-  RexgenParserContext context(&is, ignoreCase);
+  RexgenParserContext context(&is, ignoreCase, enc, infile);
   if (rexgen_parse(&context) != 0) {
     return NULL;
   }

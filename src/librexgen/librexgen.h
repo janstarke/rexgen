@@ -22,6 +22,9 @@
 #include <librexgen/parser/osdepend.h>
 
 EXPORT
-Regex* parse_regex(const char* regex, bool ignoreCase = false);
+Regex* parse_regex(     const char* regex,
+                        bool ignoreCase = false,
+                        charset enc = CHARSET_UTF8,
+                        FILE* infile = nullptr);
 
 #endif /* __libregex_h__ */

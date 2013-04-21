@@ -21,6 +21,7 @@
 #include <map>
 #include <algorithm>
 #include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/streamregexiterator.h>
 
 using namespace std;
 
@@ -39,9 +40,13 @@ public:
   void setRandomize(bool rnd) { randomize = rnd; }
   bool getRandomize() const { return randomize; }
   
+  void setStreamIterator(StreamRegexIterator* iter) {streamIterator = iter;}
+  StreamRegexIterator* getStreamIterator() const { return streamIterator; }
+  
 private:
   map<int, const Iterator*> groupIterators;
   bool randomize = false;
+  StreamRegexIterator* streamIterator = nullptr;
 };
 
 #endif // ITERATORSTATE_H

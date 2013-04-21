@@ -1,4 +1,4 @@
-%pure-parser	
+%pure-parser
 %name-prefix="rexgen_"
 %locations
 %defines
@@ -31,6 +31,7 @@
   #include <librexgen/regex/classregex.h>
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
+  #include <librexgen/regex/streamregex.h>
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/parser/osdepend.h>
   #include "parser.hpp"
@@ -72,6 +73,7 @@
 %token <character> T_END_QUANTIFIER
 %token <integer>   T_NUMBER
 %token <integer>   T_GROUPID
+%token <integer>   T_STREAM
 %token <character> T_BEGIN_GROUP
 %token <character> T_END_GROUP
 %token <character> T_BEGIN_CLASS
@@ -89,7 +91,7 @@
 %type <class_regex> ClassContentWithoutHyphen
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
-//%type <integer> Quantifier2;
+%type <regex> Stream;
 
 %%
 
@@ -141,7 +143,8 @@ Regex:
 PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
 	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
-	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	};
+	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
+          |     Stream          { $$ = static_cast<Regex*>($1); };
 
 SimpleRegex: T_ANY_CHAR {
   if (context->ignoreCase()) {
@@ -198,6 +201,10 @@ GroupReference: T_GROUPID {
   GroupReference* gr = new GroupReference($1);
   context->registerGroupReference(gr);
   $$ = gr;
-}
+};
+
+Stream: T_STREAM {
+   $$ = context->getStreamRegex();
+};
 
 %%
