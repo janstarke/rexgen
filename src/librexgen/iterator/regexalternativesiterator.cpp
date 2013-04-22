@@ -56,12 +56,12 @@ bool RegexAlternativesIterator::next() {
   }
 
   if ((*iter)->next()) {
-    return true;
+    RETURN(true);
   }
   ++iter;
   if (iter == iterators.end()) {
     iter = iterators.begin();
-    return false;
+    RETURN(false);
   }
   (*iter)->next();
   RETURN (true);

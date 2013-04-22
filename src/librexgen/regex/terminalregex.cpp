@@ -26,15 +26,6 @@ void TerminalRegex::prepend(const TerminalRegex* tre) {
     [&](const uchar_t ch){value.insert(value.begin(), ch); });
 }
 
-Iterator* TerminalRegex::iterator(IteratorState* state) const {
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return new TerminalRegexIterator(getId(), &value[0], value.size());
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
-  }
-}
-
 void TerminalRegex::appendContent(
   SimpleString& dst, int level) const {
     appendSpace(dst, level);

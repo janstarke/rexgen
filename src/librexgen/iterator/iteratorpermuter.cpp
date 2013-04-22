@@ -15,6 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 
+#include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 
 IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max)

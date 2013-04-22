@@ -19,6 +19,7 @@
 #define __Regex_h__
 
 #include <librexgen/iterator/iteratorstate.h>
+#include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/regex/quantifier.h>
 #include <librexgen/iterator/iterator.h>
 #include <iostream>
@@ -70,10 +71,17 @@ public:
   
   virtual void xmlEncapsulate(SimpleString& dst, const char* clazz, int level) const;
   
-  virtual Iterator* singleIterator(IteratorState* state) const = 0;  
-  virtual Iterator* iterator(IteratorState* state) const = 0;
+  Iterator* iterator(IteratorState* state) const {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      return singleIterator(state);
+    } else {
+      return new IteratorPermuter(
+        getId(), this, state, getMinOccurs(), getMaxOccurs());
+    }    
+  }
+  virtual Iterator* singleIterator(IteratorState* state) const = 0;
   
-  Iterator* iterator(bool randomize = true) const {
+  virtual Iterator* iterator(bool randomize = true) const {
     IteratorState* state = new IteratorState();
     state->setRandomize(randomize);
     //return iterator(state);

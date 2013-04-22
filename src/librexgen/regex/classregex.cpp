@@ -93,12 +93,5 @@ Iterator* ClassRegex::singleIterator(IteratorState* state) const
   return new ClassRegexIterator(getId(), state, &characters[0], characters.size());
 }
 
-Iterator* ClassRegex::iterator(IteratorState* state) const {
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return singleIterator(state);
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
-  }
-}
+
 

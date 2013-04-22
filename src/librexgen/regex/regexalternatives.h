@@ -44,7 +44,7 @@ public:
   Iterator* getContainerIterator();
   
   int getGroupId() const { return groupId; }
-  void setGroupId (int _id) { groupId = _id; }
+  void setGroupId (int _id) { fprintf(stderr, "setGroupId: groupId: %d\n", _id); groupId = _id; }
 private:
   int groupId;
 };

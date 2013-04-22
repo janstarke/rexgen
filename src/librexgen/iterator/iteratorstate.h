@@ -34,7 +34,11 @@ public:
   }
   
   const Iterator* getIterator(int id) const {
-    return groupIterators.at(id);
+    if (id == -1) {
+      return getStreamIterator();
+    } else {
+      return groupIterators.at(id);
+    }
   }
   
   void setRandomize(bool rnd) { randomize = rnd; }

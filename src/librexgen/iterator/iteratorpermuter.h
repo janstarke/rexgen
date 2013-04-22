@@ -20,12 +20,14 @@
 #define ITERATORPERMUTER_H
 
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/regex/regex.h>
+#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/unicode.h>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
+
+class Regex;
 
 class IteratorPermuter : public Iterator
 {

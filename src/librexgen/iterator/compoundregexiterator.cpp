@@ -69,7 +69,7 @@ bool CompoundRegexIterator::next() {
 }
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
-  assert(canUseValue());
+  //assert(canUseValue());
   for_each(iterators.begin(), iterators.end(),
   [&dst](Iterator* i) { i->value(dst); });
 }

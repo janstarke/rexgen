@@ -78,13 +78,7 @@ Iterator* CompoundRegex::iterator(IteratorState* state) const {
         re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   }
-
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return singleIterator(state);
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
-  }
+  return RegexContainer::iterator(state);
 }
 
 

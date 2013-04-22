@@ -60,12 +60,7 @@ Iterator* RegexAlternatives::iterator(IteratorState* state) const {
         re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   } else {
-    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      iter = singleIterator(state);
-    } else {
-      iter = new IteratorPermuter(
-        getId(), this, state, getMinOccurs(), getMaxOccurs());
-    }
+    iter = RegexContainer::iterator(state);
   }
 
   if (getGroupId() > 0) {

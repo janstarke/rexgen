@@ -21,21 +21,10 @@
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/simplestring.h>
 
-Iterator* GroupReference::iterator(IteratorState* state) const {
-  assert(groupRef != NULL);
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return new GroupReferenceIterator(
-      getId(), state->getIterator(groupRef->getGroupId()));
-  } else {
-    return new IteratorPermuter(
-      getId(), this, state, getMinOccurs(), getMaxOccurs());
-  }
-}
-
 Iterator* GroupReference::singleIterator(IteratorState* state) const {
   assert(groupRef != NULL);
-  return new GroupReferenceIterator(
-    getId(), state->getIterator(groupRef->getGroupId()));
+  const Iterator* ref = state->getIterator(groupRef->getGroupId());
+  return new GroupReferenceIterator(getId(), ref);
 }
 
 void GroupReference::appendContent(
