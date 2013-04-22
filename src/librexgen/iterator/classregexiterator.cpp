@@ -26,9 +26,8 @@ ClassRegexIterator::ClassRegexIterator(
       c.length = uchar_to_utf(classcontent[n], &(c.value[0]));
       characters.push_back(c);
     }
-    first = &(*characters.begin());
-    last = &(*characters.rbegin());
-    reset();
+    first = &(*(characters.begin()));
+    last = &(*(characters.rbegin()));
     current = first-1;
     state = usable;
 }
@@ -36,7 +35,8 @@ ClassRegexIterator::ClassRegexIterator(
 bool ClassRegexIterator::next() {
   ++current;
   if (current > last) {
-    reset();
+    if(randomize) {shuffle();}
+    current = first;
     return false;
   }
   return true;

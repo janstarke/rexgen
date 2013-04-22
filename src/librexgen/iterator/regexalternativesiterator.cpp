@@ -28,7 +28,7 @@ RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   state = resetted;
 }
 
-
+/*
 void RegexAlternativesIterator::reset() {
   ENTER_METHOD;
   Iterator::reset();
@@ -39,7 +39,7 @@ void RegexAlternativesIterator::reset() {
   state = resetted;
   LEAVE_METHOD;
 }
-
+*/
 void RegexAlternativesIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
   (*iter)->value(dst);

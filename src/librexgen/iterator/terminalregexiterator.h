@@ -48,7 +48,7 @@ public:
   }
   void value(SimpleString& dst) const { dst.append(terminal, terminal_length); }
   bool hasNext() const { return state == resetted; }
-  void reset() { state = resetted; }
+  //void reset() { state = resetted; }
 private:
   byte* terminal;
   size_t terminal_length;

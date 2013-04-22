@@ -27,7 +27,7 @@ class StreamRegexIterator : public Iterator
 {
 public:
     StreamRegexIterator(int _id, FILE* in)
-      : Iterator(_id), infile(in) {reset();readNextWord();}
+      : Iterator(_id), infile(in) {state = resetted; readNextWord();}
     bool next() {
       const bool res = (state == resetted);
       state = usable;
@@ -41,7 +41,7 @@ public:
     void value(SimpleString& dst) const {
       dst.append(buffer);
     }
-    void reset() {}
+    //void reset() {}
 private:
   void readNextWord() {
     if (feof(infile)) {

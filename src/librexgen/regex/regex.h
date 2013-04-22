@@ -84,7 +84,6 @@ public:
   virtual Iterator* iterator(bool randomize = true) const {
     IteratorState* state = new IteratorState();
     state->setRandomize(randomize);
-    //return iterator(state);
     return new TopIterator(getId(), iterator(state), state);
   }
   

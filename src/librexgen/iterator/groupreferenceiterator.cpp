@@ -36,8 +36,9 @@ void GroupReferenceIterator::value(SimpleString& dst) const {
   groupRef->value(dst);
   LEAVE_METHOD;
 }
-
+/*
 void GroupReferenceIterator::reset() {
   Iterator::reset();
   state = resetted;
 }
+*/

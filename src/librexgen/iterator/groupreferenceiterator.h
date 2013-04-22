@@ -35,7 +35,7 @@ public:
     virtual bool hasNext() const;
     virtual bool next();
     virtual void value(SimpleString& dst) const;
-    virtual void reset();
+    //virtual void reset();
     
 private:
   const Iterator* groupRef;

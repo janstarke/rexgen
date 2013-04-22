@@ -41,7 +41,7 @@ public:
 		      );
     virtual ~ClassRegexIterator() {}
   
-  inline void reset() { if(randomize) {shuffle();} current = first;}
+  //inline void reset() { fprintf(stderr, "reset\n"); if(randomize) {shuffle();} current = first;}
     
     inline void value(SimpleString& dst) const {
       dst.fast_append(current->value, current->length);

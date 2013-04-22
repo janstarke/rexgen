@@ -39,7 +39,7 @@ public:
       iterators.clear();
     }
     
-    void reset();
+    //void reset();
     bool next();
     void value(SimpleString& dst) const;
     bool hasNext() const;
