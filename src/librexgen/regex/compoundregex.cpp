@@ -21,14 +21,6 @@
 #include <librexgen/iterator/compoundregexiterator.h>
 #include <librexgen/debug.h>
 
-CompoundRegex::~CompoundRegex() {
-  for (container_type::iterator iter = regexObjects.begin();
-       iter != regexObjects.end();
-       ++iter) {
-    delete *iter;
-  }
-}
-
 void CompoundRegex::prependRegex(Regex* regex) {
   ENTER_METHOD;
 
@@ -61,8 +53,8 @@ void CompoundRegex::appendRegex(Regex* regex) {
 
 Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
-  for (container_type::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end(); ++iter) {
+  for (auto iter = regexObjects.cbegin();
+       iter != regexObjects.cend(); ++iter) {
     cri->addChild((*iter)->iterator(state));
   }
   return cri;

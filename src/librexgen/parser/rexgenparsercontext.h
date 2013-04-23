@@ -26,6 +26,7 @@
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/regex/streamregex.h>
 #include <librexgen/unicode/uchar.h>
+#include <librexgen/rexgen_options.h>
 
 using namespace std;
 
@@ -33,8 +34,8 @@ class RexgenParserContext
 {
 
 public:
-  RexgenParserContext(istream* input = &cin, bool _ic = false, charset _enc=CHARSET_UTF8, FILE* in=nullptr)
-  : ic(_ic), enc(_enc), infile(in) {
+  RexgenParserContext(istream* input, const RexgenOptions& __options )
+  : options(__options) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
@@ -71,13 +72,13 @@ public:
   
   int groupId;
   
-  bool ignoreCase() const { return ic; }
-  charset encoding() const { return enc; }
-  FILE* getInFile() const { return infile; }
+  bool ignoreCase() const { return options.ignore_case; }
+  charset encoding() const { return options.encoding; }
+  FILE* getInFile() const { return options.infile; }
   
   Regex* getStreamRegex() {
     if (streamRegex == nullptr) {
-      streamRegex = new StreamRegex(infile);
+      streamRegex = new StreamRegex(options.infile);
       return streamRegex;
     } else {
       GroupReference* gr = new GroupReference(streamRegex->getId());
@@ -91,9 +92,7 @@ protected:
   void DestroyScanner();
   
 private:
-  const bool ic;
-  const charset enc;
-  FILE* infile;
+  const RexgenOptions& options;
   map<int, GroupReference*> groupRefs;
   map<int, Regex*> groups;
   StreamRegex* streamRegex = nullptr;

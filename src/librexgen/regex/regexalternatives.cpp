@@ -21,19 +21,11 @@
 #include <algorithm>
 using namespace std;
 
-RegexAlternatives::~RegexAlternatives() {
-  for (container_type::iterator iter = regexObjects.begin();
-       iter != regexObjects.end();
-       ++iter) {
-    delete (*iter);
-  }
-}
-
 int RegexAlternatives::getMaxSize() const {
   int __max = 0;
   int __size = 0;
-  for (container_type::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end();
+  for (auto iter = regexObjects.cbegin();
+       iter != regexObjects.cend();
        ++iter) {
     __size = (*iter)->getMaxSize();
     __max = max(__size, __max);

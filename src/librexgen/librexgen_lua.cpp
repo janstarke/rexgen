@@ -21,6 +21,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/simplestring.h>
+#include <librexgen/rexgen_options.h>
 #include <uniconv.h>
 #include <vector>
 
@@ -93,14 +94,14 @@ int rexgen_iter(lua_State* L) {
 extern "C"
 int rexgen_parse_regex(lua_State* L) {
   SimpleString xml;
-  bool ignoreCase = false;
+  RexgenOptions options;
   if (lua_isboolean(L, 2)) {
-    ignoreCase = lua_toboolean(L, 2);
+    options.ignore_case = lua_toboolean(L, 2);
   } else {
-    ignoreCase = false;
+    options.ignore_case = false;
   }
 
-  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), ignoreCase);
+  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), options);
 
   Iterator** iter;
   iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
@@ -130,7 +131,8 @@ int rexgen_value(lua_State* L, const Iterator* iter) {
 extern "C"
 int rexgen_get_syntax_tree(lua_State* L) {
   SimpleString xml;
-  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL));
+  RexgenOptions options;
+  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), options);
   re->appendRawValue(xml);
   push_utf8_string(L, xml);
   return 1;

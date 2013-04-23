@@ -25,11 +25,10 @@
 #include "../iterator/iteratorpermuter.h"
 #include <librexgen/simplestring.h>
 
-class RegexAlternatives : public RegexContainer<deque<Regex*> >
+class RegexAlternatives : public RegexContainer
 {
 public:
   RegexAlternatives(): RegexContainer(), groupId(-1) {}
-  virtual ~RegexAlternatives();
   inline void addRegex(Regex *regex) { getChildren()->push_front(regex); }
   
   virtual inline const char* getXmlTag() const { return "alternative"; } 

@@ -18,6 +18,7 @@
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/parser/osdepend.h>
+#include <librexgen/parser/syntaxerror.h>
 #include <sstream>
 #include <string>
 #include <cstdio>
@@ -27,14 +28,19 @@ using std::istringstream;
 int rexgen_parse(RexgenParserContext* context);
 
 EXPORT
-Regex* parse_regex(const char* regex, bool ignoreCase, charset enc, FILE* infile) {
+Regex* parse_regex(const char* regex, const RexgenOptions& options) {
   const string re(regex);
 
   istringstream is(re);
 
-  RexgenParserContext context(&is, ignoreCase, enc, infile);
-  if (rexgen_parse(&context) != 0) {
-    return NULL;
+  RexgenParserContext context(&is, options);
+  try {
+    if (rexgen_parse(&context) != 0) {
+      return nullptr;
+    }
+  } catch (SyntaxError& exc) {
+    cerr << exc.getMessage() << endl;
+    return nullptr;
   }
 #pragma message("this must be handled with normal syntax error reporting")
   assert(!context.hasInvalidGroupReferences());

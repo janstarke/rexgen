@@ -15,36 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef __syntaxerror_h__
+#define __syntaxerror_h__
 
-#ifndef TOPITERATOR_H
-#define TOPITERATOR_H
-
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/iterator/iteratorstate.h>
-#include <librexgen/simplestring.h>
-
-
-class TopIterator : public Iterator
-{
+class SyntaxError {
 public:
-  TopIterator(int __id, Iterator* __child, IteratorState* __state)
-    :Iterator(__id), child(__child), state(__state) {
-  }
-  
-  ~TopIterator() {delete child;}
-  bool next() {
-    bool res = child->next();
-    if (res) { return res; }
+  SyntaxError(const char* msg)
+    : message(msg) {}
     
-    if (state->getStreamIterator() == nullptr) { return false; }
-    return state->getStreamIterator()->forceNext();
-  }
-  
-  void value(SimpleString& dst) const { child->value(dst); }
-  bool hasNext() const { return child->hasNext(); }
+    const char* getMessage() { return message; }
 private:
-  Iterator* child;
-  const IteratorState* state;
+  const char* message;
+    
 };
 
-#endif // TOPITERATOR_H
+#endif

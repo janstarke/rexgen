@@ -34,6 +34,7 @@
   #include <librexgen/regex/streamregex.h>
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/parser/osdepend.h>
+  #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
   
   #include <cstdio>
@@ -204,6 +205,9 @@ GroupReference: T_GROUPID {
 };
 
 Stream: T_STREAM {
+  if (context->getInFile() == nullptr) {
+    throw SyntaxError("You cannot use a stream reference without specifying a stream source.");
+  }
    $$ = context->getStreamRegex();
 };
 

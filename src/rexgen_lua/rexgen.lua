@@ -1,5 +1,5 @@
 #!/usr/bin/lua5.2
-package.cpath = '${CMAKE_INSTALL_PREFIX}/lib/lib?.so'
+package.cpath = '/usr/local/lib/lib?.so'
 local rexgen = require 'rexgen'
 
 if (#arg ~= 1 and #arg ~= 2) then

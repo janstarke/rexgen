@@ -28,10 +28,9 @@
 
 using namespace std;
 
-class CompoundRegex : public RegexContainer<deque<Regex*> >
+class CompoundRegex : public RegexContainer
 {
 public:
-  virtual ~CompoundRegex();
   
   virtual inline const char* getXmlTag() const { return "compound"; }
   

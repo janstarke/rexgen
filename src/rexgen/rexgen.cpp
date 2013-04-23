@@ -20,6 +20,8 @@
 #include <librexgen/librexgen.h>
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
+#include <librexgen/rexgen_options.h>
+#include <librexgen/parser/syntaxerror.h>
 #include <cstdio>
 #include <signal.h>
 #include <locale.h>
@@ -33,6 +35,13 @@ typedef char _TCHAR;
 #endif
 
 static char regex_buffer[512];
+RexgenOptions rexgen_options;
+const char* infile =  nullptr;
+
+enum {
+  display_syntax_tree,
+  generate_values
+} rexgen_operation;
 
 using namespace std;
 #ifdef YYDEBUG
@@ -59,13 +68,6 @@ static void usage() {
   cerr << "   -c:        display redistribution conditions" << endl;
 }
 
-static struct {
-  bool display_tree;
-  bool ignore_case;
-  int utf_variant;
-  bool randomize = false;
-  const char* infile = nullptr;
-} rexgen_options;
 
 static void setlocale() {
   const char* defaultLocale = "en_US.UTF8";
@@ -102,6 +104,10 @@ static void display_conditions() {
 
 const char* parse_arguments(int argc, _TCHAR** argv) {
   const char* regex = nullptr;
+  int utf_variant = 8;
+  
+  rexgen_operation = generate_values;
+  
   for (int n=1; n<argc; ++n) {
     if (argv[n][0] != '-') {
       if (regex == NULL) {
@@ -134,31 +140,38 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
         exit(0);
       case 'f':
         ++n;
-        rexgen_options.infile = argv[n];
+        infile = argv[n];
         break;
       case 'i':
         rexgen_options.ignore_case = true;
         break;
       case 't':
-        rexgen_options.display_tree = true;
+        rexgen_operation = display_syntax_tree;
         break;
       case 'r':
         rexgen_options.randomize = true;
         break;
       case 'u': /* unicode encoding */
 #ifdef _WIN32
-        rexgen_options.utf_variant = _tstoi(&(argv[n][2]));
+        utf_variant = _tstoi(&(argv[n][2]));
 #else
-        rexgen_options.utf_variant = atoi(&(argv[n][2]));
+        utf_variant = atoi(&(argv[n][2]));
 #endif
-        if (rexgen_options.utf_variant == 8 ||
-            rexgen_options.utf_variant == 16 ||
-            rexgen_options.utf_variant == 32) {
-          break;
+        switch (utf_variant) {
+          case 8:
+            rexgen_options.encoding = CHARSET_UTF8;
+            break;
+          case 16:
+            rexgen_options.encoding = CHARSET_UTF16;
+            break;
+          case 32:
+            rexgen_options.encoding = CHARSET_UTF32;
+            break;
+          default:
+            cerr << "invalid output encoding specified" << endl;
+            usage();
+            exit(1);
         }
-        cerr << "invalid output encoding specified" << endl;
-        usage();
-        exit(1);
       default:
         fprintf(stderr, "invalid argument: %s\n", argv[n]);
         usage();
@@ -171,7 +184,6 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 int _tmain(int argc, _TCHAR* argv[]) {
   SimpleString buffer;
   SimpleString syntaxTree;
-  FILE* infile = nullptr;
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -180,35 +192,31 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
   
   setlocale();
-  rexgen_options.utf_variant = 8; /* use UTF-8 by default */
+  rexgen_options.encoding = CHARSET_UTF8; /* use UTF-8 by default */
   const char* regex_str = parse_arguments(argc, argv);
   if (regex_str == nullptr) {
     usage();
     return 1;
   }
   
-  if (rexgen_options.infile != nullptr) {
-    if (0 == strcmp(rexgen_options.infile, "-")) {
-      infile = stdin;
+  if (infile != nullptr) {
+    if (0 == strcmp(infile, "-")) {
+      rexgen_options.infile = stdin;
     } else {
-      infile = fopen(rexgen_options.infile, "r");
-      if (infile == nullptr) {
+      rexgen_options.infile = fopen(infile, "r");
+      if (rexgen_options.infile == nullptr) {
         perror("unable to open input file");
         return 1;
       }
     }
   }
 
-  Regex* regex = parse_regex(regex_str,
-                             rexgen_options.ignore_case,
-                             CHARSET_UTF8,
-                             infile
-                            );
+  Regex* regex = parse_regex(regex_str, rexgen_options);
   if (regex == nullptr) {
     return 1;
   }
   
-  if (rexgen_options.display_tree) {
+  if (rexgen_operation == display_syntax_tree) {
     regex->appendRawValue(syntaxTree);
     syntaxTree.print(stdout, true);
     return 0;

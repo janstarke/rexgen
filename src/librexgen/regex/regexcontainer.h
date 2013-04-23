@@ -19,19 +19,22 @@
 #define __regexcontainer_h__
 
 #include "regex.h"
+#include <deque>
 #include <algorithm>
 #include "../debug.h"
 #include <librexgen/simplestring.h>
 
 using namespace std;
 
-template <class T>
 class RegexContainer : public Regex {
 public:
-  typedef T container_type;
+  virtual ~RegexContainer() {
+    for_each(regexObjects.begin(), regexObjects.end(), [](Regex* re)
+      {delete re;});
+  }
   
   virtual int getMaxSize() const {
-    typename T::const_iterator iter = regexObjects.begin();
+    auto iter = regexObjects.begin();
     int __size = 0;
     while (iter != regexObjects.end()) {
       __size += (*iter)->getMaxSize();
@@ -51,8 +54,8 @@ public:
   unsigned int size() { return getChildren()->size(); }
 
 protected:
-  T* getChildren() { return &regexObjects; }
-  T regexObjects;
+  deque<Regex*>* getChildren() { return &regexObjects; }
+  deque<Regex*> regexObjects;
 };
 
 #endif

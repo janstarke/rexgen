@@ -20,11 +20,9 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/parser/osdepend.h>
+#include <librexgen/rexgen_options.h>
 
 EXPORT
-Regex* parse_regex(     const char* regex,
-                        bool ignoreCase = false,
-                        charset enc = CHARSET_UTF8,
-                        FILE* infile = nullptr);
+Regex* parse_regex(const char* regex, const RexgenOptions& options);
 
 #endif /* __libregex_h__ */
