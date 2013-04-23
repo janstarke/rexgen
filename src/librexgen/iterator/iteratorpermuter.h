@@ -41,7 +41,7 @@ public:
       for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
     }
     bool next();
-    //void reset();
+    void init();
 
 private:
   bool existsIteratorWithNextElement() const;

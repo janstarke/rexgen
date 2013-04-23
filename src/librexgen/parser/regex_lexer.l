@@ -99,7 +99,8 @@ ESCAPED		\\[^xnur0-9]
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval->integer = atoi(yytext); return T_NUMBER; }
-{DIGIT}|{ALPHA}|{SPECIAL}	{ yylval->character = yytext[0]; return T_ANY_CHAR; }
+.                       { yylval->character = yytext[0]; return T_ANY_CHAR; }
+
 %%
 
 

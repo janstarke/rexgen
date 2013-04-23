@@ -25,7 +25,7 @@ hasNextElement(true), occurs(min_occurs)
   for (unsigned int n=0; n<max_occurs; ++n) {
     iterators.push_back(regex->singleIterator(iteratorState));
   }
-  //reset();
+  init();
 }
 
 void IteratorPermuter::value(SimpleString& dst) const
@@ -69,11 +69,10 @@ bool IteratorPermuter::next()
   if (n == occurs)  { ++occurs; }
   RETURN(true);
 }
-/*
-void IteratorPermuter::reset()
+
+void IteratorPermuter::init()
 {
   ENTER_METHOD;
-  Iterator::reset();
 
   bool has_next = false;
   for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {i->next();has_next |= i->hasNext();});
@@ -84,7 +83,7 @@ void IteratorPermuter::reset()
   state = resetted;
   LEAVE_METHOD;
 }
-*/
+
 bool IteratorPermuter::existsIteratorWithNextElement() const
 {
   ENTER_METHOD;

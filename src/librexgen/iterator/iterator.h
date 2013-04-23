@@ -35,7 +35,6 @@ public:
   virtual bool hasNext() const { return false; }
   virtual bool next() = 0;
   virtual void value(SimpleString& /* dst */ ) const { }
-  //virtual void reset() { state = resetted; }
   
   virtual bool canUseValue() const { return (state == usable); }
   

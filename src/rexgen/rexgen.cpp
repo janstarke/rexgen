@@ -45,7 +45,8 @@ static void usage() {
         << "This program comes with ABSOLUTELY NO WARRANTY; for details run rexgen with '-w'." << endl
         << "This is free software, and you are welcome to redistribute it" << endl
         << "under certain conditions; run rexgen with `-c' for details." << endl << endl;
-  cerr << "Usage:   rexgen [-i] [-t] <regex>" << endl;
+  cerr << "USAGE: rexgen [<options>] <regex>" << endl;
+  cerr << endl << "OPTIONS:" << endl;
   cerr << "   -t:        print syntax tree" << endl;
   cerr << "   -i:        ignore case" << endl;
   cerr << "   -r:        randomize order of values (will be slower)" << endl;
@@ -209,15 +210,15 @@ int _tmain(int argc, _TCHAR* argv[]) {
   
   if (rexgen_options.display_tree) {
     regex->appendRawValue(syntaxTree);
-    syntaxTree.terminate();
-    syntaxTree.print(stdout);
+    syntaxTree.print(stdout, true);
+    return 0;
   }
     
   Iterator* iter = regex->iterator(rexgen_options.randomize);
 
   while (iter->next()) {
     iter->value(buffer);
-    buffer.push_back('\n');
+    buffer.newline();
     buffer.print(stdout);
   }
   buffer.print(stdout, true);
