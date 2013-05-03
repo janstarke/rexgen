@@ -1,5 +1,5 @@
-#!/usr/bin/lua5.2
-package.cpath = '${CMAKE_INSTALL_PREFIX}/lib/lib?.so'
+#!${LUA_BINARY}
+package.cpath = '${CMAKE_INSTALL_PREFIX}/lib/${librexgen_filename}'
 local rexgen = require 'rexgen'
 
 if (#arg ~= 1 and #arg ~= 2) then
@@ -19,7 +19,7 @@ if (arg[1] == "-i") then
   ignoreCase = true
   regex = arg[2]
 else
-  ignoreCase = fale
+  ignoreCase = false
   regex = arg[1]
 end
 

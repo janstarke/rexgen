@@ -1,5 +1,6 @@
 #!/usr/bin/lua5.2
-package.cpath = '/usr/local/lib/lib?.so'
+
+package.cpath = '/usr/local/lib/librexgen-0.1.0.so'
 local rexgen = require 'rexgen'
 
 if (#arg ~= 1 and #arg ~= 2) then
@@ -19,7 +20,7 @@ if (arg[1] == "-i") then
   ignoreCase = true
   regex = arg[2]
 else
-  ignoreCase = fale
+  ignoreCase = false
   regex = arg[1]
 end
 

@@ -69,7 +69,7 @@ endif(COMMAND add_cppcheck)
 add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
 
 if (USE_LUA)
-  target_link_libraries(${librexgen_libname} lua5.2 )
+  target_link_libraries(${librexgen_libname} "lua${LUA_VERSION}" )
 endif(USE_LUA)
 
 target_link_libraries(${librexgen_libname} pthread )
@@ -79,6 +79,14 @@ set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
 install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)
 
 if (USE_LUA)
-  configure_file("${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen_tmpl.lua" "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua")
-  install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua" DESTINATION bin)
+  execute_process(COMMAND "/usr/bin/which" "lua${LUA_VERSION}"
+                  ERROR_VARIABLE LUA_ERROR
+                  OUTPUT_VARIABLE LUA_BINARY)
+  MESSAGE(STATUS "LUA_BINARY = ${LUA_BINARY}")
+  if(DEFINED ${LUA_ERROR})
+    MESSAGE(FATAL_ERROR "lua${LUA_VERSION} is missing")
+  else()
+    configure_file("${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen_tmpl.lua" "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua")
+    install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua" DESTINATION bin)
+  endif(DEFINED ${LUA_ERROR})
 endif(USE_LUA)

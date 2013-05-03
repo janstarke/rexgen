@@ -3,11 +3,14 @@ set(prj rexgen)
 
 cmake_minimum_required(VERSION 2.8)
 
+set(LUA_VERSION "5.2")
+
 set(librexgen_major 0)
 set(librexgen_minor 1)
 set(librexgen_release 0)
 set(librexgen_version ${librexgen_major}.${librexgen_minor}.${librexgen_release})
 set(librexgen_libname rexgen-${librexgen_version})
+set(librexgen_filename ${CMAKE_SHARED_LIBRARY_PREFIX}${librexgen_libname}${CMAKE_SHARED_LIBRARY_SUFFIX} )
 
 set(rexgen_exename "${prj}")
 
@@ -15,7 +18,7 @@ OPTION (USE_LUA "create API for lua" ON)
 #OPTION (REXGEN_DEBUG_MODE "debug mode" ON)
 
 if (USE_LUA)
-  find_library(log4cpp liblua5.2)
+  find_library(log4cpp liblua${LUA_VERSION})
 else()
   find_library(log4cpp )
 endif(USE_LUA)
