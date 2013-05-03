@@ -67,9 +67,8 @@ static const uint8_t first_byte_mark[7] = {
   }
   
   static inline uint16_t flip_byteorder(uint16_t v) {
-    return
-    ((v & 0x00ff) << 8)  |
-    ((v & 0xff00) >> 8);
+    return 
+    (((v & 0x00ff) << 8)  |  ((v & 0xff00) >> 8));
   }
 
 inline size_t convert_utf32_to_utf8 (char* dst, uint32_t value) {

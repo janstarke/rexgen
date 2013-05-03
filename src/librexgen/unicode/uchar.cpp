@@ -18,9 +18,18 @@
 #include <librexgen/unicode/uchar.h>
 #include <librexgen/unicode/utf32.h>
 
+static bool has_to_flip(charset cs) {
+  return
+  ( o32_host_order.value == O32_LITTLE_ENDIAN && 
+    (cs == CHARSET_UTF16BE || cs == CHARSET_UTF32BE) ) ||
+  ( o32_host_order.value == O32_BIG_ENDIAN && 
+    ( cs == CHARSET_UTF16LE || cs == CHARSET_UTF32LE) );
+}
+
 void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
   size_t shift = 0;
   size_t index = 0;
+  const bool flip = has_to_flip(cs);
   
   dst->variant = cs;
   dst->char_length = 1;
@@ -57,21 +66,34 @@ void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
         case 3: dst->character.bytes[index] = 0;
       }
       break;
-    case CHARSET_UTF16:
-#pragma message ("TODO: create UTF16 conversion")
-      dst->char_length = 2;
-      dst->character.ucs2.low = 0;
-      dst->character.ucs2.high = 
-      ( o32_host_order.value == O32_LITTLE_ENDIAN ?
-        flip_byteorder((uint16_t)(codepoint & 0x0000ffff)):
-        codepoint);
+    case CHARSET_UTF16LE:
+    case CHARSET_UTF16BE:
+      if (codepoint <= 0xffff) {
+        const uint16_t tmp = (uint16_t)(0x0000ffff&codepoint);
+        dst->char_length = 2;
+        dst->character.ucs2.high = 0;
+        dst->character.ucs2.low = (flip ? flip_byteorder(tmp) : tmp);
+        break;
+      }
+      
+      if (codepoint <= 0x10ffff) {
+        dst->char_length = 4;
+        const uint32_t tmp = codepoint - 0x100000;
+        dst->character.ucs4.value =
+              ((0b11011000 | (((uint16_t)(tmp>>10)) & 0b1111111111)) << 16) |
+              (0b11011100 | (((uint16_t)(tmp))     & 0b1111111111));
+        if (flip) {
+          flip_byteorder(dst->character.ucs4.value);
+        }
+        break;
+      }
+      dst->char_length = 0;
+      dst->character.ucs4.value = 0;
       break;
-    case CHARSET_UTF32:
+    case CHARSET_UTF32BE:
+    case CHARSET_UTF32LE:
       dst->char_length = 4;
-      dst->character.ucs4.value = 
-      ( o32_host_order.value == O32_LITTLE_ENDIAN ?
-            flip_byteorder(codepoint):
-            codepoint);
+      dst->character.ucs4.value = ( flip ? flip_byteorder(codepoint): codepoint);
       break;
       
   }
@@ -94,23 +116,29 @@ uint8_t uchar_to_utf8(const uchar_t& uch, byte* utf8_dst) {
 
 uint8_t uchar_to_utf16(const uchar_t& uch, byte* utf16_dst) {
   switch(uch.char_length) {
-    case 4: *utf16_dst = uch.character.bytes[0]; utf16_dst += 2;
-    case 2: *utf16_dst = uch.character.bytes[2];
+    case 4: 
+      *((uint16_t*)utf16_dst) = uch.character.ucs2.high;
+      utf16_dst += 2;
+    case 2:
+      *((uint16_t*)utf16_dst) = uch.character.ucs2.low;
   }
-  return 4;
+  return uch.char_length;
 }
 
 uint8_t uchar_to_utf32(const uchar_t& uch, byte* utf32_dst) {
-  *utf32_dst = uch.character.ucs4.value;
+  *((uint32_t*)utf32_dst) = uch.character.ucs4.value;
   return 4;
 }
 
 uint8_t uchar_to_utf(const uchar_t& uch, byte* dst) {
+  
   switch (uch.variant) {
     case CHARSET_ANSI: return uchar_to_ansi(uch, dst);
     case CHARSET_UTF8: return uchar_to_utf8(uch, dst);
-    case CHARSET_UTF16: return uchar_to_utf16(uch, dst);
-    case CHARSET_UTF32: return uchar_to_utf32(uch, dst);
+    case CHARSET_UTF16BE:
+    case CHARSET_UTF16LE: return uchar_to_utf16(uch, dst);
+    case CHARSET_UTF32BE:
+    case CHARSET_UTF32LE: return uchar_to_utf32(uch, dst);
   }
   return 0;
 }
@@ -121,4 +149,18 @@ bool uchar_isascii(const uchar_t& uch) {
   ||        (uch.character.bytes[0]==0
   && uch.character.bytes[1]==0
   && uch.character.bytes[2]==0));
+}
+
+uchar_t create_BOM(charset cs) {
+  uint32_t codepoint = 0;
+  switch (cs) {
+    case CHARSET_ANSI:
+      codepoint = 0;
+      break;
+    default:
+      codepoint = 0xfeff;
+  }
+  uchar_t uc;
+  codepoint_to_uchar(&uc, codepoint, cs);
+  return uc;
 }

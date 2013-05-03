@@ -25,8 +25,10 @@
 enum charset : uint8_t {
   CHARSET_ANSI,
   CHARSET_UTF8,
-  CHARSET_UTF16,
-  CHARSET_UTF32
+  CHARSET_UTF16BE,
+  CHARSET_UTF32BE,
+  CHARSET_UTF16LE,
+  CHARSET_UTF32LE
 };
 
 struct uchar_t{
@@ -43,8 +45,8 @@ struct uchar_t{
       char     value;
     } ansi;
     struct {
-      char16_t low;
       char16_t high;
+      char16_t low;
     } ucs2;
     struct {
       char32_t value;
@@ -77,6 +79,8 @@ uint8_t uchar_to_utf16(const uchar_t& uch, byte* utf16_dst);
 uint8_t uchar_to_utf32(const uchar_t& uch, byte* utf32_dst);
 
 uint8_t uchar_to_utf(const uchar_t& uch, byte* dst);
+
+uchar_t create_BOM(charset cs);
 
 bool uchar_isascii(const uchar_t& uch);
 

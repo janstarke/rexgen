@@ -37,6 +37,7 @@ typedef char _TCHAR;
 static char regex_buffer[512];
 RexgenOptions rexgen_options;
 const char* infile =  nullptr;
+static bool prependBOM = false;
 
 enum {
   display_syntax_tree,
@@ -62,8 +63,9 @@ static void usage() {
   cerr << "   -f <file>: read from file; use - to read from stdin" << endl;
   cerr << "              you can use \\0 to refer to the current line" << endl;
   cerr << "   -u8:       encode values in UTF-8" << endl;
-  cerr << "   -u16:      encode values in UTF-16" << endl;
-  cerr << "   -u32:      encode values in UTF-32" << endl << endl;
+  cerr << "   -u16[le]:  encode values in UTF-16BE (resp. UTF-16LE)" << endl;
+  cerr << "   -u32[le]:  encode values in UTF-32BE (resp. UTF-32LE)" << endl;
+  cerr << "   -b:        prepend output with byte order mark" << endl;
   cerr << "   -w:        display warranty information" << endl;
   cerr << "   -c:        display redistribution conditions" << endl;
 }
@@ -104,7 +106,6 @@ static void display_conditions() {
 
 const char* parse_arguments(int argc, _TCHAR** argv) {
   const char* regex = nullptr;
-  int utf_variant = 8;
   
   rexgen_operation = generate_values;
   
@@ -132,6 +133,9 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case '-':
         n = argc;
         break;
+      case 'b':
+        prependBOM = true;
+        break;
       case 'c':
         display_conditions();
         exit(0);
@@ -152,26 +156,22 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
         rexgen_options.randomize = true;
         break;
       case 'u': /* unicode encoding */
-#ifdef _WIN32
-        utf_variant = _tstoi(&(argv[n][2]));
-#else
-        utf_variant = atoi(&(argv[n][2]));
-#endif
-        switch (utf_variant) {
-          case 8:
-            rexgen_options.encoding = CHARSET_UTF8;
-            break;
-          case 16:
-            rexgen_options.encoding = CHARSET_UTF16;
-            break;
-          case 32:
-            rexgen_options.encoding = CHARSET_UTF32;
-            break;
-          default:
-            cerr << "invalid output encoding specified" << endl;
-            usage();
-            exit(1);
+        if        (0 == strcmp(&argv[n][1], "u8")) {
+          rexgen_options.encoding = CHARSET_UTF8;
+        } else if (0 == strcmp(&argv[n][1], "u16")) {
+          rexgen_options.encoding = CHARSET_UTF16BE;
+        } else if (0 == strcmp(&argv[n][1], "u32")) {
+          rexgen_options.encoding = CHARSET_UTF32BE;
+        } else if (0 == strcmp(&argv[n][1], "u16le")) {
+          rexgen_options.encoding = CHARSET_UTF16LE;
+        } else if (0 == strcmp(&argv[n][1], "u32le")) {
+          rexgen_options.encoding = CHARSET_UTF32LE;
+        } else {
+          cerr << "invalid output encoding specified" << endl;
+          usage();
+          exit(1);
         }
+        break;
       default:
         fprintf(stderr, "invalid argument: %s\n", argv[n]);
         usage();
@@ -220,6 +220,10 @@ int _tmain(int argc, _TCHAR* argv[]) {
     regex->appendRawValue(syntaxTree);
     syntaxTree.print(stdout, true);
     return 0;
+  }
+  
+  if (prependBOM) {
+    buffer.push_back(create_BOM(rexgen_options.encoding));
   }
     
   Iterator* iter = regex->iterator(rexgen_options.randomize);
