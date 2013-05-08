@@ -28,6 +28,8 @@ using namespace std;
 class IteratorState
 {
 public:
+
+	IteratorState() : randomize(false), streamIterator(nullptr) {}
   
   void registerIterator(int id, const Iterator* iterator) {
     groupIterators[id] = iterator;
@@ -49,8 +51,8 @@ public:
   
 private:
   map<int, const Iterator*> groupIterators;
-  bool randomize = false;
-  StreamRegexIterator* streamIterator = nullptr;
+  bool randomize;
+  StreamRegexIterator* streamIterator;
 };
 
 #endif // ITERATORSTATE_H

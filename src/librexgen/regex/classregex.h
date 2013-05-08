@@ -32,7 +32,7 @@ using namespace std;
 
 class ClassRegex : public Regex {
 public:
-  ClassRegex(charset variant) : encoding(variant){ }
+  ClassRegex(charset variant) : encoding(variant), canUseAsciiIterator(true){ }
   
   void addCharacter(const uchar_t& ch, bool ignoreCase);
   inline void addCharacter(char ch, bool ignoreCase) {
@@ -72,7 +72,7 @@ private:
   void __append_character(const uchar_t& ch);
   vector<uchar_t> characters;
   const charset encoding;
-  bool canUseAsciiIterator = true;
+  bool canUseAsciiIterator;
 };
 
 #endif // CLASSREGEX_H

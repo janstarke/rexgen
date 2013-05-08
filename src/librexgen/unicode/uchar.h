@@ -80,6 +80,7 @@ uint8_t uchar_to_utf32(const uchar_t& uch, byte* utf32_dst);
 
 uint8_t uchar_to_utf(const uchar_t& uch, byte* dst);
 
+EXPORT
 uchar_t create_BOM(charset cs);
 
 bool uchar_isascii(const uchar_t& uch);

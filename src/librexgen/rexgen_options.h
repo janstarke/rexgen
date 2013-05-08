@@ -23,10 +23,15 @@
 
 class RexgenOptions {
 public:
+	RexgenOptions() 
+		: ignore_case(false), 
+			encoding(CHARSET_UTF8),
+			randomize(false),
+			infile(nullptr) { }
   bool ignore_case;
-  charset encoding = CHARSET_UTF8;
-  bool randomize = false;
-  FILE* infile = nullptr;
+  charset encoding;
+  bool randomize;
+  FILE* infile;
 };
 
 #endif

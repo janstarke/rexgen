@@ -20,7 +20,9 @@
 
 ClassRegexIterator::ClassRegexIterator(
   int _id, IteratorState* iterstate, const uchar_t* classcontent, size_t elements)
-      :Iterator(_id), randomize(iterstate->getRandomize()) {
+      :Iterator(_id),
+				current(nullptr), first(nullptr), last(nullptr),
+				randomize(iterstate->getRandomize()) {
     for (size_t n=0; n<elements; ++n) {      
       buffered_character c;
       c.length = uchar_to_utf(classcontent[n], &(c.value[0]));

@@ -36,7 +36,7 @@ typedef char _TCHAR;
 
 static char regex_buffer[512];
 RexgenOptions rexgen_options;
-const char* infile =  nullptr;
+const _TCHAR* infile =  nullptr;
 static bool prependBOM = false;
 
 enum {
@@ -52,7 +52,8 @@ extern int rexgen_debug;
 #endif
 static void usage() {
   cerr  << "rexgen  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>" << endl
-        << "This program comes with ABSOLUTELY NO WARRANTY; for details run rexgen with '-w'." << endl
+        << "This program comes with ABSOLUTELY NO WARRANTY;" << endl 
+				<< "for details run rexgen with '-w'." << endl
         << "This is free software, and you are welcome to redistribute it" << endl
         << "under certain conditions; run rexgen with `-c' for details." << endl << endl;
   cerr << "USAGE: rexgen [<options>] <regex>" << endl;
@@ -156,15 +157,15 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
         rexgen_options.randomize = true;
         break;
       case 'u': /* unicode encoding */
-        if        (0 == strcmp(&argv[n][1], "u8")) {
+        if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
           rexgen_options.encoding = CHARSET_UTF8;
-        } else if (0 == strcmp(&argv[n][1], "u16")) {
+        } else if (0 == _tcscmp(&argv[n][1], _T("u16"))) {
           rexgen_options.encoding = CHARSET_UTF16BE;
-        } else if (0 == strcmp(&argv[n][1], "u32")) {
+        } else if (0 == _tcscmp(&argv[n][1], _T("u32"))) {
           rexgen_options.encoding = CHARSET_UTF32BE;
-        } else if (0 == strcmp(&argv[n][1], "u16le")) {
+        } else if (0 == _tcscmp(&argv[n][1], _T("u16le"))) {
           rexgen_options.encoding = CHARSET_UTF16LE;
-        } else if (0 == strcmp(&argv[n][1], "u32le")) {
+        } else if (0 == _tcscmp(&argv[n][1], _T("u32le"))) {
           rexgen_options.encoding = CHARSET_UTF32LE;
         } else {
           cerr << "invalid output encoding specified" << endl;
@@ -200,10 +201,10 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
   
   if (infile != nullptr) {
-    if (0 == strcmp(infile, "-")) {
+    if (0 == _tcscmp(infile, _T("-"))) {
       rexgen_options.infile = stdin;
     } else {
-      rexgen_options.infile = fopen(infile, "r");
+      rexgen_options.infile = _tfopen(infile, _T("r"));
       if (rexgen_options.infile == nullptr) {
         perror("unable to open input file");
         return 1;

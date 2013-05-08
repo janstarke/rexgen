@@ -80,8 +80,8 @@ void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
         dst->char_length = 4;
         const uint32_t tmp = codepoint - 0x100000;
         dst->character.ucs4.value =
-              ((0b11011000 | (((uint16_t)(tmp>>10)) & 0b1111111111)) << 16) |
-              (0b11011100 | (((uint16_t)(tmp))     & 0b1111111111));
+              (( 0xD8 | (((uint16_t)(tmp>>10)) & 0x3FF)) << 16) |
+              (0xDC | (((uint16_t)(tmp))     & 0x3FF));
         if (flip) {
           flip_byteorder(dst->character.ucs4.value);
         }
@@ -151,6 +151,7 @@ bool uchar_isascii(const uchar_t& uch) {
   && uch.character.bytes[2]==0));
 }
 
+EXPORT
 uchar_t create_BOM(charset cs) {
   uint32_t codepoint = 0;
   switch (cs) {

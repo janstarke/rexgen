@@ -35,7 +35,7 @@ class RexgenParserContext
 
 public:
   RexgenParserContext(istream* input, const RexgenOptions& __options )
-  : options(__options) {
+		: options(__options), streamRegex(nullptr) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
@@ -95,7 +95,7 @@ private:
   const RexgenOptions& options;
   map<int, GroupReference*> groupRefs;
   map<int, Regex*> groups;
-  StreamRegex* streamRegex = nullptr;
+  StreamRegex* streamRegex;
 };
 
 #endif // REXGENPARSERCONTEXT_H

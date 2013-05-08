@@ -34,7 +34,7 @@ public:
   virtual inline const char* getXmlTag() const { return "alternative"; } 
   RegexType getRegexType() const { return Alternative; }
   
-  inline int getMaxSize() const;
+  int getMaxSize() const;
   
   Iterator* iterator(IteratorState* state) const;
   

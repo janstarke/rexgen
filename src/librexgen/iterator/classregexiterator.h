@@ -62,7 +62,7 @@ private:
     byte value[4];
     uint8_t length;
   };
-  buffered_character *current = nullptr, *first = nullptr, *last = nullptr;
+  buffered_character *current, *first, *last;
   vector<buffered_character> characters;
   const bool randomize;
 };

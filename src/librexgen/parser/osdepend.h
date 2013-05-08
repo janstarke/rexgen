@@ -34,6 +34,9 @@ typedef unsigned __int32 uint32_t;
 
 #define EXPORT
 #define _tmain main
+#define _tcscmp strcmp
+#define _tfopen fopen
+#define _T(a) (a)
 
 #endif
 
