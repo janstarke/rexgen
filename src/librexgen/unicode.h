@@ -46,12 +46,15 @@ typedef wchar_t char_type;
 #define utf_strconv_from_locale u8_strconv_from_locale
 
 //#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( _T ## STR )))
-#define _C(STR) ( (const char_type*) _T(STR) )
+//#define _C(STR) ( (const char_type*) _T(STR) )
 
 #define PRINTF_FORMAT "%s"
 
 
 #else /* ! _WIN32 */
+
+#define _T(a) (a)
+
 #include <unistdio.h>
 #include <unistr.h>
 #include <uniconv.h>
@@ -69,8 +72,8 @@ typedef uint32_t char_type;
 #define utf_strncpy u32_strncpy
 #define utf_strconv_from_locale u32_strconv_from_locale
 
-#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( u ## STR )))
-#define _C(STR) ( (const char_type*) u ## STR )
+//#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( u ## STR )))
+//#define _C(STR) ( (const char_type*) u ## STR )
 
 #define PRINTF_FORMAT "%llU"
 
