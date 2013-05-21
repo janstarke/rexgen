@@ -63,8 +63,6 @@ public:
   
   virtual inline const char* getXmlTag() const { return "class"; }
   
-  Iterator* iterator(IteratorState* state) const;
-  
   Iterator* singleIterator(IteratorState* /* state */) const; 
 
 private:

@@ -18,7 +18,6 @@
 #ifndef __Regex_h__
 #define __Regex_h__
 
-#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/regex/quantifier.h>
 #include <librexgen/iterator/iterator.h>
@@ -26,7 +25,6 @@
 #include <librexgen/unicode.h>
 #include <librexgen/debug.h>
 #include <librexgen/simplestring.h>
-#include <librexgen/iterator/topiterator.h>
 
 typedef enum {
   Compound,
@@ -36,6 +34,8 @@ typedef enum {
   Reference,
   Stream
 } RegexType;
+
+class IteratorState;
 
 class Regex  {
 public:
@@ -71,7 +71,7 @@ public:
   
   virtual void xmlEncapsulate(SimpleString& dst, const char* clazz, int level) const;
   
-  Iterator* iterator(IteratorState* state) const {
+  virtual Iterator* iterator(IteratorState* state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     } else {
@@ -80,12 +80,6 @@ public:
     }    
   }
   virtual Iterator* singleIterator(IteratorState* state) const = 0;
-  
-  virtual Iterator* iterator(bool randomize = true) const {
-    IteratorState* state = new IteratorState();
-    state->setRandomize(randomize);
-    return new TopIterator(getId(), iterator(state), state);
-  }
   
   int getId() const { return id; }
   

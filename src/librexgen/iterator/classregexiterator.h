@@ -51,6 +51,9 @@ public:
     
     inline bool hasNext() const { return  (current < last); }
     inline bool canUseValue() const { return (current<=last); }
+    
+    virtual void updateReferences(IteratorState* /* iterState */) {}
+    
 private:
   inline void shuffle() {
     random_shuffle(characters.begin(), characters.end()); 

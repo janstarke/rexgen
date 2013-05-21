@@ -19,26 +19,7 @@
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/debug.h>
 
-bool GroupReferenceIterator::hasNext() const {
-  ENTER_METHOD;
-  RETURN(state == resetted);
+void GroupReferenceIterator::updateReferences(IteratorState* iterState)
+{
+    groupRef = iterState->getIterator(groupId);
 }
-
-bool GroupReferenceIterator::next() {
-  ENTER_METHOD;
-  bool res = (state == resetted);
-  state = usable;
-  RETURN(res);
-}
-
-void GroupReferenceIterator::value(SimpleString& dst) const {
-  ENTER_METHOD;
-  groupRef->value(dst);
-  LEAVE_METHOD;
-}
-/*
-void GroupReferenceIterator::reset() {
-  Iterator::reset();
-  state = resetted;
-}
-*/

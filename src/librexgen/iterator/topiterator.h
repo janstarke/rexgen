@@ -42,6 +42,9 @@ public:
   
   void value(SimpleString& dst) const { child->value(dst); }
   bool hasNext() const { return child->hasNext(); }
+  void updateReferences(IteratorState* iterState) {
+        child->updateReferences(iterState);
+  }
 private:
   Iterator* child;
   const IteratorState* state;

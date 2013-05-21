@@ -21,8 +21,14 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/parser/osdepend.h>
 #include <librexgen/rexgen_options.h>
+#include <librexgen/parser/rexgenparsercontext.h>
 
 EXPORT
 Regex* parse_regex(const char* regex, const RexgenOptions& options);
+
+EXPORT
+Iterator* regex_iterator(const char* regex, const RexgenOptions& options);
+
+Regex* parse_regex(RexgenParserContext* context);
 
 #endif /* __libregex_h__ */

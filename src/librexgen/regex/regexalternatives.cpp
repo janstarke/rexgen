@@ -15,7 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 
-
+#include <librexgen/iterator/iteratorstate.h>
+#include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <algorithm>
@@ -42,7 +43,13 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
 }
 
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {
-  Iterator* iter = NULL;
+  Iterator* iter = nullptr;
+  
+  iter = state->getIterator(getGroupId());
+  if (iter != nullptr) {
+    return iter;
+  }
+  
   if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {

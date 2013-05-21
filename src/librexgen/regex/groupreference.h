@@ -26,7 +26,6 @@ class GroupReference : public Regex
 {
 
 public:
-    Iterator* iterator(IteratorState* state) const;
     Iterator* singleIterator(IteratorState* state) const;
     void appendContent(SimpleString& dst, int level) const;
     RegexType getRegexType() const { return Reference; }

@@ -47,9 +47,7 @@ public:
   RegexType getRegexType() const { return Terminal; }
   
   void appendContent(SimpleString& dst, int level) const;
-  
-  Iterator* iterator(IteratorState* state) const;
-  
+    
   Iterator* singleIterator(IteratorState* /* state */) const
     { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
 private:

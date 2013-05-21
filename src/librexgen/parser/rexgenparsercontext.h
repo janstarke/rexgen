@@ -22,13 +22,14 @@
 #include <iostream>
 #include <map>
 #include <cstdio>
-#include "../regex/regex.h"
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/regex/streamregex.h>
 #include <librexgen/unicode/uchar.h>
 #include <librexgen/rexgen_options.h>
 
 using namespace std;
+
+class Regex;
 
 class RexgenParserContext
 {

@@ -101,20 +101,19 @@ int rexgen_parse_regex(lua_State* L) {
     options.ignore_case = false;
   }
 
-  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), options);
-
   Iterator** iter;
   iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
   luaL_getmetatable(L, "rexgen.iter");
   lua_setmetatable(L, -2);
-  *iter = re->iterator();
+  *iter = regex_iterator(luaL_checklstring(L, 1, NULL), options);
   lua_pushcclosure(L, rexgen_iter, 1);
 
+  /*
   re->appendRawValue(xml);
   xml.terminate();
   push_utf8_string(L, xml);
-
-  return 2;
+*/
+  return 1;
 }
 
 extern "C"

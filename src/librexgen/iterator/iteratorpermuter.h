@@ -20,7 +20,6 @@
 #define ITERATORPERMUTER_H
 
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/unicode.h>
 #include <vector>
 #include <algorithm>
@@ -42,7 +41,7 @@ public:
     }
     bool next();
     void init();
-
+    void updateReferences(IteratorState* /* iterState */) {}
 private:
   bool existsIteratorWithNextElement() const;
   

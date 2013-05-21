@@ -23,6 +23,8 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/streamregexiterator.h>
+#include <librexgen/iterator/iteratorstate.h>
+#include <librexgen/stacktrace.h>
 #include <cstdio>
 
 

@@ -25,12 +25,6 @@
 
 CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
   : Iterator(_id), randomize(rnd) {
-    /*
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
-    i->reset();
-    i->next();
-  });
-  */
 
   if (randomize) {
     for (unsigned int n = 0; n<iterators.size(); ++n) {
@@ -40,19 +34,14 @@ CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
   }
 }
 
-/*
-void CompoundRegexIterator::reset() {
-  Iterator::reset();
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
-    i->reset();
-  });
-
-  if (randomize) {
-    shuffle();
-  }
-  state = resetted;
+CompoundRegexIterator::~CompoundRegexIterator() {
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
 }
-*/
+
+void CompoundRegexIterator::updateReferences(IteratorState* iterState) {
+  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i){i->updateReferences(iterState);});
+}
+
 bool CompoundRegexIterator::next() {
   if (state == resetted) { state = usable; return true; }
   if (randomize) {

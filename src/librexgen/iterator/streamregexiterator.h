@@ -41,7 +41,7 @@ public:
     void value(SimpleString& dst) const {
       dst.append(buffer);
     }
-    //void reset() {}
+    void updateReferences(IteratorState* /* iterState */) {}
 private:
   void readNextWord() {
     if (feof(infile)) {

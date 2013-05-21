@@ -34,17 +34,14 @@ public:
   
     RegexAlternativesIterator(int id);
     
-    virtual ~RegexAlternativesIterator() {
-      for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
-      iterators.clear();
-    }
+    virtual ~RegexAlternativesIterator();
     
-    //void reset();
     bool next();
     void value(SimpleString& dst) const;
     bool hasNext() const;
     
     void addChild(Iterator* re);
+    void updateReferences(IteratorState* iterState);
 private:  
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;

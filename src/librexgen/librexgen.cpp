@@ -17,6 +17,8 @@
 
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/topiterator.h>
 #include <librexgen/parser/osdepend.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <sstream>
@@ -27,24 +29,47 @@ using std::istringstream;
 
 int rexgen_parse(RexgenParserContext* context);
 
-EXPORT
-Regex* parse_regex(const char* regex, const RexgenOptions& options) {
-  const string re(regex);
-
-  istringstream is(re);
-
-  RexgenParserContext context(&is, options);
+Regex* parse_regex(RexgenParserContext* context) {
+  
   try {
-    if (rexgen_parse(&context) != 0) {
+    if (rexgen_parse(context) != 0) {
       return nullptr;
     }
   } catch (SyntaxError& exc) {
     cerr << exc.getMessage() << endl;
     return nullptr;
+  }  
+  if (context->hasInvalidGroupReferences()) {
+    throw SyntaxError("This regular expression has an invalid back reference");
   }
-#pragma message("this must be handled with normal syntax error reporting")
-  assert(!context.hasInvalidGroupReferences());
-  // IteratorState* state = new IteratorState(context.getGroups());
-  // Iterator* iter = context.result->iterator(state);
-  return context.result;
+  return context->result;
+}
+
+EXPORT
+Regex* parse_regex(const char* regex, const RexgenOptions& options) {
+  const string strRegex(regex);
+  istringstream is(strRegex);
+  RexgenParserContext context(&is, options);
+  return parse_regex(&context);
+}
+
+EXPORT
+Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
+  const string strRegex(regex);
+  istringstream is(strRegex);
+  RexgenParserContext context(&is, options);
+  Regex* re = parse_regex(&context);
+  if (re == nullptr) {
+    return nullptr;
+  }
+  IteratorState* state = new IteratorState();
+  state->setRandomize(options.randomize);
+  Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
+  
+  // register regex alternatives
+  iter->updateReferences(state);
+  
+  // update references
+  iter->updateReferences(state);
+  return iter;
 }

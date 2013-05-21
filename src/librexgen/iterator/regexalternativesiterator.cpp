@@ -28,18 +28,6 @@ RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   state = resetted;
 }
 
-/*
-void RegexAlternativesIterator::reset() {
-  ENTER_METHOD;
-  Iterator::reset();
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i) {
-    i->reset();
-  });
-  iter = iterators.begin();
-  state = resetted;
-  LEAVE_METHOD;
-}
-*/
 void RegexAlternativesIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
   (*iter)->value(dst);
@@ -112,3 +100,11 @@ bool RegexAlternativesIterator::canUseValue() const {
   return ((*iter)->canUseValue());
 }
 
+RegexAlternativesIterator::~RegexAlternativesIterator() {
+  for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
+  iterators.clear();
+}
+
+void RegexAlternativesIterator::updateReferences(IteratorState* iterState) {
+  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i){i->updateReferences(iterState);});
+}

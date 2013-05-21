@@ -72,8 +72,6 @@ if (USE_LUA)
   target_link_libraries(${librexgen_libname} "lua${LUA_VERSION}" )
 endif(USE_LUA)
 
-target_link_libraries(${librexgen_libname} pthread )
-
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
 
 install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)

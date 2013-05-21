@@ -15,16 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 
-
+#include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/simplestring.h>
 
-Iterator* GroupReference::singleIterator(IteratorState* state) const {
+Iterator* GroupReference::singleIterator(IteratorState* /* state */) const {
   assert(groupRef != NULL);
-  const Iterator* ref = state->getIterator(groupRef->getGroupId());
-  return new GroupReferenceIterator(getId(), ref);
+  return new GroupReferenceIterator(getId(), groupRef->getGroupId());
 }
 
 void GroupReference::appendContent(

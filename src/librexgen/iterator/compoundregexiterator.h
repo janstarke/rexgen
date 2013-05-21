@@ -34,16 +34,15 @@ class CompoundRegexIterator : public Iterator
 public:  
     CompoundRegexIterator(int id, bool rnd = true);
     
-    virtual ~CompoundRegexIterator() {
-      for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
-    }
+    virtual ~CompoundRegexIterator();
     
-    //void reset();
     bool next();
     void value(SimpleString& dst) const;
     bool hasNext() const;
     
     void addChild(Iterator* i);
+    
+    void updateReferences(IteratorState* iterState);
 private:
   void shuffle() {random_shuffle(rnd_iterators.begin(), rnd_iterators.end());}
   vector<Iterator* > iterators;

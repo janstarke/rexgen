@@ -23,21 +23,26 @@
 #include <librexgen/regex/regex.h>
 #include <vector>
 #include <librexgen/unicode.h>
+#include <librexgen/iterator/iteratorstate.h>
 
 
 class GroupReferenceIterator : public Iterator
 {
 
 public:
-    GroupReferenceIterator(int _id, const Iterator* re)
-      : Iterator(_id), groupRef(re) {};
+    GroupReferenceIterator(int _id, int group)
+    : Iterator(_id), groupId(group), groupRef(nullptr) { };
   
-    virtual bool hasNext() const;
-    virtual bool next();
-    virtual void value(SimpleString& dst) const;
-    //virtual void reset();
+    inline bool hasNext() const { return (state == resetted); }
+    inline bool next() {
+      bool res = (state == resetted);
+      state = usable;
+      return res; }
+    inline void value(SimpleString& dst) const { groupRef->value(dst);}
     
+    void updateReferences(IteratorState* iterState);
 private:
+  int groupId;
   const Iterator* groupRef;
 };
 

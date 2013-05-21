@@ -23,6 +23,8 @@
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
 
+class IteratorState;
+
 class Iterator
 {
 public:
@@ -40,6 +42,7 @@ public:
   
   int getId() const { return id; }
   
+  virtual void updateReferences(IteratorState* /* iterState */) = 0;
 protected:
   
   enum {

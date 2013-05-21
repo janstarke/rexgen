@@ -45,8 +45,6 @@ typedef wchar_t char_type;
 #define utf_strncpy wcsncpy
 #define utf_strconv_from_locale u8_strconv_from_locale
 
-//#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( _T ## STR )))
-//#define _C(STR) ( (const char_type*) _T(STR) )
 
 #define PRINTF_FORMAT "%s"
 

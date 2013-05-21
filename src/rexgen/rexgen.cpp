@@ -185,6 +185,9 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 int _tmain(int argc, _TCHAR* argv[]) {
   SimpleString buffer;
   SimpleString syntaxTree;
+  Regex* regex = nullptr;
+  Iterator* iter = nullptr;
+  int retval = 0;
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -212,22 +215,40 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  Regex* regex = parse_regex(regex_str, rexgen_options);
-  if (regex == nullptr) {
-    return 1;
-  }
+  
   
   if (rexgen_operation == display_syntax_tree) {
+    try {
+      regex = parse_regex(regex_str, rexgen_options);
+    } catch (SyntaxError& error) {
+      cout << "Syntax error:" << endl << error.getMessage() << endl;
+      retval = 1;
+      goto cleanup_and_exit;
+    }
+    
+    if (regex == nullptr) {
+      return 1;
+    }
+    
     regex->appendRawValue(syntaxTree);
     syntaxTree.print(stdout, true);
+    delete regex;
     return 0;
   }
   
   if (prependBOM) {
     buffer.push_back(create_BOM(rexgen_options.encoding));
   }
-    
-  Iterator* iter = regex->iterator(rexgen_options.randomize);
+  try {
+    iter = regex_iterator(regex_str, rexgen_options);
+  } catch (SyntaxError& error) {
+    cout << "Syntax error:" << endl << error.getMessage() << endl;
+    retval = 1;
+    goto cleanup_and_exit;
+  }
+  if (iter == nullptr) {
+    return 1;
+  }
 
   while (iter->next()) {
     iter->value(buffer);
@@ -235,7 +256,9 @@ int _tmain(int argc, _TCHAR* argv[]) {
     buffer.print(stdout);
   }
   buffer.print(stdout, true);
-  delete regex;
   
-  return 0;
+cleanup_and_exit:
+  delete iter;
+  
+  return retval;
 }

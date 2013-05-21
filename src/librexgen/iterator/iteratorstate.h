@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/streamregexiterator.h>
+#include <librexgen/regex/regex.h>
 
 using namespace std;
 
@@ -29,17 +30,20 @@ class IteratorState
 {
 public:
 
-	IteratorState() : randomize(false), streamIterator(nullptr) {}
+  IteratorState() : randomize(false), streamIterator(nullptr) {
+  }
   
-  void registerIterator(int id, const Iterator* iterator) {
+  void registerIterator(int id, Iterator* iterator) {
     groupIterators[id] = iterator;
   }
   
-  const Iterator* getIterator(int id) const {
+  Iterator* getIterator(int id) const {
     if (id == -1) {
       return getStreamIterator();
-    } else {
+    } else if (groupIterators.find(id) != groupIterators.end()) {
       return groupIterators.at(id);
+    } else {
+      return nullptr;
     }
   }
   
@@ -50,7 +54,7 @@ public:
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
   
 private:
-  map<int, const Iterator*> groupIterators;
+  map<int, Iterator*> groupIterators;
   bool randomize;
   StreamRegexIterator* streamIterator;
 };
