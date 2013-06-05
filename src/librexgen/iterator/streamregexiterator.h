@@ -42,6 +42,7 @@ public:
       dst.append(buffer);
     }
     void updateReferences(IteratorState* /* iterState */) {}
+    bool isSingleton() const { return true; }
 private:
   void readNextWord() {
     if (feof(infile)) {

@@ -35,13 +35,10 @@ public:
   void value(SimpleString& dst) const;
     bool hasNext() const;
     IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
-    ~IteratorPermuter()
-    {
-      for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
-    }
+    ~IteratorPermuter();
     bool next();
     void init();
-    void updateReferences(IteratorState* /* iterState */) {}
+    void updateReferences(IteratorState* iterState);
 private:
   bool existsIteratorWithNextElement() const;
   

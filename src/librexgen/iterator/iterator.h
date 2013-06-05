@@ -43,6 +43,7 @@ public:
   int getId() const { return id; }
   
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
+  virtual bool isSingleton() const { return false; }
 protected:
   
   enum {

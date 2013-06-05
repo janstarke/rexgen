@@ -17,6 +17,7 @@
 
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
+#include <set>
 
 IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max)
 : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is),
@@ -28,10 +29,16 @@ hasNextElement(true), occurs(min_occurs)
   init();
 }
 
+IteratorPermuter::~IteratorPermuter()
+{
+  for_each(iterators.begin(), iterators.end(),
+    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
+}
+
 void IteratorPermuter::value(SimpleString& dst) const
 {
   ENTER_METHOD;
-  for (unsigned int n=0; n<occurs; ++n) {
+  for (unsigned int n=0; n<occurs; ++n) {    
     iterators[n]->value(dst);
   }
   LEAVE_METHOD;
@@ -49,7 +56,6 @@ bool IteratorPermuter::hasNext() const
     RETURN(true);
   }
   
-  //RETURN(hasNextElement);
   RETURN(existsIteratorWithNextElement());
 }
 
@@ -94,3 +100,10 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
   }
   RETURN(false);
 }
+
+void IteratorPermuter::updateReferences(IteratorState* iterState)
+{
+  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i)
+  { i->updateReferences(iterState); });
+}
+

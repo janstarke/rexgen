@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <algorithm>
 #include <cstdlib>
+#include <set>
 
 CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
   : Iterator(_id), randomize(rnd) {
@@ -35,7 +36,8 @@ CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
 }
 
 CompoundRegexIterator::~CompoundRegexIterator() {
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
+  for_each(iterators.begin(), iterators.end(),
+    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
 }
 
 void CompoundRegexIterator::updateReferences(IteratorState* iterState) {

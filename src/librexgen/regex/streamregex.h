@@ -41,7 +41,6 @@ public:
       }
     }
     Iterator* singleIterator(IteratorState* state) const {
-      StreamRegexIterator* iter = new StreamRegexIterator(getId(), infile);
       state->setStreamIterator(iter);
       return iter;
     }
@@ -49,10 +48,14 @@ public:
     RegexType getRegexType() const { return Stream; }
     const char* getXmlTag() const { return "stream"; }
     StreamRegex(FILE* in)
-      : infile(in) {}
+      : infile(in) {
+        /* this will not be deleted here, but in the iterator tree */
+        iter = new StreamRegexIterator(getId(), infile);
+      }
     
 private:
   FILE* infile;
+  StreamRegexIterator* iter;
 };
 
 #endif // STREAMREGEX_H

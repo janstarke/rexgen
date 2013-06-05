@@ -15,7 +15,7 @@ set(librexgen_filename ${CMAKE_SHARED_LIBRARY_PREFIX}${librexgen_libname}${CMAKE
 set(rexgen_exename "${prj}")
 
 OPTION (USE_LUA "create API for lua" ON)
-OPTION (REXGEN_DEBUG_MODE "debug mode" OFF)
+OPTION (REXGEN_DEBUG_MODE "debug mode" ON)
 
 if (USE_LUA)
   find_library(log4cpp liblua${LUA_VERSION})

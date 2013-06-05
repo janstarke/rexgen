@@ -22,6 +22,7 @@
 #include <cstring>
 #include <deque>
 #include <vector>
+#include <set>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : Iterator(_id), iter(iterators.begin()) {
@@ -101,7 +102,8 @@ bool RegexAlternativesIterator::canUseValue() const {
 }
 
 RegexAlternativesIterator::~RegexAlternativesIterator() {
-  for_each(iterators.begin(), iterators.end(), [](Iterator* i){delete i;});
+  for_each(iterators.begin(), iterators.end(),
+    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
   iterators.clear();
 }
 
