@@ -31,7 +31,12 @@ public:
     :Iterator(__id), child(__child), state(__state) {
   }
   
-  ~TopIterator() {delete child;}
+  ~TopIterator() {
+    delete child;
+    if (state->getStreamIterator() != nullptr) {
+      delete (state->getStreamIterator());
+    }
+  }
   bool next() {
     bool res = child->next();
     if (res) { return res; }
