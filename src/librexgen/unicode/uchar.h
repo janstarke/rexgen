@@ -35,8 +35,10 @@ struct uchar_t{
   charset variant;
   uint8_t char_length;
   
+  uint16_t __padding__;
+  
   /* this one is needed for simple iteration in in UTF8 and UTF16*/
-  uint16_t codepoint;
+  uint32_t codepoint;
   
   union {
     byte    bytes[4];

@@ -170,12 +170,16 @@ ClassContentWithoutHyphen:
     $$=re; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = (ClassRegex*) $2; re->addCharacter((char)$1, context->ignoreCase()); $$=re; };
+  { ClassRegex* re = (ClassRegex*) $2; re->addCharacter($1, context->ignoreCase()); $$=re; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR T_HYPHEN T_ANY_CHAR
-  { ClassRegex* re = new ClassRegex(context->encoding()); re->addRange($1, $3, context->ignoreCase()); $$=re; }
+  { ClassRegex* re = new ClassRegex(context->encoding()); 
+    if (re->addRange($1, $3, context->ignoreCase()) < 1) {
+      throw SyntaxError("empty range specified in class regex");
+    }
+    $$=re; }
 |  T_ANY_CHAR T_HYPHEN T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = $4; re->addRange((char)$1, (char)$3, context->ignoreCase()); $$=re; };
+  { ClassRegex* re = $4; re->addRange($1, $3, context->ignoreCase()); $$=re; };
   
 GroupRegex:
   T_BEGIN_GROUP

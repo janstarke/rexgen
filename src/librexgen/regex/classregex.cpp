@@ -30,17 +30,21 @@ bool ClassRegex::contains(const uchar_t& ch) const
   return false;
 }
 
-void ClassRegex::__append_character(const uchar_t& ch)
+int ClassRegex::__append_character(const uchar_t& ch)
 {
   if (! contains(ch)) {
     characters.push_back(ch);
+    return 1;
   }
+  return 0;
 }
-void ClassRegex::__insert_character(const uchar_t& ch)
+int ClassRegex::__insert_character(const uchar_t& ch)
 {
   if (! contains(ch)) {
     characters.insert(characters.begin(), ch);
+    return 1;
   }
+  return 0;
 }
 
 void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
@@ -59,26 +63,30 @@ void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
     }
   }
 }
-void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignoreCase) {
-  uint16_t a = uch_a.codepoint;
+int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignoreCase) {
+  uint32_t a = uch_a.codepoint;
+  int count = 0;
   while (a <= uch_b.codepoint) {
+    printf("adding codepoint %x\n", a);
     uchar_t ch;
     uchar_t uch;
     codepoint_to_uchar(&ch, a++, uch_a.variant);
-    characters.push_back(ch);
+    count += __append_character(ch);
     
     if (ignoreCase && uchar_isascii(ch)) {
       if (islower(ch.character.ansi.value)) {
         codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
-        __append_character(uch);
+        count += __append_character(uch);
       }
       
       else if (isupper(ch.character.ansi.value)) {
         codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
-        __append_character(uch);
+        count += __append_character(uch);
       }
     }
   }
+  
+  return count;
 }
 
 void ClassRegex::appendContent(SimpleString& dst, int level) const {

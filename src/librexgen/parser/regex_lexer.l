@@ -31,6 +31,7 @@
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/unicode.h>
   #include <librexgen/parser/osdepend.h>
+  #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
   #include <cstdio>
   
@@ -65,6 +66,41 @@
 	  | (hex2bin(text[4])<<4)
 	  | (hex2bin(text[5]));
   }
+
+  static void UTF8_validate_second_byte(const unsigned char c) {
+    if (c < 0b10000000 || c >= 0b11000000) {
+        throw SyntaxError("invalid UTF8  byte sequence");
+    }
+  }
+
+  static uint32_t parseUTF8(const unsigned char* text) {
+    if (text[0] < 0x80) { return text[0]; }
+    if (text[0] < 0xC0) { throw SyntaxError("invalid UTF8 byte sequence"); }
+    if (text[0] <= 0xDF) {
+      UTF8_validate_second_byte(text[1]);
+      return    ( (0b00011111 & text[0])<<6)
+              | (  0b00111111 & text[1]);
+    }
+
+    if (text[0] <= 0xEF) {
+      UTF8_validate_second_byte(text[1]);
+      UTF8_validate_second_byte(text[2]);
+      return    ( (0b00001111 & text[0])<<12)
+              | ( (0b00111111 & text[1])<<6)
+              | (  0b00111111 & text[2]);
+    }
+
+    if (text[0] <= 0xF7) {
+      UTF8_validate_second_byte(text[1]);
+      UTF8_validate_second_byte(text[2]);
+      UTF8_validate_second_byte(text[3]);
+      return    ( (0b00001111 & text[0])<<18)
+              | ( (0b00111111 & text[1])<<12)
+              | ( (0b00111111 & text[2])<<6)
+              | (  0b00111111 & text[3]);
+    }
+    throw SyntaxError("unknown UTF8 byte sequence");
+  }
 %}
 
 DIGIT		[0-9]
@@ -78,12 +114,19 @@ GROUPID		\\[1-9]
 STREAM          \\0
 ESCAPED		\\[^xnur0-9]
 
+UTF8_2          [\xC0-\xDF][\x80-\xBF]
+UTF8_3          [\xE0-\xEF][\x80-\xBF][\x80-\xBF]
+UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
+
 %s IN_QUANTIFIER
 %s IN_CLASS
 %%
 
 {ANSICHAR}		{ yylval->character = parseAnsiChar(yytext); return T_ANY_CHAR;}
 {UNICODECHAR}		{ yylval->character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
+{UTF8_2}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_3}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_4}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
 {ESCAPED}		{ yylval->character = (char)yytext[1]; return T_ANY_CHAR; }
 {LINEFEED}		{ yylval->character = '\n'; return T_ANY_CHAR; }
 {CARRIAGERETURN}	{ yylval->character = '\r'; return T_ANY_CHAR; }
