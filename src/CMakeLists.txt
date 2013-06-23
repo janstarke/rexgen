@@ -14,13 +14,21 @@ set(librexgen_filename ${CMAKE_SHARED_LIBRARY_PREFIX}${librexgen_libname}${CMAKE
 
 set(rexgen_exename "${prj}")
 
-OPTION (USE_LUA "create API for lua" ON)
+if(MSVC) 
+#this is currently not supported
+  OPTION (USE_LUA "create API for lua" OFF)
+else()
+  OPTION (USE_LUA "create API for lua" ON)
+endif(MSVC)
 OPTION (REXGEN_DEBUG_MODE "debug mode" ON)
 
+find_library(LIB_LOG4CPP log4cpp)
 if (USE_LUA)
-  find_library(log4cpp liblua${LUA_VERSION})
-else()
-  find_library(log4cpp )
+  find_library(LIB_LUA liblua${LUA_VERSION} )
+  if ("${LIB_LUA}" STREQUAL "LIB_LUA-NOTFOUND")
+    MESSAGE(FATAL_ERROR "lua${LUA_VERSION} is missing")
+  endif("${LIB_LUA}" STREQUAL "LIB_LUA-NOTFOUND")
+  MESSAGE(STATUS "using ${LIB_LUA}" )
 endif(USE_LUA)
 
 if (REXGEN_DEBUG_MODE)
@@ -34,7 +42,11 @@ endif(REXGEN_DEBUG_MODE)
 
 SET(BUILD_SHARED_LIBS ON)
 
-ADD_DEFINITIONS("--std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+IF(MSVC)
+	ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
+ELSE()
+	ADD_DEFINITIONS("--std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+ENDIF(MSVC)
 ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(librexgen)

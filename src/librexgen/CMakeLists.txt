@@ -12,9 +12,12 @@ set(flex_required_version 2.5)
 check_version(${flex_required_version} ${FLEX_VERSION}
   "${librexgen_libname} requires at least flex ${flex_required_version}")
 
-SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
-  PROPERTIES 
-  COMPILE_FLAGS "-Wno-unused-parameter")
+if(MSVC)
+else()
+  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
+    PROPERTIES 
+    COMPILE_FLAGS "-Wno-unused-parameter")
+endif(MSVC)
 
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
 FLEX_TARGET(regexlexer parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp COMPILE_FLAGS "")
@@ -74,12 +77,18 @@ endif(USE_LUA)
 
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
 
-install(TARGETS ${librexgen_libname} LIBRARY DESTINATION lib)
+install(TARGETS ${librexgen_libname}
+		LIBRARY DESTINATION "lib"
+		ARCHIVE DESTINATION "lib" )
 
 if (USE_LUA)
-  execute_process(COMMAND "/usr/bin/which" "lua${LUA_VERSION}"
-                  ERROR_VARIABLE LUA_ERROR
-                  OUTPUT_VARIABLE LUA_BINARY)
+  if (MSVC)
+    set(LUA_BINARY "$ENV{LUA_DEV}\\lua.exe")
+  else()
+    execute_process(COMMAND "/usr/bin/which" "lua${LUA_VERSION}"
+                    ERROR_VARIABLE LUA_ERROR
+                    OUTPUT_VARIABLE LUA_BINARY)
+  endif(MSVC)
   MESSAGE(STATUS "LUA_BINARY = ${LUA_BINARY}")
   if(DEFINED ${LUA_ERROR})
     MESSAGE(FATAL_ERROR "lua${LUA_VERSION} is missing")

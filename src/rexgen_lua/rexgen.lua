@@ -1,6 +1,5 @@
-#!/usr/bin/lua5.2
-
-package.cpath = '/usr/local/lib/librexgen-0.1.0.so'
+#!d:\Program Files (x86)\Lua\5.1\lua.exe
+package.cpath = 'C:/Program Files/librexgen/lib/rexgen-0.1.0.dll'
 local rexgen = require 'rexgen'
 
 if (#arg ~= 1 and #arg ~= 2) then

@@ -68,7 +68,7 @@
   }
 
   static void UTF8_validate_second_byte(const unsigned char c) {
-    if (c < 0b10000000 || c >= 0b11000000) {
+    if (c < 0x80 || c >= 0xC0) {
         throw SyntaxError("invalid UTF8  byte sequence");
     }
   }
@@ -78,26 +78,26 @@
     if (text[0] < 0xC0) { throw SyntaxError("invalid UTF8 byte sequence"); }
     if (text[0] <= 0xDF) {
       UTF8_validate_second_byte(text[1]);
-      return    ( (0b00011111 & text[0])<<6)
-              | (  0b00111111 & text[1]);
+      return    ( (0x1F & text[0])<<6)
+              | (  0x3F & text[1]);
     }
 
     if (text[0] <= 0xEF) {
       UTF8_validate_second_byte(text[1]);
       UTF8_validate_second_byte(text[2]);
-      return    ( (0b00001111 & text[0])<<12)
-              | ( (0b00111111 & text[1])<<6)
-              | (  0b00111111 & text[2]);
+      return    ( (0x0F & text[0])<<12)
+              | ( (0x3F & text[1])<<6)
+              | (  0x3F & text[2]);
     }
 
     if (text[0] <= 0xF7) {
       UTF8_validate_second_byte(text[1]);
       UTF8_validate_second_byte(text[2]);
       UTF8_validate_second_byte(text[3]);
-      return    ( (0b00001111 & text[0])<<18)
-              | ( (0b00111111 & text[1])<<12)
-              | ( (0b00111111 & text[2])<<6)
-              | (  0b00111111 & text[3]);
+      return    ( (0x0F & text[0])<<18)
+              | ( (0x3F & text[1])<<12)
+              | ( (0x3F & text[2])<<6)
+              | (  0x3F & text[3]);
     }
     throw SyntaxError("unknown UTF8 byte sequence");
   }
