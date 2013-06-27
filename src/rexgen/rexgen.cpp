@@ -30,7 +30,6 @@
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
-#include <uniconv.h>
 #include <execinfo.h>
 #endif
 

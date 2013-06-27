@@ -31,6 +31,7 @@ typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;
 
 #else /* ! defined(_WIN32) */
+#include <stdint.h>
 
 #define EXPORT
 #define _tmain main

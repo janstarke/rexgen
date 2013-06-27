@@ -81,6 +81,17 @@ install(TARGETS ${librexgen_libname}
 		LIBRARY DESTINATION "lib"
 		ARCHIVE DESTINATION "lib" )
 
+file(GLOB librexgen_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+install(FILES ${librexgen_headers} DESTINATION include/librexgen )
+file(GLOB regex_headers "${CMAKE_CURRENT_SOURCE_DIR}/regex/*.h")
+install(FILES ${regex_headers} DESTINATION include/librexgen/regex )
+file(GLOB iterator_headers "${CMAKE_CURRENT_SOURCE_DIR}/iterator/*.h")
+install(FILES ${iterator_headers} DESTINATION include/librexgen/iterator )
+file(GLOB parser_headers "${CMAKE_CURRENT_SOURCE_DIR}/parser/*.h")
+install(FILES ${parser_headers} DESTINATION include/librexgen/parser )
+file(GLOB unicode_headers "${CMAKE_CURRENT_SOURCE_DIR}/unicode/*.h")
+install(FILES ${unicode_headers} DESTINATION include/librexgen/unicode )
+
 if (USE_LUA)
   if (MSVC)
     set(LUA_BINARY "$ENV{LUA_DEV}\\lua.exe")

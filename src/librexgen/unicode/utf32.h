@@ -30,6 +30,7 @@
 
 #include <limits.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #if CHAR_BIT != 8
 #error "unsupported char size"

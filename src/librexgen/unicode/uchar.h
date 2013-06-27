@@ -19,6 +19,8 @@
 #ifndef __uchar_h__
 #define __uchar_h__
 
+#include <stdint.h>
+#include <stddef.h>
 #include <librexgen/unicode.h>
 #include <librexgen/parser/osdepend.h>
 

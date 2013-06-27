@@ -50,12 +50,9 @@ typedef wchar_t char_type;
 
 
 #else /* ! _WIN32 */
+#include <stdint.h>
 
 #define _T(a) (a)
-
-#include <unistdio.h>
-#include <unistr.h>
-#include <uniconv.h>
 
 #ifndef UTF_VARIANT
 #define UTF_VARIANT 32

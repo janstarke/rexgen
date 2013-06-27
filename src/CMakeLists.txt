@@ -18,7 +18,7 @@ if(MSVC)
 #this is currently not supported
   OPTION (USE_LUA "create API for lua" OFF)
 else()
-  OPTION (USE_LUA "create API for lua" ON)
+  OPTION (USE_LUA "create API for lua" OFF)
 endif(MSVC)
 OPTION (REXGEN_DEBUG_MODE "debug mode" ON)
 
