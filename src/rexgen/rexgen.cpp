@@ -49,6 +49,11 @@ using namespace std;
 extern int rexgen_debug;
 #endif
 #endif
+
+static const int VERSION_MAJOR = 1;
+static const int VERSION_MINOR = 0;
+static const char* VERSION_REVISION = "$Rev$";
+
 static void usage() {
   cerr  << "rexgen  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>" << endl
         << "This program comes with ABSOLUTELY NO WARRANTY;" << endl 
@@ -68,6 +73,7 @@ static void usage() {
   cerr << "   -b:        prepend output with byte order mark" << endl;
   cerr << "   -w:        display warranty information" << endl;
   cerr << "   -c:        display redistribution conditions" << endl;
+	cerr << "   -v:        display version information" << endl;
 }
 
 
@@ -102,6 +108,12 @@ static void display_warranty() {
 
 static void display_conditions() {
   cout << terms_and_conditions << endl;
+}
+
+static void display_version() {
+	cout << "rexgen-" << 
+		VERSION_MAJOR << "." << VERSION_MINOR << 
+		"(" << VERSION_REVISION << ")" << endl;
 }
 
 const char* parse_arguments(int argc, _TCHAR** argv) {
@@ -142,6 +154,9 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
       case 'w':
         display_warranty();
         exit(0);
+			case 'v':
+				display_version();
+				exit(0);
       case 'f':
         ++n;
         infile = argv[n];
