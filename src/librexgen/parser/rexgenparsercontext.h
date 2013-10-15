@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <map>
+#include <set>
 #include <cstdio>
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/regex/streamregex.h>
@@ -45,23 +46,12 @@ public:
   }
   
   virtual ~RexgenParserContext();
+  void registerGroupReference(GroupReference* gr);
+  const set<GroupReference*>* getGroupReferences(int id) const;
+  void registerGroup(Regex* re);
+  Regex* getGroupRegex(int id) const;
   
-  void registerGroupReference(GroupReference* gr) {
-    groupRefs[gr->getGroupId()] = gr;
-  }
-  
-  GroupReference* getGroupReference(int id) const {
-    return groupRefs.at(id);
-  }
-  
-  void registerGroup(Regex* re) {
-    groups[re->getGroupId()] = re;
-  }
-  Regex* getGroupRegex(int id) const {
-    return groups.at(id);
-  }
-  
-  const map<int, Regex*>& getGroups() const { return groups; }
+  const map<int, Regex*>& getGroups() const;
   
   void updateAllGroupReferences();
   void updateGroupReferences(const Regex* re);
@@ -77,16 +67,7 @@ public:
   charset encoding() const { return options.encoding; }
   FILE* getInFile() const { return options.infile; }
   
-  Regex* getStreamRegex() {
-    if (streamRegex == nullptr) {
-      streamRegex = new StreamRegex(options.infile);
-      return streamRegex;
-    } else {
-      GroupReference* gr = new GroupReference(streamRegex->getId());
-      gr->setRegex(streamRegex);
-      return gr;
-    }
-  }
+  Regex* getStreamRegex();
 
 protected:
   void InitScanner();
@@ -94,7 +75,7 @@ protected:
   
 private:
   const RexgenOptions& options;
-  map<int, GroupReference*> groupRefs;
+  map<int, set <GroupReference*> *> groupRefs;
   map<int, Regex*> groups;
   StreamRegex* streamRegex;
 };

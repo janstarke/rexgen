@@ -67,7 +67,7 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignore
   uint32_t a = uch_a.codepoint;
   int count = 0;
   while (a <= uch_b.codepoint) {
-    printf("adding codepoint %x\n", a);
+    //printf("adding codepoint %x\n", a);
     uchar_t ch;
     uchar_t uch;
     codepoint_to_uchar(&ch, a++, uch_a.variant);

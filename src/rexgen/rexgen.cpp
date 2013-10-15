@@ -261,7 +261,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     goto cleanup_and_exit;
   }
   if (iter == nullptr) {
-    return 1;
+    goto cleanup_and_exit;
   }
 
   while (iter->next()) {
@@ -273,6 +273,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
   
 cleanup_and_exit:
   delete iter;
-  
+  getchar();
   return retval;
 }

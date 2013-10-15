@@ -27,24 +27,69 @@ void RexgenParserContext::updateAllGroupReferences() {
 }
 
 void RexgenParserContext::updateGroupReferences(const Regex* re) {
-  for_each(groupRefs.begin(), groupRefs.end(),
-      [re](pair<int, GroupReference*> gr) {
-    if (gr.first == re->getGroupId()) {
-      gr.second->setRegex(re);
-    }
-  });
+	for (auto ref=groupRefs.begin(); ref!=groupRefs.end(); ++ref) {
+		for (auto gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
+			if ((*ref).first == re->getGroupId()) {
+				(*gr)->setRegex(re);
+			}
+		}
+	}
 }
 
 bool RexgenParserContext::hasInvalidGroupReferences() const {
   bool invalids = false;
-  for_each(groupRefs.cbegin(), groupRefs.cend(),
-  [&invalids](pair<int, GroupReference*> gr) {
-    invalids |= (gr.second->getRegex() == NULL);
-  });
+	for (auto ref=groupRefs.cbegin(); ref!=groupRefs.cend(); ++ref) {
+		for (auto gr=(*ref).second->cbegin(); gr!=(*ref).second->cend(); ++gr) {
+			invalids |= ((*gr)->getRegex() == NULL);
+		}
+	}
   return invalids;
 }
 
 RexgenParserContext::~RexgenParserContext() {
   DestroyScanner();
+
+	for_each(groupRefs.begin(), groupRefs.end(),
+		[](pair<int, set<GroupReference*> *> ref) 
+	{
+		delete ref.second;
+	});
 }
 
+ void RexgenParserContext::registerGroupReference(GroupReference* gr) {
+	 /* this is neeeded to later set the refered Regex */
+	 auto references = groupRefs.find(gr->getGroupId());
+	 if (references == groupRefs.end()) {
+		 groupRefs[gr->getGroupId()] = new set<GroupReference* >();
+		 references = groupRefs.find(gr->getGroupId());
+	 }
+	 (*references).second->insert(gr);
+ }
+  
+ const set<GroupReference*>* RexgenParserContext::getGroupReferences(int id) const {
+   auto references = groupRefs.find(id);
+	 if (references == groupRefs.end()) {
+		 return nullptr;
+	 }
+	 return (*references).second;
+ }
+  
+ void RexgenParserContext::registerGroup(Regex* re) {
+   groups[re->getGroupId()] = re;
+ }
+ Regex* RexgenParserContext::getGroupRegex(int id) const {
+   return groups.at(id);
+ }
+ 
+const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }
+
+Regex* RexgenParserContext::getStreamRegex() {
+ if (streamRegex == nullptr) {
+    streamRegex = new StreamRegex(options.infile);
+    return streamRegex;
+  } else {
+    GroupReference* gr = new GroupReference(streamRegex->getId());
+    gr->setRegex(streamRegex);
+    return gr;
+  }
+}
