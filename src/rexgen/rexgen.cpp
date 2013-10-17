@@ -273,6 +273,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
   
 cleanup_and_exit:
   delete iter;
+#if defined(_WIN32) && defined(_DEBUG)
   getchar();
+#endif
   return retval;
 }
