@@ -26,7 +26,7 @@ using namespace std;
 namespace rexgen {
 	static const int VERSION_MAJOR = 1;
 	static const int VERSION_MINOR = 0;
-	static const char* VERSION_REVISION = "$Rev: 70 $";
+	static const char* VERSION_REVISION = "$Rev$";
 
 	EXPORT
 	const char* getVersion();
