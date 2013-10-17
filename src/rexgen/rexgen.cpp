@@ -22,11 +22,12 @@
 #include <librexgen/simplestring.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
+#include <librexgen/version.h>
+#include <cstdio>
 #include <cstdio>
 #include <signal.h>
 #include <locale.h>
 #include "terms.h"
-#include <cstdio>
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -49,10 +50,6 @@ using namespace std;
 extern int rexgen_debug;
 #endif
 #endif
-
-static const int VERSION_MAJOR = 1;
-static const int VERSION_MINOR = 0;
-static const char* VERSION_REVISION = "$Rev$";
 
 static void usage() {
   cerr  << "rexgen  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>" << endl
@@ -111,9 +108,7 @@ static void display_conditions() {
 }
 
 static void display_version() {
-	cout << "rexgen-" << 
-		VERSION_MAJOR << "." << VERSION_MINOR << 
-		"(" << VERSION_REVISION << ")" << endl;
+	cout << "rexgen-" << rexgen::getVersion() << endl;
 }
 
 const char* parse_arguments(int argc, _TCHAR** argv) {

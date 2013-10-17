@@ -37,7 +37,7 @@ set(librexgen_sources
   librexgen.cpp
   ${lua_sources}
   debug.cpp 
-
+  version.cpp
   regex/compoundregex.cpp
   regex/regexalternatives.cpp
   regex/classregex.cpp
