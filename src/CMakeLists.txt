@@ -1,13 +1,14 @@
-project(librexgen)
+project(rexgen)
+
 set(prj rexgen)
 
 cmake_minimum_required(VERSION 2.8)
 
 set(LUA_VERSION "5.2")
 
-set(librexgen_major 0)
-set(librexgen_minor 1)
-set(librexgen_release 0)
+set(librexgen_major 1)
+set(librexgen_minor 0)
+string(REGEX REPLACE "[^0-9]" "" librexgen_elease "$Rev$")
 set(librexgen_version ${librexgen_major}.${librexgen_minor}.${librexgen_release})
 set(librexgen_libname rexgen-${librexgen_version})
 set(librexgen_filename ${CMAKE_SHARED_LIBRARY_PREFIX}${librexgen_libname}${CMAKE_SHARED_LIBRARY_SUFFIX} )
