@@ -20,6 +20,7 @@
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/librexgen.h>
+#include <librexgen/api/c/librexgen_c.h>
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
 #include <librexgen/rexgen_options.h>
@@ -37,8 +38,11 @@ typedef char _TCHAR;
 #endif
 
 static char regex_buffer[512];
-RexgenOptions rexgen_options;
-const _TCHAR* infile =  nullptr;
+int ignore_case = 0;
+int randomize = 0;
+charset encoding = CHARSET_UTF8;
+FILE* infile = nullptr;
+const _TCHAR* infile_name =  nullptr;
 static bool prependBOM = false;
 
 enum {
@@ -156,28 +160,28 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 				exit(0);
       case 'f':
         ++n;
-        infile = argv[n];
+        infile_name = argv[n];
         break;
       case 'i':
-        rexgen_options.ignore_case = true;
+        ignore_case = 1;
         break;
       case 't':
         rexgen_operation = display_syntax_tree;
         break;
       case 'r':
-        rexgen_options.randomize = true;
+        randomize = 1;
         break;
       case 'u': /* unicode encoding */
         if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
-          rexgen_options.encoding = CHARSET_UTF8;
+          encoding = CHARSET_UTF8;
         } else if (0 == _tcscmp(&argv[n][1], _T("u16"))) {
-          rexgen_options.encoding = CHARSET_UTF16BE;
+          encoding = CHARSET_UTF16BE;
         } else if (0 == _tcscmp(&argv[n][1], _T("u32"))) {
-          rexgen_options.encoding = CHARSET_UTF32BE;
+          encoding = CHARSET_UTF32BE;
         } else if (0 == _tcscmp(&argv[n][1], _T("u16le"))) {
-          rexgen_options.encoding = CHARSET_UTF16LE;
+          encoding = CHARSET_UTF16LE;
         } else if (0 == _tcscmp(&argv[n][1], _T("u32le"))) {
-          rexgen_options.encoding = CHARSET_UTF32LE;
+          encoding = CHARSET_UTF32LE;
         } else {
           cerr << "invalid output encoding specified" << endl;
           usage();
@@ -194,10 +198,10 @@ const char* parse_arguments(int argc, _TCHAR** argv) {
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
-  SimpleString buffer;
+  c_simplestring_ptr buffer = c_simplestring_new();
   SimpleString syntaxTree;
-  Regex* regex = nullptr;
-  Iterator* iter = nullptr;
+  //Regex* regex = nullptr;
+  c_iterator_ptr iter = nullptr;
   int retval = 0;
   
 #ifdef YYDEBUG
@@ -207,7 +211,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
   
   setlocale();
-  rexgen_options.encoding = CHARSET_UTF8; /* use UTF-8 by default */
+  encoding = CHARSET_UTF8; /* use UTF-8 by default */
   const char* regex_str = parse_arguments(argc, argv);
   if (regex_str == nullptr) {
     usage();
@@ -215,11 +219,11 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
   
   if (infile != nullptr) {
-    if (0 == _tcscmp(infile, _T("-"))) {
-      rexgen_options.infile = stdin;
+    if (0 == _tcscmp(infile_name, _T("-"))) {
+      infile = stdin;
     } else {
-      rexgen_options.infile = _tfopen(infile, _T("r"));
-      if (rexgen_options.infile == nullptr) {
+      infile = _tfopen(infile_name, _T("r"));
+      if (infile == nullptr) {
         perror("unable to open input file");
         return 1;
       }
@@ -227,7 +231,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
 
   
-  
+ /* 
   if (rexgen_operation == display_syntax_tree) {
     try {
       regex = parse_regex(regex_str, rexgen_options);
@@ -246,12 +250,14 @@ int _tmain(int argc, _TCHAR* argv[]) {
     delete regex;
     return 0;
   }
+	*/
   
   if (prependBOM) {
-    buffer.push_back(create_BOM(rexgen_options.encoding));
+		c_simplestring_push_back(buffer, create_BOM(encoding));
   }
   try {
-    iter = regex_iterator(regex_str, rexgen_options);
+    iter = c_regex_iterator(
+							regex_str, ignore_case, encoding, randomize, infile);
   } catch (SyntaxError& error) {
     cout << "Syntax error:" << endl << error.getMessage() << endl;
     retval = 1;
@@ -261,15 +267,16 @@ int _tmain(int argc, _TCHAR* argv[]) {
     goto cleanup_and_exit;
   }
 
-  while (iter->next()) {
-    iter->value(buffer);
-    buffer.newline();
-    buffer.print(stdout);
+  while (c_iterator_next(iter)) {
+		c_iterator_value(iter, buffer);
+    c_simplestring_newline(buffer);
+		c_simplestring_print(buffer, stdout);
   }
-  buffer.print(stdout, true);
+	c_simplestring_print(buffer, stdout, 1);
   
 cleanup_and_exit:
-  delete iter;
+	c_simplestring_delete(buffer);
+  c_iterator_delete(iter);
 #if defined(_WIN32) && defined(_DEBUG)
   getchar();
 #endif

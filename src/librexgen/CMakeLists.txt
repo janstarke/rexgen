@@ -28,7 +28,7 @@ SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp PROPERTIES GEN
 ADD_FLEX_BISON_DEPENDENCY(regexlexer regexparser)
 
 if(USE_LUA)
-  set(lua_sources librexgen_lua.cpp)
+  set(lua_sources api/lua/librexgen_lua.cpp)
 else()
   set(lua_sources "")
 endif(USE_LUA)
@@ -52,6 +52,8 @@ set(librexgen_sources
   unicode/uchar.cpp
 
   parser/rexgenparsercontext.cpp
+
+	api/c/librexgen_c.cpp
 )
 set(parser_sources
   ${BISON_regexparser_OUTPUTS}
