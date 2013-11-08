@@ -222,7 +222,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     return 1;
   }
   
-  if (infile != NULL) {
+  if (infile_name != NULL) {
     if (0 == _tcscmp(infile_name, _T("-"))) {
       infile = stdin;
     } else {
@@ -234,7 +234,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  
  /* 
   if (rexgen_operation == display_syntax_tree) {
     try {
