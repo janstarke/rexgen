@@ -1,10 +1,16 @@
 set(rexgen_exename rexgen)
 
-set(rexgen_sources rexgen.cpp)
+set(rexgen_sources rexgen.c)
 set(rexgen_manpages rexgen.1)
 
 add_executable(${rexgen_exename} ${rexgen_sources})
 target_link_libraries(${rexgen_exename} ${librexgen_libname})
+
+IF(MSVC)
+  ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
+ELSE()
+  ADD_DEFINITIONS("--std=c89 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+ENDIF(MSVC)
 
 install(TARGETS ${rexgen_exename} RUNTIME DESTINATION bin)
 

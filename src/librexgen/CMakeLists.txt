@@ -19,6 +19,12 @@ else()
     COMPILE_FLAGS "-Wno-unused-parameter")
 endif(MSVC)
 
+IF(MSVC)
+  ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
+ELSE()
+  ADD_DEFINITIONS("--std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+ENDIF(MSVC)
+
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
 FLEX_TARGET(regexlexer parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp COMPILE_FLAGS "")
 
@@ -34,7 +40,6 @@ else()
 endif(USE_LUA)
 
 set(librexgen_sources
-  librexgen.cpp
   ${lua_sources}
   debug.cpp 
   version.cpp
@@ -44,6 +49,7 @@ set(librexgen_sources
   regex/regex.cpp
   regex/terminalregex.cpp
   regex/groupreference.cpp
+  iterator/iterator.cpp
   iterator/iteratorpermuter.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
@@ -51,9 +57,12 @@ set(librexgen_sources
   iterator/classregexiterator.cpp
   unicode/uchar.cpp
 
+	simplestring.cpp
+
   parser/rexgenparsercontext.cpp
 
-	api/c/librexgen_c.cpp
+	api/cxx/librexgen.cpp
+	api/c/librexgen.cpp
 )
 set(parser_sources
   ${BISON_regexparser_OUTPUTS}

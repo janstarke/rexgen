@@ -17,7 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/api/c/librexgen_c.h>
+#include <librexgen/api/c/librexgen.h>
 #include <librexgen/unicode/uchar.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
@@ -32,40 +32,6 @@ using namespace std;
 static const char* c_rexgen_last_error = NULL;
 
 extern "C" {
-
-	EXPORT
-	c_iterator_ptr c_regex_iterator(
-					const char* regex_str,
-					int ignore_case=0,
-					charset encoding=CHARSET_UTF8,
-					int randomize=0,
-					FILE* infile=NULL) {
-		RexgenOptions options;
-		options.ignore_case = (bool)ignore_case;
-		options.encoding = encoding;
-		options.randomize = (bool)randomize;
-		options.infile = infile;
-		
-		Iterator* iter = nullptr;
-		try {
-			iter = regex_iterator(regex_str, options);
-		} catch(SyntaxError& error) {
-			c_rexgen_set_last_error(error.getMessage());
-			return NULL;
-		}
-		return iter;
-	}
-
-	EXPORT
-	int c_iterator_next(c_iterator_ptr iter) {
-		return (reinterpret_cast<Iterator*>(iter))->next();
-	}
-
-	EXPORT
-	void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-		(reinterpret_cast<Iterator*>(iter))->value(*(reinterpret_cast<SimpleString*>(dst)));
-	}
-
 	EXPORT
 	const char* c_rexgen_get_last_error() {
 		return c_rexgen_last_error;
@@ -74,3 +40,4 @@ extern "C" {
 		c_rexgen_last_error =	msg;
 	}
 }
+

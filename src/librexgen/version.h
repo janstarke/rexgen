@@ -19,19 +19,21 @@
 
 #ifndef __VERSION_H__
 #define __VERSION_H__
-#include <librexgen/parser/osdepend.h>
-#include <cstdio>
-#include <cstdlib>
+#include <librexgen/osdepend.h>
 
-using namespace std;
+const int REXGEN_VERSION_MAJOR = 1;
+const int REXGEN_VERSION_MINOR = 0;
+const char* REXGEN_VERSION_REVISION = "$Rev$";
 
-namespace rexgen {
-	const int VERSION_MAJOR = 1;
-	const int VERSION_MINOR = 0;
-	const char* VERSION_REVISION = "$Rev$";
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-	EXPORT
-	const char* getVersion();
+EXPORT
+const char* rexgen_version();
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif /* __VERSION_H__ */

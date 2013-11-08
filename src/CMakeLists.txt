@@ -43,11 +43,6 @@ endif(REXGEN_DEBUG_MODE)
 
 SET(BUILD_SHARED_LIBS ON)
 
-IF(MSVC)
-	ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
-ELSE()
-	ADD_DEFINITIONS("--std=c++0x -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
-ENDIF(MSVC)
 ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(librexgen)

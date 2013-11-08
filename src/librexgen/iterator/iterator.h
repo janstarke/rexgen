@@ -24,7 +24,9 @@
 #include <assert.h>
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
+#include <librexgen/osdepend.h>
 
+#ifdef __cplusplus
 class IteratorState;
 
 class Iterator
@@ -58,4 +60,31 @@ private:
   const int id;
 };
 
-#endif // ITERATOR_H
+#endif /* __cplusplus */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef void* c_iterator_ptr;
+
+EXPORT
+c_iterator_ptr c_regex_iterator(
+				const char* regex_str,
+				int ignore_case,
+				charset encoding,
+				int randomize,
+				FILE* infile);
+
+EXPORT
+int c_iterator_next(c_iterator_ptr iter);
+EXPORT
+void c_iterator_value(c_iterator_ptr next, c_simplestring_ptr dst);
+EXPORT
+void c_iterator_delete(c_iterator_ptr i);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* ITERATOR_H */

@@ -19,7 +19,7 @@
 
 #ifndef __unicode_h__
 #define __unicode_h__
-#include <cstdarg>
+#include <stdarg.h>
 
 /* for readability issues:
  *   we use 'char' for characters; one character per 'char'-value
@@ -68,9 +68,6 @@ typedef uint32_t char_type;
 #define utf_strncat u32_strncat
 #define utf_strncpy u32_strncpy
 #define utf_strconv_from_locale u32_strconv_from_locale
-
-//#define _T(STR) ( const_cast<char_type*>( reinterpret_cast<const char_type*>( u ## STR )))
-//#define _C(STR) ( (const char_type*) u ## STR )
 
 #define PRINTF_FORMAT "%llU"
 

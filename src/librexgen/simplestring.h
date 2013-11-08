@@ -23,9 +23,15 @@
 
 #include <librexgen/unicode/uchar.h>
 #include <librexgen/unicode.h>
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
+#include <librexgen/osdepend.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#ifdef __cplusplus
+
+using namespace std;
+
 class SimpleString {
 public:
   SimpleString(size_t msize=512)
@@ -47,7 +53,7 @@ public:
   }
 
   SimpleString& push_back(const uchar_t& c) {
-    fast_append(firstByteAddressOf(c), c.char_length);
+    fast_append(firstByteAddressOf(&c), c.char_length);
     return *this;
   }
 
@@ -110,4 +116,31 @@ private:
   byte* buffer;
 };
 
-#endif // SIMPLESTRING_H
+#endif /* __cplusplus */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef void* c_simplestring_ptr;
+
+EXPORT
+c_simplestring_ptr c_simplestring_new();
+
+EXPORT
+void c_simplestring_delete(c_simplestring_ptr s);
+
+EXPORT
+void c_simplestring_newline(c_simplestring_ptr s);
+
+EXPORT
+void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush);
+
+EXPORT
+void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* SIMPLESTRING_H */

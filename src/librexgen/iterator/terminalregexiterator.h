@@ -37,7 +37,7 @@ public:
     terminal = new byte[elements*sizeof(uchar_t)];
     terminal_length = 0;
     for (size_t n = 0; n < elements; ++n) {
-      terminal_length += uchar_to_utf(_terminal[n], &terminal[terminal_length]);
+      terminal_length += uchar_to_utf(&_terminal[n], &terminal[terminal_length]);
     }
   }
   

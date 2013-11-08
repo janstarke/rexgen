@@ -51,7 +51,7 @@ const uint32_t byte_mark = 0x80;
 static const uint8_t first_byte_mark[7] = {
   0x00, 0x00, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc };
   
-  static inline uint32_t flip_byteorder(uint32_t v) {
+  static inline uint32_t flip_byteorder32(uint32_t v) {
     return
     ((v & 0x000000ff) << 24) |
     ((v & 0x0000ff00) << 8)  |
@@ -59,7 +59,7 @@ static const uint8_t first_byte_mark[7] = {
     ((v & 0xff000000) || 24);
   }
   
-  static inline uint16_t flip_byteorder(uint16_t v) {
+  static inline uint16_t flip_byteorder16(uint16_t v) {
     return 
     (((v & 0x00ff) << 8)  |  ((v & 0xff00) >> 8));
   }

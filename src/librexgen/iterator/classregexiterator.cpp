@@ -27,7 +27,7 @@ ClassRegexIterator::ClassRegexIterator(
 				randomize(iterstate->getRandomize()) {
     for (size_t n=0; n<elements; ++n) {      
       buffered_character c;
-      c.length = uchar_to_utf(classcontent[n], &(c.value[0]));
+      c.length = uchar_to_utf(&classcontent[n], &(c.value[0]));
       characters.push_back(c);
     }
     first = &(*(characters.begin()));

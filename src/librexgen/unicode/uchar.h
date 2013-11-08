@@ -26,16 +26,20 @@
 #include <librexgen/unicode.h>
 #include <librexgen/parser/osdepend.h>
 
-enum charset : uint8_t {
-  CHARSET_ANSI,
-  CHARSET_UTF8,
-  CHARSET_UTF16BE,
-  CHARSET_UTF32BE,
-  CHARSET_UTF16LE,
-  CHARSET_UTF32LE
-};
+typedef uint8_t charset;
+#define CHARSET_ANSI    1
+#define CHARSET_UTF8    2
+#define CHARSET_UTF16BE 3
+#define CHARSET_UTF32BE 4
+#define CHARSET_UTF16LE 5
+#define CHARSET_UTF32LE 6
 
-struct uchar_t{
+#ifndef __cplusplus
+typedef uint16_t char16_t;
+typedef uint32_t char32_t;
+#endif
+
+typedef struct __uchar_t{
   charset variant;
   uint8_t char_length;
   
@@ -58,37 +62,44 @@ struct uchar_t{
       char32_t value;
     } ucs4;
   } character;
-};
+} uchar_t;
 
-inline const byte* firstByteAddressOf(const uchar_t& c) {
-  return & (c.character.bytes[
-    sizeof(c.character.bytes)/sizeof(c.character.bytes[0]) - c.char_length]);
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-inline uchar_t char_to_uchar(char ch) {
-  uchar_t u;
-  u.character.ucs4.value = 0;
-  u.character.ansi.value = ch;
-  u.variant = CHARSET_ANSI;
-  u.char_length = 1;
-  return u;
-}
+EXPORT
+const byte* firstByteAddressOf(const uchar_t* c);
 
+EXPORT
+uchar_t char_to_uchar(char ch);
+
+EXPORT
 void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
 
-uint8_t uchar_to_ansi(const uchar_t& uch, byte* ansi_dst);
+EXPORT
+uint8_t uchar_to_ansi(const uchar_t* uch, byte* ansi_dst);
 
-uint8_t uchar_to_utf8(const uchar_t& uch, byte* utf8_dst);
+EXPORT
+uint8_t uchar_to_utf8(const uchar_t* uch, byte* utf8_dst);
 
-uint8_t uchar_to_utf16(const uchar_t& uch, byte* utf16_dst);
+EXPORT
+uint8_t uchar_to_utf16(const uchar_t* uch, byte* utf16_dst);
 
-uint8_t uchar_to_utf32(const uchar_t& uch, byte* utf32_dst);
+EXPORT
+uint8_t uchar_to_utf32(const uchar_t* uch, byte* utf32_dst);
 
-uint8_t uchar_to_utf(const uchar_t& uch, byte* dst);
+EXPORT
+uint8_t uchar_to_utf(const uchar_t* uch, byte* dst);
 
 EXPORT
 uchar_t create_BOM(charset cs);
 
-bool uchar_isascii(const uchar_t& uch);
+EXPORT
+int uchar_isascii(const uchar_t* uch);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

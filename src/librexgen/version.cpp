@@ -19,20 +19,18 @@
 
 #include <librexgen/version.h>
 #include <librexgen/parser/osdepend.h>
+#include <cstdio>
+#include <cstdlib>
 
-namespace rexgen {
+static char __version[16];
 
-	static char __version[16];
-
-	EXPORT
-	const char* getVersion() {
-		if (! __version[0]) {
-			snprintf(__version, sizeof(__version)/sizeof(__version[0])-1, "%d.%d.%d",
-				VERSION_MAJOR,
-				VERSION_MINOR,
-				atoi(VERSION_REVISION + 6));
-		}
-		return __version;
+EXPORT
+const char* rexgen_version () {
+	if (! __version[0]) {
+		snprintf(__version, sizeof(__version)/sizeof(__version[0])-1, "%d.%d.%d",
+			REXGEN_VERSION_MAJOR,
+			REXGEN_VERSION_MINOR,
+			atoi(REXGEN_VERSION_REVISION + 6));
 	}
-
+	return __version;
 }
