@@ -8,12 +8,18 @@ set(LUA_VERSION "5.2")
 
 set(librexgen_major 1)
 set(librexgen_minor 0)
-string(REGEX REPLACE "[^0-9]" "" librexgen_release "$Rev$")
-set(librexgen_version ${librexgen_major}.${librexgen_minor}.${librexgen_release})
-set(librexgen_libname rexgen-${librexgen_version})
-set(librexgen_filename ${CMAKE_SHARED_LIBRARY_PREFIX}${librexgen_libname}${CMAKE_SHARED_LIBRARY_SUFFIX} )
 
-set(rexgen_exename "${prj}")
+find_program(svnversion "svnversion")
+execute_process( COMMAND svnversion
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+	OUTPUT_VARIABLE librexgen_build 
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
+set(librexgen_version "${librexgen_major}.${librexgen_minor}.${librexgen_build}")
+set(librexgen_libname rexgen-${librexgen_version})
+set(librexgen_filename "${prj}" )
+#set(librexgen_filename "${prj}${CMAKE_SHARED_LIBRARY_SUFFIX}.${librexgen_version}" )
+
+message("creating ${prj} ${librexgen_version}")
 
 if(MSVC) 
 #this is currently not supported

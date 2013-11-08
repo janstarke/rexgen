@@ -21,10 +21,6 @@
 #define __VERSION_H__
 #include <librexgen/osdepend.h>
 
-const int REXGEN_VERSION_MAJOR = 1;
-const int REXGEN_VERSION_MINOR = 0;
-const char* REXGEN_VERSION_REVISION = "$Rev$";
-
 #ifdef __cplusplus
 extern "C" {
 #endif

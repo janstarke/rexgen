@@ -42,7 +42,7 @@ endif(USE_LUA)
 set(librexgen_sources
   ${lua_sources}
   debug.cpp 
-  version.cpp
+  "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp"
   regex/compoundregex.cpp
   regex/regexalternatives.cpp
   regex/classregex.cpp
@@ -71,31 +71,37 @@ set(parser_sources
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
 if(COMMAND add_cpplint)
- add_cpplint(${librexgen_libname} ${librexgen_sources})
- add_dependencies(${librexgen_libname} ${librexgen_libname}_CPPLINT)
+ add_cpplint(${librexgen_filename} ${librexgen_sources})
+ add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPLINT)
 endif(COMMAND add_cpplint)
 
 if(COMMAND add_cppcheck)
- add_cppcheck(${librexgen_libname} ${librexgen_sources} ${parser_sources})
- add_dependencies(${librexgen_libname} ${librexgen_libname}_CPPCHECK)
+ add_cppcheck(${librexgen_filename} ${librexgen_sources} ${parser_sources})
+ add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPCHECK)
 endif(COMMAND add_cppcheck)
 
-add_library(${librexgen_libname} SHARED ${librexgen_sources} ${parser_sources})
+add_library(${librexgen_filename} SHARED ${librexgen_sources} ${parser_sources})
 
 if (USE_LUA)
-  target_link_libraries(${librexgen_libname} "lua${LUA_VERSION}" )
+  target_link_libraries(${librexgen_filename} "lua${LUA_VERSION}" )
 endif(USE_LUA)
 
 if(MSVC)
 else()
-	target_link_libraries(${librexgen_libname} "stdc++")
+	target_link_libraries(${librexgen_filename} "stdc++")
 endif(MSVC)
 
-set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
+set_target_properties(${librexgen_filename} PROPERTIES
+	PREFIX "lib"
+	SOVERSION ${librexgen_version}
+	VERSION ${librexgen_version})
 
-install(TARGETS ${librexgen_libname}
+configure_file( "version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp" )
+
+install(TARGETS ${librexgen_filename}
 		LIBRARY DESTINATION "lib"
-		ARCHIVE DESTINATION "lib" )
+		ARCHIVE DESTINATION "lib"
+		)
 
 file(GLOB librexgen_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 install(FILES ${librexgen_headers} DESTINATION include/librexgen )
