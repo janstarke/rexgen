@@ -86,6 +86,11 @@ if (USE_LUA)
   target_link_libraries(${librexgen_libname} "lua${LUA_VERSION}" )
 endif(USE_LUA)
 
+if(MSVC)
+else()
+	target_link_libraries(${librexgen_libname} "stdc++")
+endif(MSVC)
+
 set_target_properties(${librexgen_libname} PROPERTIES PREFIX "lib")
 
 install(TARGETS ${librexgen_libname}

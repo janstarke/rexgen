@@ -1,5 +1,5 @@
 %pure-parser
-%name-prefix="rexgen_"
+%name-prefix "rexgen_"
 %locations
 %defines
 %error-verbose
