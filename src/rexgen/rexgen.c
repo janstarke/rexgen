@@ -207,6 +207,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	*/
   c_iterator_ptr iter = NULL;
   int retval = 0;
+  const char* regex_str = NULL;
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -216,7 +217,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   
   rexgen_setlocale();
   encoding = CHARSET_UTF8; /* use UTF-8 by default */
-  const char* regex_str = rexgen_parse_arguments(argc, argv);
+  regex_str = rexgen_parse_arguments(argc, argv);
   if (regex_str == NULL) {
     rexgen_usage();
     return 1;

@@ -21,7 +21,7 @@
 #define __libregex_h__
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/parser/osdepend.h>
+#include <librexgen/osdepend.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/rexgenparsercontext.h>
 

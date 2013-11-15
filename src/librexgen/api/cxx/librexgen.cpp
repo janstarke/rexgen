@@ -21,7 +21,7 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
-#include <librexgen/parser/osdepend.h>
+#include <librexgen/osdepend.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <sstream>
 #include <string>

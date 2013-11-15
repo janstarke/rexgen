@@ -32,7 +32,7 @@
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/unicode.h>
-  #include <librexgen/parser/osdepend.h>
+  #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
   #include <cstdio>

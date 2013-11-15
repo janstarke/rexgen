@@ -23,7 +23,7 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/simplestring.h>
-#include <librexgen/librexgen.h>
+#include <librexgen/api/cxx/librexgen.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <cstdio>
 

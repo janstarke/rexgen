@@ -23,7 +23,10 @@
 #if defined(_WIN32)
 #include <io.h>
 #define __attribute__(X) 
-inline int isatty(int fd ) { return _isatty(fd); }
+#ifdef __cplusplus
+inline
+#endif
+	int isatty(int fd ) { return _isatty(fd); }
 #define YY_NO_UNISTD_H
 
 #define EXPORT __declspec (dllexport)

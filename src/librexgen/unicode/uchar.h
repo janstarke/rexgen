@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <librexgen/unicode.h>
-#include <librexgen/parser/osdepend.h>
+#include <librexgen/osdepend.h>
 
 typedef uint8_t charset;
 #define CHARSET_ANSI    1
@@ -34,7 +34,7 @@ typedef uint8_t charset;
 #define CHARSET_UTF16LE 5
 #define CHARSET_UTF32LE 6
 
-#ifndef __cplusplus
+#if ! defined(__cplusplus) || defined(_WIN32)
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
 #endif
