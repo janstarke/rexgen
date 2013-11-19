@@ -14,7 +14,13 @@ execute_process( COMMAND svnversion
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 	OUTPUT_VARIABLE librexgen_build 
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
-set(librexgen_version "${librexgen_major}.${librexgen_minor}.${librexgen_build}")
+if (${librexgen_build} MATCHES " ")
+  set(librexgen_build "DEV")
+  set(librexgen_version "${librexgen_major}.${librexgen_minor}.DEV")
+else()
+  set(librexgen_version "${librexgen_major}.${librexgen_minor}.${librexgen_build}")
+endif(${librexgen_build} MATCHES " ")
+
 set(librexgen_libname rexgen-${librexgen_version})
 set(librexgen_filename "${prj}" )
 #set(librexgen_filename "${prj}${CMAKE_SHARED_LIBRARY_SUFFIX}.${librexgen_version}" )

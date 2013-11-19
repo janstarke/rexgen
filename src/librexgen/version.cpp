@@ -18,7 +18,7 @@
 */
 
 #include <librexgen/version.h>
-#include <librexgen/parser/osdepend.h>
+#include <librexgen/osdepend.h>
 #include <cstdio>
 #include <cstdlib>
 
