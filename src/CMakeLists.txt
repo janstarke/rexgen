@@ -12,8 +12,9 @@ set(librexgen_minor 0)
 find_program(svnversion "svnversion")
 execute_process( COMMAND svnversion
 	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-	OUTPUT_VARIABLE librexgen_build 
+	OUTPUT_VARIABLE librexgen_build_tmp 
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
+string(REPLACE ":" "-" librexgen_build ${librexgen_build_tmp} )
 if (${librexgen_build} MATCHES " ")
   set(librexgen_build "DEV")
   set(librexgen_version "${librexgen_major}.${librexgen_minor}.DEV")
