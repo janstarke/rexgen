@@ -94,7 +94,7 @@ endif(MSVC)
 
 set_target_properties(${librexgen_filename} PROPERTIES
 	PREFIX ""
-	SOVERSION ${librexgen_major}
+	SOVERSION "${librexgen_major}.${librexgen_minor}"
 	VERSION ${librexgen_version})
 
 configure_file( "version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp" )
