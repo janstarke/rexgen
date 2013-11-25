@@ -39,7 +39,7 @@ SET(CPACK_PACKAGE_VERSION_MINOR ${librexgen_minor})
 SET(CPACK_PACKAGE_VERSION_PATCH ${librexgen_build})
 SET(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/../bin/${CMAKE_SYSTEM_NAME}")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SOURCE_IGNORE_FILES "^${PROJECT_SOURCE_DIR}/build/" ".*\\.sh")
+SET(CPACK_SOURCE_IGNORE_FILES "^${PROJECT_SOURCE_DIR}/build/" ".*\\\\.sh")
 include(CPack)
 
 set(librexgen_libname librexgen-${librexgen_version})
