@@ -1,16 +1,17 @@
 #include(cmake/cpplint.cmake)
 #include(cmake/cppcheck.cmake)
-include(cmake/checkversion.cmake)
 
 find_package(BISON)
 set(bison_required_version 2.5)
-check_version(${bison_required_version} ${BISON_VERSION}
-  "${librexgen_libname} requires at least bison ${bison_required_version}")
+IF(${BISON_VERSION} VERSION_LESS ${bison_required_version})
+  MESSAGE(FATAL_ERROR "${librexgen_libname} requires at least bison ${bison_required_version}")
+ENDIF (${BISON_VERSION} VERSION_LESS ${bison_required_version})
 
 find_package(FLEX)
 set(flex_required_version 2.5)
-check_version(${flex_required_version} ${FLEX_VERSION}
-  "${librexgen_libname} requires at least flex ${flex_required_version}")
+IF(${FLEX_VERSION} VERSION_LESS ${flex_required_version}) 
+  MESSAGE(FATAL_ERROR "${librexgen_libname} requires at least flex ${flex_required_version}")
+ENDIF(${FLEX_VERSION} VERSION_LESS ${flex_required_version})
 
 if(MSVC)
 else()
@@ -92,11 +93,15 @@ else()
 endif(MSVC)
 
 set_target_properties(${librexgen_filename} PROPERTIES
-	PREFIX "lib"
+	PREFIX ""
 	SOVERSION ${librexgen_version}
 	VERSION ${librexgen_version})
 
 configure_file( "version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp" )
+if(MSVC)
+	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTIES COMPILE_FLAGS "/wd4065" )
+	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp PROPERTIES COMPILE_FLAGS "/wd4005" )
+endif(MSVC)
 
 install(TARGETS ${librexgen_filename}
 		LIBRARY DESTINATION "lib"
