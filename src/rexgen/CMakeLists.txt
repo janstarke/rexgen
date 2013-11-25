@@ -13,10 +13,7 @@ else()
   ADD_DEFINITIONS("--std=c89 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 endif(MSVC)
 
-install(
-	TARGETS ${rexgen_exename}
-	RUNTIME
-	DESTINATION bin)
+install(TARGETS ${rexgen_exename} RUNTIME DESTINATION bin)
 
 # install manpage
 if(MSVC)
