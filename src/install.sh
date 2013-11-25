@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 BASEDIR=$(dirname "$SCRIPT")
 . ${BASEDIR}/build.sh
@@ -6,6 +6,11 @@ BASEDIR=$(dirname "$SCRIPT")
 cd ${BUILDDIR}
 
 cmake ..
-sudo make install
+
+if test $(id -u) -eq 0; then
+	make install
+else
+	sudo make install
+fi
 
 cd ${BASEDIR}
