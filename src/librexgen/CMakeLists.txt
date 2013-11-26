@@ -104,6 +104,7 @@ if(MSVC)
 endif(MSVC)
 
 install(TARGETS ${librexgen_filename}
+		RUNTIME DESTINATION "bin"
 		LIBRARY DESTINATION "lib"
 		ARCHIVE DESTINATION "lib"
 		)
