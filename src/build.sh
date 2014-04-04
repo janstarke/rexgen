@@ -1,8 +1,12 @@
 #!/bin/sh -e
 
+SYSTEM=$(uname -s)
 SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 BUILDDIR="$BASEDIR/build"
+
+
+
 
 if test -d ${BUILDDIR}; then
 	rm -rf ${BUILDDIR}

@@ -56,6 +56,8 @@ public:
     
     virtual void updateReferences(IteratorState* /* iterState */) {}
     
+    SerializableState* getCurrentState() const;
+    void setCurrentState(const SerializableState* state);    
 private:
   inline void shuffle() {
     random_shuffle(characters.begin(), characters.end()); 

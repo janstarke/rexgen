@@ -42,7 +42,7 @@ public:
   void setValue(const char* v);
   */
   
-  inline const char_type* getValue() const { return nullptr; }
+  inline const char_type* getValue() const { return NULL; }
   
   inline const char* getXmlTag() const { return "terminal"; }
   

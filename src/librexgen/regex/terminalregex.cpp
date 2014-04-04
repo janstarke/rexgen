@@ -24,13 +24,15 @@
 
 
 void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for_each((tre->value.cbegin()), (tre->value.cend()),
-    [&](const uchar_t ch){value.insert(value.begin(), ch); });
+	for(vector<uchar_t>::const_iterator iter=tre->value.begin(); iter!=tre->value.end(); ++iter) {
+		value.insert(value.begin(), *iter);
+	}
 }
 
 void TerminalRegex::appendContent(
   SimpleString& dst, int level) const {
     appendSpace(dst, level);
-    for_each(value.cbegin(), value.cend(), [&dst](uchar_t c) {dst.push_back(c);});
-    dst.newline();
+		for(vector<uchar_t>::const_iterator iter=value.begin(); iter!=value.end(); ++iter) {
+			dst.push_back(*iter);
+		}
 }

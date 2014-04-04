@@ -1,9 +1,6 @@
-%pure-parser
-%name-prefix "rexgen_"
 %locations
 %defines
 %error-verbose
-%lex-param {void* scanner}
 %parse-param {RexgenParserContext* context}
 %{
 /*
@@ -44,14 +41,14 @@
   using namespace std;
 
   //extern "C"
-  int rexgen_lex(YYSTYPE* lvalp, YYLTYPE *llocp, void* scanner);
-
-  void rexgen_error(YYLTYPE* locp, void*, const char *s)
+  int yylex(/*YYSTYPE* lvalp, YYLTYPE *llocp*/);
+  void yyerror(/*YYLTYPE* locp, */RexgenParserContext * /* ctx */, const char *s)
   {
-        cerr << "error in col " << locp->first_column << ": " << s << endl;
+        //cerr << "error in col " << locp->first_column << ": " << s << endl;
+        cerr << "error: " << s << endl;
   }
   
-  #define scanner context->scanner
+  //#define scanner context->scanner
 %}
 
 %start T_RegexAlternatives
@@ -187,11 +184,11 @@ GroupRegex:
   T_BEGIN_GROUP
   {
     $<groupId>$ = context->groupId++;
-  }[id]
+  }
   T_RegexAlternatives T_END_GROUP
   { 
     RegexAlternatives* ra = $3; 
-    ra->setGroupId($<groupId>id);
+    ra->setGroupId($<groupId>2);
     context->registerGroup(ra);
     context->updateGroupReferences(ra);
     $$ = ra;
@@ -211,10 +208,11 @@ GroupReference: T_GROUPID {
 };
 
 Stream: T_STREAM {
-  if (context->getInFile() == nullptr) {
+  if (context->getInFile() == NULL) {
     throw SyntaxError("You cannot use a stream reference without specifying a stream source.");
   }
    $$ = context->getStreamRegex();
 };
 
 %%
+#include "scanner.cpp"

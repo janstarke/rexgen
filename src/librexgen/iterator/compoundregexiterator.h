@@ -25,8 +25,8 @@
 #include <deque>
 #include <vector>
 #include <algorithm>
-#include "../regex/regex.h"
-#include "../unicode.h"
+#include <librexgen/regex/regex.h>
+#include <librexgen/unicode.h>
 
 using namespace std;
 
@@ -45,6 +45,10 @@ public:
     void addChild(Iterator* i);
     
     void updateReferences(IteratorState* iterState);
+    
+    SerializableState* getCurrentState() const;
+    void setCurrentState(const SerializableState* state);
+    
 private:
   void shuffle() {random_shuffle(rnd_iterators.begin(), rnd_iterators.end());}
   vector<Iterator* > iterators;

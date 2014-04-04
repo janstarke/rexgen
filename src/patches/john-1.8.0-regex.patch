@@ -1,0 +1,212 @@
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/john.c john-1.8.0/src/john.c
+--- john-1.8.0-regex/src/john.c	2013-06-27 19:48:53.097459277 +0200
++++ john-1.8.0/src/john.c	2013-05-30 01:27:25.000000000 +0200
+@@ -59,9 +59,6 @@
+ #include "inc.h"
+ #include "external.h"
+ #include "batch.h"
+-#if HAVE_REXGEN
+-#include "regex.h"
+-#endif /* HAVE_REXGEN */
+ 
+ #if CPU_DETECT
+ extern int CPU_detect(void);
+@@ -591,11 +588,6 @@
+ 		if (options.flags & FLG_WORDLIST_CHK)
+ 			do_wordlist_crack(&database, options.wordlist,
+ 				(options.flags & FLG_RULES) != 0);
+-#if HAVE_REXGEN
+-		else
+-		if (options.flags & FLG_REGEX_CHK)
+-			do_regex_crack(&database, options.regex);
+-#endif /* HAVE_REXGEN */
+ 		else
+ 		if (options.flags & FLG_INC_CHK)
+ 			do_incremental_crack(&database, options.charset);
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/Makefile john-1.8.0/src/Makefile
+--- john-1.8.0-regex/src/Makefile	2013-12-28 15:00:37.870948275 +0100
++++ john-1.8.0/src/Makefile	2013-05-30 01:21:25.000000000 +0200
+@@ -28,11 +28,11 @@
+ #OMPFLAGS = -fopenmp -D_FORTIFY_SOURCE=0
+ # Sun Studio with OpenMP (set the OMP_NUM_THREADS env var at runtime)
+ #OMPFLAGS = -xopenmp
+-CFLAGS = -c -Wall -Wdeclaration-after-statement -O2 -fomit-frame-pointer $(OMPFLAGS) -DHAVE_REXGEN=1 -I/usr/local/include
++CFLAGS = -c -Wall -Wdeclaration-after-statement -O2 -fomit-frame-pointer $(OMPFLAGS)
+ # CFLAGS for use on the main john.c file only
+ CFLAGS_MAIN = $(CFLAGS)
+ ASFLAGS = -c $(OMPFLAGS)
+-LDFLAGS = -s $(OMPFLAGS) -lrexgen -L/usr/local/lib
++LDFLAGS = -s $(OMPFLAGS)
+ OPT_NORMAL = -funroll-loops
+ # Remove the "-Os" if you're using an ancient version of gcc
+ OPT_INLINE = -Os -funroll-loops -finline-functions
+@@ -52,8 +52,7 @@
+ 	recovery.o rpp.o rules.o signals.o single.o status.o tty.o wordlist.o \
+ 	unshadow.o \
+ 	unafs.o \
+-	unique.o \
+-	regex.o
++	unique.o
+ 
+ BENCH_DES_OBJS_ORIG = \
+ 	DES_fmt.o DES_std.o
+@@ -896,9 +895,6 @@
+ .c.o:
+ 	$(CC) $(CFLAGS) $(OPT_NORMAL) $*.c
+ 
+-.cpp.o:
+-	$(CPP) $(CFLAGS) $(OPT_NORMAL) -std=c++0x $*.cpp
+-
+ .S.o:
+ 	$(AS) $(ASFLAGS) $*.S
+ 
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/options.c john-1.8.0/src/options.c
+--- john-1.8.0-regex/src/options.c	2013-06-27 19:32:59.168729000 +0200
++++ john-1.8.0/src/options.c	2013-05-30 01:31:53.000000000 +0200
+@@ -42,10 +42,6 @@
+ 		0, 0, OPT_FMT_STR_ALLOC, &options.charset},
+ 	{"external", FLG_EXTERNAL_SET, FLG_EXTERNAL_CHK,
+ 		0, OPT_REQ_PARAM, OPT_FMT_STR_ALLOC, &options.external},
+-#if HAVE_REXGEN
+-	{"regex", FLG_REGEX_SET, FLG_REGEX_CHK,
+-		0, OPT_REQ_PARAM, OPT_FMT_STR_ALLOC, &options.regex},
+-#endif
+ 	{"stdout", FLG_STDOUT, FLG_STDOUT,
+ 		FLG_CRACKING_SUP, FLG_SINGLE_CHK | FLG_BATCH_CHK,
+ 		"%u", &options.length},
+@@ -98,13 +94,6 @@
+ #define JOHN_USAGE_FORK ""
+ #endif
+ 
+-#if HAVE_REXGEN
+-#define JOHN_USAGE_REGEX \
+-"--regex=REGEX              regular expression mode\n"
+-#else
+-#define JOHN_USAGE_REGEX ""
+-#endif
+-
+ #define JOHN_USAGE \
+ "John the Ripper password cracker, version " JOHN_VERSION "\n" \
+ "Copyright (c) 1996-2013 by " JOHN_COPYRIGHT "\n" \
+@@ -116,7 +105,6 @@
+ "--rules                    enable word mangling rules for wordlist mode\n" \
+ "--incremental[=MODE]       \"incremental\" mode [using section MODE]\n" \
+ "--external=MODE            external mode or word filter\n" \
+-JOHN_USAGE_REGEX \
+ "--stdout[=LENGTH]          just output candidate passwords [cut at LENGTH]\n" \
+ "--restore[=NAME]           restore an interrupted session [called NAME]\n" \
+ "--session=NAME             give a new session the NAME\n" \
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/options.h john-1.8.0/src/options.h
+--- john-1.8.0-regex/src/options.h	2013-06-27 19:30:11.659898368 +0200
++++ john-1.8.0/src/options.h	2013-05-30 01:31:55.000000000 +0200
+@@ -56,12 +56,6 @@
+ #define FLG_EXTERNAL_CHK		0x00001000
+ #define FLG_EXTERNAL_SET \
+ 	(FLG_EXTERNAL_CHK | FLG_ACTION | FLG_CRACKING_SUP | FLG_PWD_SUP)
+-
+-#if HAVE_REXGEN
+-#define FLG_REGEX_CHK 0x00002000
+-#define FLG_REGEX_SET		(FLG_REGEX_CHK | FLG_CRACKING_SET)
+-#endif /* HAVE_REXGEN */
+-
+ /* Batch cracker */
+ #define FLG_BATCH_CHK			0x00004000
+ #define FLG_BATCH_SET			(FLG_BATCH_CHK | FLG_CRACKING_SET)
+@@ -134,11 +128,6 @@
+ /* Parallel processing options */
+ 	char *node_str;
+ 	unsigned int node_min, node_max, node_count, fork;
+-
+-#if HAVE_REXGEN
+-/* regular expression */
+-  char *regex;
+-#endif /* HAVE_REXGEN */
+ };
+ 
+ extern struct options_main options;
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/regex.c john-1.8.0/src/regex.c
+--- john-1.8.0-regex/src/regex.c	2013-12-02 23:00:18.822674165 +0100
++++ john-1.8.0/src/regex.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,53 +0,0 @@
+-/*
+- * This file is part of John the Ripper password cracker,
+- * Copyright (c) 1996-99,2003,2004,2006,2009,2013 by Solar Designer
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted.
+- *
+- * There's ABSOLUTELY NO WARRANTY, express or implied.
+- * Author if this file is Jan Starke <jan.starke@outofbed.org>
+- */
+-
+-#include "loader.h"
+-#include "logger.h"
+-#include "status.h"
+-#include "recovery.h"
+-#include "options.h"
+-#include "cracker.h"
+-#include "john.h"
+-#include "external.h"
+-
+-#include <librexgen/api/c/librexgen.h>
+-
+-static void fix_state(void) {
+-}
+-
+-void do_regex_crack(struct db_main *db, char *regex) {
+-	c_iterator_ptr iter = NULL;
+-	c_simplestring_ptr buffer = c_simplestring_new();
+-	char* word;
+-
+-	crk_init(db, fix_state, NULL);
+-
+-	iter = c_regex_iterator(
+-						regex,					/* regular expression */
+-						0,							/* do not ignore case */
+-						CHARSET_UTF8,		/* produce UTF8 output */
+-						0,							/* do not randomize */
+-						NULL						/* no stream input yet */
+-						);
+-	while (c_iterator_next(iter)) {
+-		c_simplestring_clear(buffer);
+-		c_iterator_value(iter, buffer);
+-		c_simplestring_terminate(buffer);
+-		word = (char*) c_simplestring_bufferaddress(buffer);
+-		if (ext_filter(word)) {
+-			crk_process_key(word);
+-		}
+-	}
+-
+-	c_simplestring_delete(buffer);
+-	c_iterator_delete(iter);
+-	crk_done();
+-}
+diff -Naur '--exclude=*.o' john-1.8.0-regex/src/regex.h john-1.8.0/src/regex.h
+--- john-1.8.0-regex/src/regex.h	2013-12-02 22:45:12.190178417 +0100
++++ john-1.8.0/src/regex.h	1970-01-01 01:00:00.000000000 +0100
+@@ -1,25 +0,0 @@
+-/*
+- * This file is part of John the Ripper password cracker,
+- * Copyright (c) 1996-98 by Solar Designer
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted.
+- *
+- * There's ABSOLUTELY NO WARRANTY, express or implied.
+- */
+-
+-/*
+- * Regular expression cracker.
+- */
+-
+-#ifndef _JOHN_REGEX_H
+-#define _JOHN_REGEX_H
+-
+-#include "loader.h"
+-
+-/*
+- * Runs the Regular expression cracker
+- */
+-void do_regex_crack(struct db_main *db, char *regex);
+-
+-#endif

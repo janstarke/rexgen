@@ -27,6 +27,7 @@
 #include <vector>
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
+#include <librexgen/state/invaliditeratoridexception.h>
 
 class TerminalRegexIterator : public Iterator
 {

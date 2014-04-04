@@ -24,7 +24,7 @@
 
 bool ClassRegex::contains(const uchar_t& ch) const
 {
-  for (auto iter = characters.cbegin(); iter != characters.cend(); ++iter) {
+  for (vector<uchar_t>::const_iterator iter = characters.begin(); iter != characters.end(); ++iter) {
     if ((*iter).codepoint == ch.codepoint) {
       return true;
     }
@@ -94,7 +94,9 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignore
 void ClassRegex::appendContent(SimpleString& dst, int level) const {
   appendSpace(dst, level);
 
-  for_each(characters.begin(), characters.end(), [&dst](uchar_t c){dst.push_back(c);});
+	for(vector<uchar_t>::const_iterator iter=characters.begin(); iter!=characters.end(); ++iter) {
+		dst.push_back(*iter);
+	}
   dst.newline();
 }
 

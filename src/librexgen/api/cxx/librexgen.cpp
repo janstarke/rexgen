@@ -17,29 +17,28 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <sstream>
+#include <cstdio>
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/parser/syntaxerror.h>
-#include <sstream>
-#include <string>
-#include <cstdio>
 
-using std::istringstream;
+using namespace std;
 
-int rexgen_parse(RexgenParserContext* context);
+int yyparse(RexgenParserContext* context);
 
 Regex* parse_regex(RexgenParserContext* context) {
   
   try {
-    if (rexgen_parse(context) != 0) {
-      return nullptr;
+    if (yyparse(context) != 0) {
+      return NULL;
     }
   } catch (SyntaxError& exc) {
     cerr << exc.getMessage() << endl;
-    return nullptr;
+    return NULL;
   }  
   if (context->hasInvalidGroupReferences()) {
     throw SyntaxError("This regular expression has an invalid back reference");
@@ -57,12 +56,9 @@ Regex* parse_regex(const char* regex, const RexgenOptions& options) {
 
 EXPORT
 Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
-  const string strRegex(regex);
-  istringstream is(strRegex);
-  RexgenParserContext context(&is, options);
-  Regex* re = parse_regex(&context);
-  if (re == nullptr) {
-    return nullptr;
+	Regex* re = parse_regex(regex, options);
+  if (re == NULL) {
+    return NULL;
   }
   IteratorState* state = new IteratorState();
   state->setRandomize(options.randomize);

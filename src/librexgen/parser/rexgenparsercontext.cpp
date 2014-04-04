@@ -23,14 +23,15 @@
 #include <utility>
 
 void RexgenParserContext::updateAllGroupReferences() {
-  for_each(groups.cbegin(), groups.cend(), [this](pair<int, Regex*> p) {
-    updateGroupReferences(p.second);
-  });
+	for(map<int, Regex*>::const_iterator p=groups.begin(); p!=groups.end(); ++p) {
+    updateGroupReferences((*p).second);
+  }
 }
 
 void RexgenParserContext::updateGroupReferences(const Regex* re) {
-	for (auto ref=groupRefs.begin(); ref!=groupRefs.end(); ++ref) {
-		for (auto gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
+	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+			ref!=groupRefs.end(); ++ref) {
+		for (set<GroupReference*>::iterator gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
 			if ((*ref).first == re->getGroupId()) {
 				(*gr)->setRegex(re);
 			}
@@ -40,8 +41,9 @@ void RexgenParserContext::updateGroupReferences(const Regex* re) {
 
 bool RexgenParserContext::hasInvalidGroupReferences() const {
   bool invalids = false;
-	for (auto ref=groupRefs.cbegin(); ref!=groupRefs.cend(); ++ref) {
-		for (auto gr=(*ref).second->cbegin(); gr!=(*ref).second->cend(); ++gr) {
+	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+			ref!=groupRefs.end(); ++ref) {
+		for (set<GroupReference*>::iterator gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
 			invalids |= ((*gr)->getRegex() == NULL);
 		}
 	}
@@ -51,16 +53,15 @@ bool RexgenParserContext::hasInvalidGroupReferences() const {
 RexgenParserContext::~RexgenParserContext() {
   DestroyScanner();
 
-	for_each(groupRefs.begin(), groupRefs.end(),
-		[](pair<int, set<GroupReference*> *> ref) 
-	{
-		delete ref.second;
-	});
+	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+			ref!=groupRefs.end(); ++ref) {
+		delete (*ref).second;
+	}
 }
 
  void RexgenParserContext::registerGroupReference(GroupReference* gr) {
 	 /* this is neeeded to later set the refered Regex */
-	 auto references = groupRefs.find(gr->getGroupId());
+	 map<int, set<GroupReference*>*>::iterator references = groupRefs.find(gr->getGroupId());
 	 if (references == groupRefs.end()) {
 		 groupRefs[gr->getGroupId()] = new set<GroupReference* >();
 		 references = groupRefs.find(gr->getGroupId());
@@ -69,9 +70,9 @@ RexgenParserContext::~RexgenParserContext() {
  }
   
  const set<GroupReference*>* RexgenParserContext::getGroupReferences(int id) const {
-   auto references = groupRefs.find(id);
+   map<int, set<GroupReference*>*>::const_iterator references = groupRefs.find(id);
 	 if (references == groupRefs.end()) {
-		 return nullptr;
+		 return NULL;
 	 }
 	 return (*references).second;
  }
@@ -86,7 +87,7 @@ RexgenParserContext::~RexgenParserContext() {
 const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }
 
 Regex* RexgenParserContext::getStreamRegex() {
- if (streamRegex == nullptr) {
+ if (streamRegex == NULL) {
     streamRegex = new StreamRegex(options.infile);
     return streamRegex;
   } else {

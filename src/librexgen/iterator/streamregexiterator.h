@@ -44,23 +44,11 @@ public:
     }
     void updateReferences(IteratorState* /* iterState */) {}
     bool isSingleton() const { return true; }
+    
+    SerializableState* getCurrentState() const;
+    void setCurrentState(const SerializableState* state);
 private:
-  void readNextWord() {
-    if (feof(infile)) {
-      __hasNext = false;
-    } else {
-      if (nullptr == fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile)) {
-        __hasNext = false;
-      } else {
-        __hasNext = true;
-        unsigned int idx = 0;
-        while (idx < sizeof(buffer)/sizeof(buffer[0])-2
-                    && buffer[idx] != '\r'
-                    && buffer[idx] != '\n') { ++idx; }
-        buffer[idx] = 0;
-      }
-    }
-  }
+  void readNextWord();
   
   FILE* infile;
   char buffer[4096];

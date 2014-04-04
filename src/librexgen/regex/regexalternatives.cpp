@@ -27,8 +27,8 @@ using namespace std;
 int RegexAlternatives::getMaxSize() const {
   int __max = 0;
   int __size = 0;
-  for (auto iter = regexObjects.cbegin();
-       iter != regexObjects.cend();
+  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
+       iter != regexObjects.end();
        ++iter) {
     __size = (*iter)->getMaxSize();
     __max = max(__size, __max);
@@ -38,17 +38,17 @@ int RegexAlternatives::getMaxSize() const {
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (auto iter = regexObjects.begin(); iter != regexObjects.end(); iter++) {
+  for (deque<Regex*>::const_iterator iter = regexObjects.begin(); iter != regexObjects.end(); iter++) {
     rai->addChild((*iter)->iterator(state));
   }
   return rai;
 }
 
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {
-  Iterator* iter = nullptr;
+  Iterator* iter = NULL;
   
   iter = state->getIterator(getGroupId());
-  if (iter != nullptr) {
+  if (iter != NULL) {
     return iter;
   }
   

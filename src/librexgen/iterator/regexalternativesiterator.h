@@ -44,6 +44,9 @@ public:
     
     void addChild(Iterator* re);
     void updateReferences(IteratorState* iterState);
+    
+    SerializableState* getCurrentState() const;
+    void setCurrentState(const SerializableState* state);
 private:  
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;

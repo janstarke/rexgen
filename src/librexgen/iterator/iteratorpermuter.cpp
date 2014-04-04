@@ -33,8 +33,11 @@ hasNextElement(true), occurs(min_occurs)
 
 IteratorPermuter::~IteratorPermuter()
 {
-  for_each(iterators.begin(), iterators.end(),
-    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
+	for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+		if ((*iter)->isSingleton()) {
+			delete (*iter);
+		}
+	}
 }
 
 void IteratorPermuter::value(SimpleString& dst) const
@@ -83,7 +86,10 @@ void IteratorPermuter::init()
   ENTER_METHOD;
 
   bool has_next = false;
-  for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {i->next();has_next |= i->hasNext();});
+	for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+		(*iter)->next();
+		has_next |= (*iter)->hasNext();
+	}
   hasNextElement = has_next;
 
   occurs = min_occurs;
@@ -95,8 +101,8 @@ void IteratorPermuter::init()
 bool IteratorPermuter::existsIteratorWithNextElement() const
 {
   ENTER_METHOD;
-  for(auto i=iterators.cbegin(); i!=iterators.cend(); ++i) {
-    if ((*i)->hasNext()) {
+  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+    if ((*iter)->hasNext()) {
       RETURN( true );
     }
   }
@@ -105,7 +111,8 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
 
 void IteratorPermuter::updateReferences(IteratorState* iterState)
 {
-  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i)
-  { i->updateReferences(iterState); });
+  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  	(*iter)->updateReferences(iterState);
+	}
 }
 

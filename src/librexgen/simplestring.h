@@ -30,8 +30,6 @@
 
 #ifdef __cplusplus
 
-using namespace std;
-
 class SimpleString {
 public:
   SimpleString(size_t msize=512)
@@ -134,10 +132,19 @@ EXPORT
 void c_simplestring_newline(c_simplestring_ptr s);
 
 EXPORT
+void c_simplestring_terminate(c_simplestring_ptr s);
+
+EXPORT
 void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush);
 
 EXPORT
 void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch);
+
+EXPORT
+const char* c_simplestring_bufferaddress(c_simplestring_ptr s);
+
+EXPORT
+void c_simplestring_clear(c_simplestring_ptr s);
 
 #ifdef __cplusplus
 }

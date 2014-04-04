@@ -35,7 +35,7 @@ public:
   
   ~TopIterator() {
     delete child;
-    if (state->getStreamIterator() != nullptr) {
+    if (state->getStreamIterator() != NULL) {
       delete (state->getStreamIterator());
     }
   }
@@ -43,7 +43,7 @@ public:
     bool res = child->next();
     if (res) { return res; }
     
-    if (state->getStreamIterator() == nullptr) { return false; }
+    if (state->getStreamIterator() == NULL) { return false; }
     return state->getStreamIterator()->forceNext();
   }
   
@@ -52,6 +52,15 @@ public:
   void updateReferences(IteratorState* iterState) {
         child->updateReferences(iterState);
   }
+  
+  SerializableState* getCurrentState() const {
+    return child->getCurrentState();
+  }
+  
+  void setCurrentState(const SerializableState* s) {
+    child->setCurrentState(s);
+  }
+    
 private:
   Iterator* child;
   const IteratorState* state;

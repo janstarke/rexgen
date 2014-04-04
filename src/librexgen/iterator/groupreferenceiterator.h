@@ -33,7 +33,7 @@ class GroupReferenceIterator : public Iterator
 
 public:
     GroupReferenceIterator(int _id, int group)
-    : Iterator(_id), groupId(group), groupRef(nullptr) { };
+    : Iterator(_id), groupId(group), groupRef(NULL) { };
   
     inline bool hasNext() const { return (state == resetted); }
     inline bool next() {

@@ -34,7 +34,7 @@ typedef uint8_t charset;
 #define CHARSET_UTF16LE 5
 #define CHARSET_UTF32LE 6
 
-#if ! defined(__cplusplus) || defined(_WIN32)
+#if ! defined(__cplusplus) || defined(_WIN32) || __cplusplus==1 || __cplusplus==199711L
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
 #endif

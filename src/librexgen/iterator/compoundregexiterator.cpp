@@ -38,25 +38,30 @@ CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
 }
 
 CompoundRegexIterator::~CompoundRegexIterator() {
-  for_each(iterators.begin(), iterators.end(),
-    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
+  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+    if (! (*iter)->isSingleton()) {
+			delete (*iter);
+		}
+	}
 }
 
 void CompoundRegexIterator::updateReferences(IteratorState* iterState) {
-  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i){i->updateReferences(iterState);});
+  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  	(*iter)->updateReferences(iterState);
+	}
 }
 
 bool CompoundRegexIterator::next() {
   if (state == resetted) { state = usable; return true; }
   if (randomize) {
-    for (auto rnd_i = rnd_iterators.begin(); rnd_i != rnd_iterators.end(); ++rnd_i) {
+    for (vector<unsigned int>::iterator rnd_i = rnd_iterators.begin(); rnd_i != rnd_iterators.end(); ++rnd_i) {
       if (iterators[*rnd_i]->next()) {
         return true;
       }
     }
     return false;
   }
-  for (auto i = iterators.begin(); i != iterators.end(); ++i) {
+  for (vector<Iterator*>::iterator i = iterators.begin(); i != iterators.end(); ++i) {
     if ((*i)->next()) {
       return true;
     }
@@ -66,8 +71,9 @@ bool CompoundRegexIterator::next() {
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
   //assert(canUseValue());
-  for_each(iterators.begin(), iterators.end(),
-  [&dst](Iterator* i) { i->value(dst); });
+  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  	(*iter)->value(dst);
+	}
 }
 
 bool CompoundRegexIterator::hasNext() const {
@@ -75,9 +81,9 @@ bool CompoundRegexIterator::hasNext() const {
   if (state == not_usable) {
     return false;
   }
-  for_each(iterators.begin(), iterators.end(), [&has_next](Iterator* i) {
-    has_next |= i->hasNext();
-  });
+  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+    has_next |= (*iter)->hasNext();
+  }
   return has_next;
 }
 
@@ -91,5 +97,21 @@ void CompoundRegexIterator::addChild(Iterator* i) {
   i->next();
 }
 
+SerializableState* CompoundRegexIterator::getCurrentState() const
+{
+  SerializableState* s = Iterator::getCurrentState();
+  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+    s->addValue((*iter)->getCurrentState());
+  }
+  return s;
+}
 
+void CompoundRegexIterator::setCurrentState(const SerializableState* s)
+{
+    Iterator::setCurrentState(s);
+    
+		for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+      (*iter)->setCurrentState(s->getChildState((*iter)->getId()));
+    }
+}
 

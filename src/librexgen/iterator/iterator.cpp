@@ -41,7 +41,7 @@ c_iterator_ptr c_regex_iterator(
 	options.randomize = (bool)randomize;
 	options.infile = infile;
 
-	Iterator* iter = nullptr;
+	Iterator* iter = NULL;
 	try {
 		iter = regex_iterator(regex_str, options);
 	} catch(SyntaxError& error) {
@@ -65,6 +65,28 @@ void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
 EXPORT
 void c_iterator_delete(c_iterator_ptr i) {
 	delete (reinterpret_cast<Iterator*>(i));
+}
+
+EXPORT
+void c_iterator_get_state(c_iterator_ptr i, void** dstptr)
+{
+  vector<SerializableState::stateword_t> dst;
+  SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
+  state->serialize(&dst);
+  *dstptr = malloc(dst.size() * sizeof(SerializableState::stateword_t));
+  if (*dstptr != NULL) {
+    memcpy(*dstptr, &dst[0], dst.size() * sizeof(SerializableState::stateword_t));
+  }
+}
+
+EXPORT
+void c_iterator_set_state(c_iterator_ptr i, void* dstptr)
+{
+  size_t words = 0;
+  SerializableState* state = new SerializableState(
+    (SerializableState::stateword_t*)dstptr, words);
+  (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
+  delete state;
 }
 
 #ifdef __cplusplus

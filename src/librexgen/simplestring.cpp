@@ -36,6 +36,12 @@ EXPORT
 void c_simplestring_newline(c_simplestring_ptr s) {
 	(reinterpret_cast<SimpleString*>(s))->newline();
 }
+
+EXPORT
+void c_simplestring_terminate(c_simplestring_ptr s) {
+  (reinterpret_cast<SimpleString*>(s))->terminate();
+}
+
 EXPORT
 void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush = 0) {
 	(reinterpret_cast<SimpleString*>(s))->print(dst, (bool)flush);
@@ -43,6 +49,16 @@ void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush = 0) {
 EXPORT
 void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch) {
 	(reinterpret_cast<SimpleString*>(s))->push_back(ch);
+}
+
+EXPORT
+const char* c_simplestring_bufferaddress(c_simplestring_ptr s) {
+  return (reinterpret_cast<SimpleString*>(s))->__get_buffer_address();
+}
+
+EXPORT
+void c_simplestring_clear(c_simplestring_ptr s) {
+  (reinterpret_cast<SimpleString*>(s))->clear();
 }
 
 #ifdef __cplusplus

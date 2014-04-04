@@ -104,11 +104,38 @@ bool RegexAlternativesIterator::canUseValue() const {
 }
 
 RegexAlternativesIterator::~RegexAlternativesIterator() {
-  for_each(iterators.begin(), iterators.end(),
-    [](Iterator* i) { if (! i->isSingleton()) { delete i; } } );
+	for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+		if ((*i)->isSingleton()) {
+			delete (*i);
+		}
+	}
   iterators.clear();
 }
 
 void RegexAlternativesIterator::updateReferences(IteratorState* iterState) {
-  for_each(iterators.begin(), iterators.end(), [iterState](Iterator* i){i->updateReferences(iterState);});
+	for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+		(*i)->updateReferences(iterState);
+	}
+}
+
+SerializableState* RegexAlternativesIterator::getCurrentState() const
+{
+  SerializableState* s = Iterator::getCurrentState();
+  s->addValue(iter - iterators.begin());
+    
+	for(deque<Iterator*>::const_iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+    s->addValue((*i)->getCurrentState());
+  }
+  return s;
+}
+
+void RegexAlternativesIterator::setCurrentState(const SerializableState* s)
+{
+    Iterator::setCurrentState(s);
+    
+		for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+      (*i)->setCurrentState(s->getChildState((*i)->getId()));
+    }
+    
+    iter = iterators.begin() + s->getValue(0);
 }

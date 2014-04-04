@@ -31,12 +31,13 @@ using namespace std;
 class RegexContainer : public Regex {
 public:
   virtual ~RegexContainer() {
-    for_each(regexObjects.begin(), regexObjects.end(), [](Regex* re)
-      {delete re;});
+		for (deque<Regex*>::iterator re=regexObjects.begin(); re!=regexObjects.end(); ++re) {
+			delete (*re);
+		}
   }
   
   virtual int getMaxSize() const {
-    auto iter = regexObjects.begin();
+    deque<Regex*>::const_iterator iter = regexObjects.begin();
     int __size = 0;
     while (iter != regexObjects.end()) {
       __size += (*iter)->getMaxSize();
@@ -46,11 +47,10 @@ public:
   }
   
   void appendContent(SimpleString& dst, int level) const {
-    for_each(regexObjects.cbegin(), regexObjects.cend(),
-      [&](const Regex* re) {
+		for (deque<Regex*>::const_iterator re=regexObjects.begin(); re!=regexObjects.end(); ++re) {
         appendSpace(dst, level);
-        re->appendRawValue(dst, level);
-    });
+        (*re)->appendRawValue(dst, level);
+		}
   }
   
   unsigned int size() { return getChildren()->size(); }

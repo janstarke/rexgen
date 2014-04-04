@@ -25,6 +25,8 @@
 #include <librexgen/unicode.h>
 #include <librexgen/simplestring.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/state/serializablestate.h>
+#include <librexgen/state/invaliditeratoridexception.h>
 
 #ifdef __cplusplus
 class IteratorState;
@@ -48,6 +50,16 @@ public:
   
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
   virtual bool isSingleton() const { return false; }
+    
+  virtual SerializableState* getCurrentState() const {
+    return new SerializableState(getId());
+  }
+  
+  virtual void setCurrentState(const SerializableState* s) {
+    if (getId() != s->getIteratorId()) {
+      throw InvalidIteratorIdException();
+    }
+  }
 protected:
   
   enum {
@@ -82,6 +94,11 @@ EXPORT
 void c_iterator_value(c_iterator_ptr next, c_simplestring_ptr dst);
 EXPORT
 void c_iterator_delete(c_iterator_ptr i);
+
+EXPORT
+void c_iterator_get_state(c_iterator_ptr i, void** dstptr);
+EXPORT
+void c_iterator_set_state(c_iterator_ptr i, void* dstptr);
 
 #ifdef __cplusplus
 }

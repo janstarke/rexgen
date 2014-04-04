@@ -55,8 +55,8 @@ void CompoundRegex::appendRegex(Regex* regex) {
 
 Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
-  for (auto iter = regexObjects.cbegin();
-       iter != regexObjects.cend(); ++iter) {
+  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
+       iter != regexObjects.end(); ++iter) {
     cri->addChild((*iter)->iterator(state));
   }
   return cri;

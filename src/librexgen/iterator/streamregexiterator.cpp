@@ -15,26 +15,42 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
- */
+*/
 
-#ifndef __rexgen_options_h__
-#define __rexgen_options_h__
-
+#include <librexgen/iterator/streamregexiterator.h>
 #include <cstdio>
-#include <librexgen/unicode/uchar.h>
 
-class RexgenOptions {
-public:
-	RexgenOptions() 
-		: ignore_case(false), 
-			encoding(CHARSET_UTF8),
-			randomize(false),
-			infile(NULL) { }
-  bool ignore_case;
-  charset encoding;
-  bool randomize;
-  FILE* infile;
-};
+using namespace std;
 
-#endif
+void StreamRegexIterator::readNextWord()
+{
+  if (feof(infile)) {
+    __hasNext = false;
+  } else {
+    if (NULL == fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile)) {
+      __hasNext = false;
+    } else {
+      __hasNext = true;
+      unsigned int idx = 0;
+      while (idx < sizeof(buffer)/sizeof(buffer[0])-2
+                  && buffer[idx] != '\r'
+                  && buffer[idx] != '\n') { ++idx; }
+      buffer[idx] = 0;
+    }
+  }
+}
+
+SerializableState* StreamRegexIterator::getCurrentState() const
+{
+  SerializableState* s = Iterator::getCurrentState();
+  const long pos = ftell(infile);
+  s->addValue(pos);
+  return s;
+}
+
+void StreamRegexIterator::setCurrentState(const SerializableState* s)
+{
+    Iterator::setCurrentState(s);
+    fseek(infile, s->getValue(0), SEEK_SET);
+}
 

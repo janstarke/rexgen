@@ -26,7 +26,6 @@
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
-#include <execinfo.h>
 #endif
 
 #ifndef __cplusplus
@@ -208,6 +207,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   c_iterator_ptr iter = NULL;
   int retval = 0;
   const char* regex_str = NULL;
+  void* state = NULL;
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -234,27 +234,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
       }
     }
   }
-
- /* 
-  if (rexgen_operation == display_syntax_tree) {
-    try {
-      regex = parse_regex(regex_str, rexgen_options);
-    } catch (SyntaxError& error) {
-      cout << "Syntax error:" << endl << error.getMessage() << endl;
-      retval = 1;
-      goto cleanup_and_exit;
-    }
-    
-    if (regex == NULL) {
-      return 1;
-    }
-    
-    regex->appendRawValue(syntaxTree);
-    syntaxTree.print(stdout, true);
-    delete regex;
-    return 0;
-  }
-	*/
   
   if (prependBOM) {
 		c_simplestring_push_back(buffer, create_BOM(encoding));
@@ -271,6 +250,10 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		c_iterator_value(iter, buffer);
     c_simplestring_newline(buffer);
 		c_simplestring_print(buffer, stdout, 0);
+    
+    c_iterator_get_state(iter, &state);
+    c_iterator_set_state(iter, state);
+    free(state);
   }
 	c_simplestring_print(buffer, stdout, 1);
   
@@ -282,3 +265,4 @@ cleanup_and_exit:
 #endif
   return retval;
 }
+

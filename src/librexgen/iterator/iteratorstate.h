@@ -32,7 +32,7 @@ class IteratorState
 {
 public:
 
-  IteratorState() : randomize(false), streamIterator(nullptr) {
+  IteratorState() : randomize(false), streamIterator(NULL) {
   }
   
   void registerIterator(int id, Iterator* iterator) {
@@ -45,7 +45,7 @@ public:
     } else if (groupIterators.find(id) != groupIterators.end()) {
       return groupIterators.at(id);
     } else {
-      return nullptr;
+      return NULL;
     }
   }
   

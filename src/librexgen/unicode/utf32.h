@@ -56,7 +56,7 @@ static const uint8_t first_byte_mark[7] = {
     ((v & 0x000000ff) << 24) |
     ((v & 0x0000ff00) << 8)  |
     ((v & 0x00ff0000) >> 8)  |
-    ((v & 0xff000000) || 24);
+    ((v & 0xff000000) >> 24);
   }
   
   static inline uint16_t flip_byteorder16(uint16_t v) {

@@ -1,7 +1,3 @@
-%option prefix="rexgen_"
-%option bison-bridge
-%option bison-locations
-%option reentrant
 %option noyywrap
 %option nounput
 %{
@@ -36,21 +32,25 @@
   #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
   #include <cstdio>
+
+	static RexgenParserContext* global_context = NULL;
   
   #define YY_EXTRA_TYPE RexgenParserContext*
 //  #define YY_USER_ACTION yylloc->first_line = yylinelo
-  
-  #define YY_INPUT(buf,result,max_size) {	\
-    char c;					\
-    (*yyextra->is) >> noskipws >> c;		\
-    if (yyextra->is->eof())			\
-      result = YY_NULL;				\
-    else {					\
-      buf[0] = c;				\
-      result = 1;				\
-    }						\
-  }
-  
+  //#define YY_INPUT(buf,result,max_size) __yy_input(buf, result, max_size)
+
+	#define YY_INPUT(buf, result, max_size) __yy_input(buf, result, max_size)
+	void __yy_input(char* buf, int &result, int /* max_size */) {
+    char c;
+    *(global_context->is) >> noskipws >> c;
+    if (global_context->is->eof())
+      result = YY_NULL;
+    else {
+      buf[0] = c;
+      result = 1;
+    }
+	}
+
   static char hex2bin(const char c) {
     if (c>='0' && c<='9') return c-'0';
     if (c>='a' && c<='f') return (10+c-'a');
@@ -124,14 +124,14 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 %s IN_CLASS
 %%
 
-{ANSICHAR}		{ yylval->character = parseAnsiChar(yytext); return T_ANY_CHAR;}
-{UNICODECHAR}		{ yylval->character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
-{UTF8_2}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_3}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_4}                { yylval->character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{ESCAPED}		{ yylval->character = (char)yytext[1]; return T_ANY_CHAR; }
-{LINEFEED}		{ yylval->character = '\n'; return T_ANY_CHAR; }
-{CARRIAGERETURN}	{ yylval->character = '\r'; return T_ANY_CHAR; }
+{ANSICHAR}		{ yylval.character = parseAnsiChar(yytext); return T_ANY_CHAR;}
+{UNICODECHAR}		{ yylval.character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
+{UTF8_2}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_3}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_4}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{ESCAPED}		{ yylval.character = (char)yytext[1]; return T_ANY_CHAR; }
+{LINEFEED}		{ yylval.character = '\n'; return T_ANY_CHAR; }
+{CARRIAGERETURN}	{ yylval.character = '\r'; return T_ANY_CHAR; }
 "|"			{ return T_PIPE; }
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"			{ BEGIN(INITIAL); return T_END_CLASS; }
@@ -139,24 +139,25 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 ")"			{ return T_END_GROUP; }
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
-{GROUPID}		{ yylval->integer = atoi(&yytext[1]); return T_GROUPID; }
-{STREAM}                { yylval->integer = atoi(&yytext[1]); return T_STREAM; }
+{GROUPID}		{ yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
+{STREAM}                { yylval.integer = atoi(&yytext[1]); return T_STREAM; }
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
-<IN_QUANTIFIER>{DIGIT}+		{ yylval->integer = atoi(yytext); return T_NUMBER; }
-.                       { yylval->character = yytext[0]; return T_ANY_CHAR; }
+<IN_QUANTIFIER>{DIGIT}+		{ yylval.integer = atoi(yytext); return T_NUMBER; }
+.                       { yylval.character = yytext[0]; return T_ANY_CHAR; }
 
 %%
 
 
   void RexgenParserContext::InitScanner() {
-    yylex_init(&scanner);
-    yyset_extra(this, scanner);
+    //yylex_init(&scanner);
+    //yyset_extra(this, scanner);
+		global_context = this;
 #ifdef YYDEBUG
-    rexgen_set_debug(1, scanner);
+    //yyset_debug(1, scanner);
 #endif
   }
   
   void RexgenParserContext::DestroyScanner() {
-    yylex_destroy(scanner);
+    //yylex_destroy(scanner);
   }

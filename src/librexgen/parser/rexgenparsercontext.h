@@ -39,7 +39,7 @@ class RexgenParserContext
 
 public:
   RexgenParserContext(istream* input, const RexgenOptions& __options )
-		: options(__options), streamRegex(nullptr) {
+		: options(__options), streamRegex(NULL) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
