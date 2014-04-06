@@ -22,8 +22,8 @@
 #define ITERATOR_H
 
 #include <assert.h>
-#include <librexgen/unicode.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/simplestring.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/state/serializablestate.h>
 #include <librexgen/state/invaliditeratoridexception.h>
@@ -73,35 +73,5 @@ private:
 };
 
 #endif /* __cplusplus */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void* c_iterator_ptr;
-
-EXPORT
-c_iterator_ptr c_regex_iterator(
-				const char* regex_str,
-				int ignore_case,
-				charset encoding,
-				int randomize,
-				FILE* infile);
-
-EXPORT
-int c_iterator_next(c_iterator_ptr iter);
-EXPORT
-void c_iterator_value(c_iterator_ptr next, c_simplestring_ptr dst);
-EXPORT
-void c_iterator_delete(c_iterator_ptr i);
-
-EXPORT
-void c_iterator_get_state(c_iterator_ptr i, void** dstptr);
-EXPORT
-void c_iterator_set_state(c_iterator_ptr i, void* dstptr);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ITERATOR_H */

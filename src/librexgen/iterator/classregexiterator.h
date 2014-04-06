@@ -21,12 +21,12 @@
 #ifndef CLASSREGEXITERATOR_H
 #define CLASSREGEXITERATOR_H
 
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/iterator/iteratorstate.h>
-#include <librexgen/unicode.h>
-#include <librexgen/unicode/uchar.h>
 #include <vector>
 #include <algorithm>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/iteratorstate.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/uchar.h>
 
 using std::random_shuffle;
 
@@ -43,16 +43,17 @@ public:
 		      );
     virtual ~ClassRegexIterator() {}
   
-  //inline void reset() { fprintf(stderr, "reset\n"); if(randomize) {shuffle();} current = first;}
-    
     inline void value(SimpleString& dst) const {
       dst.fast_append(current->value, current->length);
+			//this->bFirstUsed = true;
     }
     
     bool next();
     
     inline bool hasNext() const { return  (current < last); }
     inline bool canUseValue() const { return (current<=last); }
+		//inline bool needNextFirst() const { return (current == first-1); }
+		//inline bool firstUsed() const { return bFirstUsed; }
     
     virtual void updateReferences(IteratorState* /* iterState */) {}
     
@@ -72,6 +73,7 @@ private:
   buffered_character *current, *first, *last;
   vector<buffered_character> characters;
   const bool randomize;
+	//bool bFirstUsed;
 };
 
 #endif // CLASSREGEXITERATOR_H

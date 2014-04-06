@@ -34,6 +34,7 @@ ClassRegexIterator::ClassRegexIterator(
     last = &(*(characters.rbegin()));
     current = first-1;
     state = usable;
+		//bFirstUsed = false;
 }
 
 bool ClassRegexIterator::next() {

@@ -20,11 +20,11 @@
 #ifndef __regexcontainer_h__
 #define __regexcontainer_h__
 
-#include "regex.h"
 #include <deque>
 #include <algorithm>
-#include "../debug.h"
-#include <librexgen/simplestring.h>
+#include <librexgen/regex/regex.h>
+#include <librexgen/debug.h>
+#include <librexgen/string/simplestring.h>
 
 using namespace std;
 

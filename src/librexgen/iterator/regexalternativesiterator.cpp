@@ -17,14 +17,14 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/iterator/regexalternativesiterator.h>
-#include <librexgen/debug.h>
-#include <librexgen/unicode.h>
 #include <assert.h>
 #include <cstring>
 #include <deque>
 #include <vector>
 #include <set>
+#include <librexgen/iterator/regexalternativesiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/string/unicode.h>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : Iterator(_id), iter(iterators.begin()) {

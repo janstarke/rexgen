@@ -17,11 +17,13 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/api/c/librexgen.h>
-#include <librexgen/version.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <signal.h>
 #include <locale.h>
+#include <librexgen/api/c/librexgen.h>
+#include <generated/version.h>
 #include "terms.h"
 
 #if ! defined(_WIN32)
@@ -198,6 +200,31 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
   return regex;
 }
 
+/* super simple callback function.  Simply does 'same' function as the normal
+ * -f file taken from the StreamIterator::readNextWord() function however, it
+ * is done in a callback. Now another app can write it's own callback function
+ * (such as JtR's wordlist, rules, or Markov modes). This callback allows the
+ * calling program a lot more insight, which may be needed to better implement
+ * things such as state save/restore logic.  With a callback we know that the
+ * and 83 calls to c_iterator_next() first 867412 lines of the file have been
+ * processed against 867413rd line. This make restart a lot quicker, where we
+ * simply skip 867412 lines, then throw away 83 c_iterator_next() calls, and
+ * then start processing.  Without knowing the line count, we would simply have
+ * to call c_iterator_next() many times, to restore the location of the restart.
+ */
+const char *callback() {
+ static char Buf[512];
+ if (feof(infile)) return NULL;
+ if (fgets(Buf, sizeof(Buf)-1, infile) == 0)  return NULL;
+ unsigned int idx = 0;
+ while (idx < sizeof(Buf)-2 && Buf[idx] != '\r' && Buf[idx] != '\n')
+   ++idx;
+ Buf[idx] = 0;
+ return Buf;
+}
+
+
+
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = c_simplestring_new();
   /*
@@ -207,7 +234,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   c_iterator_ptr iter = NULL;
   int retval = 0;
   const char* regex_str = NULL;
-  void* state = NULL;
+  char* state = NULL;
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -238,24 +265,31 @@ int _tmain(int argc, _TCHAR* argv[]) {
   if (prependBOM) {
 		c_simplestring_push_back(buffer, create_BOM(encoding));
   }
-	iter = c_regex_iterator(
-						regex_str, ignore_case, encoding, randomize, infile);
+	iter = c_regex_iterator_cb(
+						regex_str, ignore_case, encoding, randomize, callback);
   if (iter == NULL) {
 		fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
 		retval = 1;
     goto cleanup_and_exit;
-  }
+	}
+
+  /*  to test restore state, simply put the restore string here, AND use exactly the same regex input string * /
+  c_iterator_set_state(iter, "RXS1.1,b,0,3,1,1,2,0,9,0,0,a,1,2,0");
+  */
 
   while (c_iterator_next(iter)) {
 		c_iterator_value(iter, buffer);
-    c_simplestring_newline(buffer);
-		c_simplestring_print(buffer, stdout, 0);
+    c_simplestring_terminate(buffer);
+		printf("%s\n", c_simplestring_bufferaddress(buffer));
     
-    c_iterator_get_state(iter, &state);
-    c_iterator_set_state(iter, state);
-    free(state);
+   /* These show how to save-restore state */
+   c_iterator_get_state(iter, &state);
+   printf ("state = %s\n", state);
+   c_iterator_set_state(iter, state);
+   c_iterator_delete_state_buffer(state);
+   /* */
+   c_simplestring_clear(buffer);
   }
-	c_simplestring_print(buffer, stdout, 1);
   
 cleanup_and_exit:
 	c_simplestring_delete(buffer);

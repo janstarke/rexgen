@@ -18,7 +18,7 @@
 */
 
 
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 
 #ifdef __cplusplus
 extern "C" {

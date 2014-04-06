@@ -21,12 +21,13 @@
 #ifndef SIMPLESTRING_H
 #define SIMPLESTRING_H
 
-#include <librexgen/unicode/uchar.h>
-#include <librexgen/unicode.h>
-#include <librexgen/osdepend.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/osdepend.h>
+#include <librexgen/api/c/simplestring.h>
 
 #ifdef __cplusplus
 
@@ -115,39 +116,5 @@ private:
 };
 
 #endif /* __cplusplus */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void* c_simplestring_ptr;
-
-EXPORT
-c_simplestring_ptr c_simplestring_new();
-
-EXPORT
-void c_simplestring_delete(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_newline(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_terminate(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush);
-
-EXPORT
-void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch);
-
-EXPORT
-const char* c_simplestring_bufferaddress(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_clear(c_simplestring_ptr s);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* SIMPLESTRING_H */

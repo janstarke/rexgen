@@ -20,9 +20,9 @@
 #ifndef __librexgen_lua_h__
 #define __librexgen_lua_h__
 
-#include <librexgen/unicode.h>
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/simplestring.h>
 
 extern "C" {
 #include <lua5.2/lua.h>

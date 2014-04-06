@@ -27,7 +27,7 @@
 #include <cstdio>
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/regex/streamregex.h>
-#include <librexgen/unicode/uchar.h>
+#include <librexgen/string/uchar.h>
 #include <librexgen/rexgen_options.h>
 
 using namespace std;
@@ -68,6 +68,7 @@ public:
   bool ignoreCase() const { return options.ignore_case; }
   charset encoding() const { return options.encoding; }
   FILE* getInFile() const { return options.infile; }
+	callback_fp getStreamCallback() const { return options.stream_callback; }
   
   Regex* getStreamRegex();
 

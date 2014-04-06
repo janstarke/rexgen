@@ -22,13 +22,14 @@
 #define STREAMREGEXITERATOR_H
 
 #include <librexgen/iterator/iterator.h>
+#include <librexgen/api/c/iterator.h>
 
 
 class StreamRegexIterator : public Iterator
 {
 public:
-    StreamRegexIterator(int _id, FILE* in)
-      : Iterator(_id), infile(in) {state = resetted; readNextWord();}
+    StreamRegexIterator(int _id, FILE* in, callback_fp cb)
+      : Iterator(_id), infile(in), callback(cb) {state = resetted; readNextWord();}
     bool next() {
       const bool res = (state == resetted);
       state = usable;
@@ -51,6 +52,7 @@ private:
   void readNextWord();
   
   FILE* infile;
+	callback_fp callback;
   char buffer[4096];
   bool __hasNext;
 };

@@ -21,14 +21,14 @@
 #ifndef CLASSREGEX_H
 #define CLASSREGEX_H
 
-#include "regex.h"
 #include <vector>
 #include <string>
+#include <librexgen/regex/regex.h>
 #include <librexgen/iterator/classregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
-#include <librexgen/unicode.h>
-#include <librexgen/unicode/uchar.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/string/simplestring.h>
 
 using namespace std;
 

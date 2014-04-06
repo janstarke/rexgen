@@ -21,11 +21,11 @@
 #ifndef REGEXALTERNATIVES_H
 #define REGEXALTERNATIVES_H
 
-#include "regex.h"
 #include <deque>
-#include "regexcontainer.h"
-#include "../iterator/iteratorpermuter.h"
-#include <librexgen/simplestring.h>
+#include <librexgen/regex/regex.h>
+#include <librexgen/regex/regexcontainer.h>
+#include <librexgen/iterator/iteratorpermuter.h>
+#include <librexgen/string/simplestring.h>
 
 class RegexAlternatives : public RegexContainer
 {

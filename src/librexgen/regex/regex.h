@@ -20,13 +20,13 @@
 #ifndef __Regex_h__
 #define __Regex_h__
 
+#include <iostream>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/regex/quantifier.h>
 #include <librexgen/iterator/iterator.h>
-#include <iostream>
-#include <librexgen/unicode.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/simplestring.h>
 #include <librexgen/debug.h>
-#include <librexgen/simplestring.h>
 
 typedef enum {
   Compound,

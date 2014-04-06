@@ -22,7 +22,7 @@
 #define GROUPREFERENCE_H
 
 #include <librexgen/regex/regex.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 
 class GroupReference : public Regex
 {

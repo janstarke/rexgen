@@ -21,7 +21,8 @@
 #define __rexgen_options_h__
 
 #include <cstdio>
-#include <librexgen/unicode/uchar.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/api/c/iterator.h>
 
 class RexgenOptions {
 public:
@@ -29,11 +30,13 @@ public:
 		: ignore_case(false), 
 			encoding(CHARSET_UTF8),
 			randomize(false),
-			infile(NULL) { }
+			infile(NULL),
+			stream_callback(NULL){ }
   bool ignore_case;
   charset encoding;
   bool randomize;
   FILE* infile;
+	callback_fp stream_callback;
 };
 
 #endif

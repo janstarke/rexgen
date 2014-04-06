@@ -21,10 +21,10 @@
 #ifndef GROUPREFERENCEITERATOR_H
 #define GROUPREFERENCEITERATOR_H
 
-#include "iterator.h"
-#include <librexgen/regex/regex.h>
 #include <vector>
-#include <librexgen/unicode.h>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/regex/regex.h>
+#include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorstate.h>
 
 

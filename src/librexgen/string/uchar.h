@@ -23,7 +23,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <librexgen/unicode.h>
+#include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
 
 typedef uint8_t charset;

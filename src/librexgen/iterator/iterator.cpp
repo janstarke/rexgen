@@ -40,6 +40,31 @@ c_iterator_ptr c_regex_iterator(
 	options.encoding = encoding;
 	options.randomize = (bool)randomize;
 	options.infile = infile;
+	options.stream_callback = NULL;
+
+	Iterator* iter = NULL;
+	try {
+		iter = regex_iterator(regex_str, options);
+	} catch(SyntaxError& error) {
+		c_rexgen_set_last_error(error.getMessage());
+		return NULL;
+	}
+	return iter;
+}
+
+EXPORT
+c_iterator_ptr c_regex_iterator_cb (
+				const char* regex_str,
+				int ignore_case=0,
+				charset encoding=CHARSET_UTF8,
+				int randomize=0,
+				callback_fp callback=NULL) {
+	RexgenOptions options;
+	options.ignore_case = (bool)ignore_case;
+	options.encoding = encoding;
+	options.randomize = (bool)randomize;
+	options.infile = NULL;
+	options.stream_callback = callback;
 
 	Iterator* iter = NULL;
 	try {
@@ -68,7 +93,7 @@ void c_iterator_delete(c_iterator_ptr i) {
 }
 
 EXPORT
-void c_iterator_get_state(c_iterator_ptr i, void** dstptr)
+void c_iterator_get_statex(c_iterator_ptr i, void** dstptr)
 {
   vector<SerializableState::stateword_t> dst;
   SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
@@ -80,7 +105,7 @@ void c_iterator_get_state(c_iterator_ptr i, void** dstptr)
 }
 
 EXPORT
-void c_iterator_set_state(c_iterator_ptr i, void* dstptr)
+void c_iterator_set_statex(c_iterator_ptr i, void* dstptr)
 {
   size_t words = 0;
   SerializableState* state = new SerializableState(
@@ -88,6 +113,59 @@ void c_iterator_set_state(c_iterator_ptr i, void* dstptr)
   (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
   delete state;
 }
+EXPORT
+void c_iterator_get_state(c_iterator_ptr i, char** dstptr)
+{
+  vector<SerializableState::stateword_t> dst;
+  SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
+  state->serialize(&dst);
+  string sDst = "RXS1.1";
+  char cpTmp[18];
+  for (unsigned n = 0; n < dst.size(); ++n) {
+ sprintf(cpTmp, ",%x", dst[n]);
+ sDst += cpTmp;
+  }
+  *dstptr = (char*)malloc(sDst.length()+1);
+  strcpy(*dstptr, sDst.c_str());
+}
+
+EXPORT
+void c_iterator_delete_state_buffer(char* srcptr)
+{
+ if (srcptr != NULL) {
+	 free(srcptr);
+ }
+}
+
+EXPORT
+void c_iterator_set_state(c_iterator_ptr i, char* srcptr)
+{
+  if (strncmp(srcptr, "RXS1.1,", 7)) {
+    fprintf(stderr, "Warning!  Can not resume state in rexgex library\n");
+    return;
+  }
+
+  size_t words = 0;
+  int count=0;
+  char *cp = strchr(srcptr, ',');
+  while (cp) {
+ ++cp;
+ ++count;
+ cp = strchr(cp, ',');
+  }
+  SerializableState::stateword_t *stp = new SerializableState::stateword_t[count];
+  cp = strchr(srcptr, ',');
+  count = 0;
+  while (cp) {
+ sscanf(cp, ",%x", &stp[count++]);
+ cp = strchr(cp+1, ',');
+  }
+  SerializableState* state = new SerializableState(
+    (SerializableState::stateword_t*)stp, words);
+  (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
+  delete state;
+}
+
 
 #ifdef __cplusplus
 }

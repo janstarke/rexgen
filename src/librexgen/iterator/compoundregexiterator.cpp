@@ -18,13 +18,13 @@
 */
 
 
-#include <librexgen/iterator/compoundregexiterator.h>
-#include <librexgen/debug.h>
-#include <librexgen/unicode.h>
 #include <assert.h>
 #include <algorithm>
 #include <cstdlib>
 #include <set>
+#include <librexgen/iterator/compoundregexiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/string/unicode.h>
 
 CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
   : Iterator(_id), randomize(rnd) {

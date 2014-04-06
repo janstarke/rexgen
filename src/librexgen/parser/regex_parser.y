@@ -208,8 +208,8 @@ GroupReference: T_GROUPID {
 };
 
 Stream: T_STREAM {
-  if (context->getInFile() == NULL) {
-    throw SyntaxError("You cannot use a stream reference without specifying a stream source.");
+  if (context->getInFile() == NULL && context->getStreamCallback() == NULL) {
+    throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.");
   }
    $$ = context->getStreamRegex();
 };

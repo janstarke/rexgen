@@ -14,7 +14,7 @@ endif(MSVC)
 set(LUA_VERSION "5.2")
 
 set(librexgen_major 1)
-set(librexgen_minor 0)
+set(librexgen_minor 1)
 
 find_program(svnversion "svnversion")
 execute_process( COMMAND svnversion
@@ -75,7 +75,7 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
 SET(BUILD_SHARED_LIBS ON)
 
-ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR} -I/usr/local/include/flex")
+ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR} -I ${CMAKE_CURRENT_BINARY_DIR}/librexgen -I/usr/local/include/flex")
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)

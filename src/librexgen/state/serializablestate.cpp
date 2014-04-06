@@ -23,14 +23,6 @@
 #include <algorithm>
 #include <map>
 
-static SerializableState::stateword_t serialize_int(SerializableState::stateword_t i) {
-  return htonl(i);
-}
-
-static SerializableState::stateword_t deserialize_int(SerializableState::stateword_t i) {
-  return ntohl(i);
-}
-
 SerializableState::SerializableState(SerializableState::stateword_t id)
 {
   iterator_id = id;
@@ -42,16 +34,16 @@ SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
   words = 0;
   size_t consumed_words = 0;
   
-  iterator_id = deserialize_int(*vptr++); ++words;
+  iterator_id = *vptr++; ++words;
   
-  size = deserialize_int(*vptr++);        ++words;
+  size = *vptr++;        ++words;
   while (size > 0) {
-    values.push_back(deserialize_int(*vptr++));
+    values.push_back(*vptr++);
     --size;
     ++words;
   }
   
-  size = deserialize_int(*vptr++);        ++words;
+  size = *vptr++;        ++words;
   while (size > 0) {
     addValue(new SerializableState(vptr, consumed_words));
     --size;
@@ -100,16 +92,16 @@ int SerializableState::getChildStatesCount() const
 void SerializableState::serialize(vector<stateword_t>* dst) const
 {
   /* iterator id */
-  dst->push_back(serialize_int(iterator_id));
+  dst->push_back(iterator_id);
   
   /* serialize integer values */
-  dst->push_back(serialize_int(values.size()));
+  dst->push_back(values.size());
 	for(vector<stateword_t>::const_iterator v=values.begin(); v!=values.end(); ++v) {
-    dst->push_back(serialize_int(*v));
+    dst->push_back(*v);
   }
   
   /* serialize child states */
-  dst->push_back(serialize_int(childStates.size()));
+  dst->push_back(childStates.size());
   for (map<int, const SerializableState*>::const_iterator p=childStates.begin(); p!=childStates.end(); ++p) {
     (*p).second->serialize(dst);
   }

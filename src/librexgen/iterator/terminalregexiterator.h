@@ -21,12 +21,12 @@
 #ifndef TERMINALREGEXITERATOR_H
 #define TERMINALREGEXITERATOR_H
 
-#include "iterator.h"
 #include <string.h>
-#include "../debug.h"
 #include <vector>
-#include <librexgen/unicode.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/simplestring.h>
 #include <librexgen/state/invaliditeratoridexception.h>
 
 class TerminalRegexIterator : public Iterator

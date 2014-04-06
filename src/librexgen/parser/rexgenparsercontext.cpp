@@ -88,7 +88,7 @@ const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; 
 
 Regex* RexgenParserContext::getStreamRegex() {
  if (streamRegex == NULL) {
-    streamRegex = new StreamRegex(options.infile);
+    streamRegex = new StreamRegex(options.infile, options.stream_callback);
     return streamRegex;
   } else {
     GroupReference* gr = new GroupReference(streamRegex->getId());

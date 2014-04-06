@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/unicode/uchar.h>
-#include <librexgen/unicode/utf32.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/string/utf32.h>
 
 #ifdef __cplusplus
 extern "C" {

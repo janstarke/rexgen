@@ -23,7 +23,7 @@
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 
 
 class TopIterator : public Iterator

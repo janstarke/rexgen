@@ -21,12 +21,11 @@
 #ifndef STREAMREGEX_H
 #define STREAMREGEX_H
 
+#include <cstdio>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/iterator/iteratorstate.h>
-#include <cstdio>
-
 
 class StreamRegex : public Regex
 {
@@ -47,14 +46,15 @@ public:
     void appendContent(SimpleString& /* dst */, int /* level */) const {}
     RegexType getRegexType() const { return Stream; }
     const char* getXmlTag() const { return "stream"; }
-    StreamRegex(FILE* in)
-      : infile(in) {
+    StreamRegex(FILE* in, callback_fp cb)
+      : infile(in), callback(cb) {
         /* this will not be deleted here, but in the iterator tree */
-        iter = new StreamRegexIterator(getId(), infile);
+        iter = new StreamRegexIterator(getId(), infile, cb);
       }
     
 private:
   FILE* infile;
+	callback_fp callback;
   StreamRegexIterator* iter;
 };
 

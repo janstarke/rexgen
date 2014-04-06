@@ -21,12 +21,12 @@
 #ifndef REGEXALTERNATIVESITERATOR_H
 #define REGEXALTERNATIVESITERATOR_H
 
-#include "iterator.h"
-#include <librexgen/regex/regexalternatives.h>
 #include <algorithm>
 #include <deque>
 #include <vector>
-#include "../unicode.h"
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/regex/regexalternatives.h>
+#include <librexgen/string/unicode.h>
 
 using namespace std;
 

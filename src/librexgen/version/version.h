@@ -17,14 +17,23 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/version.h>
+#ifndef __VERSION_H__
+#define __VERSION_H__
 #include <librexgen/osdepend.h>
-#include <cstdio>
-#include <cstdlib>
 
-static const char* __version="@librexgen_version@";
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define JS_REGEX_MAJOR_VERSION @librexgen_major@
+#define JS_REGEX_MINOR_VERSION @librexgen_minor@
+#define JS_REGEX_BUILD_VERSION @librexgen_build@
 
 EXPORT
-const char* rexgen_version () {
-	return __version;
+const char* rexgen_version();
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* __VERSION_H__ */

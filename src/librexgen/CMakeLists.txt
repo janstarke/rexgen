@@ -36,7 +36,7 @@ endif(USE_LUA)
 set(librexgen_sources
   ${lua_sources}
   debug.cpp 
-  "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp"
+  "${CMAKE_CURRENT_BINARY_DIR}/generated/version.cpp"
   regex/compoundregex.cpp
   regex/regexalternatives.cpp
   regex/classregex.cpp
@@ -51,9 +51,8 @@ set(librexgen_sources
   iterator/classregexiterator.cpp
   iterator/streamregexiterator.cpp
   state/serializablestate.cpp
-  unicode/uchar.cpp
-
-	simplestring.cpp
+  string/uchar.cpp
+	string/simplestring.cpp
 
   parser/rexgenparsercontext.cpp
 
@@ -92,7 +91,8 @@ set_target_properties(${librexgen_filename} PROPERTIES
 	SOVERSION "${librexgen_major}.${librexgen_minor}"
 	VERSION ${librexgen_version})
 
-configure_file( "version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/version_cmake.cpp" )
+configure_file( "version/version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/generated/version.cpp" )
+configure_file( "version/version.h" "${CMAKE_CURRENT_BINARY_DIR}/generated/version.h" )
 if(MSVC)
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTIES COMPILE_FLAGS "/wd4065" )
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTIES COMPILE_FLAGS "/wd4005" )
@@ -104,20 +104,27 @@ install(TARGETS ${librexgen_filename}
 		ARCHIVE DESTINATION "lib"
 		)
 
+SET(INSTALL_INCLUDE_DIR "include/librexgen")
 file(GLOB librexgen_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-install(FILES ${librexgen_headers} DESTINATION include/librexgen )
 file(GLOB regex_headers "${CMAKE_CURRENT_SOURCE_DIR}/regex/*.h")
-install(FILES ${regex_headers} DESTINATION include/librexgen/regex )
 file(GLOB iterator_headers "${CMAKE_CURRENT_SOURCE_DIR}/iterator/*.h")
-install(FILES ${iterator_headers} DESTINATION include/librexgen/iterator )
 file(GLOB parser_headers "${CMAKE_CURRENT_SOURCE_DIR}/parser/*.h")
-install(FILES ${parser_headers} DESTINATION include/librexgen/parser )
-file(GLOB unicode_headers "${CMAKE_CURRENT_SOURCE_DIR}/unicode/*.h")
-install(FILES ${unicode_headers} DESTINATION include/librexgen/unicode )
+file(GLOB string_headers "${CMAKE_CURRENT_SOURCE_DIR}/string/*.h")
 file(GLOB state_headers "${CMAKE_CURRENT_SOURCE_DIR}/state/*.h")
-install(FILES ${state_headers} DESTINATION include/librexgen/state )
 file(GLOB capi_headers "${CMAKE_CURRENT_SOURCE_DIR}/api/c/*.h")
-install(FILES ${capi_headers} DESTINATION include/librexgen/api/c )
+file(GLOB cxxapi_headers "${CMAKE_CURRENT_SOURCE_DIR}/api/cxx/*.h")
+file(GLOB luaapi_headers "${CMAKE_CURRENT_SOURCE_DIR}/api/lua/*.h")
+file(GLOB generated_headers "${CMAKE_CURRENT_BINARY_DIR}/generated/*.h")
+install(FILES ${librexgen_headers} DESTINATION ${INSTALL_INCLUDE_DIR} )
+install(FILES ${regex_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/regex )
+install(FILES ${iterator_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/iterator )
+install(FILES ${parser_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/parser )
+install(FILES ${string_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/string )
+install(FILES ${state_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/state )
+install(FILES ${capi_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/api/c )
+install(FILES ${cxxapi_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/api/cxx )
+install(FILES ${luaapi_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/api/lua )
+install(FILES ${generated_headers} DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 if (USE_LUA)
   if (MSVC)

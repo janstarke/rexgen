@@ -20,12 +20,12 @@
 #ifndef __TerminalRegex_h__
 #define __TerminalRegex_h__
 
+#include <vector>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/terminalregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
-#include <librexgen/unicode.h>
-#include <librexgen/unicode/uchar.h>
-#include <vector>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/uchar.h>
 
 using std::vector;
 

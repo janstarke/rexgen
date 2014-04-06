@@ -17,15 +17,15 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <cstdio>
 #include <librexgen/api/c/librexgen.h>
-#include <librexgen/unicode/uchar.h>
+#include <librexgen/string/uchar.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 #include <librexgen/api/cxx/librexgen.h>
 #include <librexgen/parser/syntaxerror.h>
-#include <cstdio>
 
 using namespace std;
 

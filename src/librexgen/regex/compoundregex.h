@@ -21,12 +21,12 @@
 #ifndef COMPOUNDREGEX_H
 #define COMPOUNDREGEX_H
 
-#include "regex.h"
 #include <deque>
-#include "regexcontainer.h"
-#include "../iterator/iteratorpermuter.h"
-#include "../unicode.h"
-#include <librexgen/simplestring.h>
+#include <librexgen/regex/regex.h>
+#include <librexgen/regex/regexcontainer.h>
+#include <librexgen/iterator/iteratorpermuter.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/string/simplestring.h>
 
 using namespace std;
 

@@ -20,9 +20,11 @@
 #ifndef __librexgen_api_c_h__
 #define __librexgen_api_c_h__
 
-#include <librexgen/unicode/uchar.h>
-#include <librexgen/simplestring.h>
-#include <librexgen/iterator/iterator.h>
+#include <stdio.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/api/c/simplestring.h>
+#include <librexgen/api/c/iterator.h>
+#include <generated/version.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -21,10 +21,10 @@
 #ifndef ITERATORPERMUTER_H
 #define ITERATORPERMUTER_H
 
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/unicode.h>
 #include <vector>
 #include <algorithm>
+#include <librexgen/iterator/iterator.h>
+#include <librexgen/string/unicode.h>
 
 using namespace std;
 

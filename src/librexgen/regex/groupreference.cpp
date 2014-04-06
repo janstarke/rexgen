@@ -21,7 +21,7 @@
 #include <librexgen/regex/groupreference.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/groupreferenceiterator.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 
 Iterator* GroupReference::singleIterator(IteratorState* /* state */) const {
   assert(groupRef != NULL);

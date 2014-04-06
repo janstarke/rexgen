@@ -17,10 +17,10 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/regex/classregex.h>
-#include <librexgen/unicode/uchar.h>
 #include <algorithm>
 #include <vector>
+#include <librexgen/regex/classregex.h>
+#include <librexgen/string/uchar.h>
 
 bool ClassRegex::contains(const uchar_t& ch) const
 {
