@@ -93,27 +93,6 @@ void c_iterator_delete(c_iterator_ptr i) {
 }
 
 EXPORT
-void c_iterator_get_statex(c_iterator_ptr i, void** dstptr)
-{
-  vector<SerializableState::stateword_t> dst;
-  SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
-  state->serialize(&dst);
-  *dstptr = malloc(dst.size() * sizeof(SerializableState::stateword_t));
-  if (*dstptr != NULL) {
-    memcpy(*dstptr, &dst[0], dst.size() * sizeof(SerializableState::stateword_t));
-  }
-}
-
-EXPORT
-void c_iterator_set_statex(c_iterator_ptr i, void* dstptr)
-{
-  size_t words = 0;
-  SerializableState* state = new SerializableState(
-    (SerializableState::stateword_t*)dstptr, words);
-  (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
-  delete state;
-}
-EXPORT
 void c_iterator_get_state(c_iterator_ptr i, char** dstptr)
 {
   vector<SerializableState::stateword_t> dst;
@@ -122,11 +101,12 @@ void c_iterator_get_state(c_iterator_ptr i, char** dstptr)
   string sDst = "RXS1.1";
   char cpTmp[18];
   for (unsigned n = 0; n < dst.size(); ++n) {
- sprintf(cpTmp, ",%x", dst[n]);
- sDst += cpTmp;
+		snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%x", dst[n]);
+ 		sDst += cpTmp;
   }
   *dstptr = (char*)malloc(sDst.length()+1);
-  strcpy(*dstptr, sDst.c_str());
+	memset(*dstptr, 0, sDst.length()+1);
+  strncpy(*dstptr, sDst.c_str(), sDst.length());
 }
 
 EXPORT

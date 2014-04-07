@@ -273,9 +273,12 @@ int _tmain(int argc, _TCHAR* argv[]) {
     goto cleanup_and_exit;
 	}
 
-  /*  to test restore state, simply put the restore string here, AND use exactly the same regex input string * /
-  c_iterator_set_state(iter, "RXS1.1,b,0,3,1,1,2,0,9,0,0,a,1,2,0");
-  */
+  /*  to test restore state, simply put the restore string here, AND use exactly the same regex input string */
+  /* c_iterator_set_state(iter, "RXS1.1,b,0,3,1,1,2,0,9,0,0,a,1,1,0"); */
+  /* */
+  c_iterator_get_state(iter, &state);
+  printf ("initial state = %s\n", state);
+  c_iterator_delete_state_buffer(state);
 
   while (c_iterator_next(iter)) {
 		c_iterator_value(iter, buffer);
@@ -284,12 +287,16 @@ int _tmain(int argc, _TCHAR* argv[]) {
     
    /* These show how to save-restore state */
    c_iterator_get_state(iter, &state);
-   printf ("state = %s\n", state);
+   printf ("state         = %s\n", state);
    c_iterator_set_state(iter, state);
    c_iterator_delete_state_buffer(state);
    /* */
    c_simplestring_clear(buffer);
   }
+
+  c_iterator_get_state(iter, &state);
+  printf ("final state   = %s\n", state);
+  c_iterator_delete_state_buffer(state);
   
 cleanup_and_exit:
 	c_simplestring_delete(buffer);

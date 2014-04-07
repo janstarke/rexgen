@@ -31,7 +31,7 @@ using namespace std;
 class SerializableState
 {
 public:
-  typedef uint32_t stateword_t;
+  typedef int32_t stateword_t;
   SerializableState(stateword_t id);
   SerializableState(const stateword_t* vptr, size_t& words);
   ~SerializableState();
