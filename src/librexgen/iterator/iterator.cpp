@@ -101,7 +101,7 @@ void c_iterator_get_state(c_iterator_ptr i, char** dstptr)
   string sDst = "RXS1.1";
   char cpTmp[18];
   for (unsigned n = 0; n < dst.size(); ++n) {
-		snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%x", dst[n]);
+		snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", dst[n]);
  		sDst += cpTmp;
   }
   *dstptr = (char*)malloc(sDst.length()+1);
@@ -137,7 +137,7 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr)
   cp = strchr(srcptr, ',');
   count = 0;
   while (cp) {
- sscanf(cp, ",%x", &stp[count++]);
+ sscanf(cp, ",%d", &stp[count++]);
  cp = strchr(cp+1, ',');
   }
   SerializableState* state = new SerializableState(
