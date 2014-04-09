@@ -63,7 +63,6 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
   IteratorState* state = new IteratorState();
   state->setRandomize(options.randomize);
   Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
-  
   // register regex alternatives
   iter->updateReferences(state);
   

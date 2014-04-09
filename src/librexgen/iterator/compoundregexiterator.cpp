@@ -52,7 +52,14 @@ void CompoundRegexIterator::updateReferences(IteratorState* iterState) {
 }
 
 bool CompoundRegexIterator::next() {
-  if (state == resetted) { state = usable; return true; }
+  if (state == resetted) {
+		state = usable;
+		bool res = false;
+    for (vector<Iterator*>::iterator iter = iterators.begin(); iter != iterators.end(); ++iter) {
+			res |= (*iter)->next();
+		} 
+		return res;
+	}
   if (randomize) {
     for (vector<unsigned int>::iterator rnd_i = rnd_iterators.begin(); rnd_i != rnd_iterators.end(); ++rnd_i) {
       if (iterators[*rnd_i]->next()) {
@@ -94,7 +101,7 @@ void CompoundRegexIterator::addChild(Iterator* i) {
   }
   iterators.push_back(i);
   //i->reset();
-  i->next();
+  //i->next();
 }
 
 SerializableState* CompoundRegexIterator::getCurrentState() const

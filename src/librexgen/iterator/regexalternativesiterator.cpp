@@ -43,7 +43,11 @@ bool RegexAlternativesIterator::next() {
 
   if (state == resetted) {
     state = usable;
-    RETURN(true);
+		bool res = false;
+		for(deque<Iterator*>::iterator i = iterators.begin(); i != iterators.end(); ++i) {
+			res |= ((*i)->next());
+		}
+    RETURN(res);
   }
 
   if ((*iter)->next()) {
@@ -54,7 +58,7 @@ bool RegexAlternativesIterator::next() {
     iter = iterators.begin();
     RETURN(false);
   }
-  (*iter)->next();
+  //(*iter)->next();
   RETURN (true);
 }
 
@@ -89,7 +93,7 @@ void RegexAlternativesIterator::addChild(Iterator* i) {
   ENTER_METHOD;
   iterators.push_back(i);
   iter = iterators.begin();
-  i->next();
+//  i->next();
   LEAVE_METHOD;
 }
 

@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cstdio>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/string/unicode.h>
