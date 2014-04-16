@@ -39,17 +39,16 @@
 //  #define YY_USER_ACTION yylloc->first_line = yylinelo
   //#define YY_INPUT(buf,result,max_size) __yy_input(buf, result, max_size)
 
-	#define YY_INPUT(buf, result, max_size) __yy_input(buf, result, max_size)
-	void __yy_input(char* buf, int &result, int /* max_size */) {
-    char c;
-    *(global_context->is) >> noskipws >> c;
-    if (global_context->is->eof())
-      result = YY_NULL;
-    else {
-      buf[0] = c;
-      result = 1;
-    }
-	}
+	#define YY_INPUT(buf, result, max_size) do {  \
+    char c;                                     \
+    *(global_context->is) >> noskipws >> c;     \
+    if (global_context->is->eof())              \
+      result = YY_NULL;                         \
+    else {                                      \
+      buf[0] = c;                               \
+      result = 1;                               \
+    }                                           \
+	} while (0);
 
   static char hex2bin(const char c) {
     if (c>='0' && c<='9') return c-'0';

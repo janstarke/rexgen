@@ -223,8 +223,6 @@ const char *callback() {
  return Buf;
 }
 
-
-
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = c_simplestring_new();
   /*
@@ -234,7 +232,9 @@ int _tmain(int argc, _TCHAR* argv[]) {
   c_iterator_ptr iter = NULL;
   int retval = 0;
   const char* regex_str = NULL;
+#ifdef DEBUG_STATE
   char* state = NULL;
+#endif /* DEBUG_STATE */
   
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -276,27 +276,32 @@ int _tmain(int argc, _TCHAR* argv[]) {
   /*  to test restore state, simply put the restore string here, AND use exactly the same regex input string */
   /* c_iterator_set_state(iter, "RXS1.1,b,0,3,1,1,2,0,9,0,0,a,1,1,0"); */
   /* */
+#ifdef DEBUG_STATE
   c_iterator_get_state(iter, &state);
   printf ("initial state = %s\n", state);
   c_iterator_delete_state_buffer(state);
+#endif /* DEBUG_STATE */
 
   while (c_iterator_next(iter)) {
 		c_iterator_value(iter, buffer);
     c_simplestring_terminate(buffer);
 		printf("%s\n", c_simplestring_bufferaddress(buffer));
     
-   /* These show how to save-restore state */
+#ifdef DEBUG_STATE
+  /* These show how to save-restore state */
    c_iterator_get_state(iter, &state);
    printf ("state         = %s\n", state);
    c_iterator_set_state(iter, state);
    c_iterator_delete_state_buffer(state);
-   /* */
+#endif /* DEBUG_STATE */
    c_simplestring_clear(buffer);
   }
 
+#ifdef DEBUG_STATE
   c_iterator_get_state(iter, &state);
   printf ("final state   = %s\n", state);
   c_iterator_delete_state_buffer(state);
+#endif /* DEBUG_STATE */
   
 cleanup_and_exit:
 	c_simplestring_delete(buffer);
