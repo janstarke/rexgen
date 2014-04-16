@@ -29,6 +29,11 @@ extern "C" {
 #define JS_REGEX_MINOR_VERSION @librexgen_minor@
 #define JS_REGEX_BUILD_VERSION @librexgen_build@
 
+#define xstr(s) str(s)
+#define str(s) #s
+
+#define JS_REGEX_RELEASE xstr(JS_REGEX_MAJOR_VERSION) "." xstr(JS_REGEX_MINOR_VERSION)
+
 EXPORT
 const char* rexgen_version();
 

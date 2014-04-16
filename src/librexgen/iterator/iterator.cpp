@@ -23,6 +23,7 @@
 #include <librexgen/api/c/librexgen.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
+#include <librexgen/version/version.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,7 +99,7 @@ void c_iterator_get_state(c_iterator_ptr i, char** dstptr)
   vector<SerializableState::stateword_t> dst;
   SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
   state->serialize(&dst);
-  string sDst = "RXS1.1";
+  string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
   for (unsigned n = 0; n < dst.size(); ++n) {
 		snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", dst[n]);
@@ -120,7 +121,7 @@ void c_iterator_delete_state_buffer(char* srcptr)
 EXPORT
 void c_iterator_set_state(c_iterator_ptr i, char* srcptr)
 {
-  if (strncmp(srcptr, "RXS1.1,", 7)) {
+  if (strncmp(srcptr, "RXS" JS_REGEX_RELEASE ",", 7)) {
     fprintf(stderr, "Warning!  Can not resume state in rexgex library\n");
     return;
   }
