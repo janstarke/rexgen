@@ -42,10 +42,13 @@ public:
   Iterator* getIterator(int id) const {
     if (id == -1) {
       return getStreamIterator();
-    } else if (groupIterators.find(id) != groupIterators.end()) {
-      return groupIterators.at(id);
+    } else {
+      map<int, Iterator*>::const_iterator iter = groupIterators.find(id);
+      if (iter != groupIterators.end()) {
+      return iter->second;
     } else {
       return NULL;
+    }
     }
   }
   

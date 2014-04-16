@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 2.8.12)
 
 if(MSVC)
 	set(CPACK_GENERATOR "ZIP")
+elseif(CYGWIN)
+	set(CPACK_GENERATOR "ZIP")
 elseif(APPLE)
 	set(CPACK_GENERATOR "TGZ")
 else()

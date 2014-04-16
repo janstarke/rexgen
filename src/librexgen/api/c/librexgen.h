@@ -24,7 +24,7 @@
 #include <librexgen/string/uchar.h>
 #include <librexgen/api/c/simplestring.h>
 #include <librexgen/api/c/iterator.h>
-#include <generated/version.h>
+#include <librexgen/version.h>
 
 #ifdef __cplusplus
 extern "C" {

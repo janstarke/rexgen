@@ -81,7 +81,11 @@ RexgenParserContext::~RexgenParserContext() {
    groups[re->getGroupId()] = re;
  }
  Regex* RexgenParserContext::getGroupRegex(int id) const {
-   return groups.at(id);
+   map<int, Regex*>::const_iterator iter = groups.find(id);
+   if (iter != groups.end()) {
+     return iter->second;
+   }
+   return NULL;
  }
  
 const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }

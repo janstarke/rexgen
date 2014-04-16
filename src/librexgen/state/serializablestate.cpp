@@ -75,7 +75,11 @@ SerializableState::stateword_t SerializableState::getValue(int idx) const
 
 const SerializableState* SerializableState::getChildState(int id) const
 {
-  return childStates.at(id);
+  map<int, const SerializableState*>::const_iterator iter = childStates.find(id);
+  if (iter != childStates.end()) {
+    return iter->second;
+  }
+  return NULL;
 }
 
 int SerializableState::getValuesCount() const
