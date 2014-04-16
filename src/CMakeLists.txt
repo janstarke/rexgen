@@ -45,7 +45,6 @@ include(CPack)
 
 set(librexgen_libname librexgen-${librexgen_version})
 set(librexgen_filename "lib${prj}" )
-#set(librexgen_filename "${prj}${CMAKE_SHARED_LIBRARY_SUFFIX}.${librexgen_version}" )
 
 message("creating ${prj} ${librexgen_version}")
 
@@ -75,7 +74,10 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
 SET(BUILD_SHARED_LIBS ON)
 
-ADD_DEFINITIONS("-I${PROJECT_SOURCE_DIR} -I ${CMAKE_CURRENT_BINARY_DIR}/librexgen -I/usr/local/include/flex")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/librexgen" "/usr/local/include/flex")
+if(MSVC)
+INCLUDE_DIRECTORIES("D:/Tools/GnuWin32/include")
+endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)

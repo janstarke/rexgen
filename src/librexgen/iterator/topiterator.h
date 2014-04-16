@@ -34,9 +34,17 @@ public:
   }
   
   ~TopIterator() {
-    delete child;
     if (state->getStreamIterator() != NULL) {
+      
+      /* this happens when we only have a StreamIterator */
+      if (child == state->getStreamIterator()) {
+        child = NULL;
+      }
       delete (state->getStreamIterator());
+    }
+
+    if (child != NULL) {
+      delete child;
     }
   }
   bool next() {

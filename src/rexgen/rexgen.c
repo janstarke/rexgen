@@ -214,9 +214,11 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  */
 const char *callback() {
  static char Buf[512];
- if (feof(infile)) return NULL;
- if (fgets(Buf, sizeof(Buf)-1, infile) == 0)  return NULL;
  unsigned int idx = 0;
+ if (feof(infile)) return NULL;
+ if (fgets(Buf, sizeof(Buf)-1, infile) == 0) {
+   return NULL;
+ }
  while (idx < sizeof(Buf)-2 && Buf[idx] != '\r' && Buf[idx] != '\n')
    ++idx;
  Buf[idx] = 0;

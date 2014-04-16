@@ -19,7 +19,6 @@
  */
 
 #include "serializablestate.h"
-#include "arpa/inet.h"
 #include <algorithm>
 #include <map>
 

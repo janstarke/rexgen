@@ -35,7 +35,7 @@ int get_level() {
 
 char* spaces(char c, int s) {
   if (((size_t)s) > (sizeof(space_buffer)/sizeof(space_buffer[0])-1)) {
-    return NULL;
+    return 0;
   }
   for (int n = 0; n < s; ++n) {
     space_buffer[n] = c;

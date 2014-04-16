@@ -29,7 +29,9 @@ class StreamRegexIterator : public Iterator
 {
 public:
     StreamRegexIterator(int _id, FILE* in, callback_fp cb)
-      : Iterator(_id), infile(in), callback(cb) {state = resetted; readNextWord();}
+      : Iterator(_id), infile(in), callback(cb) {
+        state = resetted; readNextWord();
+    }
     bool next() {
       const bool res = (state == resetted);
       state = usable;
