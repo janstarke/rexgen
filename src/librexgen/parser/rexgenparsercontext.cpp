@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -23,75 +23,79 @@
 #include <utility>
 
 void RexgenParserContext::updateAllGroupReferences() {
-	for(map<int, Regex*>::const_iterator p=groups.begin(); p!=groups.end(); ++p) {
+  for (map<int, Regex*>::const_iterator p=groups.begin(); p!=groups.end(); ++p) {
     updateGroupReferences((*p).second);
   }
 }
 
 void RexgenParserContext::updateGroupReferences(const Regex* re) {
-	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-			ref!=groupRefs.end(); ++ref) {
-		for (set<GroupReference*>::iterator gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
-			if ((*ref).first == re->getGroupId()) {
-				(*gr)->setRegex(re);
-			}
-		}
-	}
+  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+       ref!=groupRefs.end(); ++ref) {
+    for (set<GroupReference*>::iterator gr=(*ref).second->begin();
+         gr!=(*ref).second->end(); ++gr) {
+      if ((*ref).first == re->getGroupId()) {
+        (*gr)->setRegex(re);
+      }
+    }
+  }
 }
 
 bool RexgenParserContext::hasInvalidGroupReferences() const {
   bool invalids = false;
-	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-			ref!=groupRefs.end(); ++ref) {
-		for (set<GroupReference*>::iterator gr=(*ref).second->begin(); gr!=(*ref).second->end(); ++gr) {
-			invalids |= ((*gr)->getRegex() == NULL);
-		}
-	}
+  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+       ref!=groupRefs.end(); ++ref) {
+    for (set<GroupReference*>::iterator gr=(*ref).second->begin();
+         gr!=(*ref).second->end(); ++gr) {
+      invalids |= ((*gr)->getRegex() == NULL);
+    }
+  }
   return invalids;
 }
 
 RexgenParserContext::~RexgenParserContext() {
   DestroyScanner();
 
-	for(map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-			ref!=groupRefs.end(); ++ref) {
-		delete (*ref).second;
-	}
+  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
+       ref!=groupRefs.end(); ++ref) {
+    delete (*ref).second;
+  }
 }
 
- void RexgenParserContext::registerGroupReference(GroupReference* gr) {
-	 /* this is neeeded to later set the refered Regex */
-	 map<int, set<GroupReference*>*>::iterator references = groupRefs.find(gr->getGroupId());
-	 if (references == groupRefs.end()) {
-		 groupRefs[gr->getGroupId()] = new set<GroupReference* >();
-		 references = groupRefs.find(gr->getGroupId());
-	 }
-	 (*references).second->insert(gr);
- }
-  
- const set<GroupReference*>* RexgenParserContext::getGroupReferences(int id) const {
-   map<int, set<GroupReference*>*>::const_iterator references = groupRefs.find(id);
-	 if (references == groupRefs.end()) {
-		 return NULL;
-	 }
-	 return (*references).second;
- }
-  
- void RexgenParserContext::registerGroup(Regex* re) {
-   groups[re->getGroupId()] = re;
- }
- Regex* RexgenParserContext::getGroupRegex(int id) const {
-   map<int, Regex*>::const_iterator iter = groups.find(id);
-   if (iter != groups.end()) {
-     return iter->second;
-   }
-   return NULL;
- }
- 
+void RexgenParserContext::registerGroupReference(GroupReference* gr) {
+  /* this is neeeded to later set the refered Regex */
+  map<int, set<GroupReference*>*>::iterator references = groupRefs.find(
+        gr->getGroupId());
+  if (references == groupRefs.end()) {
+    groupRefs[gr->getGroupId()] = new set<GroupReference* >();
+    references = groupRefs.find(gr->getGroupId());
+  }
+  (*references).second->insert(gr);
+}
+
+const set<GroupReference*>* RexgenParserContext::getGroupReferences(
+  int id) const {
+  map<int, set<GroupReference*>*>::const_iterator references = groupRefs.find(id);
+  if (references == groupRefs.end()) {
+    return NULL;
+  }
+  return (*references).second;
+}
+
+void RexgenParserContext::registerGroup(Regex* re) {
+  groups[re->getGroupId()] = re;
+}
+Regex* RexgenParserContext::getGroupRegex(int id) const {
+  map<int, Regex*>::const_iterator iter = groups.find(id);
+  if (iter != groups.end()) {
+    return iter->second;
+  }
+  return NULL;
+}
+
 const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }
 
 Regex* RexgenParserContext::getStreamRegex() {
- if (streamRegex == NULL) {
+  if (streamRegex == NULL) {
     streamRegex = new StreamRegex(options.infile, options.stream_callback);
     return streamRegex;
   } else {

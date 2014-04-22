@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -38,37 +38,42 @@ CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
 }
 
 CompoundRegexIterator::~CompoundRegexIterator() {
-  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
     if (! (*iter)->isSingleton()) {
-			delete (*iter);
-		}
-	}
+      delete (*iter);
+    }
+  }
 }
 
 void CompoundRegexIterator::updateReferences(IteratorState* iterState) {
-  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-  	(*iter)->updateReferences(iterState);
-	}
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
+    (*iter)->updateReferences(iterState);
+  }
 }
 
 bool CompoundRegexIterator::next() {
   if (state == resetted) {
-		state = usable;
-		bool res = false;
-    for (vector<Iterator*>::iterator iter = iterators.begin(); iter != iterators.end(); ++iter) {
-			res |= (*iter)->next();
-		} 
-		return res;
-	}
+    state = usable;
+    bool res = false;
+    for (vector<Iterator*>::iterator iter = iterators.begin();
+         iter != iterators.end(); ++iter) {
+      res |= (*iter)->next();
+    }
+    return res;
+  }
   if (randomize) {
-    for (vector<unsigned int>::iterator rnd_i = rnd_iterators.begin(); rnd_i != rnd_iterators.end(); ++rnd_i) {
+    for (vector<unsigned int>::iterator rnd_i = rnd_iterators.begin();
+         rnd_i != rnd_iterators.end(); ++rnd_i) {
       if (iterators[*rnd_i]->next()) {
         return true;
       }
     }
     return false;
   }
-  for (vector<Iterator*>::iterator i = iterators.begin(); i != iterators.end(); ++i) {
+  for (vector<Iterator*>::iterator i = iterators.begin(); i != iterators.end();
+       ++i) {
     if ((*i)->next()) {
       return true;
     }
@@ -78,9 +83,10 @@ bool CompoundRegexIterator::next() {
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
   //assert(canUseValue());
-  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-  	(*iter)->value(dst);
-	}
+  for (vector<Iterator*>::const_iterator iter=iterators.begin();
+       iter!=iterators.end(); ++iter) {
+    (*iter)->value(dst);
+  }
 }
 
 bool CompoundRegexIterator::hasNext() const {
@@ -88,7 +94,8 @@ bool CompoundRegexIterator::hasNext() const {
   if (state == not_usable) {
     return false;
   }
-  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  for (vector<Iterator*>::const_iterator iter=iterators.begin();
+       iter!=iterators.end(); ++iter) {
     has_next |= (*iter)->hasNext();
   }
   return has_next;
@@ -104,21 +111,21 @@ void CompoundRegexIterator::addChild(Iterator* i) {
   //i->next();
 }
 
-SerializableState* CompoundRegexIterator::getCurrentState() const
-{
+SerializableState* CompoundRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  for (vector<Iterator*>::const_iterator iter=iterators.begin();
+       iter!=iterators.end(); ++iter) {
     s->addValue((*iter)->getCurrentState());
   }
   return s;
 }
 
-void CompoundRegexIterator::setCurrentState(const SerializableState* s)
-{
-    Iterator::setCurrentState(s);
-    
-		for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-      (*iter)->setCurrentState(s->getChildState((*iter)->getId()));
-    }
+void CompoundRegexIterator::setCurrentState(const SerializableState* s) {
+  Iterator::setCurrentState(s);
+
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
+    (*iter)->setCurrentState(s->getChildState((*iter)->getId()));
+  }
 }
 

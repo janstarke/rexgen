@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -31,7 +31,7 @@ using namespace std;
 int yyparse(RexgenParserContext* context);
 
 Regex* parse_regex(RexgenParserContext* context) {
-  
+
   try {
     if (yyparse(context) != 0) {
       return NULL;
@@ -39,7 +39,7 @@ Regex* parse_regex(RexgenParserContext* context) {
   } catch (SyntaxError& exc) {
     cerr << exc.getMessage() << endl;
     return NULL;
-  }  
+  }
   if (context->hasInvalidGroupReferences()) {
     throw SyntaxError("This regular expression has an invalid back reference");
   }
@@ -56,7 +56,7 @@ Regex* parse_regex(const char* regex, const RexgenOptions& options) {
 
 EXPORT
 Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
-	Regex* re = parse_regex(regex, options);
+  Regex* re = parse_regex(regex, options);
   if (re == NULL) {
     return NULL;
   }
@@ -65,7 +65,7 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
   Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
   // register regex alternatives
   iter->updateReferences(state);
-  
+
   // update references
   iter->updateReferences(state);
   return iter;

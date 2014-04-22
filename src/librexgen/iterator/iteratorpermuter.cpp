@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -21,75 +21,72 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <set>
 
-IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max)
-: Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is),
-hasNextElement(true), occurs(min_occurs)
-{
+IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is,
+                                   unsigned int min, unsigned int max)
+  : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is),
+    hasNextElement(true), occurs(min_occurs) {
   for (unsigned int n=0; n<max_occurs; ++n) {
     iterators.push_back(regex->singleIterator(iteratorState));
   }
   init();
 }
 
-IteratorPermuter::~IteratorPermuter()
-{
-	for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-		if ((*iter)->isSingleton()) {
-			delete (*iter);
-		}
-	}
+IteratorPermuter::~IteratorPermuter() {
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
+    if ((*iter)->isSingleton()) {
+      delete (*iter);
+    }
+  }
 }
 
-void IteratorPermuter::value(SimpleString& dst) const
-{
+void IteratorPermuter::value(SimpleString& dst) const {
   ENTER_METHOD;
-  for (unsigned int n=0; n<occurs; ++n) {    
+  for (unsigned int n=0; n<occurs; ++n) {
     iterators[n]->value(dst);
   }
   LEAVE_METHOD;
 }
 
-bool IteratorPermuter::hasNext() const
-{
+bool IteratorPermuter::hasNext() const {
   ENTER_METHOD;
-  
+
   if (state == resetted) {
     RETURN(true);
   }
-  
+
   if (occurs < max_occurs) {
     RETURN(true);
   }
-  
+
   RETURN(existsIteratorWithNextElement());
 }
 
-bool IteratorPermuter::next()
-{
+bool IteratorPermuter::next() {
   ENTER_METHOD;
-  
+
   /* special case handling for resetted state */
   if (state == resetted) { state = usable; RETURN(true); }
-  
+
   /* special case handling for quantifier which starts with 0, i.e. {0,3} */
   if (state == usable && occurs == 0) { ++occurs; RETURN(true); }
-  
+
   unsigned int n = 0;
-  for (; n<occurs; ++n) { if (iterators[n]->next()) break; }
+  for (; n<occurs; ++n) { if (iterators[n]->next()) { break; } }
   if (n == max_occurs) { occurs = min_occurs; RETURN(false); }
   if (n == occurs)  { ++occurs; }
   RETURN(true);
 }
 
-void IteratorPermuter::init()
-{
+void IteratorPermuter::init() {
   ENTER_METHOD;
 
   bool has_next = false;
-	for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-		(*iter)->next();
-		has_next |= (*iter)->hasNext();
-	}
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
+    (*iter)->next();
+    has_next |= (*iter)->hasNext();
+  }
   hasNextElement = has_next;
 
   occurs = min_occurs;
@@ -98,10 +95,10 @@ void IteratorPermuter::init()
   LEAVE_METHOD;
 }
 
-bool IteratorPermuter::existsIteratorWithNextElement() const
-{
+bool IteratorPermuter::existsIteratorWithNextElement() const {
   ENTER_METHOD;
-  for(vector<Iterator*>::const_iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
+  for (vector<Iterator*>::const_iterator iter=iterators.begin();
+       iter!=iterators.end(); ++iter) {
     if ((*iter)->hasNext()) {
       RETURN( true );
     }
@@ -109,10 +106,10 @@ bool IteratorPermuter::existsIteratorWithNextElement() const
   RETURN(false);
 }
 
-void IteratorPermuter::updateReferences(IteratorState* iterState)
-{
-  for(vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end(); ++iter) {
-  	(*iter)->updateReferences(iterState);
-	}
+void IteratorPermuter::updateReferences(IteratorState* iterState) {
+  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
+       ++iter) {
+    (*iter)->updateReferences(iterState);
+  }
 }
 

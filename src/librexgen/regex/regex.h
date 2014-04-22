@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -40,60 +40,61 @@ typedef enum {
 class IteratorState;
 
 class Regex  {
-public:
+ public:
   Regex() : quantifier(1,1) {id=createId();}
   virtual ~Regex() {}
-  
+
   inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
   inline unsigned int getMaxOccurs() const { return quantifier.getMax(); }
-  
+
   inline void setMinOccurs(unsigned int _min) { quantifier.setMin(_min); }
   inline void setMaxOccurs(unsigned int _max) { quantifier.setMax(_max); }
-  
+
   inline void setQuantifier(const Quantifier& q) { quantifier = q; }
-    
+
   virtual const char* getXmlTag() const = 0;
   virtual RegexType getRegexType() const = 0;
-  
+
   virtual inline int getMaxSize() const {
     return getMaxOccurs();
   }
-  
+
   inline void appendRawValue(SimpleString& dst) const {
     appendRawValue(dst, 0);
   }
-  
+
   inline void appendRawValue(SimpleString& dst, int level) const {
     return xmlEncapsulate(dst, getXmlTag(), level);
   }
-  
+
   void appendSpace(SimpleString& dst, int count) const;
-  
+
   virtual void appendContent(SimpleString& dst, int level) const = 0;
-  
-  virtual void xmlEncapsulate(SimpleString& dst, const char* clazz, int level) const;
-  
+
+  virtual void xmlEncapsulate(SimpleString& dst, const char* clazz,
+                              int level) const;
+
   virtual Iterator* iterator(IteratorState* state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     } else {
       return new IteratorPermuter(
-        getId(), this, state, getMinOccurs(), getMaxOccurs());
-    }    
+               getId(), this, state, getMinOccurs(), getMaxOccurs());
+    }
   }
   virtual Iterator* singleIterator(IteratorState* state) const = 0;
-  
+
   int getId() const { return id; }
-  
+
   virtual int getGroupId() const { return -1; }
-  
-protected:
-  
+
+ protected:
+
   virtual int createId() {
     return ++next_id;
   }
-  
-private:
+
+ private:
   Quantifier quantifier;
   static int next_id;
   int id;

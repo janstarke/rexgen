@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -30,18 +30,17 @@
 
 using namespace std;
 
-class CompoundRegex : public RegexContainer
-{
-public:
-  
+class CompoundRegex : public RegexContainer {
+ public:
+
   virtual inline const char* getXmlTag() const { return "compound"; }
-  
+
   void prependRegex(Regex* regex);
   void appendRegex(Regex* regex);
   void getRawValue(string& target);
   RegexType getRegexType() const { return Compound; }
   Iterator* iterator(IteratorState* state) const;
-  
+
   Iterator* singleIterator(IteratorState* state) const;
 };
 

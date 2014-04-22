@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -32,9 +32,9 @@ void CompoundRegex::prependRegex(Regex* regex) {
       if (regexObjects[0]->getRegexType() == Terminal) {
         TerminalRegex* tre = reinterpret_cast<TerminalRegex*>(regexObjects[0]);
         if (regex->getMinOccurs() == 1
-              && regex->getMaxOccurs() == 1
-              && tre->getMinOccurs() == 1
-              && tre->getMaxOccurs() == 1) {
+            && regex->getMaxOccurs() == 1
+            && tre->getMinOccurs() == 1
+            && tre->getMaxOccurs() == 1) {
           TerminalRegex* tre_new = reinterpret_cast<TerminalRegex*>(regex);
           tre->prepend(tre_new);
           LEAVE_METHOD;
@@ -69,7 +69,7 @@ Iterator* CompoundRegex::iterator(IteratorState* state) const {
       return re->iterator(state);
     } else {
       return new IteratorPermuter(
-        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+               re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   }
   return RegexContainer::iterator(state);

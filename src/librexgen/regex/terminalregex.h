@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -30,7 +30,7 @@
 using std::vector;
 
 class TerminalRegex : public Regex {
-public:  
+ public:
   TerminalRegex(uint32_t ch, charset encoding) {
     uchar_t uch;
     codepoint_to_uchar(&uch, ch, encoding);
@@ -41,19 +41,19 @@ public:
   /*
   void setValue(const char* v);
   */
-  
+
   inline const char_type* getValue() const { return NULL; }
-  
+
   inline const char* getXmlTag() const { return "terminal"; }
-  
+
   RegexType getRegexType() const { return Terminal; }
-  
+
   void appendContent(SimpleString& dst, int level) const;
-    
+
   Iterator* singleIterator(IteratorState* /* state */) const
-    { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
-private:
+  { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
+ private:
   vector<uchar_t> value;
 };
-  
+
 #endif

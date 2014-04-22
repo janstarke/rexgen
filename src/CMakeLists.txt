@@ -2,52 +2,15 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 project(rexgen)
 set(prj rexgen)
 
-cmake_minimum_required(VERSION 2.8.12)
-
-if(MSVC)
-	set(CPACK_GENERATOR "ZIP")
-elseif(CYGWIN)
-	set(CPACK_GENERATOR "ZIP")
-elseif(APPLE)
-	set(CPACK_GENERATOR "TGZ")
-else()
-	set(CPACK_GENERATOR "DEB;RPM")
-endif(MSVC)
-
+cmake_minimum_required(VERSION 2.8.10)
 set(LUA_VERSION "5.2")
+
+include (cmake/version.cmake)
+include (cmake/packaging.cmake)
+include (cmake/testing.cmake)
 
 set(librexgen_major 1)
 set(librexgen_minor 1)
-
-find_program(svnversion "svnversion")
-execute_process( COMMAND svnversion
-	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-	OUTPUT_VARIABLE librexgen_build_tmp 
-	OUTPUT_STRIP_TRAILING_WHITESPACE )
-string(REPLACE ":" "-" librexgen_build ${librexgen_build_tmp} )
-if (${librexgen_build} MATCHES " ")
-  set(librexgen_build "DEV")
-  set(librexgen_version "${librexgen_major}.${librexgen_minor}.DEV")
-else()
-  set(librexgen_version "${librexgen_major}.${librexgen_minor}.${librexgen_build}")
-endif(${librexgen_build} MATCHES " ")
-
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "rexgen - a tool to create words based on regular expressions")
-SET(CPACK_PACKAGE_VENDOR "Jan Starke <rexgen@outofbed.org>")
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_VENDOR})
-#SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/gpl.txt")
-SET(CPACK_PACKAGE_VERSION_MAJOR ${librexgen_major})
-SET(CPACK_PACKAGE_VERSION_MINOR ${librexgen_minor})
-SET(CPACK_PACKAGE_VERSION_PATCH ${librexgen_build})
-SET(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/../bin/${CMAKE_SYSTEM_NAME}")
-SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SOURCE_IGNORE_FILES "^${PROJECT_SOURCE_DIR}/build/" ".*\\\\.sh")
-SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
-include(CPack)
-
-set(librexgen_libname librexgen-${librexgen_version})
-set(librexgen_filename "lib${prj}" )
 
 message("creating ${prj} ${librexgen_version}")
 

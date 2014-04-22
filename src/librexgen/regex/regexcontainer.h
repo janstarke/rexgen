@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -29,13 +29,14 @@
 using namespace std;
 
 class RegexContainer : public Regex {
-public:
+ public:
   virtual ~RegexContainer() {
-		for (deque<Regex*>::iterator re=regexObjects.begin(); re!=regexObjects.end(); ++re) {
-			delete (*re);
-		}
+    for (deque<Regex*>::iterator re=regexObjects.begin(); re!=regexObjects.end();
+         ++re) {
+      delete (*re);
+    }
   }
-  
+
   virtual int getMaxSize() const {
     deque<Regex*>::const_iterator iter = regexObjects.begin();
     int __size = 0;
@@ -45,17 +46,18 @@ public:
     }
     return __size * getMaxOccurs();
   }
-  
+
   void appendContent(SimpleString& dst, int level) const {
-		for (deque<Regex*>::const_iterator re=regexObjects.begin(); re!=regexObjects.end(); ++re) {
-        appendSpace(dst, level);
-        (*re)->appendRawValue(dst, level);
-		}
+    for (deque<Regex*>::const_iterator re=regexObjects.begin();
+         re!=regexObjects.end(); ++re) {
+      appendSpace(dst, level);
+      (*re)->appendRawValue(dst, level);
+    }
   }
-  
+
   unsigned int size() { return getChildren()->size(); }
 
-protected:
+ protected:
   deque<Regex*>* getChildren() { return &regexObjects; }
   deque<Regex*> regexObjects;
 };

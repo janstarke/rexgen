@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -38,7 +38,8 @@ int RegexAlternatives::getMaxSize() const {
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (deque<Regex*>::const_iterator iter = regexObjects.begin(); iter != regexObjects.end(); iter++) {
+  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
+       iter != regexObjects.end(); iter++) {
     rai->addChild((*iter)->iterator(state));
   }
   return rai;
@@ -46,12 +47,12 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
 
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {
   Iterator* iter = NULL;
-  
+
   iter = state->getIterator(getGroupId());
   if (iter != NULL) {
     return iter;
   }
-  
+
   if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {

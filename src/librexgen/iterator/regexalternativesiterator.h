@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -30,27 +30,26 @@
 
 using namespace std;
 
-class RegexAlternativesIterator : public Iterator
-{
-public:
-  
-    RegexAlternativesIterator(int id);
-    
-    virtual ~RegexAlternativesIterator();
-    
-    bool next();
-    void value(SimpleString& dst) const;
-    bool hasNext() const;
-    
-    void addChild(Iterator* re);
-    void updateReferences(IteratorState* iterState);
-    
-    SerializableState* getCurrentState() const;
-    void setCurrentState(const SerializableState* state);
-private:  
+class RegexAlternativesIterator : public Iterator {
+ public:
+
+  RegexAlternativesIterator(int id);
+
+  virtual ~RegexAlternativesIterator();
+
+  bool next();
+  void value(SimpleString& dst) const;
+  bool hasNext() const;
+
+  void addChild(Iterator* re);
+  void updateReferences(IteratorState* iterState);
+
+  SerializableState* getCurrentState() const;
+  void setCurrentState(const SerializableState* state);
+ private:
   deque<Iterator*> iterators;
   deque<Iterator*>::iterator iter;
-  
+
   bool canUseValue() const;
 };
 

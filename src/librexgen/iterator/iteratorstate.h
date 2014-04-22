@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -28,37 +28,36 @@
 
 using namespace std;
 
-class IteratorState
-{
-public:
+class IteratorState {
+ public:
 
   IteratorState() : randomize(false), streamIterator(NULL) {
   }
-  
+
   void registerIterator(int id, Iterator* iterator) {
     groupIterators[id] = iterator;
   }
-  
+
   Iterator* getIterator(int id) const {
     if (id == -1) {
       return getStreamIterator();
     } else {
       map<int, Iterator*>::const_iterator iter = groupIterators.find(id);
       if (iter != groupIterators.end()) {
-      return iter->second;
-    } else {
-      return NULL;
-    }
+        return iter->second;
+      } else {
+        return NULL;
+      }
     }
   }
-  
+
   void setRandomize(bool rnd) { randomize = rnd; }
   bool getRandomize() const { return randomize; }
-  
+
   void setStreamIterator(StreamRegexIterator* iter) {streamIterator = iter;}
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
-  
-private:
+
+ private:
   map<int, Iterator*> groupIterators;
   bool randomize;
   StreamRegexIterator* streamIterator;

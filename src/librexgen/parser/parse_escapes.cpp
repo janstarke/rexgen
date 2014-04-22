@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ static uint32_t parseHexString(const char* ptr, size_t length) {
   char32_t hexvalue = 0;
   while (*ptr != 0 && length > 0) {
     const uint8_t v = parseHexChar(*ptr);
-    if (v == -1) return -1;
+    if (v == -1) { return -1; }
     hexvalue = (hexvalue << 4) + v;
     ptr++;
     length--;
@@ -52,24 +52,24 @@ static uint32_t parseHexString(const char* ptr, size_t length) {
  */
 uint16_t parseFirstCharacter(const char* c) {
   uint16_t codepoint;
-  
+
   if (c[0] == '\0') {
     return c[0];
   }
   if (c[0] == '\\' && c[1] != '\0') {
     switch (c[1]) {
-      case 'n':
-        return '\n';
-      case 'r':
-        return '\r';
-      case '0':
-        return '\0';
-      case 'x':
-        return (char_type) parseHexString((c+2), 2);
-      case 'u':
-        return parseHexString((c+2), 4);
-      default:
-        return c[1];
+    case 'n':
+      return '\n';
+    case 'r':
+      return '\r';
+    case '0':
+      return '\0';
+    case 'x':
+      return (char_type) parseHexString((c+2), 2);
+    case 'u':
+      return parseHexString((c+2), 4);
+    default:
+      return c[1];
     }
   }
   return c[0];

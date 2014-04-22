@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -27,34 +27,33 @@
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 
-class StreamRegex : public Regex
-{
+class StreamRegex : public Regex {
 
-public:
-    Iterator* iterator(IteratorState* state) const {
-      if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-        return singleIterator(state);
-      } else {
-        return new IteratorPermuter(
-          getId(), this, state, getMinOccurs(), getMaxOccurs());
-      }
+ public:
+  Iterator* iterator(IteratorState* state) const {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      return singleIterator(state);
+    } else {
+      return new IteratorPermuter(
+               getId(), this, state, getMinOccurs(), getMaxOccurs());
     }
-    Iterator* singleIterator(IteratorState* state) const {
-      state->setStreamIterator(iter);
-      return iter;
-    }
-    void appendContent(SimpleString& /* dst */, int /* level */) const {}
-    RegexType getRegexType() const { return Stream; }
-    const char* getXmlTag() const { return "stream"; }
-    StreamRegex(FILE* in, callback_fp cb)
-      : infile(in), callback(cb) {
-        /* this will not be deleted here, but in the iterator tree */
-        iter = new StreamRegexIterator(getId(), infile, cb);
-      }
-    
-private:
+  }
+  Iterator* singleIterator(IteratorState* state) const {
+    state->setStreamIterator(iter);
+    return iter;
+  }
+  void appendContent(SimpleString& /* dst */, int /* level */) const {}
+  RegexType getRegexType() const { return Stream; }
+  const char* getXmlTag() const { return "stream"; }
+  StreamRegex(FILE* in, callback_fp cb)
+    : infile(in), callback(cb) {
+    /* this will not be deleted here, but in the iterator tree */
+    iter = new StreamRegexIterator(getId(), infile, cb);
+  }
+
+ private:
   FILE* infile;
-	callback_fp callback;
+  callback_fp callback;
   StreamRegexIterator* iter;
 };
 

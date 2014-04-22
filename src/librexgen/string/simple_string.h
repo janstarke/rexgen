@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -25,15 +25,14 @@
 #include "uchar.h"
 
 template <class CHAR>
-class simple_string
-{
-public:
+class simple_string {
+ public:
   simple_string(size_t msize=256)
     :max_size(msize), current_size(0) {
-      buffer = new CHAR[msize];
-    }
+    buffer = new CHAR[msize];
+  }
   ~simple_string() { delete[] buffer; }
-    
+
   void push_back(CHAR ch) {
     if (current_size < max_size) {
       buffer[current_size] = ch;
@@ -49,14 +48,14 @@ public:
       ++current_size;
     }
   }
-  
+
   virtual size_t size() const { return current_size; }
   virtual void clear() { current_size = 0; }
-  
+
   size_t print(FILE* stream) {
     return fwrite(buffer, current_size, sizeof(CHAR), stream);
   }
-private:
+ private:
   size_t max_size;
   size_t current_size;
   CHAR* buffer;
@@ -65,12 +64,12 @@ private:
 template <>
 class simple_string <uchar_t> {
   simple_string(size_t msize=256)
-  :max_size(msize), current_size(0) {
+    :max_size(msize), current_size(0) {
     buffer = new char[msize];
     end = buffer;
   }
   ~simple_string() { delete[] buffer; }
-  
+
   void push_back(uchar_t ch) {
     if (current_size+ch.char_length <= max_size) {
       current_size += uchar_to_utf(ch, &buffer[current_size]);
@@ -86,14 +85,14 @@ class simple_string <uchar_t> {
       current_size += uchar_to_utf(ch, &buffer[idx]);
     }
   }
-  
+
   virtual size_t size() const { return current_size; }
   virtual void clear() { current_size = 0; }
-  
+
   size_t print(FILE* stream) {
     return fwrite(buffer, current_size, sizeof(char), stream);
-  }  
-private:
+  }
+ private:
   size_t max_size;
   size_t current_size;
   char* end;

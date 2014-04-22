@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -25,18 +25,18 @@
 #include <librexgen/api/c/iterator.h>
 
 class RexgenOptions {
-public:
-	RexgenOptions() 
-		: ignore_case(false), 
-			encoding(CHARSET_UTF8),
-			randomize(false),
-			infile(NULL),
-			stream_callback(NULL){ }
+ public:
+  RexgenOptions()
+    : ignore_case(false),
+      encoding(CHARSET_UTF8),
+      randomize(false),
+      infile(NULL),
+      stream_callback(NULL) { }
   bool ignore_case;
   charset encoding;
   bool randomize;
   FILE* infile;
-	callback_fp stream_callback;
+  callback_fp stream_callback;
 };
 
 #endif

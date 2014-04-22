@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -33,42 +33,42 @@
 using namespace std;
 
 class ClassRegex : public Regex {
-public:
-  ClassRegex(charset variant) : encoding(variant){ }
-  
+ public:
+  ClassRegex(charset variant) : encoding(variant) { }
+
   inline void addCharacter(const uint32_t& ch, bool ignoreCase) {
     uchar_t uch;
     codepoint_to_uchar(&uch, ch, encoding);
     addCharacter(uch, ignoreCase);
   }
-  
-  
+
+
   int addRange(const uint32_t& a, const uint32_t& b, bool ignoreCase) {
     uchar_t uch_a, uch_b;
     codepoint_to_uchar(&uch_a, a, encoding);
     codepoint_to_uchar(&uch_b, b, encoding);
     return addRange(uch_a, uch_b, ignoreCase);
   }
-  
+
   bool contains(const uint32_t& ch) const {
     uchar_t uch;
     codepoint_to_uchar(&uch, ch, encoding);
     return contains(uch);
   }
-  
-  RegexType getRegexType() const { return Class; }
-  
-  void appendContent(SimpleString& dst, int level) const;
-  
-  const char* getXmlTag() const { return "class"; }
-  
-  Iterator* singleIterator(IteratorState* /* state */) const; 
 
-private:
+  RegexType getRegexType() const { return Class; }
+
+  void appendContent(SimpleString& dst, int level) const;
+
+  const char* getXmlTag() const { return "class"; }
+
+  Iterator* singleIterator(IteratorState* /* state */) const;
+
+ private:
   void addCharacter(const uchar_t& ch, bool ignoreCase);
   int addRange(const uchar_t& a, const uchar_t& b, bool ignoreCase);
   bool contains(const uchar_t& ch) const;
-  
+
   int __insert_character(const uchar_t& ch);
   int __append_character(const uchar_t& ch);
   vector<uchar_t> characters;

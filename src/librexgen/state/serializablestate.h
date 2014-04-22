@@ -1,5 +1,5 @@
 /*
- * rexgen - a tool to create words based on regular expressions    
+ * rexgen - a tool to create words based on regular expressions
  * Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -28,9 +28,8 @@
 
 using namespace std;
 
-class SerializableState
-{
-public:
+class SerializableState {
+ public:
   typedef int32_t stateword_t;
   SerializableState(stateword_t id);
   SerializableState(const stateword_t* vptr, size_t& words);
@@ -38,14 +37,14 @@ public:
   void serialize(vector<stateword_t>* dst) const;
   int getIteratorId() const { return iterator_id; }
   void setIteratorId(stateword_t id) { iterator_id = id; }
-  
+
   void addValue(stateword_t value);
   void addValue(const SerializableState* state);
   stateword_t getValue(int idx) const;
   const SerializableState* getChildState(int id) const;
   int getValuesCount() const;
   int getChildStatesCount() const;
-private:
+ private:
   stateword_t iterator_id;
   vector<stateword_t> values;
   map<int, const SerializableState*> childStates;

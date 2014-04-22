@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -17,7 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <generated/version.h>
+#include <librexgen/version.h>
 #include <librexgen/osdepend.h>
 #include <cstdio>
 #include <cstdlib>
@@ -26,5 +26,5 @@ static const char* __version="@librexgen_version@";
 
 EXPORT
 const char* rexgen_version () {
-	return __version;
+  return __version;
 }

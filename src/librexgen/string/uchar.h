@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -39,15 +39,15 @@ typedef uint16_t char16_t;
 typedef uint32_t char32_t;
 #endif
 
-typedef struct __uchar_t{
+typedef struct __uchar_t {
   charset variant;
   uint8_t char_length;
-  
+
   uint16_t __padding__;
-  
+
   /* this one is needed for simple iteration in in UTF8 and UTF16*/
   uint32_t codepoint;
-  
+
   union {
     byte    bytes[4];
     struct {

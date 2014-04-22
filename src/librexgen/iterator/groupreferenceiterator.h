@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -28,22 +28,22 @@
 #include <librexgen/iterator/iteratorstate.h>
 
 
-class GroupReferenceIterator : public Iterator
-{
+class GroupReferenceIterator : public Iterator {
 
-public:
-    GroupReferenceIterator(int _id, int group)
+ public:
+  GroupReferenceIterator(int _id, int group)
     : Iterator(_id), groupId(group), groupRef(NULL) { };
-  
-    inline bool hasNext() const { return (state == resetted); }
-    inline bool next() {
-      bool res = (state == resetted);
-      state = usable;
-      return res; }
-    inline void value(SimpleString& dst) const { groupRef->value(dst);}
-    
-    void updateReferences(IteratorState* iterState);
-private:
+
+  inline bool hasNext() const { return (state == resetted); }
+  inline bool next() {
+    bool res = (state == resetted);
+    state = usable;
+    return res;
+  }
+  inline void value(SimpleString& dst) const { groupRef->value(dst);}
+
+  void updateReferences(IteratorState* iterState);
+ private:
   int groupId;
   const Iterator* groupRef;
 };

@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -43,10 +43,11 @@ bool RegexAlternativesIterator::next() {
 
   if (state == resetted) {
     state = usable;
-		bool res = false;
-		for(deque<Iterator*>::iterator i = iterators.begin(); i != iterators.end(); ++i) {
-			res |= ((*i)->next());
-		}
+    bool res = false;
+    for (deque<Iterator*>::iterator i = iterators.begin(); i != iterators.end();
+         ++i) {
+      res |= ((*i)->next());
+    }
     RETURN(res);
   }
 
@@ -108,38 +109,37 @@ bool RegexAlternativesIterator::canUseValue() const {
 }
 
 RegexAlternativesIterator::~RegexAlternativesIterator() {
-	for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-		if ((*i)->isSingleton()) {
-			delete (*i);
-		}
-	}
+  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+    if ((*i)->isSingleton()) {
+      delete (*i);
+    }
+  }
   iterators.clear();
 }
 
 void RegexAlternativesIterator::updateReferences(IteratorState* iterState) {
-	for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-		(*i)->updateReferences(iterState);
-	}
+  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+    (*i)->updateReferences(iterState);
+  }
 }
 
-SerializableState* RegexAlternativesIterator::getCurrentState() const
-{
+SerializableState* RegexAlternativesIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
   s->addValue(iter - iterators.begin());
-    
-	for(deque<Iterator*>::const_iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+
+  for (deque<Iterator*>::const_iterator i=iterators.begin(); i!=iterators.end();
+       ++i) {
     s->addValue((*i)->getCurrentState());
   }
   return s;
 }
 
-void RegexAlternativesIterator::setCurrentState(const SerializableState* s)
-{
-    Iterator::setCurrentState(s);
-    
-		for(deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-      (*i)->setCurrentState(s->getChildState((*i)->getId()));
-    }
-    
-    iter = iterators.begin() + s->getValue(0);
+void RegexAlternativesIterator::setCurrentState(const SerializableState* s) {
+  Iterator::setCurrentState(s);
+
+  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
+    (*i)->setCurrentState(s->getChildState((*i)->getId()));
+  }
+
+  iter = iterators.begin() + s->getValue(0);
 }

@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -32,12 +32,12 @@ using namespace std;
 static const char* c_rexgen_last_error = NULL;
 
 extern "C" {
-	EXPORT
-	const char* c_rexgen_get_last_error() {
-		return c_rexgen_last_error;
-	}
-	void c_rexgen_set_last_error(const char* msg){
-		c_rexgen_last_error =	msg;
-	}
+  EXPORT
+  const char* c_rexgen_get_last_error() {
+    return c_rexgen_last_error;
+  }
+  void c_rexgen_set_last_error(const char* msg) {
+    c_rexgen_last_error = msg;
+  }
 }
 

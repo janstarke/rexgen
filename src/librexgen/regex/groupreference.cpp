@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -29,7 +29,7 @@ Iterator* GroupReference::singleIterator(IteratorState* /* state */) const {
 }
 
 void GroupReference::appendContent(
-    SimpleString& dst, int level) const {
+  SimpleString& dst, int level) const {
   appendSpace(dst, level);
   dst.append(groupRef->getId());
 }

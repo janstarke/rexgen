@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -24,15 +24,17 @@
 
 
 void TerminalRegex::prepend(const TerminalRegex* tre) {
-	for(vector<uchar_t>::const_iterator iter=tre->value.begin(); iter!=tre->value.end(); ++iter) {
-		value.insert(value.begin(), *iter);
-	}
+  for (vector<uchar_t>::const_iterator iter=tre->value.begin();
+       iter!=tre->value.end(); ++iter) {
+    value.insert(value.begin(), *iter);
+  }
 }
 
 void TerminalRegex::appendContent(
   SimpleString& dst, int level) const {
-    appendSpace(dst, level);
-		for(vector<uchar_t>::const_iterator iter=value.begin(); iter!=value.end(); ++iter) {
-			dst.push_back(*iter);
-		}
+  appendSpace(dst, level);
+  for (vector<uchar_t>::const_iterator iter=value.begin(); iter!=value.end();
+       ++iter) {
+    dst.push_back(*iter);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * rexgen - a tool to create words based on regular expressions    
+ * rexgen - a tool to create words based on regular expressions
  * Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,27 +22,29 @@
 #include <algorithm>
 #include <map>
 
-SerializableState::SerializableState(SerializableState::stateword_t id)
-{
+SerializableState::SerializableState(SerializableState::stateword_t id) {
   iterator_id = id;
 }
 
-SerializableState::SerializableState(const SerializableState::stateword_t* vptr, size_t& words)
-{
+SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
+                                     size_t& words) {
   stateword_t size;
   words = 0;
   size_t consumed_words = 0;
-  
-  iterator_id = *vptr++; ++words;
-  
-  size = *vptr++;        ++words;
+
+  iterator_id = *vptr++;
+  ++words;
+
+  size = *vptr++;
+  ++words;
   while (size > 0) {
     values.push_back(*vptr++);
     --size;
     ++words;
   }
-  
-  size = *vptr++;        ++words;
+
+  size = *vptr++;
+  ++words;
   while (size > 0) {
     addValue(new SerializableState(vptr, consumed_words));
     --size;
@@ -51,30 +53,26 @@ SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
   }
 }
 
-SerializableState::~SerializableState()
-{
-  for (map<int, const SerializableState*>::iterator p=childStates.begin(); p!=childStates.end(); ++p) {
+SerializableState::~SerializableState() {
+  for (map<int, const SerializableState*>::iterator p=childStates.begin();
+       p!=childStates.end(); ++p) {
     delete (*p).second;
   }
 }
 
-void SerializableState::addValue(SerializableState::stateword_t value)
-{
+void SerializableState::addValue(SerializableState::stateword_t value) {
   values.push_back(value);
 }
 
-void SerializableState::addValue(const SerializableState* state)
-{
+void SerializableState::addValue(const SerializableState* state) {
   childStates[state->getIteratorId()] = state;
 }
 
-SerializableState::stateword_t SerializableState::getValue(int idx) const
-{
+SerializableState::stateword_t SerializableState::getValue(int idx) const {
   return values[idx];
 }
 
-const SerializableState* SerializableState::getChildState(int id) const
-{
+const SerializableState* SerializableState::getChildState(int id) const {
   map<int, const SerializableState*>::const_iterator iter = childStates.find(id);
   if (iter != childStates.end()) {
     return iter->second;
@@ -82,30 +80,29 @@ const SerializableState* SerializableState::getChildState(int id) const
   return NULL;
 }
 
-int SerializableState::getValuesCount() const
-{
+int SerializableState::getValuesCount() const {
   return values.size();
 }
 
-int SerializableState::getChildStatesCount() const
-{
+int SerializableState::getChildStatesCount() const {
   return childStates.size();
 }
 
-void SerializableState::serialize(vector<stateword_t>* dst) const
-{
+void SerializableState::serialize(vector<stateword_t>* dst) const {
   /* iterator id */
   dst->push_back(iterator_id);
-  
+
   /* serialize integer values */
   dst->push_back(values.size());
-	for(vector<stateword_t>::const_iterator v=values.begin(); v!=values.end(); ++v) {
+  for (vector<stateword_t>::const_iterator v=values.begin(); v!=values.end();
+       ++v) {
     dst->push_back(*v);
   }
-  
+
   /* serialize child states */
   dst->push_back(childStates.size());
-  for (map<int, const SerializableState*>::const_iterator p=childStates.begin(); p!=childStates.end(); ++p) {
+  for (map<int, const SerializableState*>::const_iterator p=childStates.begin();
+       p!=childStates.end(); ++p) {
     (*p).second->serialize(dst);
   }
 }

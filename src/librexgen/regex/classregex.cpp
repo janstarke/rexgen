@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -22,9 +22,9 @@
 #include <librexgen/regex/classregex.h>
 #include <librexgen/string/uchar.h>
 
-bool ClassRegex::contains(const uchar_t& ch) const
-{
-  for (vector<uchar_t>::const_iterator iter = characters.begin(); iter != characters.end(); ++iter) {
+bool ClassRegex::contains(const uchar_t& ch) const {
+  for (vector<uchar_t>::const_iterator iter = characters.begin();
+       iter != characters.end(); ++iter) {
     if ((*iter).codepoint == ch.codepoint) {
       return true;
     }
@@ -32,16 +32,14 @@ bool ClassRegex::contains(const uchar_t& ch) const
   return false;
 }
 
-int ClassRegex::__append_character(const uchar_t& ch)
-{
+int ClassRegex::__append_character(const uchar_t& ch) {
   if (! contains(ch)) {
     characters.push_back(ch);
     return 1;
   }
   return 0;
 }
-int ClassRegex::__insert_character(const uchar_t& ch)
-{
+int ClassRegex::__insert_character(const uchar_t& ch) {
   if (! contains(ch)) {
     characters.insert(characters.begin(), ch);
     return 1;
@@ -53,19 +51,20 @@ void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
   __insert_character(ch);
   if (ignoreCase && uchar_isascii(&ch)) {
     uchar_t uch;
-    
+
     if (islower(ch.character.ansi.value)) {
       codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
       __insert_character(uch);
-    } 
-    
+    }
+
     else if (isupper(ch.character.ansi.value)) {
       codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
       __insert_character(uch);
     }
   }
 }
-int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignoreCase) {
+int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b,
+                         bool ignoreCase) {
   uint32_t a = uch_a.codepoint;
   int count = 0;
   while (a <= uch_b.codepoint) {
@@ -74,35 +73,36 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b, bool ignore
     uchar_t uch;
     codepoint_to_uchar(&ch, a++, uch_a.variant);
     count += __append_character(ch);
-    
+
     if (ignoreCase && uchar_isascii(&ch)) {
       if (islower(ch.character.ansi.value)) {
         codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
         count += __append_character(uch);
       }
-      
+
       else if (isupper(ch.character.ansi.value)) {
         codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
         count += __append_character(uch);
       }
     }
   }
-  
+
   return count;
 }
 
 void ClassRegex::appendContent(SimpleString& dst, int level) const {
   appendSpace(dst, level);
 
-	for(vector<uchar_t>::const_iterator iter=characters.begin(); iter!=characters.end(); ++iter) {
-		dst.push_back(*iter);
-	}
+  for (vector<uchar_t>::const_iterator iter=characters.begin();
+       iter!=characters.end(); ++iter) {
+    dst.push_back(*iter);
+  }
   dst.newline();
 }
 
-Iterator* ClassRegex::singleIterator(IteratorState* state) const
-{
-  return new ClassRegexIterator(getId(), state, &characters[0], characters.size());
+Iterator* ClassRegex::singleIterator(IteratorState* state) const {
+  return new ClassRegexIterator(getId(), state, &characters[0],
+                                characters.size());
 }
 
 

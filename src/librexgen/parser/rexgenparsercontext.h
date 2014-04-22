@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -34,49 +34,48 @@ using namespace std;
 
 class Regex;
 
-class RexgenParserContext
-{
+class RexgenParserContext {
 
-public:
+ public:
   RexgenParserContext(istream* input, const RexgenOptions& __options )
-		: options(__options), streamRegex(NULL) {
+    : options(__options), streamRegex(NULL) {
     this->is = input;
     this->result = NULL;
     this->scanner = NULL;
     groupId = 1;
     InitScanner();
   }
-  
+
   virtual ~RexgenParserContext();
   void registerGroupReference(GroupReference* gr);
   const set<GroupReference*>* getGroupReferences(int id) const;
   void registerGroup(Regex* re);
   Regex* getGroupRegex(int id) const;
-  
+
   const map<int, Regex*>& getGroups() const;
-  
+
   void updateAllGroupReferences();
   void updateGroupReferences(const Regex* re);
   bool hasInvalidGroupReferences() const;
 
   void* scanner;
-  istream * is;
+  istream* is;
   Regex* result;
-  
+
   int groupId;
-  
+
   bool ignoreCase() const { return options.ignore_case; }
   charset encoding() const { return options.encoding; }
   FILE* getInFile() const { return options.infile; }
-	callback_fp getStreamCallback() const { return options.stream_callback; }
-  
+  callback_fp getStreamCallback() const { return options.stream_callback; }
+
   Regex* getStreamRegex();
 
-protected:
+ protected:
   void InitScanner();
   void DestroyScanner();
-  
-private:
+
+ private:
   const RexgenOptions& options;
   map<int, set <GroupReference*> *> groupRefs;
   map<int, Regex*> groups;

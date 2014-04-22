@@ -36,7 +36,7 @@ endif(USE_LUA)
 set(librexgen_sources
   ${lua_sources}
   debug.cpp 
-  "${CMAKE_CURRENT_BINARY_DIR}/generated/version.cpp"
+  "${CMAKE_CURRENT_BINARY_DIR}/librexgen/version.cpp"
   regex/compoundregex.cpp
   regex/regexalternatives.cpp
   regex/classregex.cpp

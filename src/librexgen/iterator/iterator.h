@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -31,44 +31,43 @@
 #ifdef __cplusplus
 class IteratorState;
 
-class Iterator
-{
-public:
+class Iterator {
+ public:
 
   Iterator(int _id):
-    state(resetted), 
+    state(resetted),
     id(_id) {}
   virtual ~Iterator() {}
-  
+
   virtual bool hasNext() const { return false; }
   virtual bool next() = 0;
   virtual void value(SimpleString& /* dst */ ) const { }
-  
+
   virtual bool canUseValue() const { return (state == usable); }
-  
+
   int getId() const { return id; }
-  
+
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
   virtual bool isSingleton() const { return false; }
-    
+
   virtual SerializableState* getCurrentState() const {
     return new SerializableState(getId());
   }
-  
+
   virtual void setCurrentState(const SerializableState* s) {
     if (getId() != s->getIteratorId()) {
       throw InvalidIteratorIdException();
     }
   }
-protected:
-  
+ protected:
+
   enum {
     resetted,
     usable,
     not_usable
   } state;
-  
-private:
+
+ private:
   const int id;
 };
 

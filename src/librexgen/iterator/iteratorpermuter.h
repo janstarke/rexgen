@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -30,26 +30,26 @@ using namespace std;
 
 class Regex;
 
-class IteratorPermuter : public Iterator
-{
+class IteratorPermuter : public Iterator {
 
-public:
+ public:
   void value(SimpleString& dst) const;
-    bool hasNext() const;
-    IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
-    ~IteratorPermuter();
-    bool next();
-    void init();
-    void updateReferences(IteratorState* iterState);
-private:
+  bool hasNext() const;
+  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min,
+                   unsigned int max);
+  ~IteratorPermuter();
+  bool next();
+  void init();
+  void updateReferences(IteratorState* iterState);
+ private:
   bool existsIteratorWithNextElement() const;
-  
+
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
-  vector<Iterator *> iterators;
+  vector<Iterator*> iterators;
   IteratorState* iteratorState;
   bool hasNextElement;
-  
+
   unsigned int current;
   unsigned int occurs;
 };

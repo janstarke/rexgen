@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -22,42 +22,40 @@
 
 ClassRegexIterator::ClassRegexIterator(
   int _id, IteratorState* iterstate, const uchar_t* classcontent, size_t elements)
-      :Iterator(_id),
-				current(NULL), first(NULL), last(NULL),
-				randomize(iterstate->getRandomize()) {
-    for (size_t n=0; n<elements; ++n) {      
-      buffered_character c;
-      c.length = uchar_to_utf(&classcontent[n], &(c.value[0]));
-      characters.push_back(c);
-    }
-    first = &(*(characters.begin()));
-    last = &(*(characters.rbegin()));
-    current = first-1;
-    state = usable;
-		//bFirstUsed = false;
+  :Iterator(_id),
+   current(NULL), first(NULL), last(NULL),
+   randomize(iterstate->getRandomize()) {
+  for (size_t n=0; n<elements; ++n) {
+    buffered_character c;
+    c.length = uchar_to_utf(&classcontent[n], &(c.value[0]));
+    characters.push_back(c);
+  }
+  first = &(*(characters.begin()));
+  last = &(*(characters.rbegin()));
+  current = first-1;
+  state = usable;
+  //bFirstUsed = false;
 }
 
 bool ClassRegexIterator::next() {
   ++current;
   if (current > last) {
-    if(randomize) {shuffle();}
+    if (randomize) {shuffle();}
     current = first;
     return false;
   }
   return true;
 }
 
-SerializableState* ClassRegexIterator::getCurrentState() const
-{
-    SerializableState* s = Iterator::getCurrentState();
-    s->addValue(current - first);
-    return s;
+SerializableState* ClassRegexIterator::getCurrentState() const {
+  SerializableState* s = Iterator::getCurrentState();
+  s->addValue(current - first);
+  return s;
 }
 
-void ClassRegexIterator::setCurrentState(const SerializableState* s)
-{
-    Iterator::setCurrentState(s);
-    current = first + s->getValue(0);
+void ClassRegexIterator::setCurrentState(const SerializableState* s) {
+  Iterator::setCurrentState(s);
+  current = first + s->getValue(0);
 }
 
 

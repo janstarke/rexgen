@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -30,15 +30,15 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 extern "C" {
-int rexgen_parse_regex(lua_State* L);
+  int rexgen_parse_regex(lua_State* L);
 
-int rexgen_value(lua_State* L, const Iterator* iter);
+  int rexgen_value(lua_State* L, const Iterator* iter);
 
-int luaopen_rexgen(lua_State* L);
+  int luaopen_rexgen(lua_State* L);
 
-int rexgen_iter(lua_State* L);
+  int rexgen_iter(lua_State* L);
 
-int rexgen_get_syntax_tree(lua_State* L);
+  int rexgen_get_syntax_tree(lua_State* L);
 }
 
 void push_utf8_string(lua_State* L, const SimpleString& str);

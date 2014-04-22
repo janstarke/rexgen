@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -26,16 +26,15 @@
 #include <librexgen/string/simplestring.h>
 
 
-class TopIterator : public Iterator
-{
-public:
+class TopIterator : public Iterator {
+ public:
   TopIterator(int __id, Iterator* __child, IteratorState* __state)
     :Iterator(__id), child(__child), state(__state) {
   }
-  
+
   ~TopIterator() {
     if (state->getStreamIterator() != NULL) {
-      
+
       /* this happens when we only have a StreamIterator */
       if (child == state->getStreamIterator()) {
         child = NULL;
@@ -50,26 +49,26 @@ public:
   bool next() {
     bool res = child->next();
     if (res) { return res; }
-    
+
     if (state->getStreamIterator() == NULL) { return false; }
     return state->getStreamIterator()->forceNext();
   }
-  
+
   void value(SimpleString& dst) const { child->value(dst); }
   bool hasNext() const { return child->hasNext(); }
   void updateReferences(IteratorState* iterState) {
-        child->updateReferences(iterState);
+    child->updateReferences(iterState);
   }
-  
+
   SerializableState* getCurrentState() const {
     return child->getCurrentState();
   }
-  
+
   void setCurrentState(const SerializableState* s) {
     child->setCurrentState(s);
   }
-    
-private:
+
+ private:
   Iterator* child;
   const IteratorState* state;
 };

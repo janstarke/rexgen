@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -29,10 +29,9 @@
 #include <librexgen/string/simplestring.h>
 #include <librexgen/state/invaliditeratoridexception.h>
 
-class TerminalRegexIterator : public Iterator
-{
-public:
-  
+class TerminalRegexIterator : public Iterator {
+ public:
+
   TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
     : Iterator(_id) {
     terminal = new byte[elements*sizeof(uchar_t)];
@@ -41,9 +40,9 @@ public:
       terminal_length += uchar_to_utf(&_terminal[n], &terminal[terminal_length]);
     }
   }
-  
+
   ~TerminalRegexIterator() { delete[] terminal; }
-    
+
   bool next() {
     const bool res = (state == resetted);
     state = usable;
@@ -53,7 +52,7 @@ public:
   bool hasNext() const { return state == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
-private:
+ private:
   byte* terminal;
   size_t terminal_length;
 };

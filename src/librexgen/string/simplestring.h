@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -32,13 +32,13 @@
 #ifdef __cplusplus
 
 class SimpleString {
-public:
+ public:
   SimpleString(size_t msize=512)
     :max_size(msize), current_size(0) {
-      buffer = new byte[msize];
+    buffer = new byte[msize];
   }
   virtual ~SimpleString() { delete[] buffer; }
-  
+
   SimpleString& newline() {
     return push_back('\n');
   }
@@ -60,7 +60,7 @@ public:
     buffer[current_size] = 0;
     return *this;
   }
-  
+
   SimpleString& append(const byte* ch, const size_t& length) {
     if (length < max_size-current_size) {
       memcpy(&buffer[current_size], ch, length);
@@ -68,23 +68,27 @@ public:
     }
     return *this;
   }
-  
+
   void fast_append(const byte* ch, const size_t& length) {
     if (length < max_size-current_size) {
       switch (length) {
-        case 4: buffer[current_size++] = *ch++;
-        case 3: buffer[current_size++] = *ch++;
-        case 2: buffer[current_size++] = *ch++;
-        case 1: buffer[current_size++] = *ch;
+      case 4:
+        buffer[current_size++] = *ch++;
+      case 3:
+        buffer[current_size++] = *ch++;
+      case 2:
+        buffer[current_size++] = *ch++;
+      case 1:
+        buffer[current_size++] = *ch;
       }
     }
   }
 
   SimpleString& append(const char* ch) {
-     while (*ch != '\0') {
-       push_back(char_to_uchar(*ch++));
-     }
-     return *this;
+    while (*ch != '\0') {
+      push_back(char_to_uchar(*ch++));
+    }
+    return *this;
   }
 
   SimpleString& append(int n) {
@@ -96,20 +100,20 @@ public:
 #endif
     return append(buf);
   }
-  
+
   unsigned int size() { return current_size; }
   void clear() { current_size = 0; }
   void print(FILE* stream, bool force = false) {
     if (current_size > (max_size / 2) || force) {
-    fwrite(buffer, sizeof(*buffer), current_size, stream);
-    clear();
+      fwrite(buffer, sizeof(*buffer), current_size, stream);
+      clear();
     }
   }
-  
+
   const byte* __get_buffer_address() const { return buffer; }
   size_t __get_buffer_size() const { return current_size; }
-  
-private:
+
+ private:
   size_t max_size;
   size_t current_size;
   byte* buffer;

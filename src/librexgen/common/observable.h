@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -25,28 +25,27 @@
 
 using namespace std;
 
-class Observable
-{
-public:
+class Observable {
+ public:
   void addObserver(Observer* observer) {
     if (observers.find(observer) == observers.end()) {
       observers.insert(observer);
     }
   }
-  
+
   void notifyObservers() {
     for_each(observers.begin(), observers.end(),
-      [this](Observer* o){o->notify(this);});
+    [this](Observer* o) {o->notify(this);});
   }
-  
+
   void removeObserver(Observer*) {
     auto iter = observers.find(observer);
     if (iter != observers.end()) {
       observers.erase(iter);
     }
   }
-  
-private:
+
+ private:
   set<Oberver*> observers;
 };
 

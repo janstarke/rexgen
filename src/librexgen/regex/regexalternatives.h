@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -27,26 +27,25 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/simplestring.h>
 
-class RegexAlternatives : public RegexContainer
-{
-public:
+class RegexAlternatives : public RegexContainer {
+ public:
   RegexAlternatives(): RegexContainer(), groupId(-1) {}
-  inline void addRegex(Regex *regex) { getChildren()->push_front(regex); }
-  
-  virtual inline const char* getXmlTag() const { return "alternative"; } 
+  inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
+
+  virtual inline const char* getXmlTag() const { return "alternative"; }
   RegexType getRegexType() const { return Alternative; }
-  
+
   int getMaxSize() const;
-  
+
   Iterator* iterator(IteratorState* state) const;
-  
+
   Iterator* singleIterator(IteratorState* state) const;
-  
+
   Iterator* getContainerIterator();
-  
+
   int getGroupId() const { return groupId; }
   void setGroupId (int _id) { groupId = _id; }
-private:
+ private:
   int groupId;
 };
 

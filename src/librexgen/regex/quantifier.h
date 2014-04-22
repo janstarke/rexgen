@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -21,10 +21,9 @@
 #ifndef QUANTIFIER_H
 #define QUANTIFIER_H
 
-class Quantifier
-{
+class Quantifier {
 
-public:
+ public:
   Quantifier() : min(1), max(1) {}
   Quantifier(unsigned int _min, unsigned int _max) : min(_min), max(_max) {}
   Quantifier ( const Quantifier& other ): min(other.min), max(other.max) {}
@@ -37,14 +36,14 @@ public:
   virtual bool operator== ( const Quantifier& other ) const {
     return (this->min == other.min) && (this->max == other.max);
   }
-  
+
   inline unsigned int getMin() const { return min; }
   inline unsigned int getMax() const { return max; }
-  
+
   inline void setMin(unsigned _min) { min = _min; }
   inline void setMax(unsigned _max) { max = _max; }
-  
-public:
+
+ public:
   unsigned int min;
   unsigned int max;
 };

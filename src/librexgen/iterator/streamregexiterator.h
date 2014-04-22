@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -25,36 +25,36 @@
 #include <librexgen/api/c/iterator.h>
 
 
-class StreamRegexIterator : public Iterator
-{
-public:
-    StreamRegexIterator(int _id, FILE* in, callback_fp cb)
-      : Iterator(_id), infile(in), callback(cb) {
-        state = resetted; readNextWord();
-    }
-    bool next() {
-      const bool res = (state == resetted);
-      state = usable;
-      return res;
-    }
-    bool forceNext() {
-      readNextWord();
-      return __hasNext;      
-    }
-    bool hasNext() const { return state == resetted; }
-    void value(SimpleString& dst) const {
-      dst.append(buffer);
-    }
-    void updateReferences(IteratorState* /* iterState */) {}
-    bool isSingleton() const { return true; }
-    
-    SerializableState* getCurrentState() const;
-    void setCurrentState(const SerializableState* state);
-private:
+class StreamRegexIterator : public Iterator {
+ public:
+  StreamRegexIterator(int _id, FILE* in, callback_fp cb)
+    : Iterator(_id), infile(in), callback(cb) {
+    state = resetted;
+    readNextWord();
+  }
+  bool next() {
+    const bool res = (state == resetted);
+    state = usable;
+    return res;
+  }
+  bool forceNext() {
+    readNextWord();
+    return __hasNext;
+  }
+  bool hasNext() const { return state == resetted; }
+  void value(SimpleString& dst) const {
+    dst.append(buffer);
+  }
+  void updateReferences(IteratorState* /* iterState */) {}
+  bool isSingleton() const { return true; }
+
+  SerializableState* getCurrentState() const;
+  void setCurrentState(const SerializableState* state);
+ private:
   void readNextWord();
-  
+
   FILE* infile;
-	callback_fp callback;
+  callback_fp callback;
   char buffer[4096];
   bool __hasNext;
 };

@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -29,12 +29,12 @@ c_simplestring_ptr c_simplestring_new() { return new SimpleString(); }
 
 EXPORT
 void c_simplestring_delete(c_simplestring_ptr s) {
-	delete (reinterpret_cast<SimpleString*>(s));
+  delete (reinterpret_cast<SimpleString*>(s));
 }
 
 EXPORT
 void c_simplestring_newline(c_simplestring_ptr s) {
-	(reinterpret_cast<SimpleString*>(s))->newline();
+  (reinterpret_cast<SimpleString*>(s))->newline();
 }
 
 EXPORT
@@ -44,11 +44,11 @@ void c_simplestring_terminate(c_simplestring_ptr s) {
 
 EXPORT
 void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush = 0) {
-	(reinterpret_cast<SimpleString*>(s))->print(dst, (bool)flush);
+  (reinterpret_cast<SimpleString*>(s))->print(dst, (bool)flush);
 }
 EXPORT
 void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch) {
-	(reinterpret_cast<SimpleString*>(s))->push_back(ch);
+  (reinterpret_cast<SimpleString*>(s))->push_back(ch);
 }
 
 EXPORT

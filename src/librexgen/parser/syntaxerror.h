@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -21,14 +21,14 @@
 #define __syntaxerror_h__
 
 class SyntaxError {
-public:
+ public:
   SyntaxError(const char* msg)
     : message(msg) {}
-    
-    const char* getMessage() { return message; }
-private:
+
+  const char* getMessage() { return message; }
+ private:
   const char* message;
-    
+
 };
 
 #endif

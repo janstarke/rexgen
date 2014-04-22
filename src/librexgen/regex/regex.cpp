@@ -1,5 +1,5 @@
 /*
-    rexgen - a tool to create words based on regular expressions    
+    rexgen - a tool to create words based on regular expressions
     Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
@@ -22,23 +22,23 @@
 int Regex::next_id = 0;
 
 void Regex::xmlEncapsulate(
-    SimpleString& dst, const char* clazz, int level) const {
+  SimpleString& dst, const char* clazz, int level) const {
   dst .push_back('<')
-      .append(clazz)
-      .append(" id=\"")
-      .append(getId())
-      .append("\" min=\"")
-      .append(getMinOccurs())
-      .append("\" max=\"")
-      .append(getMaxOccurs())
-      .append("\">")
-      .newline();
+  .append(clazz)
+  .append(" id=\"")
+  .append(getId())
+  .append("\" min=\"")
+  .append(getMinOccurs())
+  .append("\" max=\"")
+  .append(getMaxOccurs())
+  .append("\">")
+  .newline();
   appendContent(dst, level+1);
   appendSpace(dst, level);
   dst .append("</")
-      .append(clazz)
-      .append(">")
-      .newline();
+  .append(clazz)
+  .append(">")
+  .newline();
 }
 
 void Regex::appendSpace(SimpleString& dst, int count) const {
