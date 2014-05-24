@@ -21,6 +21,9 @@
 #include "serializablestate.h"
 #include <algorithm>
 #include <map>
+#include <cstddef>
+
+using std::size_t;
 
 SerializableState::SerializableState(SerializableState::stateword_t id) {
   iterator_id = id;

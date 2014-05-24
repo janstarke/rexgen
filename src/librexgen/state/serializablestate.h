@@ -25,9 +25,11 @@
 #include <stdint.h>
 #include <vector>
 #include <map>
+#include <cstddef>
 
 using std::map;
 using std::vector;
+using std::size_t;
 
 class SerializableState {
  public:
