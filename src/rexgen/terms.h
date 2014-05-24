@@ -102,7 +102,7 @@ const char* terms_and_conditions =
   "\n"
   "    a) Accompany it with the complete corresponding machine-readable\n"
   "    source code, which must be distributed under the terms of Sections\n"
-  "    1 and 2 above on a medium customarily used for software interchange; or,\n"
+  "    1 and 2 above on a medium customarily used for software interchange; or,\n" /* NOLINT(whitespace/line_length) */
   "\n"
   "    b) Accompany it with a written offer, valid for at least three\n"
   "    years, to give any third party, for a charge no more than your\n"
@@ -209,7 +209,7 @@ const char* terms_and_conditions =
   "later version\", you have the option of following the terms and conditions\n"
   "either of that version or of any later version published by the Free\n"
   "Software Foundation.  If the Program does not specify a version number of\n"
-  "this License, you may choose any version ever published by the Free Software\n"
+  "this License, you may choose any version ever published by the Free Software\n" /* NOLINT(whitespace/line_length) */
   "Foundation.\n"
   "\n"
   "  10. If you wish to incorporate parts of the Program into other free\n"
@@ -225,17 +225,17 @@ const char* terms_and_conditions =
   "  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
   "FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
   "OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n"
-  "PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n"
+  "PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n" /* NOLINT(whitespace/line_length) */
   "OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n"
   "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n"
   "TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
   "PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n"
   "REPAIR OR CORRECTION.\n"
   "\n"
-  "  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n"
+  "  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n" /* NOLINT(whitespace/line_length) */
   "WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n"
   "REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n"
-  "INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n"
+  "INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n" /* NOLINT(whitespace/line_length) */
   "OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n"
   "TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n"
   "YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n"

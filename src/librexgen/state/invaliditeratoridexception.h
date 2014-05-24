@@ -24,7 +24,6 @@
 #ifdef __cplusplus
 
 class InvalidIteratorIdException {
-
 };
 
 #endif /* __cplusplus */

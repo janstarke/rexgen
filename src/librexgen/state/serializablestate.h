@@ -22,16 +22,17 @@
 #define SERIALIZABLESTATE_H
 
 #ifdef __cplusplus
+#include <stdint.h>
 #include <vector>
 #include <map>
-#include <stdint.h>
 
-using namespace std;
+using std::map;
+using std::vector;
 
 class SerializableState {
  public:
   typedef int32_t stateword_t;
-  SerializableState(stateword_t id);
+  explicit SerializableState(stateword_t id);
   SerializableState(const stateword_t* vptr, size_t& words);
   ~SerializableState();
   void serialize(vector<stateword_t>* dst) const;
