@@ -18,10 +18,6 @@ foreach(testcase ${testcases})
   STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\2" test_regex ${testcase})
   STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\3" test_hash  ${testcase})
 
-  MESSAGE(STATUS "test_name  = ${test_name}")
-  MESSAGE(STATUS "test_regex = ${test_regex}")
-  MESSAGE(STATUS "test_hash  = ${test_hash}")
-  
   add_test( NAME "${test_name}"
             COMMAND ${CMAKE_COMMAND}
             -DTEST_PROG=$<TARGET_FILE:rexgen>

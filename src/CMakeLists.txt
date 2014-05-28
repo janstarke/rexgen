@@ -2,7 +2,7 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 project(rexgen)
 set(prj rexgen)
 
-cmake_minimum_required(VERSION 2.8.10)
+cmake_minimum_required(VERSION 2.8.12)
 set(LUA_VERSION "5.2")
 
 include (cmake/version.cmake)
