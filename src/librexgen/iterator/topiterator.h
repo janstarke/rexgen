@@ -38,8 +38,8 @@ class TopIterator : public Iterator {
       /* this happens when we only have a StreamIterator */
       if (child == state->getStreamIterator()) {
         child = NULL;
+	delete (state->getStreamIterator());
       }
-      delete (state->getStreamIterator());
     }
 
     if (child != NULL) {

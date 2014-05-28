@@ -45,15 +45,12 @@ class ClassRegexIterator : public Iterator {
 
   inline void value(SimpleString& dst) const {
     dst.fast_append(current->value, current->length);
-    //this->bFirstUsed = true;
   }
 
   bool next();
 
   inline bool hasNext() const { return  (current < last); }
   inline bool canUseValue() const { return (current<=last); }
-  //inline bool needNextFirst() const { return (current == first-1); }
-  //inline bool firstUsed() const { return bFirstUsed; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
 
@@ -73,7 +70,6 @@ class ClassRegexIterator : public Iterator {
   buffered_character* current, *first, *last;
   vector<buffered_character> characters;
   const bool randomize;
-  //bool bFirstUsed;
 };
 
 #endif // CLASSREGEXITERATOR_H
