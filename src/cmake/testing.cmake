@@ -14,8 +14,8 @@ STRING(REGEX REPLACE ";" "\\\\;" testcases "${testcases}")
 STRING(REGEX REPLACE "\n" ";" testcases "${testcases}")
 
 foreach(testcase ${testcases})
-  STRING(REGEX REPLACE ":([A-Fa-f0-9]+) -\$" "\\1" test_hash ${testcase})
-  STRING(REGEX REPLACE "^(.*):[A-Fa-f0-9]+ -\$" "\\1" test_regex ${testcase})
+  STRING(REGEX REPLACE "^(.+):([A-Fa-f0-9]+) -\$" "\\1" test_regex ${testcase})
+  STRING(REGEX REPLACE "^(.+):([A-Fa-f0-9]+) -\$" "\\2" test_hash ${testcase})
   
   SET(test_name "regex:${test_regex}")
   
@@ -24,7 +24,7 @@ foreach(testcase ${testcases})
             -DTEST_PROG=$<TARGET_FILE:rexgen>
             -DREGEX=${test_regex}
             -DHASH=${test_hash}
-            -P "${PROJECT_SOURCE_DIR}/test/runtest.cmake" )
+            -P "${PROJECT_SOURCE_DIR}/test/singletest.cmake" )
   
   # add_test( NAME "valgrind:${test_regex}"
   #            COMMAND 
