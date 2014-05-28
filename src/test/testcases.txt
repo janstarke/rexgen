@@ -1,1 +1,3 @@
-test[0-9]:437e2d1569f62e00024feb246f8eac7a -
+simple:test[0-9]:437e2d1569f62e00024feb246f8eac7a -
+alternatives1:([a-b])test([0-1]|[g-h]):95ea6d20025da38ffe62518b9d78cde3  -
+class1:([a-b])test([0-1g-h]):e5a6a130a0039b4544cba1ab63468f6f  -

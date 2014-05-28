@@ -14,12 +14,15 @@ STRING(REGEX REPLACE ";" "\\\\;" testcases "${testcases}")
 STRING(REGEX REPLACE "\n" ";" testcases "${testcases}")
 
 foreach(testcase ${testcases})
-  STRING(REGEX REPLACE "^(.+):([A-Fa-f0-9]+) -\$" "\\1" test_regex ${testcase})
-  STRING(REGEX REPLACE "^(.+):([A-Fa-f0-9]+) -\$" "\\2" test_hash ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\1" test_name  ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\2" test_regex ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\3" test_hash  ${testcase})
+
+  MESSAGE(STATUS "test_name  = ${test_name}")
+  MESSAGE(STATUS "test_regex = ${test_regex}")
+  MESSAGE(STATUS "test_hash  = ${test_hash}")
   
-  SET(test_name "regex:${test_regex}")
-  
-  add_test( NAME ${test_name}
+  add_test( NAME "${test_name}"
             COMMAND ${CMAKE_COMMAND}
             -DTEST_PROG=$<TARGET_FILE:rexgen>
             -DREGEX=${test_regex}
