@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <vector>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
@@ -31,92 +32,33 @@
 
 #ifdef __cplusplus
 
+using std::vector;
+
 class SimpleString {
  public:
-  SimpleString(size_t msize=512)
-    :max_size(msize), current_size(0) {
-    buffer = new byte[msize];
-  }
-  virtual ~SimpleString() { delete[] buffer; }
+  SimpleString(size_t msize=512);
+	const uchar_t& operator[](const unsigned int idx) const; 
+	int to_binary_string(char* buffer, size_t buffer_size) const;
 
-  SimpleString& newline() {
-    return push_back('\n');
-  }
+  void newline();
 
-  SimpleString& push_back(byte ch) {
-    if (current_size < max_size) {
-      buffer[current_size] = ch;
-      current_size++;
-    }
-    return *this;
-  }
+	bool isalpha(unsigned int n) const;
+	bool islower(unsigned int n) const;
+	bool isupper(unsigned int n) const;
 
-  SimpleString& push_back(const uchar_t& c) {
-    fast_append(firstByteAddressOf(&c), c.char_length);
-    return *this;
-  }
+	void tolower(unsigned int n);
+	void toupper(unsigned int n);
 
-  SimpleString& terminate() {
-    buffer[current_size] = 0;
-    return *this;
-  }
+	void push_back(char ch);
+  void push_back(const uchar_t& c);
+  void append(const char* ch);
 
-  SimpleString& append(const byte* ch, const size_t& length) {
-    if (length < max_size-current_size) {
-      memcpy(&buffer[current_size], ch, length);
-      current_size += length;
-    }
-    return *this;
-  }
-
-  void fast_append(const byte* ch, const size_t& length) {
-    if (length < max_size-current_size) {
-      switch (length) {
-      case 4:
-        buffer[current_size++] = *ch++;
-      case 3:
-        buffer[current_size++] = *ch++;
-      case 2:
-        buffer[current_size++] = *ch++;
-      case 1:
-        buffer[current_size++] = *ch;
-      }
-    }
-  }
-
-  SimpleString& append(const char* ch) {
-    while (*ch != '\0') {
-      push_back(char_to_uchar(*ch++));
-    }
-    return *this;
-  }
-
-  SimpleString& append(int n) {
-    char buf[32];
-#ifdef _WIN32
-    _itoa_s(n, buf, sizeof(buf)/sizeof(buf[0])-1, 10);
-#else
-    snprintf(buf, sizeof(buf)-1, "%d", n);
-#endif
-    return append(buf);
-  }
-
-  unsigned int size() { return current_size; }
-  void clear() { current_size = 0; }
-  void print(FILE* stream, bool force = false) {
-    if (current_size > (max_size / 2) || force) {
-      fwrite(buffer, sizeof(*buffer), current_size, stream);
-      clear();
-    }
-  }
-
-  const byte* __get_buffer_address() const { return buffer; }
-  size_t __get_buffer_size() const { return current_size; }
+  void clear();
+	size_t size() const;
+	size_t get_buffer_size() const;
 
  private:
-  size_t max_size;
-  size_t current_size;
-  byte* buffer;
+	vector<uchar_t> characters;
 };
 
 #endif /* __cplusplus */

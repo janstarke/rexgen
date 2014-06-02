@@ -49,6 +49,7 @@ class CaseIterator : public Iterator {
     }
   }
 
+
  private:
 
  void readNextFromChild();

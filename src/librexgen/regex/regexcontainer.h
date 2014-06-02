@@ -47,14 +47,6 @@ class RegexContainer : public Regex {
     return __size * getMaxOccurs();
   }
 
-  void appendContent(SimpleString& dst, int level) const {
-    for (deque<Regex*>::const_iterator re=regexObjects.begin();
-         re!=regexObjects.end(); ++re) {
-      appendSpace(dst, level);
-      (*re)->appendRawValue(dst, level);
-    }
-  }
-
   unsigned int size() { return getChildren()->size(); }
 
  protected:

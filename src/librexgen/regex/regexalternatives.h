@@ -34,7 +34,6 @@ class RegexAlternatives : public RegexContainer {
 	}
   inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
 
-  virtual inline const char* getXmlTag() const { return "alternative"; }
   RegexType getRegexType() const { return Alternative; }
 
   int getMaxSize() const;

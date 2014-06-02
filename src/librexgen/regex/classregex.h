@@ -58,10 +58,6 @@ class ClassRegex : public Regex {
 
   RegexType getRegexType() const { return Class; }
 
-  void appendContent(SimpleString& dst, int level) const;
-
-  const char* getXmlTag() const { return "class"; }
-
   Iterator* singleIterator(IteratorState* /* state */) const;
 
  private:

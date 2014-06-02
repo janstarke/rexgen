@@ -52,27 +52,11 @@ class Regex  {
 
   inline void setQuantifier(const Quantifier& q) { quantifier = q; }
 
-  virtual const char* getXmlTag() const = 0;
   virtual RegexType getRegexType() const = 0;
 
   virtual inline int getMaxSize() const {
     return getMaxOccurs();
   }
-
-  inline void appendRawValue(SimpleString& dst) const {
-    appendRawValue(dst, 0);
-  }
-
-  inline void appendRawValue(SimpleString& dst, int level) const {
-    return xmlEncapsulate(dst, getXmlTag(), level);
-  }
-
-  void appendSpace(SimpleString& dst, int count) const;
-
-  virtual void appendContent(SimpleString& dst, int level) const = 0;
-
-  virtual void xmlEncapsulate(SimpleString& dst, const char* clazz,
-                              int level) const;
 
   virtual Iterator* iterator(IteratorState* state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {

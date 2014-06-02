@@ -18,7 +18,85 @@
 */
 
 
+#include <ctype.h>
 #include <librexgen/string/simplestring.h>
+
+SimpleString::SimpleString(size_t msize)
+	:characters(msize) {
+}
+
+const uchar_t& SimpleString::operator[](const unsigned int idx) const {
+	return characters[idx];
+}
+
+size_t SimpleString::size() const {
+	return characters.size();
+}
+
+
+bool SimpleString::isalpha(unsigned int n) const {
+	return (uchar_isascii(characters[n]) && ::isalpha(characters[n].character.ansi.value));
+}
+bool SimpleString::islower(unsigned int n) const {
+	return (uchar_isascii(characters[n]) && ::islower(characters[n].character.ansi.value));
+}
+
+bool SimpleString::isupper(unsigned int n) const {
+	return (uchar_isascii(characters[n]) && ::isupper(characters[n].character.ansi.value));
+}
+
+void SimpleString::tolower(unsigned int n) {
+	if (uchar_isascii(characters[n])) {
+		characters[n].character.ansi.value = ::tolower(characters[n].character.ansi.value);
+	}
+}
+void SimpleString::toupper(unsigned int n) {
+	if (uchar_isascii(characters[n])) {
+		characters[n].character.ansi.value = ::toupper(characters[n].character.ansi.value);
+	}
+}
+
+
+void SimpleString::append(const char* ch) {
+	while (*ch != '\0') {
+		push_back(char_to_uchar(*ch++));
+	}
+}
+
+size_t SimpleString::get_buffer_size() const {
+	return characters.size();
+}
+
+void SimpleString::clear() {
+	characters.clear();
+}
+
+void SimpleString::push_back(char ch) {
+	push_back(char_to_uchar(ch));
+}
+
+void SimpleString::push_back(const uchar_t& c) {
+	characters.push_back(c);
+}
+
+void SimpleString::newline() {
+	return push_back('\n');
+}
+
+int SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
+	char* ptr = dst;
+	int count = 0;
+	for (unsigned int idx=0; idx<characters.size() && buffer_size>(4+1); ++idx) {
+		const uint8_t char_size = uchar_to_ansi(&characters[idx], ptr);
+		ptr += char_size;
+		buffer_size -= char_size;
+	}
+	if (buffer_size > 1) {
+		*ptr = 0;
+		++count;
+	}
+	return count;
+}
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,22 +116,13 @@ void c_simplestring_newline(c_simplestring_ptr s) {
 }
 
 EXPORT
-void c_simplestring_terminate(c_simplestring_ptr s) {
-  (reinterpret_cast<SimpleString*>(s))->terminate();
-}
-
-EXPORT
-void c_simplestring_print(c_simplestring_ptr s, FILE* dst, int flush = 0) {
-  (reinterpret_cast<SimpleString*>(s))->print(dst, (bool)flush);
-}
-EXPORT
 void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch) {
   (reinterpret_cast<SimpleString*>(s))->push_back(ch);
 }
 
 EXPORT
-const char* c_simplestring_bufferaddress(c_simplestring_ptr s) {
-  return (reinterpret_cast<SimpleString*>(s))->__get_buffer_address();
+int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer, size_t buffer_size) {
+  return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer, buffer_size);
 }
 
 EXPORT

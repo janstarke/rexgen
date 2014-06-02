@@ -49,7 +49,7 @@ int ClassRegex::__insert_character(const uchar_t& ch) {
 
 void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
   __insert_character(ch);
-  if (ignoreCase && uchar_isascii(&ch)) {
+  if (ignoreCase && uchar_isascii(ch)) {
     uchar_t uch;
 
     if (islower(ch.character.ansi.value)) {
@@ -74,7 +74,7 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b,
     codepoint_to_uchar(&ch, a++, uch_a.variant);
     count += __append_character(ch);
 
-    if (ignoreCase && uchar_isascii(&ch)) {
+    if (ignoreCase && uchar_isascii(ch)) {
       if (islower(ch.character.ansi.value)) {
         codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
         count += __append_character(uch);
@@ -88,16 +88,6 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b,
   }
 
   return count;
-}
-
-void ClassRegex::appendContent(SimpleString& dst, int level) const {
-  appendSpace(dst, level);
-
-  for (vector<uchar_t>::const_iterator iter=characters.begin();
-       iter!=characters.end(); ++iter) {
-    dst.push_back(*iter);
-  }
-  dst.newline();
 }
 
 Iterator* ClassRegex::singleIterator(IteratorState* state) const {

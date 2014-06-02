@@ -30,11 +30,3 @@ void TerminalRegex::prepend(const TerminalRegex* tre) {
   }
 }
 
-void TerminalRegex::appendContent(
-  SimpleString& dst, int level) const {
-  appendSpace(dst, level);
-  for (vector<uchar_t>::const_iterator iter=value.begin(); iter!=value.end();
-       ++iter) {
-    dst.push_back(*iter);
-  }
-}

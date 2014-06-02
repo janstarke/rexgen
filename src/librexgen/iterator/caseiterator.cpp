@@ -20,12 +20,11 @@
 #include <librexgen/iterator/caseiterator.h>
 
 CaseIterator::CaseIterator(Iterator* __child)
-	: Iterator(-1), child(__child), word(NULL), length(0), childHasNext(false) {
+	: Iterator(-1), child(__child), childHasNext(false) {
 }
 
 CaseIterator::~CaseIterator() {
 	delete child;
-	delete word;
 }
 
 void CaseIterator::readNextFromChild() {
@@ -33,41 +32,37 @@ void CaseIterator::readNextFromChild() {
 
 	childHasNext = child->next();
 	child->value(word);
-	for(int n=0; n<length; ++n) {
-		if (uchar_isascii(str[n])) {
-			codepoint_to_uchar(&word[n], tolower(str[n].character.ansi.value), str[n].encoding);
-		} else {
-			word[n] = str[n];
-		}
+	for(unsigned int n=0; n<word.size(); ++n) {
+		word.tolower(n);
 	}
 }
 
-bool CaseIterator::next() {
-	if (word == NULL) {
-		childHasNext = readNextFromChild();
+bool CaseIterator::hasNext() const {
+	if (word.size() == 0) {
+		return child->hasNext();
+	}
+	return true;
+}
 
+bool CaseIterator::next() {
+	if (word.size() == 0) {
+		readNextFromChild();
 	}
 
-	for (int idx=0; idx<length; ++idx) {
+	for (unsigned int n=0; n<word.size(); ++n) {
 		
-		if (! uchar_isascii(word[n])) {
-			continue;
+		if (word.islower(n)) {
+			word.toupper(n);
+			return childHasNext;
 		}
 
-		if (islower(word[n].character.ansi.value)) {
-			word[n].character.ansi.value = toupper(word[n].character.ansi.value);
-			return childNasNext;
-		}
-
-		if (isupper(word[n].character.ansi.value) {
-			word[n].character.ansi.value = tolower(word[n].character.ansi.value);
-		}
+		word.tolower(n);
 	}
 	return childHasNext;
 }
 
 void CaseIterator::value(SimpleString& dst) const {
-	for (int n=0; n<length; ++n) {
+	for (unsigned int n=0; n<word.size(); ++n) {
 		dst.push_back(word[n]);
 	}
 }

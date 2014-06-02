@@ -29,9 +29,7 @@ class GroupReference : public Regex {
  public:
   GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
   Iterator* singleIterator(IteratorState* state) const;
-  void appendContent(SimpleString& dst, int level) const;
   RegexType getRegexType() const { return Reference; }
-  const char* getXmlTag() const { return "ref"; }
 
   int getGroupId() const { return groupId; }
   const Regex* getRegex() const { return groupRef; }

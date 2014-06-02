@@ -228,6 +228,7 @@ const char* callback() {
 
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = c_simplestring_new();
+	char binary_string[512];
   /*
   SimpleString syntaxTree;
   Regex* regex = NULL;
@@ -287,8 +288,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    c_simplestring_terminate(buffer);
-    printf("%s\n", c_simplestring_bufferaddress(buffer));
+		c_simplestring_to_binary_string(buffer, binary_string, sizeof(binary_string));
+    printf("%s\n", binary_string);
 
 #ifdef DEBUG_STATE
     /* These show how to save-restore state */

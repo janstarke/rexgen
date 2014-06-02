@@ -188,12 +188,12 @@ uint8_t uchar_to_utf(const uchar_t* uch, byte* dst) {
 }
 
 EXPORT
-int uchar_isascii(const uchar_t* uch) {
-  return (      (uch->variant == CHARSET_ANSI)
-                ||        (uch->char_length == 1)
-                ||        (uch->character.bytes[0]==0
-                           && uch->character.bytes[1]==0
-                           && uch->character.bytes[2]==0));
+bool uchar_isascii(const uchar_t& uch) {
+  return (      (uch.variant == CHARSET_ANSI)
+                ||        (uch.char_length == 1)
+                ||        (uch.character.bytes[0]==0
+                           && uch.character.bytes[1]==0
+                           && uch.character.bytes[2]==0));
 }
 
 EXPORT

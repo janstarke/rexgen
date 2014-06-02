@@ -28,8 +28,3 @@ Iterator* GroupReference::singleIterator(IteratorState* /* state */) const {
   return new GroupReferenceIterator(getId(), groupRef->getGroupId());
 }
 
-void GroupReference::appendContent(
-  SimpleString& dst, int level) const {
-  appendSpace(dst, level);
-  dst.append(groupRef->getId());
-}

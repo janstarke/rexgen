@@ -23,25 +23,19 @@
 ClassRegexIterator::ClassRegexIterator(
   int _id, IteratorState* iterstate, const uchar_t* classcontent, size_t elements)
   :Iterator(_id),
-   current(NULL), first(NULL), last(NULL),
+   current(-1),
    randomize(iterstate->getRandomize()) {
   for (size_t n=0; n<elements; ++n) {
-    buffered_character c;
-    c.length = uchar_to_utf(&classcontent[n], &(c.value[0]));
-    characters.push_back(c);
+    characters.push_back(classcontent[n]);
   }
-  first = &(*(characters.begin()));
-  last = &(*(characters.rbegin()));
-  current = first-1;
   state = usable;
-  //bFirstUsed = false;
 }
 
 bool ClassRegexIterator::next() {
   ++current;
-  if (current > last) {
+  if (current >= (int)characters.size()) {
     if (randomize) {shuffle();}
-    current = first;
+    current = 0;
     return false;
   }
   return true;
@@ -49,13 +43,13 @@ bool ClassRegexIterator::next() {
 
 SerializableState* ClassRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  s->addValue(current - first);
+  s->addValue(current);
   return s;
 }
 
 void ClassRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
-  current = first + s->getValue(0);
+  current = s->getValue(0);
 }
 
 

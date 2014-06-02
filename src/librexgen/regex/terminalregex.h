@@ -44,11 +44,7 @@ class TerminalRegex : public Regex {
 
   inline const char_type* getValue() const { return NULL; }
 
-  inline const char* getXmlTag() const { return "terminal"; }
-
   RegexType getRegexType() const { return Terminal; }
-
-  void appendContent(SimpleString& dst, int level) const;
 
   Iterator* singleIterator(IteratorState* /* state */) const
   { return new TerminalRegexIterator(getId(), &value[0], value.size()); }

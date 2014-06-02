@@ -44,13 +44,13 @@ class ClassRegexIterator : public Iterator {
   virtual ~ClassRegexIterator() {}
 
   inline void value(SimpleString& dst) const {
-    dst.fast_append(current->value, current->length);
+		dst.push_back(characters[current]);
   }
 
   bool next();
 
-  inline bool hasNext() const { return  (current < last); }
-  inline bool canUseValue() const { return (current<=last); }
+  inline bool hasNext() const { return  (current < ((int)characters.size()-1)); }
+  inline bool canUseValue() const { return (current < (int)characters.size()); }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
 
@@ -58,17 +58,10 @@ class ClassRegexIterator : public Iterator {
   void setCurrentState(const SerializableState* state);
  private:
   inline void shuffle() {
-    random_shuffle(characters.begin(), characters.end());
-    first = &(*characters.begin());
-    last = &(*characters.rbegin());
   }
 
-  struct buffered_character {
-    byte value[4];
-    uint8_t length;
-  };
-  buffered_character* current, *first, *last;
-  vector<buffered_character> characters;
+  int current;
+  vector<uchar_t> characters;
   const bool randomize;
 };
 

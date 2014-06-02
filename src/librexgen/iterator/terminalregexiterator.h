@@ -34,11 +34,9 @@ class TerminalRegexIterator : public Iterator {
 
   TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
     : Iterator(_id) {
-    terminal = new byte[elements*sizeof(uchar_t)];
-    terminal_length = 0;
-    for (size_t n = 0; n < elements; ++n) {
-      terminal_length += uchar_to_utf(&_terminal[n], &terminal[terminal_length]);
-    }
+    terminal = new uchar_t[elements];
+		memcpy(terminal, _terminal, elements*sizeof(terminal[0]));
+    terminal_length = elements;
   }
 
   ~TerminalRegexIterator() { delete[] terminal; }
@@ -48,12 +46,16 @@ class TerminalRegexIterator : public Iterator {
     state = usable;
     return res;
   }
-  void value(SimpleString& dst) const { dst.append(terminal, terminal_length); }
+  void value(SimpleString& dst) const {
+		for (unsigned int idx=0; idx<terminal_length; ++idx) {
+			dst.push_back(terminal[idx]);
+		}
+	}
   bool hasNext() const { return state == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
  private:
-  byte* terminal;
+  uchar_t* terminal;
   size_t terminal_length;
 };
 

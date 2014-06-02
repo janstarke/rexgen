@@ -66,6 +66,13 @@ typedef struct __uchar_t {
 
 #ifdef __cplusplus
 extern "C" {
+EXPORT
+bool uchar_isascii(const uchar_t& uch);
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 EXPORT
@@ -94,9 +101,6 @@ uint8_t uchar_to_utf(const uchar_t* uch, byte* dst);
 
 EXPORT
 uchar_t create_BOM(charset cs);
-
-EXPORT
-int uchar_isascii(const uchar_t* uch);
 
 #ifdef __cplusplus
 }
