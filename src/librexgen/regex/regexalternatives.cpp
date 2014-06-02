@@ -22,6 +22,7 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
+#include <librexgen/iterator/caseiterator.h>
 using namespace std;
 
 int RegexAlternatives::getMaxSize() const {
@@ -42,7 +43,11 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
        iter != regexObjects.end(); iter++) {
     rai->addChild((*iter)->iterator(state));
   }
-  return rai;
+	if (ignore_case) {
+		return new CaseIterator(rai);
+	} else {
+  	return rai;
+	}
 }
 
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {

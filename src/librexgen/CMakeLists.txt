@@ -50,6 +50,7 @@ set(librexgen_sources
   iterator/groupreferenceiterator.cpp
   iterator/classregexiterator.cpp
   iterator/streamregexiterator.cpp
+  iterator/caseiterator.cpp
   state/serializablestate.cpp
   string/uchar.cpp
 	string/simplestring.cpp

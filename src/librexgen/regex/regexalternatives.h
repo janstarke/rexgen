@@ -26,10 +26,12 @@
 #include <librexgen/regex/regexcontainer.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/simplestring.h>
+#include <librexgen/parser/group_options.h>
 
 class RegexAlternatives : public RegexContainer {
  public:
-  RegexAlternatives(): RegexContainer(), groupId(-1) {}
+  RegexAlternatives(): RegexContainer(), groupId(-1),ignore_case(false) {
+	}
   inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
 
   virtual inline const char* getXmlTag() const { return "alternative"; }
@@ -45,8 +47,14 @@ class RegexAlternatives : public RegexContainer {
 
   int getGroupId() const { return groupId; }
   void setGroupId (int _id) { groupId = _id; }
+
+	void setGroupOptions(const t_group_options* opts) {
+		ignore_case = opts->ignore_case;
+		setGroupId(opts->group_id);
+	}
  private:
   int groupId;
+	bool ignore_case;
 };
 
 #endif // REGEXALTERNATIVES_H

@@ -35,6 +35,7 @@
   #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
+	#include <librexgen/parser/group_options.h>
   
   #include <cstdio>
   
@@ -56,7 +57,8 @@
 %union {
   uint32_t		character;
   int 			integer;
-  int 			groupId;
+
+	t_group_options* group_options;
   Regex* 		regex;
   RegexAlternatives* 	regex_alternatives;
   CompoundRegex* 	compound_regex;
@@ -64,6 +66,7 @@
   ClassRegex* 		class_regex;
   TerminalRegex* 	terminal_regex;
   GroupReference* 	group_reference;
+
 }
 
 %token <character> T_PIPE
@@ -74,8 +77,9 @@
 %token <integer>   T_NUMBER
 %token <integer>   T_GROUPID
 %token <integer>   T_STREAM
-%token <character> T_BEGIN_GROUP
+%token <group_options> T_BEGIN_GROUP
 %token <character> T_END_GROUP
+%token <integer>   T_GROUP_OPTIONS
 %token <character> T_BEGIN_CLASS
 %token <character> T_END_CLASS
 %token <character> T_COMMA
@@ -92,6 +96,7 @@
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
 %type <regex> Stream;
+
 
 %%
 
@@ -174,7 +179,7 @@ ClassContentWithoutHyphen:
   T_ANY_CHAR T_HYPHEN T_ANY_CHAR
   { ClassRegex* re = new ClassRegex(context->encoding()); 
     if (re->addRange($1, $3, context->ignoreCase()) < 1) {
-      throw SyntaxError("empty range specified in class regex");
+      throw SyntaxError("empty range specified in class regex", @1.first_column);
     }
     $$=re; }
 |  T_ANY_CHAR T_HYPHEN T_ANY_CHAR ClassContentWithoutHyphen
@@ -183,12 +188,13 @@ ClassContentWithoutHyphen:
 GroupRegex:
   T_BEGIN_GROUP
   {
-    $<groupId>$ = context->groupId++;
+    $<group_options>$->group_id = context->groupId++;
   }
   T_RegexAlternatives T_END_GROUP
   { 
     RegexAlternatives* ra = $3; 
-    ra->setGroupId($<groupId>2);
+		ra->setGroupOptions($<group_options>2);
+		delete $<group_options>2;
     context->registerGroup(ra);
     context->updateGroupReferences(ra);
     $$ = ra;
@@ -209,7 +215,7 @@ GroupReference: T_GROUPID {
 
 Stream: T_STREAM {
   if (context->getInFile() == NULL && context->getStreamCallback() == NULL) {
-    throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.");
+    throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.", @1.first_column);
   }
    $$ = context->getStreamRegex();
 };

@@ -30,6 +30,7 @@
   #include <librexgen/string/unicode.h>
   #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
+	#include <librexgen/parser/group_options.h>
   #include "parser.hpp"
   #include <cstdio>
 
@@ -104,16 +105,19 @@
   }
 %}
 
-DIGIT		[0-9]
-ALPHA		[_a-zA-Z]
-ANSICHAR	\\x[0-9a-fA-F]{2,2}
-UNICODECHAR	\\u[0-9a-fA-F]{4,4}
-LINEFEED	\\n
-CARRIAGERETURN	\\r
-SPECIAL		[ \t\r\n.,;:=/%&?<>-]
-GROUPID		\\[1-9]
-STREAM          \\0
-ESCAPED		\\[^xnur0-9]
+DIGIT									[0-9]
+ALPHA									[_a-zA-Z]
+ANSICHAR							\\x[0-9a-fA-F]{2,2}
+UNICODECHAR						\\u[0-9a-fA-F]{4,4}
+LINEFEED							\\n
+CARRIAGERETURN				\\r
+SPECIAL								[ \t\r\n.,;:=/%&?<>-]
+GROUPID								\\[1-9]
+STREAM          			\\0
+ESCAPED								\\[^xnur0-9]
+BEGIN_GROUP_WITH_OPTIONS				 	\(\?[i]*(-[i]+)?:
+BEGIN_GROUP 					\(
+END_GROUP							\)
 
 UTF8_2          [\xC0-\xDF][\x80-\xBF]
 UTF8_3          [\xE0-\xEF][\x80-\xBF][\x80-\xBF]
@@ -134,8 +138,30 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 "|"			{ return T_PIPE; }
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"			{ BEGIN(INITIAL); return T_END_CLASS; }
-"("			{ return T_BEGIN_GROUP; }
-")"			{ return T_END_GROUP; }
+
+BEGIN_GROUP_WITH_OPTIONS	{
+	bool enable_mode = true;
+	yylval.group_options = new t_group_options();
+	for (unsigned int idx=2; idx < yyleng-1; ++idx) {
+		switch(yytext[idx]) {
+			case 'i':
+				yylval.group_options->ignore_case = enable_mode;
+				break;
+			case '-':
+				enable_mode = false;
+				break;
+			default:
+				throw SyntaxError("Invalid modifier for special group");
+		}
+	}
+	return T_GROUP_OPTIONS;
+}
+
+BEGIN_GROUP			{ 
+	yylval.group_options = new t_group_options();
+	return T_BEGIN_GROUP; 
+}
+END_GROUP			{ return T_END_GROUP; }
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
 {GROUPID}		{ yylval.integer = atoi(&yytext[1]); return T_GROUPID; }

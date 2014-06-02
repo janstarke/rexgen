@@ -22,13 +22,13 @@
 
 class SyntaxError {
  public:
-  SyntaxError(const char* msg)
-    : message(msg) {}
+  SyntaxError(const char* msg, int fc=-1 )
+    : message(msg), first_column(fc) {}
 
   const char* getMessage() { return message; }
  private:
   const char* message;
-
+	const int first_column;
 };
 
 #endif
