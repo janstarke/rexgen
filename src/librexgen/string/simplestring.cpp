@@ -23,6 +23,7 @@
 
 SimpleString::SimpleString(size_t msize)
 	:characters(msize) {
+	clear();
 }
 
 const uchar_t& SimpleString::operator[](const unsigned int idx) const {
