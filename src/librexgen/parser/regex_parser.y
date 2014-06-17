@@ -79,7 +79,6 @@
 %token <integer>   T_STREAM
 %token <group_options> T_BEGIN_GROUP
 %token <character> T_END_GROUP
-%token <integer>   T_GROUP_OPTIONS
 %token <character> T_BEGIN_CLASS
 %token <character> T_END_CLASS
 %token <character> T_COMMA
@@ -186,15 +185,11 @@ ClassContentWithoutHyphen:
   { ClassRegex* re = $4; re->addRange($1, $3, context->ignoreCase()); $$=re; };
   
 GroupRegex:
-  T_BEGIN_GROUP
-  {
-    $<group_options>$->group_id = context->groupId++;
-  }
-  T_RegexAlternatives T_END_GROUP
+  T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP
   { 
-    RegexAlternatives* ra = $3; 
-		ra->setGroupOptions($<group_options>2);
-		delete $<group_options>2;
+    RegexAlternatives* ra = $2; 
+		ra->setGroupOptions($1);
+		delete $1;
     context->registerGroup(ra);
     context->updateGroupReferences(ra);
     $$ = ra;

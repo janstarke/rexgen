@@ -112,6 +112,7 @@ UNICODECHAR						\\u[0-9a-fA-F]{4,4}
 LINEFEED							\\n
 CARRIAGERETURN				\\r
 SPECIAL								[ \t\r\n.,;:=/%&?<>-]
+NORMAL								[^ \t\r\n.,;:=/%&?<>-]
 GROUPID								\\[1-9]
 STREAM          			\\0
 ESCAPED								\\[^xnur0-9]
@@ -139,9 +140,10 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"			{ BEGIN(INITIAL); return T_END_CLASS; }
 
-BEGIN_GROUP_WITH_OPTIONS	{
+{BEGIN_GROUP_WITH_OPTIONS}	{
 	bool enable_mode = true;
 	yylval.group_options = new t_group_options();
+	yylval.group_options->group_id = global_context->groupId++;
 	for (unsigned int idx=2; idx < yyleng-1; ++idx) {
 		switch(yytext[idx]) {
 			case 'i':
@@ -154,14 +156,15 @@ BEGIN_GROUP_WITH_OPTIONS	{
 				throw SyntaxError("Invalid modifier for special group");
 		}
 	}
-	return T_GROUP_OPTIONS;
+	return T_BEGIN_GROUP;
 }
 
-BEGIN_GROUP			{ 
+{BEGIN_GROUP}			{ 
 	yylval.group_options = new t_group_options();
+	yylval.group_options->group_id = global_context->groupId++;
 	return T_BEGIN_GROUP; 
 }
-END_GROUP			{ return T_END_GROUP; }
+{END_GROUP}			{ return T_END_GROUP; }
 "{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
 {GROUPID}		{ yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
@@ -169,7 +172,8 @@ END_GROUP			{ return T_END_GROUP; }
 <IN_QUANTIFIER>","	{ return T_COMMA; }
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval.integer = atoi(yytext); return T_NUMBER; }
-.                       { yylval.character = yytext[0]; return T_ANY_CHAR; }
+{NORMAL}                  { yylval.character = yytext[0]; return T_ANY_CHAR; }
+.                       { }
 
 %%
 
