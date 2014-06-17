@@ -43,11 +43,7 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
        iter != regexObjects.end(); iter++) {
     rai->addChild((*iter)->iterator(state));
   }
-	if (ignore_case) {
-		return new CaseIterator(rai);
-	} else {
-  	return rai;
-	}
+	return rai;
 }
 
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {
@@ -73,6 +69,10 @@ Iterator* RegexAlternatives::iterator(IteratorState* state) const {
   if (getGroupId() > 0) {
     state->registerIterator(getGroupId(), iter);
   }
+
+	if (ignore_case) {
+		iter = new CaseIterator(iter);
+	}
 
   return iter;
 }

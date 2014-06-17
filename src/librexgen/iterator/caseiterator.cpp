@@ -20,21 +20,21 @@
 #include <librexgen/iterator/caseiterator.h>
 
 CaseIterator::CaseIterator(Iterator* __child)
-	: Iterator(-1), child(__child), childHasNext(false) {
+	: Iterator(-1), child(__child) {
 }
 
 CaseIterator::~CaseIterator() {
 	delete child;
 }
 
-void CaseIterator::readNextFromChild() {
+bool CaseIterator::readNextFromChild() {
 	word.clear();
-
-	childHasNext = child->next();
+	const bool childHasNext = child->next();
 	child->value(word);
 	for(unsigned int n=0; n<word.size(); ++n) {
 		word.tolower(n);
 	}
+	return childHasNext;
 }
 
 bool CaseIterator::hasNext() const {
@@ -47,18 +47,20 @@ bool CaseIterator::hasNext() const {
 bool CaseIterator::next() {
 	if (word.size() == 0) {
 		readNextFromChild();
+		return (word.size() > 0);
 	}
 
-	for (unsigned int n=0; n<word.size(); ++n) {
-		
+	unsigned int n;
+	for (n=0; n<word.size(); ++n) {
 		if (word.islower(n)) {
 			word.toupper(n);
-			return childHasNext;
+			break;
 		}
-
 		word.tolower(n);
 	}
-	return childHasNext;
+
+	if (n<word.size()) { return true; }
+	return readNextFromChild();
 }
 
 void CaseIterator::value(SimpleString& dst) const {

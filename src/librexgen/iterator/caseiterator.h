@@ -52,11 +52,10 @@ class CaseIterator : public Iterator {
 
  private:
 
- void readNextFromChild();
+ bool readNextFromChild();
 
  Iterator* child;
  SimpleString word;
- bool childHasNext;
 };
 
 #endif /* __cplusplus */
