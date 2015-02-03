@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2015  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -27,13 +27,14 @@
 #include <librexgen/string/unicode.h>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
-  : Iterator(_id), iter(iterators.begin()) {
+  : IteratorContainer(_id) {
+	resetPosition();
   state = resetted;
 }
 
 void RegexAlternativesIterator::value(SimpleString& dst) const {
   ENTER_METHOD;
-  (*iter)->value(dst);
+  (*getPosition())->value(dst);
   LEAVE_METHOD;
 }
 
@@ -44,19 +45,18 @@ bool RegexAlternativesIterator::next() {
   if (state == resetted) {
     state = usable;
     bool res = false;
-    for (deque<Iterator*>::iterator i = iterators.begin(); i != iterators.end();
-         ++i) {
-      res |= ((*i)->next());
+    for (auto i: iterators) {
+      res |= (i->next());
     }
     RETURN(res);
   }
 
-  if ((*iter)->next()) {
+  if ((*getPosition())->next()) {
     RETURN(true);
   }
-  ++iter;
-  if (iter == iterators.end()) {
-    iter = iterators.begin();
+  incrementPosition();
+  if (getPosition() == iterators.end()) {
+    resetPosition();
     RETURN(false);
   }
   //(*iter)->next();
@@ -77,14 +77,14 @@ bool RegexAlternativesIterator::hasNext() const {
     RETURN(true);
   }
 
-  if (iter == iterators.end()) {
+  if (getPosition() == iterators.end()) {
     RETURN(false);
   }
 
-  if ((*iter)->hasNext()) {
+  if ((*(getPosition()))->hasNext()) {
     RETURN(true);
   } else {
-    deque<Iterator*>::iterator tmp = iter;
+    children_list_type::iterator tmp = getPosition();
     ++tmp;
     RETURN(tmp != iterators.end());
   }
@@ -93,7 +93,7 @@ bool RegexAlternativesIterator::hasNext() const {
 void RegexAlternativesIterator::addChild(Iterator* i) {
   ENTER_METHOD;
   iterators.push_back(i);
-  iter = iterators.begin();
+  resetPosition();
 //  i->next();
   LEAVE_METHOD;
 }
@@ -102,34 +102,27 @@ bool RegexAlternativesIterator::canUseValue() const {
   if (!Iterator::canUseValue()) {
     return false;
   }
-  if (iter == iterators.end()) {
+  if (getPosition() == iterators.end()) {
     return false;
   }
-  return ((*iter)->canUseValue());
+  return ((*(getPosition()))->canUseValue());
 }
 
 RegexAlternativesIterator::~RegexAlternativesIterator() {
-  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-    if ((*i)->isSingleton()) {
-      delete (*i);
+  for (auto i: iterators) {
+    if (i->isSingleton()) {
+      delete i;
     }
   }
   iterators.clear();
 }
 
-void RegexAlternativesIterator::updateReferences(IteratorState* iterState) {
-  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-    (*i)->updateReferences(iterState);
-  }
-}
-
 SerializableState* RegexAlternativesIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  s->addValue(iter - iterators.begin());
+  s->addValue(getPosition() - iterators.begin());
 
-  for (deque<Iterator*>::const_iterator i=iterators.begin(); i!=iterators.end();
-       ++i) {
-    s->addValue((*i)->getCurrentState());
+  for (auto i: iterators) {
+    s->addValue(i->getCurrentState());
   }
   return s;
 }
@@ -137,9 +130,9 @@ SerializableState* RegexAlternativesIterator::getCurrentState() const {
 void RegexAlternativesIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
 
-  for (deque<Iterator*>::iterator i=iterators.begin(); i!=iterators.end(); ++i) {
-    (*i)->setCurrentState(s->getChildState((*i)->getId()));
+  for (auto i: iterators) {
+    i->setCurrentState(s->getChildState(i->getId()));
   }
 
-  iter = iterators.begin() + s->getValue(0);
+  setPosition(iterators.begin() + s->getValue(0));
 }

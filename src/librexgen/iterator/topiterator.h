@@ -60,6 +60,10 @@ class TopIterator : public Iterator {
     child->updateReferences(iterState);
   }
 
+  void updateAttributes(IteratorState* /* iterState*/ ) {
+		/* nothin to do :-) */
+	}
+
   SerializableState* getCurrentState() const {
     return child->getCurrentState();
   }

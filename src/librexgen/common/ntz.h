@@ -21,9 +21,12 @@
 #ifndef NTZ_H
 #define NTZ_H
 
-#ifdef __cplusplus
-template <class COUNTER_T>
-int ntz(COUNTER_T x);
-#endif /* __cplusplus */
+int ntz11(unsigned int n);
+
+#if __x86_64__
+unsigned int ntz(long long unsigned int x);
+#else
+unsigned int ntz(long unsigned int x);
+#endif /* __x86_64__ */
 
 #endif /* NTZ_H */

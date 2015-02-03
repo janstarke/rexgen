@@ -8,23 +8,24 @@ sub print_foldings($$$) {
     my $function_name = shift;
     my $foldings = shift;
 
-    print $fh "void\n$function_name";
+    print $fh "bool\n$function_name";
     print $fh <<'ENDING';
-(uint16_t cp, uint16_t& cp0, uint16_t& cp1, uint16_t& cp2) {
-  d0 = (uint16_t) 0xFFFF;
-  d1 = (uint16_t) 0xFFFF;
-  d2 = (uint16_t) 0xFFFF;
+(uint32_t cp, charset cs, binary_character_t* bch) {
+  bch[1].ucs4.value = 0xffffffff;
+  bch[2].ucs4.value = 0xffffffff;
   switch (cp) {
 ENDING
     foreach my $cp (sort keys %$foldings) {
         my $folding = $foldings->{$cp};
-        print $fh "    case 0x$cp:";
-        print $fh " cp0 = 0x$folding->[0];" if defined($folding->[0]);
-        print $fh " cp1 = 0x$folding->[1];" if defined($folding->[1]);
-        print $fh " cp2 = 0x$folding->[2];" if defined($folding->[2]);
-        print $fh " break;\n";
+        print $fh "    case 0x$cp:\n";
+        for my $idx (0..2) {
+            if (defined($folding->[$idx])) {
+                print $fh "      encode_codepoint(0x$folding->[$idx], cs, &bch[$idx]);\n";
+            }
+        }
+        print $fh "      return true;\n";
     }
-    print $fh "  };\n}\n\n";
+    print $fh "  }\n  bch[0].ucs4.value=0xffffffff;  return false;\n}\n\n";
   }
 
 my $outfile = $ARGV[0] or die "Usage: $0 <outfile>\n";
@@ -56,13 +57,14 @@ foreach my $line(@content) {
 
 open my $FH, ">$outfile" or die "$!\n";
 
-print $FH "#ifndef __CASEFOLDING_H__\n";
-print $FH "#define __CASEFOLDING_H__\n";
+#print $FH "#ifndef __CASEFOLDING_H__\n";
+#print $FH "#define __CASEFOLDING_H__\n";
 
+print $FH "#include <librexgen/string/uchar.h>\n";
 print_foldings($FH, 'casefold_common', $folding{'C'});
 print_foldings($FH, 'casefold_full', $folding{'F'});
 print_foldings($FH, 'casefold_simple', $folding{'S'});
 print_foldings($FH, 'casefold_special', $folding{'T'});
 
-print $FH "#endif /* __CASEFOLDING_H__ */\n";
+#print $FH "#endif /* __CASEFOLDING_H__ */\n";
 close $FH;

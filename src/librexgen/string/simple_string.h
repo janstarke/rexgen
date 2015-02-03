@@ -72,7 +72,7 @@ class simple_string <uchar_t> {
 
   void push_back(uchar_t ch) {
     if (current_size+ch.char_length <= max_size) {
-      current_size += uchar_to_utf(ch, &buffer[current_size]);
+      current_size += uchar_to_binary(ch, &buffer[current_size]);
     }
   }
   void push_front(uchar_t ch) {
@@ -82,7 +82,7 @@ class simple_string <uchar_t> {
       for (idx = current_size+len-1; idx >= len; idx--) {
         buffer[idx] = buffer[idx-len];
       }
-      current_size += uchar_to_utf(ch, &buffer[idx]);
+      current_size += uchar_to_binary(ch, &buffer[idx]);
     }
   }
 

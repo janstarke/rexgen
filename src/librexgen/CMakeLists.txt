@@ -14,7 +14,7 @@ endif(MSVC)
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+  ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
@@ -32,6 +32,10 @@ if(USE_LUA)
 else()
   set(lua_sources "")
 endif(USE_LUA)
+
+#add_custom_target(casefolding COMMAND "perl" "-w"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/string/casefolding.pl"
+#	"${CMAKE_CURRENT_SOURCE_DIR}/string/casefolding.cpp")
 
 set(librexgen_sources
   ${lua_sources}
@@ -59,6 +63,7 @@ set(librexgen_sources
 
 	api/cxx/librexgen.cpp
 	api/c/librexgen.cpp
+	common/ntz.cpp
 )
 set(parser_sources
   ${BISON_regexparser_OUTPUTS}
@@ -76,7 +81,7 @@ if(COMMAND add_cppcheck)
 endif(COMMAND add_cppcheck)
 
 add_library(${librexgen_filename} SHARED ${parser_sources} ${librexgen_sources})
-add_dependencies(${librexgen_filename} parser_target)
+add_dependencies(${librexgen_filename} parser_target casefolding)
 
 if (USE_LUA)
   target_link_libraries(${librexgen_filename} "lua${LUA_VERSION}" )
@@ -86,6 +91,7 @@ if(MSVC)
 else()
 	target_link_libraries(${librexgen_filename} "stdc++")
 endif(MSVC)
+target_link_libraries(${librexgen_filename} "icuuc")
 
 set_target_properties(${librexgen_filename} PROPERTIES
 	PREFIX ""

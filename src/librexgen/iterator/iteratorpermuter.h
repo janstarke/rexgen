@@ -25,29 +25,26 @@
 #include <algorithm>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
+#include <librexgen/iterator/iteratorcontainer.h>
 
 using namespace std;
 
 class Regex;
 
-class IteratorPermuter : public Iterator {
+class IteratorPermuter : public IteratorContainer {
 
  public:
   void value(SimpleString& dst) const;
   bool hasNext() const;
-  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min,
-                   unsigned int max);
+  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
   ~IteratorPermuter();
   bool next();
   void init();
-  void updateReferences(IteratorState* iterState);
  private:
   bool existsIteratorWithNextElement() const;
 
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
-  vector<Iterator*> iterators;
-  IteratorState* iteratorState;
   bool hasNextElement;
 
   unsigned int current;

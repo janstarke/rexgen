@@ -23,19 +23,18 @@
 
 IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is,
                                    unsigned int min, unsigned int max)
-  : Iterator(_id), min_occurs(min), max_occurs(max), regex(re), iteratorState(is),
+  : IteratorContainer(_id), min_occurs(min), max_occurs(max), regex(re), 
     hasNextElement(true), occurs(min_occurs) {
   for (unsigned int n=0; n<max_occurs; ++n) {
-    iterators.push_back(regex->singleIterator(iteratorState));
+    addChild(regex->singleIterator(is));
   }
   init();
 }
 
 IteratorPermuter::~IteratorPermuter() {
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    if ((*iter)->isSingleton()) {
-      delete (*iter);
+	for (auto i: iterators) {
+    if (i->isSingleton()) {
+      delete i;
     }
   }
 }
@@ -82,10 +81,9 @@ void IteratorPermuter::init() {
   ENTER_METHOD;
 
   bool has_next = false;
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    (*iter)->next();
-    has_next |= (*iter)->hasNext();
+  for (auto i: iterators) {
+    i->next();
+    has_next |= i->hasNext();
   }
   hasNextElement = has_next;
 
@@ -97,19 +95,11 @@ void IteratorPermuter::init() {
 
 bool IteratorPermuter::existsIteratorWithNextElement() const {
   ENTER_METHOD;
-  for (vector<Iterator*>::const_iterator iter=iterators.begin();
-       iter!=iterators.end(); ++iter) {
-    if ((*iter)->hasNext()) {
+  for (auto i: iterators) {
+    if (i->hasNext()) {
       RETURN( true );
     }
   }
   RETURN(false);
-}
-
-void IteratorPermuter::updateReferences(IteratorState* iterState) {
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    (*iter)->updateReferences(iterState);
-  }
 }
 

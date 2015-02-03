@@ -22,17 +22,17 @@
 #define GROUPREFERENCEITERATOR_H
 
 #include <vector>
-#include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/iteratorcontainer.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorstate.h>
 
 
-class GroupReferenceIterator : public Iterator {
+class GroupReferenceIterator : public IteratorContainer {
 
  public:
   GroupReferenceIterator(int _id, int group)
-    : Iterator(_id), groupId(group), groupRef(NULL) { };
+    : IteratorContainer(_id), groupId(group), groupRef(NULL) { };
 
   inline bool hasNext() const { return (state == resetted); }
   inline bool next() {

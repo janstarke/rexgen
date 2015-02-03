@@ -48,6 +48,7 @@ class Iterator {
   int getId() const { return id; }
 
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
+  virtual void updateAttributes(IteratorState* /* iterState */) = 0;
   virtual bool isSingleton() const { return false; }
 
   virtual SerializableState* getCurrentState() const {

@@ -31,7 +31,7 @@ using namespace std;
 class IteratorState {
  public:
 
-  IteratorState() : randomize(false), streamIterator(NULL) {
+  IteratorState() : streamIterator(NULL) {
   }
 
   void registerIterator(int id, Iterator* iterator) {
@@ -51,15 +51,11 @@ class IteratorState {
     }
   }
 
-  void setRandomize(bool rnd) { randomize = rnd; }
-  bool getRandomize() const { return randomize; }
-
   void setStreamIterator(StreamRegexIterator* iter) {streamIterator = iter;}
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
 
  private:
   map<int, Iterator*> groupIterators;
-  bool randomize;
   StreamRegexIterator* streamIterator;
 };
 

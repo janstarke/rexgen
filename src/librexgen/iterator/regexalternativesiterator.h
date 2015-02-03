@@ -27,10 +27,11 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/string/unicode.h>
+#include <librexgen/iterator/iteratorcontainer.h>
 
 using namespace std;
 
-class RegexAlternativesIterator : public Iterator {
+class RegexAlternativesIterator : public IteratorContainer {
  public:
 
   RegexAlternativesIterator(int id);
@@ -42,14 +43,10 @@ class RegexAlternativesIterator : public Iterator {
   bool hasNext() const;
 
   void addChild(Iterator* re);
-  void updateReferences(IteratorState* iterState);
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
  private:
-  deque<Iterator*> iterators;
-  deque<Iterator*>::iterator iter;
-
   bool canUseValue() const;
 };
 

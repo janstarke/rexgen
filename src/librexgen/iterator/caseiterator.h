@@ -21,23 +21,23 @@
 #ifndef CASEITERATOR_H
 #define CASEITERATOR_H
 
-#include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/iteratorcontainer.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
 
 #ifdef __cplusplus
 
-class CaseIterator : public Iterator {
+class CaseIterator : public IteratorContainer {
  public:
 
-  CaseIterator(Iterator* _child);
+  CaseIterator(Iterator* _child, int options);
   virtual ~CaseIterator();
 
   bool hasNext() const;
   bool next();
-  void value(SimpleString& /* dst */ ) const;
+	bool fast_next();
 
-  void updateReferences(IteratorState* /* iterState */){}
+  void value(SimpleString& /* dst */ ) const;
 
   virtual SerializableState* getCurrentState() const {
     return new SerializableState(getId());
@@ -51,11 +51,23 @@ class CaseIterator : public Iterator {
 
 
  private:
-
- bool readNextFromChild();
-
  Iterator* child;
+ int handle_case;
+ bool readNextFromChild();
  SimpleString word;
+
+#if __x86_64__
+  typedef long long unsigned int counter_t;
+  static const unsigned int max_fast_character_bytes = 64;
+#else
+  typedef long unsigned int counter_t;
+  static const unsigned int max_fast_character_bytes = 32;
+#endif
+ 
+ counter_t k, max;
+ unsigned int parity;
+ vector<int> changeable_characters;
+
 };
 
 #endif /* __cplusplus */

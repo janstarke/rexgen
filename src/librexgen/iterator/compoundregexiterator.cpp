@@ -26,30 +26,15 @@
 #include <librexgen/debug.h>
 #include <librexgen/string/unicode.h>
 
-CompoundRegexIterator::CompoundRegexIterator(int _id, bool rnd)
-  : Iterator(_id), randomize(rnd) {
-
-  if (randomize) {
-    for (unsigned int n = 0; n<iterators.size(); ++n) {
-      rnd_iterators.push_back(n);
-    }
-    shuffle();
-  }
+CompoundRegexIterator::CompoundRegexIterator(int _id)
+  : IteratorContainer(_id) {
 }
 
 CompoundRegexIterator::~CompoundRegexIterator() {
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    if (! (*iter)->isSingleton()) {
-      delete (*iter);
+	for (auto i: iterators) {
+    if (! i->isSingleton()) {
+      delete i;
     }
-  }
-}
-
-void CompoundRegexIterator::updateReferences(IteratorState* iterState) {
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    (*iter)->updateReferences(iterState);
   }
 }
 
@@ -57,24 +42,13 @@ bool CompoundRegexIterator::next() {
   if (state == resetted) {
     state = usable;
     bool res = false;
-    for (vector<Iterator*>::iterator iter = iterators.begin();
-         iter != iterators.end(); ++iter) {
-      res |= (*iter)->next();
+		for (auto i: iterators) {
+      res |= i->next();
     }
     return res;
   }
-  if (randomize) {
-    for (vector<unsigned int>::iterator rnd_i = rnd_iterators.begin();
-         rnd_i != rnd_iterators.end(); ++rnd_i) {
-      if (iterators[*rnd_i]->next()) {
-        return true;
-      }
-    }
-    return false;
-  }
-  for (vector<Iterator*>::iterator i = iterators.begin(); i != iterators.end();
-       ++i) {
-    if ((*i)->next()) {
+	for (auto i: iterators) {
+    if (i->next()) {
       return true;
     }
   }
@@ -83,9 +57,8 @@ bool CompoundRegexIterator::next() {
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
   //assert(canUseValue());
-  for (vector<Iterator*>::const_iterator iter=iterators.begin();
-       iter!=iterators.end(); ++iter) {
-    (*iter)->value(dst);
+	for (auto i: iterators) {
+    i->value(dst);
   }
 }
 
@@ -94,28 +67,16 @@ bool CompoundRegexIterator::hasNext() const {
   if (state == not_usable) {
     return false;
   }
-  for (vector<Iterator*>::const_iterator iter=iterators.begin();
-       iter!=iterators.end(); ++iter) {
-    has_next |= (*iter)->hasNext();
+  for (auto i: iterators) {
+    has_next |= i->hasNext();
   }
   return has_next;
 }
 
-void CompoundRegexIterator::addChild(Iterator* i) {
-  rnd_iterators.push_back(iterators.size());
-  if (randomize) {
-    shuffle();
-  }
-  iterators.push_back(i);
-  //i->reset();
-  //i->next();
-}
-
 SerializableState* CompoundRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  for (vector<Iterator*>::const_iterator iter=iterators.begin();
-       iter!=iterators.end(); ++iter) {
-    s->addValue((*iter)->getCurrentState());
+  for (auto i: iterators) {
+    s->addValue(i->getCurrentState());
   }
   return s;
 }
@@ -123,9 +84,8 @@ SerializableState* CompoundRegexIterator::getCurrentState() const {
 void CompoundRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
 
-  for (vector<Iterator*>::iterator iter=iterators.begin(); iter!=iterators.end();
-       ++iter) {
-    (*iter)->setCurrentState(s->getChildState((*iter)->getId()));
+  for (auto i:iterators) {
+    i->setCurrentState(s->getChildState(i->getId()));
   }
 }
 

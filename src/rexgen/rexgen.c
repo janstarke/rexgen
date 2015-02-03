@@ -38,7 +38,6 @@ typedef int bool;
 
 static char regex_buffer[512];
 int ignore_case = 0;
-int randomize = 0;
 charset encoding = CHARSET_UTF8;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
@@ -68,7 +67,6 @@ static void rexgen_usage() {
           "OPTIONS:\n"
           "   -t:        print syntax tree\n"
           "   -i:        ignore case\n"
-          "   -r:        randomize order of values (will be slower)\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
           "   -u8:       encode values in UTF-8\n"
@@ -171,9 +169,6 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
     case 't':
       rexgen_operation = display_syntax_tree;
       break;
-    case 'r':
-      randomize = 1;
-      break;
     case 'u': /* unicode encoding */
       if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
         encoding = CHARSET_UTF8;
@@ -270,7 +265,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
   iter = c_regex_iterator_cb(
-           regex_str, ignore_case, encoding, randomize, callback);
+           regex_str, ignore_case, encoding, callback);
   if (iter == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

@@ -38,7 +38,6 @@ c_iterator_ptr c_regex_iterator(
   const char* regex_str,
   int ignore_case,
   charset encoding,
-  int randomize,
   FILE* infile);
 
 EXPORT
@@ -46,7 +45,6 @@ c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
   int ignore_case,
   charset encoding,
-  int randomize,
   callback_fp cb);
 
 EXPORT

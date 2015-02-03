@@ -147,7 +147,10 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 	for (unsigned int idx=2; idx < yyleng-1; ++idx) {
 		switch(yytext[idx]) {
 			case 'i':
-				yylval.group_options->ignore_case = enable_mode;
+				yylval.group_options->handle_case = 
+					enable_mode 
+									?	CASE_ITERATE
+									: CASE_PRESERVE ;
 				break;
 			case '-':
 				enable_mode = false;

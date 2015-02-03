@@ -46,6 +46,7 @@ class StreamRegexIterator : public Iterator {
     dst.append(buffer);
   }
   void updateReferences(IteratorState* /* iterState */) {}
+  void updateAttributes(IteratorState* /* iterState */) {}
   bool isSingleton() const { return true; }
 
   SerializableState* getCurrentState() const;

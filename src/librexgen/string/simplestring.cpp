@@ -26,8 +26,12 @@ SimpleString::SimpleString(size_t msize)
 	clear();
 }
 
-const uchar_t& SimpleString::operator[](const unsigned int idx) const {
+uchar_t& SimpleString::operator[](const unsigned int& idx) {
 	return characters[idx];
+}
+
+const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
+  return (const uchar_t&) characters[idx];
 }
 
 size_t SimpleString::size() const {
@@ -88,7 +92,7 @@ int SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
 	char* ptr = dst;
 	int count = 0;
 	for (unsigned int idx=0; idx<characters.size() && buffer_size>(4+1); ++idx) {
-		const uint8_t char_size = uchar_to_ansi(&characters[idx], ptr);
+		const uint8_t char_size = uchar_to_binary(&characters[idx], ptr);
 		ptr += char_size;
 		buffer_size -= char_size;
 	}

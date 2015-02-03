@@ -27,13 +27,14 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/unicode.h>
+#include <librexgen/iterator/iteratorcontainer.h>
 
 using namespace std;
 
-class CompoundRegexIterator : public Iterator {
+class CompoundRegexIterator : public IteratorContainer {
 
  public:
-  CompoundRegexIterator(int id, bool rnd = true);
+  CompoundRegexIterator(int id);
 
   virtual ~CompoundRegexIterator();
 
@@ -41,18 +42,8 @@ class CompoundRegexIterator : public Iterator {
   void value(SimpleString& dst) const;
   bool hasNext() const;
 
-  void addChild(Iterator* i);
-
-  void updateReferences(IteratorState* iterState);
-
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
-
- private:
-  void shuffle() {random_shuffle(rnd_iterators.begin(), rnd_iterators.end());}
-  vector<Iterator* > iterators;
-  vector<unsigned int> rnd_iterators;
-  const bool randomize;
 };
 
 #endif // COMPOUNDREGEXITERATOR_H

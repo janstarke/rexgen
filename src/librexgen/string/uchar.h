@@ -39,35 +39,78 @@ typedef uint16_t char16_t;
 typedef uint32_t char32_t;
 #endif
 
-typedef struct __uchar_t {
-  charset variant;
-  uint8_t char_length;
+typedef uint8_t uchar_flags_t;
+typedef uint8_t uchar_info_t;
 
-  uint16_t __padding__;
+#define UCHAR_FLAGS_CHANGE_CASE         0x01
+#define UCHAR_FLAGS_PRESERVE_CASE       0x02
+#define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
-  /* this one is needed for simple iteration in in UTF8 and UTF16*/
-  uint32_t codepoint;
+#define UCHAR_CAN_CHANGE_CASE(a) (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
+#define UCHAR_MUST_CHANGE_CASE(a) ((a).flags&UCHAR_CHANGE_CASE && !((a).flags&UCHAR_PRESERVE_CASE))
+#define UCHAR_MUST_PRESERVE_CASE(a) ((a).flags&UCHAR_FLAGS_PRESERVE_CASE)
+#define UCHAR_SET_CHANGE_CASE(a) do {            \
+  (a).flags |= UCHAR_FLAGS_CHANGE_CASE;          \
+  (a).flags &= (! UCHAR_FLAGS_PRESERVE_CASE );   \
+} while (0)
+#define UCHAR_SET_PRESERVE_CASE(a) do {          \
+  (a).flags &= (! UCHAR_FLAGS_CHANGE_CASE );     \
+  (a).flags |= UCHAR_FLAGS_PRESERVE_CASE;        \
+} while (0)
 
-  union {
-    byte    bytes[4];
-    struct {
-      uint8_t  pad[3];
-      char     value;
-    } ansi;
-    struct {
-      char16_t high;
-      char16_t low;
-    } ucs2;
-    struct {
-      char32_t value;
-    } ucs4;
-  } character;
-} uchar_t;
+typedef enum {
+  BMP   =  0,               /* Basic Multilingual Plane            */
+  SMP   =  1,               /* Supplementary Multilingual Plane    */
+  SIP   =  2,               /* Supplementary Ideographic Plane     */
+  SSP   = 14,               /* Supplementary Special-purpose Plane */
+  PUA_A = 15,               /* Supplementary Private Use Area-A    */
+  PUA_B = 16                /* Supplementary Private Use Area-B    */
+} unicode_plane_t;
+
+/*
+ * this datastructure is used to cache the binary representation 
+ * of unicode characters. Because we use this cache, it is not
+ * necessary to create the binary value during the output
+ */
+typedef union {
+  byte    bytes[4];
+  struct {
+    uint8_t  pad[3];
+    char     value;
+  } ansi;
+  struct {
+    char16_t high;
+    char16_t low;
+  } ucs2;
+  struct {
+    char32_t value;
+  } ucs4;
+} binary_character_t;
+
+const char32_t UCHAR_UNASSIGNED = 0xffffffff;
+
+struct __uchar_t {
+  charset         variant;    /* 1 byte */
+  uint8_t         char_length;/* 1 byte */
+  uchar_flags_t   flags;      /* 1 byte */
+  unicode_plane_t plane;      /* 1 byte */
+
+  /* this one is needed for simple iteration in in UTF8 and UTF16 */
+  uint32_t codepoint;         /* 4 byte */
+
+  binary_character_t character; /* 4 byte */
+  binary_character_t casefolded[3]; /* 12 byte */
+};
+typedef struct __uchar_t uchar_t;
 
 #ifdef __cplusplus
 extern "C" {
 EXPORT
 bool uchar_isascii(const uchar_t& uch);
+
+EXPORT
+void uchar_toggle_case(uchar_t& uch);
+
 }
 #endif
 
@@ -85,19 +128,22 @@ EXPORT
 void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
 
 EXPORT
-uint8_t uchar_to_ansi(const uchar_t* uch, byte* ansi_dst);
+uint8_t encode_codepoint(uint32_t codepoint, charset cs, binary_character_t* bch);
 
 EXPORT
-uint8_t uchar_to_utf8(const uchar_t* uch, byte* utf8_dst);
+uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);
 
 EXPORT
-uint8_t uchar_to_utf16(const uchar_t* uch, byte* utf16_dst);
+uint8_t uchar_to_utf8(const binary_character_t*, byte* utf8_dst);
 
 EXPORT
-uint8_t uchar_to_utf32(const uchar_t* uch, byte* utf32_dst);
+uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
 
 EXPORT
-uint8_t uchar_to_utf(const uchar_t* uch, byte* dst);
+uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
+
+EXPORT
+uint8_t uchar_to_binary(const uchar_t* uch, byte* dst);
 
 EXPORT
 uchar_t create_BOM(charset cs);

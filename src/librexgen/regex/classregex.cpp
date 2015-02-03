@@ -90,8 +90,8 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b,
   return count;
 }
 
-Iterator* ClassRegex::singleIterator(IteratorState* state) const {
-  return new ClassRegexIterator(getId(), state, &characters[0],
+Iterator* ClassRegex::singleIterator(IteratorState* /*state*/) const {
+  return new ClassRegexIterator(getId(), &characters[0],
                                 characters.size());
 }
 

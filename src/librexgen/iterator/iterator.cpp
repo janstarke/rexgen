@@ -34,12 +34,10 @@ c_iterator_ptr c_regex_iterator(
   const char* regex_str,
   int ignore_case=0,
   charset encoding=CHARSET_UTF8,
-  int randomize=0,
   FILE* infile=NULL) {
   RexgenOptions options;
   options.ignore_case = (bool)ignore_case;
   options.encoding = encoding;
-  options.randomize = (bool)randomize;
   options.infile = infile;
   options.stream_callback = NULL;
 
@@ -58,12 +56,10 @@ c_iterator_ptr c_regex_iterator_cb (
   const char* regex_str,
   int ignore_case=0,
   charset encoding=CHARSET_UTF8,
-  int randomize=0,
   callback_fp callback=NULL) {
   RexgenOptions options;
   options.ignore_case = (bool)ignore_case;
   options.encoding = encoding;
-  options.randomize = (bool)randomize;
   options.infile = NULL;
   options.stream_callback = callback;
 

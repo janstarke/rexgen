@@ -37,28 +37,30 @@ using std::vector;
 class SimpleString {
  public:
   SimpleString(size_t msize=512);
-	const uchar_t& operator[](const unsigned int idx) const; 
-	int to_binary_string(char* buffer, size_t buffer_size) const;
+  uchar_t& operator[](const unsigned int& idx); 
+
+  const uchar_t& getAt(const unsigned int& idx) const; 
+  int to_binary_string(char* buffer, size_t buffer_size) const;
 
   void newline();
 
-	bool isalpha(unsigned int n) const;
-	bool islower(unsigned int n) const;
-	bool isupper(unsigned int n) const;
+  bool isalpha(unsigned int n) const;
+  bool islower(unsigned int n) const;
+  bool isupper(unsigned int n) const;
 
-	void tolower(unsigned int n);
-	void toupper(unsigned int n);
+  void tolower(unsigned int n);
+  void toupper(unsigned int n);
 
-	void push_back(char ch);
+  void push_back(char ch);
   void push_back(const uchar_t& c);
   void append(const char* ch);
 
   void clear();
-	size_t size() const;
-	size_t get_buffer_size() const;
+  size_t size() const;
+  size_t get_buffer_size() const;
 
  private:
-	vector<uchar_t> characters;
+        vector<uchar_t> characters;
 };
 
 #endif /* __cplusplus */

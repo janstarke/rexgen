@@ -47,3 +47,4 @@ endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
+include (cmake/ctags.cmake)

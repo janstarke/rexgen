@@ -29,15 +29,12 @@
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/uchar.h>
 
-using std::random_shuffle;
-
 using namespace std;
 
 class ClassRegexIterator : public Iterator {
 
  public:
   ClassRegexIterator(int _id,
-                     IteratorState* iterstate,
                      const uchar_t* classcontent,
                      size_t elements
                     );
@@ -53,6 +50,7 @@ class ClassRegexIterator : public Iterator {
   inline bool canUseValue() const { return (current < (int)characters.size()); }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
+  virtual void updateAttributes(IteratorState* /* iterState */) {}
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
@@ -62,7 +60,6 @@ class ClassRegexIterator : public Iterator {
 
   int current;
   vector<uchar_t> characters;
-  const bool randomize;
 };
 
 #endif // CLASSREGEXITERATOR_H

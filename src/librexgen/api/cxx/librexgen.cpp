@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2015  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -61,12 +61,14 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
     return NULL;
   }
   IteratorState* state = new IteratorState();
-  state->setRandomize(options.randomize);
   Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
   // register regex alternatives
   iter->updateReferences(state);
 
   // update references
   iter->updateReferences(state);
+
+	// update attributes (e.g. case folding )
+	iter->updateAttributes(state);
   return iter;
 }

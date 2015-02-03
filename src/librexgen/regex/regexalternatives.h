@@ -30,7 +30,7 @@
 
 class RegexAlternatives : public RegexContainer {
  public:
-  RegexAlternatives(): RegexContainer(), groupId(-1),ignore_case(false) {
+  RegexAlternatives(): RegexContainer(), groupId(-1),handle_case(CASE_IGNORE) {
 	}
   inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
 
@@ -48,12 +48,12 @@ class RegexAlternatives : public RegexContainer {
   void setGroupId (int _id) { groupId = _id; }
 
 	void setGroupOptions(const t_group_options* opts) {
-		ignore_case = opts->ignore_case;
+		handle_case = opts->handle_case;
 		setGroupId(opts->group_id);
 	}
  private:
   int groupId;
-	bool ignore_case;
+	int handle_case;
 };
 
 #endif // REGEXALTERNATIVES_H

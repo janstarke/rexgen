@@ -21,10 +21,8 @@
 #include <librexgen/iterator/iteratorstate.h>
 
 ClassRegexIterator::ClassRegexIterator(
-  int _id, IteratorState* iterstate, const uchar_t* classcontent, size_t elements)
-  :Iterator(_id),
-   current(-1),
-   randomize(iterstate->getRandomize()) {
+  int _id, const uchar_t* classcontent, size_t elements)
+  :Iterator(_id), current(-1) {
   for (size_t n=0; n<elements; ++n) {
     characters.push_back(classcontent[n]);
   }
@@ -34,7 +32,6 @@ ClassRegexIterator::ClassRegexIterator(
 bool ClassRegexIterator::next() {
   ++current;
   if (current >= (int)characters.size()) {
-    if (randomize) {shuffle();}
     current = 0;
     return false;
   }
@@ -51,5 +48,3 @@ void ClassRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
   current = s->getValue(0);
 }
-
-
