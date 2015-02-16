@@ -70,15 +70,15 @@ set(parser_sources
 )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
-if(COMMAND add_cpplint)
- add_cpplint(${librexgen_filename} ${librexgen_sources})
- add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPLINT)
-endif(COMMAND add_cpplint)
+#if(COMMAND add_cpplint)
+# add_cpplint(${librexgen_filename} ${librexgen_sources})
+# add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPLINT)
+#endif(COMMAND add_cpplint)
 
-if(COMMAND add_cppcheck)
- add_cppcheck(${librexgen_filename} ${librexgen_sources} ${parser_sources})
- add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPCHECK)
-endif(COMMAND add_cppcheck)
+#if(COMMAND add_cppcheck)
+# add_cppcheck(${librexgen_filename} ${librexgen_sources} ${parser_sources})
+# add_dependencies(${librexgen_filename} ${librexgen_libname}_CPPCHECK)
+#endif(COMMAND add_cppcheck)
 
 add_library(${librexgen_filename} SHARED ${parser_sources} ${librexgen_sources})
 add_dependencies(${librexgen_filename} parser_target casefolding)

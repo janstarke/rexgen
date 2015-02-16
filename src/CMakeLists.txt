@@ -5,12 +5,16 @@ set(prj rexgen)
 cmake_minimum_required(VERSION 2.8.12)
 set(LUA_VERSION "5.2")
 
-include (cmake/version.cmake)
 include (cmake/packaging.cmake)
 include (cmake/testing.cmake)
 
-set(librexgen_major 1)
-set(librexgen_minor 1)
+file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
+string(REPLACE "\n" "" librexgen_version ${librexgen_version_line})
+string(REPLACE "." ";" version_list ${librexgen_version})
+list(GET version_list 0 librexgen_major)
+list(GET version_list 1 librexgen_minor)
+set(librexgen_libname librexgen-${librexgen_version})
+set(librexgen_filename "lib${prj}" )
 
 message("creating ${prj} ${librexgen_version}")
 
