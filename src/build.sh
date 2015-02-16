@@ -1,23 +1,19 @@
 #!/bin/sh -e
 
-SYSTEM=$(uname -s)
-SCRIPT=$(readlink -f "$0")
-BASEDIR=$(dirname "$SCRIPT")
-BUILDDIR="$BASEDIR/build"
+. ./build.config
 
+#if test -d ${BUILDDIR}; then
+#	rm -rf ${BUILDDIR}
+#fi
 
-
-
-if test -d ${BUILDDIR}; then
-	rm -rf ${BUILDDIR}
+if test ! -d ${BUILDDIR}; then
+	mkdir ${BUILDDIR}
 fi
-
-mkdir ${BUILDDIR}
 
 echo "entering ${BUILDDIR}"
 cd ${BUILDDIR}
 
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=RELEASE ..
 make
 
 echo "entering ${BASEDIR}"
