@@ -64,7 +64,8 @@ class CaseIterator : public IteratorContainer {
   static const unsigned int max_fast_character_bytes = 32;
 #endif
  
- counter_t k, max;
+ counter_t k;
+ unsigned int j;
  unsigned int parity;
  vector<int> changeable_characters;
 

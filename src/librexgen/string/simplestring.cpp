@@ -34,11 +34,6 @@ const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
   return (const uchar_t&) characters[idx];
 }
 
-size_t SimpleString::size() const {
-	return characters.size();
-}
-
-
 bool SimpleString::isalpha(unsigned int n) const {
 	return (uchar_isascii(characters[n]) && ::isalpha(characters[n].character.ansi.value));
 }
@@ -70,10 +65,6 @@ void SimpleString::append(const char* ch) {
 
 size_t SimpleString::get_buffer_size() const {
 	return characters.size();
-}
-
-void SimpleString::clear() {
-	characters.clear();
 }
 
 void SimpleString::push_back(char ch) {

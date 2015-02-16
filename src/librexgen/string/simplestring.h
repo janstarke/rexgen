@@ -55,8 +55,9 @@ class SimpleString {
   void push_back(const uchar_t& c);
   void append(const char* ch);
 
-  void clear();
-  size_t size() const;
+  void clear()        {        characters.clear(); }
+  size_t size() const { return characters.size();  }
+	bool empty() const  { return characters.empty(); }
   size_t get_buffer_size() const;
 
  private:

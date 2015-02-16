@@ -145,13 +145,23 @@ void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
 	} else {
 		cpLower = codepoint;
 		cpUpper = 0xFFFFFFFF;
-		UCHAR_MUST_PRESERVE_CASE(*dst);
+		UCHAR_SET_PRESERVE_CASE(*dst);
 	}
 	dst->codepoint     = cpLower;
-	encode_codepoint(cpUpper, cs, &(dst->casefolded[0]));
-	dst->casefolded[1].ucs4.value = UCHAR_UNASSIGNED;
-	dst->casefolded[2].ucs4.value = UCHAR_UNASSIGNED;
+
+	/* convert the character itself */
 	dst->char_length = encode_codepoint(dst->codepoint, cs, &dst->character);
+
+	/* convert the uppercase/lowercase variant of the character */
+	encode_codepoint(cpUpper, cs, &(dst->casefolded[0]));
+
+	/* if the uppercase and lowercase variant are equal, then preserve case */
+	if (dst->casefolded[0].ucs4.value == dst->character.ucs4.value) {
+		UCHAR_SET_PRESERVE_CASE(*dst);
+	} else {
+		dst->casefolded[1].ucs4.value = UCHAR_UNASSIGNED;
+		dst->casefolded[2].ucs4.value = UCHAR_UNASSIGNED;
+	}
 }
 
 EXPORT
