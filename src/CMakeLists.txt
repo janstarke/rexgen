@@ -49,6 +49,7 @@ if(MSVC)
 INCLUDE_DIRECTORIES("D:/Tools/GnuWin32/include")
 endif(MSVC)
 
-add_subdirectory(librexgen)
 add_subdirectory(rexgen)
+add_subdirectory(librexgen)
+
 include (cmake/ctags.cmake)

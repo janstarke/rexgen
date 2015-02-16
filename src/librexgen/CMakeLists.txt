@@ -149,3 +149,6 @@ if (USE_LUA)
     install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua" DESTINATION bin)
   endif(DEFINED ${LUA_ERROR})
 endif(USE_LUA)
+
+INSTALL(CODE "MESSAGE(\"Please run 'ldconfig' upon successful installation of ${prj}\")")
+
