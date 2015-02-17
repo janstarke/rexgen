@@ -21,12 +21,16 @@
 #ifndef NTZ_H
 #define NTZ_H
 
+#include <cstdint>
+
 int ntz11(unsigned int n);
 
+#define __HAVE_BSF__
+
 #if __x86_64__
-unsigned int ntz(long long unsigned int x);
+unsigned int ntz(uint64_t x);
 #else
-unsigned int ntz(long unsigned int x);
+unsigned int ntz(uint32_t x);
 #endif /* __x86_64__ */
 
 #endif /* NTZ_H */
