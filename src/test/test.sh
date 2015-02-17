@@ -1,15 +1,14 @@
-#!/bin/bash
+#!/bin/bash -x
 
-REGEX=$1
+REXGEN_BINARY=$1
+REGEX=$2
+THISDIR=$(dirname $0)
 
 if [ "x$REGEX" = "x" ]; then
 	echo "Usage: $0 <regex>" >&2
 	exit 1
 fi
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $0)/../build/librexgen/
-REXGEN_BINARY=$(dirname $0)/../build/rexgen/rexgen
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $REXGEN_BINARY)
 
-echo -n $REGEX
-echo -n :
-$REXGEN_BINARY $REGEX | md5sum
+$REXGEN_BINARY $REGEX | perl ${THISDIR}/check_results.pl "$REGEX"

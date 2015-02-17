@@ -14,15 +14,16 @@ STRING(REGEX REPLACE ";" "\\\\;" testcases "${testcases}")
 STRING(REGEX REPLACE "\n" ";" testcases "${testcases}")
 
 foreach(testcase ${testcases})
-  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\1" test_name  ${testcase})
-  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\2" test_regex ${testcase})
-  STRING(REGEX REPLACE "^([^:]+):(.+):([A-Fa-f0-9]+) +-\$" "\\3" test_hash  ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([0-9]+)\$" "\\1" test_name  ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([0-9]+)\$" "\\2" test_regex ${testcase})
+  STRING(REGEX REPLACE "^([^:]+):(.+):([0-9]+)\$" "\\3" test_count ${testcase})
 
   add_test( NAME "${test_name}"
             COMMAND ${CMAKE_COMMAND}
+						-DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}
             -DTEST_PROG=$<TARGET_FILE:rexgen>
-            -DREGEX=${test_regex}
-            -DHASH=${test_hash}
+            -DREGEX='${test_regex}'
+						-DCOUNT=${test_count}
             -P "${PROJECT_SOURCE_DIR}/test/singletest.cmake" )
   
   # add_test( NAME "valgrind:${test_regex}"
