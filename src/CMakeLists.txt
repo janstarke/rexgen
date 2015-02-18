@@ -4,7 +4,7 @@ set(prj rexgen)
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-#include (cmake/testing.cmake)
+include (cmake/testing.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
 string(REPLACE "\n" "" librexgen_version ${librexgen_version_line})
