@@ -115,7 +115,7 @@ inline bool CaseIterator::fast_next() {
 
 	//fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
-  assert(j < changeable_characters.size());
+  //assert(j < changeable_characters.size());
   uchar_toggle_case(word[changeable_characters[j]]);
 	--k;
   return (k >= 0);

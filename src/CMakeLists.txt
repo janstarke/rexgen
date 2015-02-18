@@ -3,6 +3,7 @@ project(rexgen)
 set(prj rexgen)
 
 cmake_minimum_required(VERSION 2.8.12)
+
 set(LUA_VERSION "5.2")
 
 include (cmake/packaging.cmake)
@@ -52,4 +53,4 @@ endif(MSVC)
 add_subdirectory(rexgen)
 add_subdirectory(librexgen)
 
-include (cmake/ctags.cmake)
+#include (cmake/ctags.cmake)

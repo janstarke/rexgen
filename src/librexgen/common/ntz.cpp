@@ -45,19 +45,7 @@ int ntz11(unsigned int n) {
    return n ? tab[k>>27] : 32;
 }
 
-#ifdef __HAVE_BSF__
-
-#if __x86_64__
-unsigned int ntz(uint64_t x) {
-  __asm__ volatile ( "bsf %%rax, %0":"+r"(x) );
-}
-#else
-unsigned int ntz(uint32_t x) {
-  __asm__ volatile ( "bsf %%eax, %0":"+r"(x) );
-}
-#endif /* __x86_64__ */
-
-#else 
+#if ! defined(__USE_INLINE_NTZ__)
 #if __x86_64__
 unsigned int ntz(long long unsigned int x) {
 	const unsigned int lower_part =  (const unsigned int) (x & 0x00000000ffffffff);
@@ -77,4 +65,4 @@ unsigned int ntz(long unsigned int x) {
   return ntz11(x);
 }
 #endif /* __x86_64__ */
-#endif /* __HAVE_BSF__ */
+#endif /* ! defined(__USE_INLINE_NTZ__) */

@@ -109,7 +109,10 @@ EXPORT
 bool uchar_isascii(const uchar_t& uch);
 
 EXPORT
-void uchar_toggle_case(uchar_t& uch);
+inline
+void uchar_toggle_case(uchar_t& uch) {
+	uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
+}
 
 }
 #endif

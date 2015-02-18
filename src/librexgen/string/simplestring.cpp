@@ -26,10 +26,6 @@ SimpleString::SimpleString(size_t msize)
 	clear();
 }
 
-uchar_t& SimpleString::operator[](const unsigned int& idx) {
-	return characters[idx];
-}
-
 const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
   return (const uchar_t&) characters[idx];
 }

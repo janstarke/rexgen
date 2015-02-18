@@ -265,11 +265,6 @@ uchar_t create_BOM(charset cs) {
   return uc;
 }
 
-EXPORT
-void uchar_toggle_case(uchar_t& uch) {
-	uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
-}
-
 #ifdef __cplusplus
 }
 #endif

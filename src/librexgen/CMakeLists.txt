@@ -1,8 +1,17 @@
+cmake_minimum_required(VERSION 2.8.12)
+cmake_policy(SET CMP0042 OLD)
+
 #include(cmake/cpplint.cmake)
 #include(cmake/cppcheck.cmake)
+include(../FindICU.cmake/FindICU.cmake)
+
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
+find_package(ICU 54.1 REQUIRED)
+
+include_directories(${ICU_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 
 if(MSVC)
 else()
@@ -32,10 +41,6 @@ if(USE_LUA)
 else()
   set(lua_sources "")
 endif(USE_LUA)
-
-#add_custom_target(casefolding COMMAND "perl" "-w"
-#	"${CMAKE_CURRENT_SOURCE_DIR}/string/casefolding.pl"
-#	"${CMAKE_CURRENT_SOURCE_DIR}/string/casefolding.cpp")
 
 set(librexgen_sources
   ${lua_sources}
@@ -81,7 +86,7 @@ set(CPPCHECK_SUPPRESS ${parser_sources})
 #endif(COMMAND add_cppcheck)
 
 add_library(${librexgen_filename} SHARED ${parser_sources} ${librexgen_sources})
-add_dependencies(${librexgen_filename} parser_target casefolding)
+add_dependencies(${librexgen_filename} parser_target )
 
 if (USE_LUA)
   target_link_libraries(${librexgen_filename} "lua${LUA_VERSION}" )
@@ -91,7 +96,7 @@ if(MSVC)
 else()
 	target_link_libraries(${librexgen_filename} "stdc++")
 endif(MSVC)
-target_link_libraries(${librexgen_filename} "icuuc")
+target_link_libraries(${librexgen_filename} ${ICU_LIBRARIES})
 
 set_target_properties(${librexgen_filename} PROPERTIES
 	PREFIX ""

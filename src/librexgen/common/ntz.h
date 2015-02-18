@@ -25,12 +25,19 @@
 
 int ntz11(unsigned int n);
 
-#define __HAVE_BSF__
+#define __USE_INLINE_NTZ__
 
+#ifdef __USE_INLINE_NTZ__
+#if __x86_64__
+#define ntz(x) (ffsl(x)-1)
+#else
+#define ntz(x) (ffsll(x)-1)
+#endif /* __x86_64__ */
+#else /* __USE_INLINE_NTZ__ */
 #if __x86_64__
 unsigned int ntz(uint64_t x);
 #else
 unsigned int ntz(uint32_t x);
 #endif /* __x86_64__ */
-
+#endif /* __USE_INLINE_NTZ__ */
 #endif /* NTZ_H */
