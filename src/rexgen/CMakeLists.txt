@@ -1,10 +1,11 @@
+project(${prj})
 set(rexgen_exename rexgen)
 
 set(rexgen_sources rexgen.c)
 set(rexgen_manpages rexgen.1)
 
 add_executable(${rexgen_exename} ${rexgen_sources})
-target_link_libraries(${rexgen_exename} ${librexgen_filename})
+target_link_libraries(${rexgen_exename} ${librexgen-c})
 
 # set compiler flags
 if(MSVC)
