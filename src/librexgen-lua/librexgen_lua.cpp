@@ -50,8 +50,7 @@ EXPORT
 int rexgen_iter(lua_State* L) {
   Iterator* iter =
     * reinterpret_cast<Iterator**>(lua_touserdata(L, lua_upvalueindex(1)));
-  if (iter->hasNext()) {
-    iter->next();
+  if (iter->next()) {
     rexgen_value(L, iter);
     return 1;
   } else {
@@ -76,19 +75,18 @@ int rexgen_parse_regex(lua_State* L) {
 
 EXPORT
 int rexgen_value(lua_State* L, const Iterator* iter) {
-  SimpleString buffer;
+	char* buffer = NULL;
+  SimpleString str;
 
-  iter->value(buffer);
-  rexgen_push_string(L, buffer);
+  iter->value(str);
+	const size_t buffer_size = (str.size()+1)*4;
+	buffer = new char[buffer_size];
+	size_t bytes = str.to_binary_string(buffer, buffer_size);
+	lua_pushlstring(L, buffer, bytes);
+	delete [] buffer;
+	str.clear();
 
   return 1;
 }
 }
 
-void rexgen_push_string(lua_State* L, const SimpleString& str) {
-	const size_t buffer_size = (str.size()+1)*4;
-	char* buffer = new char[buffer_size];
-	str.to_binary_string(buffer, buffer_size);
-  lua_pushlstring(L, buffer, buffer_size);
-	delete [] buffer;
-}

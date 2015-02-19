@@ -44,6 +44,4 @@ extern "C" {
   int rexgen_iter(lua_State* L);
 }
 
-void rexgen_push_string(lua_State* L, const SimpleString& str);
-
 #endif /* __librexgen_lua_h__ */

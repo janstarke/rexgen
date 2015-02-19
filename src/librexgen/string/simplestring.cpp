@@ -78,15 +78,18 @@ void SimpleString::newline() {
 int SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
 	char* ptr = dst;
 	int count = 0;
-	for (unsigned int idx=0; idx<characters.size() && buffer_size>(4+1); ++idx) {
-		const uint8_t char_size = uchar_to_binary(&characters[idx], ptr);
-		ptr += char_size;
-		buffer_size -= char_size;
+	const uchar_t zero = char_to_uchar('\0');
+
+	/* guarantee space for terminating zero */
+	buffer_size -= 4;
+
+	for (auto ch: characters) {
+		if (count >= buffer_size) { 
+			break;
+		}
+		count += uchar_to_binary(&ch, dst+count);
 	}
-	if (buffer_size > 1) {
-		*ptr = 0;
-		++count;
-	}
+	count += uchar_to_binary(&zero, dst+count);
 	return count;
 }
 
