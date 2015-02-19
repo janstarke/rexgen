@@ -1,24 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 cmake_policy(SET CMP0042 OLD)
 
-if(MSVC)
-#this is currently not supported
-  OPTION (USE_LUA "create API for lua" OFF)
-else()
-  set(LUA_VERSION "5.2")
-  find_library(LIB_LUA liblua${LUA_VERSION} )
-  if (${LIB_LUA} STREQUAL "LIB_LUA-NOTFOUND")
-    OPTION (USE_LUA "create API for lua" OFF)
-  else()
-    OPTION (USE_LUA "create API for lua" ON)
-  endif (${LIB_LUA} STREQUAL "LIB_LUA-NOTFOUND")
-endif(MSVC)
+OPTION (USE_LUA "create API for lua" OFF)
 
-if(LIB_LUA)
-if ("${LIB_LUA}" STREQUAL "LIB_LUA-NOTFOUND")
-	MESSAGE(FATAL_ERROR "lua${LUA_VERSION} is missing")
-endif("${LIB_LUA}" STREQUAL "LIB_LUA-NOTFOUND")
-MESSAGE(STATUS "using ${LIB_LUA}" )
+if(USE_LUA)
+find_library(LIB_LUA REQUIRED )
+MESSAGE(STATUS "using ${LUA_VERSION_STRING}" )
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
@@ -28,9 +15,9 @@ ELSE()
   ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
-set(lua_sources api/lua/librexgen-lua.cpp)
+set(lua-sources librexgen_lua.cpp)
 add_library(${librexgen-lua} SHARED ${lua-sources})
-target_link_libraries(${librexgen-lua} ${librexgen_filename} "lua${LUA_VERSION}" )
+target_link_libraries(${librexgen-lua} ${librexgen} "lua${LUA_VERSION}" )
 
 if(MSVC)
 else()
@@ -67,4 +54,4 @@ else()
 	install(PROGRAMS "${PROJECT_SOURCE_DIR}/rexgen_lua/rexgen.lua" DESTINATION bin)
 endif(DEFINED ${LUA_ERROR})
 
-endif(LIB_LUA)
+endif(USE_LUA)

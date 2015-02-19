@@ -19,8 +19,8 @@
 
 
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/api/cxx/librexgen.h>
-#include <librexgen/api/c/librexgen.h>
+#include <librexgen/librexgen.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <librexgen/version/version.h>

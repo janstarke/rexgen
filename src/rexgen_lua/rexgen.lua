@@ -1,35 +1,15 @@
 #!/usr/local/bin/lua
 
-package.cpath = '/usr/local/lib/librexgen'
-local rexgen = require 'rexgen'
+package.cpath = '/usr/local/lib/librexgen-lua.dylib'
+local rexgen = require 'rexgen-lua'
 
-if (#arg ~= 1 and #arg ~= 2) then
-  print 'Usage: rexgen.lua [-i] <regex>'
+if (#arg ~= 1) then
+  print 'Usage: rexgen.lua <regex>'
   return
 end
 
-if (arg[1] == "-i" and #arg < 2) then
-  print 'Usage: rexgen.lua [-i] <regex>'
-  return
-end
-
-
-local regex;
-local ignoreCase = false;
-if (arg[1] == "-i") then
-  ignoreCase = true
-  regex = arg[2]
-else
-  ignoreCase = false
-  regex = arg[1]
-end
-
-
-local words, tree = rexgen.parse_regex(regex, ignoreCase)
-
---[[
-print(tree)
---]]
+local regex = arg[1];
+local words = rexgen.parse_regex(regex)
 
 for word in words do
   print(word)

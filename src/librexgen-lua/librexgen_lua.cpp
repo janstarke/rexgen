@@ -17,21 +17,14 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#include <librexgen/librexgen_lua.h>
+#include "librexgen_lua.h"
 #include <librexgen/librexgen.h>
-#include <librexgen/unicode.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
-#include <librexgen/simplestring.h>
+#include <librexgen/string/simplestring.h>
 #include <librexgen/rexgen_options.h>
-#include <uniconv.h>
+#include <librexgen/osdepend.h>
 #include <vector>
-
-#if REXGEN_DEBUG == 1
-#include <execinfo.h>
-#include <signal.h>
-#include <librexgen/stacktrace.h>
-#endif
 
 extern "C" {
 #include <lua5.2/lua.h>
@@ -41,46 +34,19 @@ extern "C" {
 
 #include <string>
 
-#ifdef YYDEBUG
-extern int rexgen_debug;
-#endif
-
-static const int BUFFER_SIZE = 4096;
-
 static const luaL_Reg rexgen_lib[] = {
   { "parse_regex",      rexgen_parse_regex },
-  { "get_syntax_tree",  rexgen_get_syntax_tree },
   {NULL, NULL}
 };
 
-#ifdef REXGEN_DEBUG
-#if REXGEN_DEBUG == 1
-static void handler(int sig) {
-  // print out all the frames to stderr
-  fprintf(stderr, "Error: signal %d:\n", sig);
-  print_stacktrace();
-  exit(1);
-}
-#endif
-#endif
-
-extern "C"
+extern "C" {
+EXPORT
 int luaopen_rexgen(lua_State* L) {
-#if YYDEBUG == 1
-  rexgen_debug = 1;
-#endif
-
   luaL_newlib(L, rexgen_lib);
-#ifdef REXGEN_DEBUG
-#if REXGEN_DEBUG == 1
-  //signal(SIGSEGV, handler);
-  signal(SIGABRT, handler);
-#endif
-#endif
   return 1;
 }
 
-extern "C"
+EXPORT
 int rexgen_iter(lua_State* L) {
   Iterator* iter =
     * reinterpret_cast<Iterator**>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -93,15 +59,10 @@ int rexgen_iter(lua_State* L) {
   }
 }
 
-extern "C"
+EXPORT
 int rexgen_parse_regex(lua_State* L) {
   SimpleString xml;
   RexgenOptions options;
-  if (lua_isboolean(L, 2)) {
-    options.ignore_case = lua_toboolean(L, 2);
-  } else {
-    options.ignore_case = false;
-  }
 
   Iterator** iter;
   iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
@@ -110,36 +71,24 @@ int rexgen_parse_regex(lua_State* L) {
   *iter = regex_iterator(luaL_checklstring(L, 1, NULL), options);
   lua_pushcclosure(L, rexgen_iter, 1);
 
-  /*
-  re->appendRawValue(xml);
-  xml.terminate();
-  push_utf8_string(L, xml);
-  */
   return 1;
 }
 
-extern "C"
+EXPORT
 int rexgen_value(lua_State* L, const Iterator* iter) {
   SimpleString buffer;
 
   iter->value(buffer);
-  buffer.terminate();
-  push_utf8_string(L, buffer);
+  rexgen_push_string(L, buffer);
 
   return 1;
 }
-
-extern "C"
-int rexgen_get_syntax_tree(lua_State* L) {
-  SimpleString xml;
-  RexgenOptions options;
-  Regex* re = parse_regex(luaL_checklstring(L, 1, NULL), options);
-  re->appendRawValue(xml);
-  push_utf8_string(L, xml);
-  return 1;
 }
 
-void push_utf8_string(lua_State* L, const SimpleString& str) {
-  lua_pushlstring(L, (const char*)str.__get_buffer_address(),
-                  str.__get_buffer_size());
+void rexgen_push_string(lua_State* L, const SimpleString& str) {
+	const size_t buffer_size = (str.size()+1)*4;
+	char* buffer = new char[buffer_size];
+	str.to_binary_string(buffer, buffer_size);
+  lua_pushlstring(L, buffer, buffer_size);
+	delete [] buffer;
 }

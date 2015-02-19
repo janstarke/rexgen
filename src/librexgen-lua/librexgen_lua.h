@@ -23,6 +23,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
+#include <librexgen/osdepend.h>
 
 extern "C" {
 #include <lua5.2/lua.h>
@@ -30,17 +31,19 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 extern "C" {
+	EXPORT
   int rexgen_parse_regex(lua_State* L);
 
+	EXPORT
   int rexgen_value(lua_State* L, const Iterator* iter);
 
+	EXPORT
   int luaopen_rexgen(lua_State* L);
 
+	EXPORT
   int rexgen_iter(lua_State* L);
-
-  int rexgen_get_syntax_tree(lua_State* L);
 }
 
-void push_utf8_string(lua_State* L, const SimpleString& str);
+void rexgen_push_string(lua_State* L, const SimpleString& str);
 
 #endif /* __librexgen_lua_h__ */
