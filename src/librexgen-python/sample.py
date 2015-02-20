@@ -1,4 +1,3 @@
-from ctypes import *
 from rexgen import *
 
 if __name__ == '__main__':
