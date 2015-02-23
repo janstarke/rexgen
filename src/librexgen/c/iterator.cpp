@@ -23,7 +23,7 @@
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <librexgen/version/version.h>
-#include "librexgen.h"
+#include <librexgen/c/librexgen.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -22,8 +22,8 @@
 
 #include <stdio.h>
 #include <librexgen/string/uchar.h>
-#include <librexgen/api/c/simplestring.h>
-#include <librexgen/api/c/iterator.h>
+#include <librexgen/c/simplestring.h>
+#include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 
 #ifdef __cplusplus

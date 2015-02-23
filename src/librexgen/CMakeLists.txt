@@ -38,7 +38,6 @@ ADD_FLEX_BISON_DEPENDENCY(regexscanner regexparser)
 ADD_CUSTOM_TARGET(parser_target DEPENDS ${BISON_regexparser_OUTPUTS} ${FLEX_regexscanner_OUTPUTS})
 
 set(librexgen_sources
-  ${lua_sources}
   debug.cpp 
   "${CMAKE_CURRENT_BINARY_DIR}/${librexgen}/version.cpp"
   regex/compoundregex.cpp
@@ -88,6 +87,10 @@ if(MSVC)
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTIES COMPILE_FLAGS "/wd4065" )
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTIES COMPILE_FLAGS "/wd4005" )
 endif(MSVC)
+
+add_subdirectory(lua)
+add_subdirectory(c)
+add_subdirectory(python)
 
 install(TARGETS ${librexgen}
 		RUNTIME DESTINATION "bin"

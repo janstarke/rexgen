@@ -23,7 +23,7 @@
 
 #include <assert.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/api/c/simplestring.h>
+#include <librexgen/c/simplestring.h>
 #include <librexgen/osdepend.h>
 
 #ifdef __cplusplus

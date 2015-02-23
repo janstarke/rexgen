@@ -18,13 +18,13 @@
 */
 
 #include <cstdio>
-#include <librexgen/api/c/librexgen.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/simplestring.h>
-#include <librexgen/api/cxx/librexgen.h>
+#include <librexgen/librexgen.h>
 #include <librexgen/parser/syntaxerror.h>
 
 using namespace std;

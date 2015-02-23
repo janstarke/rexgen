@@ -34,9 +34,6 @@ INCLUDE_DIRECTORIES("D:/Tools/GnuWin32/include")
 endif(MSVC)
 
 add_subdirectory(librexgen)
-add_subdirectory(librexgen-c)
-#add_subdirectory(librexgen-python)
-add_subdirectory(librexgen-lua)
 add_subdirectory(rexgen)
 
 #include (cmake/ctags.cmake)
