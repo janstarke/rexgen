@@ -16,12 +16,6 @@ rexgen is a library which allows you to create all words that match the given re
 
 The aim of this tool is to check if some secret follows a given pattern, which is an integral part of penetration tests. This tool is not intended to be used for real attacks against any secrets.
 .SH Options
-.IP -t 10
-print syntax tree
-.IP -i 10
-ignore case
-.IP -r 10
-randomize order of values (will be slower)
 .IP "-f <file>" 10
 read from file; use - to read from stdin you can use \\0 to refer to the current line
 .IP -u8 10
@@ -77,6 +71,9 @@ will be replaced with the respective line of input. input can be either a file (
 T}
 \\n@back reference@T{
 will be replaced by the value created with the n th (with 1<=n<=9) opened alternative/group; e.g. <(script|link|embed|object)>xyz</\\1> creates the results <script>xyz</script>, <link>xyz</link>, <embed>xyz</embed> and <object>xyz</object>
+T}
+(?i:re)@ignore case@T{
+creates all variants of uppercase and lowercase of the values created by _re_. For example, (?i:moo) will create the values moo, Moo, mOo, MOo, moO, MoO, mOO and MOO (but not in that order)
 T}
 .TE
 
