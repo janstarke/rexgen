@@ -5,7 +5,7 @@ set(rexgen_sources rexgen.c)
 set(rexgen_manpages rexgen.1)
 
 add_executable(${rexgen_exename} ${rexgen_sources})
-target_link_libraries(${rexgen_exename} ${librexgen-c})
+target_link_libraries(${rexgen_exename} ${librexgen})
 
 # set compiler flags
 if(MSVC)

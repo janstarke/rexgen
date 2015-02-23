@@ -61,6 +61,10 @@ set(librexgen_sources
 
 	librexgen.cpp
 	common/ntz.cpp
+
+	c/librexgen.cpp
+	c/iterator.cpp
+	c/simplestring.cpp
 )
 set(parser_sources
   ${BISON_regexparser_OUTPUTS}
@@ -89,7 +93,6 @@ if(MSVC)
 endif(MSVC)
 
 add_subdirectory(lua)
-add_subdirectory(c)
 add_subdirectory(python)
 
 install(TARGETS ${librexgen}
@@ -105,6 +108,7 @@ file(GLOB iterator_headers "${CMAKE_CURRENT_SOURCE_DIR}/iterator/*.h")
 file(GLOB parser_headers "${CMAKE_CURRENT_SOURCE_DIR}/parser/*.h")
 file(GLOB string_headers "${CMAKE_CURRENT_SOURCE_DIR}/string/*.h")
 file(GLOB state_headers "${CMAKE_CURRENT_SOURCE_DIR}/state/*.h")
+file(GLOB c_headers "${CMAKE_CURRENT_SOURCE_DIR}/c/*.h")
 file(GLOB generated_headers "${CMAKE_CURRENT_BINARY_DIR}/librexgen/*.h")
 install(FILES ${librexgen_headers} DESTINATION ${INSTALL_INCLUDE_DIR} )
 install(FILES ${regex_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/regex )
@@ -112,6 +116,7 @@ install(FILES ${iterator_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/iterator )
 install(FILES ${parser_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/parser )
 install(FILES ${string_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/string )
 install(FILES ${state_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/state )
+install(FILES ${c_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/c )
 install(FILES ${generated_headers} DESTINATION ${INSTALL_INCLUDE_DIR} )
 
 INSTALL(CODE "MESSAGE(\"Please run 'ldconfig' upon successful installation of ${prj}\")")

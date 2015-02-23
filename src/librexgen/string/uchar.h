@@ -87,7 +87,7 @@ typedef union {
   } ucs4;
 } binary_character_t;
 
-const char32_t UCHAR_UNASSIGNED = 0xffffffff;
+static const char32_t UCHAR_UNASSIGNED = 0xffffffff;
 
 struct __uchar_t {
   charset         variant;    /* 1 byte */

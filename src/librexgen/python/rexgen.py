@@ -1,5 +1,5 @@
 from ctypes import *
-rexgen = cdll.LoadLibrary("librexgen-c.dylib")
+rexgen = cdll.LoadLibrary("librexgen.dylib")
 
 class SimpleString:
 	def __init__(self):
