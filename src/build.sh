@@ -2,19 +2,15 @@
 
 . ./build.config
 
-#if test -d ${BUILDDIR}; then
-#	rm -rf ${BUILDDIR}
-#fi
-
 if test ! -d ${BUILDDIR}; then
 	mkdir ${BUILDDIR}
 fi
 
 echo "entering ${BUILDDIR}"
-cd ${BUILDDIR}
+pushd ${BUILDDIR}
 
-cmake -DCMAKE_BUILD_TYPE=RELEASE ..
+echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR} <<<"
+cmake ${CMAKE_OPTIONS} ${BASEDIR}
 make
 
-echo "entering ${BASEDIR}"
-cd ${BASEDIR}
+popd

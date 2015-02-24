@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
-find_package(ICU 54.1 REQUIRED)
+find_package(ICU REQUIRED)
 
 include_directories(${ICU_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 
