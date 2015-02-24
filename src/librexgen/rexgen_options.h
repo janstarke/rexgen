@@ -22,7 +22,7 @@
 
 #include <cstdio>
 #include <librexgen/string/uchar.h>
-#include <librexgen/api/c/iterator.h>
+#include <librexgen/c/iterator.h>
 
 class RexgenOptions {
  public:

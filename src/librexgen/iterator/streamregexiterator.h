@@ -22,7 +22,7 @@
 #define STREAMREGEXITERATOR_H
 
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/api/c/iterator.h>
+#include <librexgen/c/iterator.h>
 
 
 class StreamRegexIterator : public Iterator {

@@ -28,7 +28,7 @@
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
-#include <librexgen/api/c/simplestring.h>
+#include <librexgen/c/simplestring.h>
 
 #ifdef __cplusplus
 

@@ -22,7 +22,7 @@
 #include <string.h>
 #include <signal.h>
 #include <locale.h>
-#include <librexgen/api/c/librexgen.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/version.h>
 #include "terms.h"
 
