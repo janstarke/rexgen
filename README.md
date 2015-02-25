@@ -17,6 +17,10 @@ cd rexgen/src
 ```
 
 # Support
+
+If you want to contribute ideas, bug reports or improvements to this project, feel free to contact me via github. 
+
+If you are not interested in active participation of this project, but you want to support it anyway, you can 
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jan.starke&url=https://github.com/teeshop/rexgen&title=rexgen&language=en&tags=github&category=software)
 
 # License
