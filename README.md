@@ -16,7 +16,8 @@ cd rexgen/src
 # you can use the switches -p to enable python support and -l to enable lua support
 ```
 
-
+# Support
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jan.starke&url=https://github.com/teeshop/rexgen&title=rexgen&language=en&tags=github&category=software)
 
 # License
 
