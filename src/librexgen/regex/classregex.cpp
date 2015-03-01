@@ -33,18 +33,25 @@ bool ClassRegex::contains(const uchar_t& ch) const {
 }
 
 int ClassRegex::__append_character(const uchar_t& ch) {
-  if (! contains(ch)) {
-    characters.push_back(ch);
-    return 1;
-  }
-  return 0;
+	int count = 1 - removeCharacterInstances(ch);
+	characters.push_back(ch);
+  return count;
 }
 int ClassRegex::__insert_character(const uchar_t& ch) {
-  if (! contains(ch)) {
-    characters.insert(characters.begin(), ch);
-    return 1;
+	int count = 1 - removeCharacterInstances(ch);
+	characters.insert(characters.begin(), ch);
+  return count;
+}
+
+int ClassRegex::removeCharacterInstances(const uchar_t& ch) {
+	auto match_fct = [&ch](uchar_t x){return x.codepoint==ch.codepoint;};
+	int count = std::count_if( characters.begin(), characters.end(), match_fct);
+  if (count > 0) {
+		characters.erase(
+			std::remove_if(characters.begin(), characters.end(), match_fct),
+			characters.end());
   }
-  return 0;
+	return count;
 }
 
 void ClassRegex::addCharacter(const uchar_t& ch) {
@@ -62,7 +69,6 @@ int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
 
   while (a != uch_b.codepoint + diff) {
     uchar_t ch;
-    uchar_t uch;
     codepoint_to_uchar(&ch, a, uch_a.variant);
     count += __append_character(ch);
 		a += diff;
