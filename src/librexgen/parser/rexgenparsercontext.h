@@ -64,7 +64,6 @@ class RexgenParserContext {
 
   int groupId;
 
-  bool ignoreCase() const { return options.ignore_case; }
   charset encoding() const { return options.encoding; }
   FILE* getInFile() const { return options.infile; }
   callback_fp getStreamCallback() const { return options.stream_callback; }
