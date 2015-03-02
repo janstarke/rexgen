@@ -7,10 +7,10 @@ if test ! -d ${BUILDDIR}; then
 fi
 
 echo "entering ${BUILDDIR}"
-pushd ${BUILDDIR}
+OLD_CWD=$(pwd)
+cd ${BUILDDIR}
 
 echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR} <<<"
-cmake ${CMAKE_OPTIONS} ${BASEDIR}
-make
+cmake ${CMAKE_OPTIONS} ${BASEDIR} && make
 
-popd
+cd ${OLD_CWD}
