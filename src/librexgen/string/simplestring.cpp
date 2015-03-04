@@ -75,9 +75,8 @@ void SimpleString::newline() {
 	return push_back('\n');
 }
 
-int SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
-	char* ptr = dst;
-	int count = 0;
+size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
+	size_t count = 0;
 	const uchar_t zero = char_to_uchar('\0');
 
 	/* guarantee space for terminating zero */
