@@ -46,14 +46,13 @@ class StreamRegex : public Regex {
   RegexType getRegexType() const { return Stream; }
   const char* getXmlTag() const { return "stream"; }
   StreamRegex(FILE* in, callback_fp cb)
-    : infile(in), callback(cb) {
+    : infile(in) {
     /* this will not be deleted here, but in the iterator tree */
     iter = new StreamRegexIterator(getId(), infile, cb);
   }
 
  private:
   FILE* infile;
-  callback_fp callback;
   StreamRegexIterator* iter;
 };
 
