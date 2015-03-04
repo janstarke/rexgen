@@ -4,22 +4,15 @@ cmake_policy(SET CMP0042 OLD)
 endif(CMAKE_MAJOR_VERSION GREATER 2)
 project(${librexgen})
 
-include(FindICU.cmake/FindICU.cmake)
-
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+#LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+#LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/FindICU.cmake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/FindICU.cmake")
 
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
 find_package(ICU REQUIRED)
 
 include_directories(${ICU_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
-
-if(MSVC)
-else()
-  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp
-    PROPERTIES 
-    COMPILE_FLAGS "-Wno-unused-parameter")
-endif(MSVC)
 
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
@@ -29,6 +22,13 @@ ENDIF(MSVC)
 
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
+
+if(MSVC)
+else()
+  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp
+    PROPERTIES 
+    COMPILE_FLAGS "-Wno-unused-parameter -Wno-deprecated-register")
+endif(MSVC)
 
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTIES GENERATED 1)
 SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTIES GENERATED 1)
