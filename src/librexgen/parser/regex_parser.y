@@ -209,11 +209,12 @@ GroupRegex:
   };
 
 Quantifier:	
-  T_BEGIN_QUANTIFIER T_NUMBER T_COMMA T_NUMBER T_END_QUANTIFIER
-{
-  Quantifier* q = new Quantifier($2, $4);
-  $$ = q;
-};
+    T_BEGIN_QUANTIFIER T_NUMBER T_END_QUANTIFIER {
+      $$ = new Quantifier($2, $2);
+    }
+  | T_BEGIN_QUANTIFIER T_NUMBER T_COMMA T_NUMBER T_END_QUANTIFIER {
+      $$ = new Quantifier($2, $4);
+  };
 
 GroupReference: T_GROUPID {
   GroupReference* gr = new GroupReference($1);
