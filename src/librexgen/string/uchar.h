@@ -99,7 +99,7 @@ struct __uchar_t {
   uint32_t codepoint;         /* 4 byte */
 
   binary_character_t character; /* 4 byte */
-  binary_character_t casefolded[3]; /* 12 byte */
+  binary_character_t casevariant; /* 4 byte */
 
 #ifdef __cplusplus
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }

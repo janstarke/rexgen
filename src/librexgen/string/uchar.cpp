@@ -153,14 +153,11 @@ void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
 	dst->char_length = encode_codepoint(dst->codepoint, cs, &dst->character);
 
 	/* convert the uppercase/lowercase variant of the character */
-	encode_codepoint(cpUpper, cs, &(dst->casefolded[0]));
+	encode_codepoint(cpUpper, cs, &(dst->casevariant));
 
 	/* if the uppercase and lowercase variant are equal, then preserve case */
-	if (dst->casefolded[0].ucs4.value == dst->character.ucs4.value) {
+	if (dst->casevariant.ucs4.value == dst->character.ucs4.value) {
 		UCHAR_SET_PRESERVE_CASE(*dst);
-	} else {
-		dst->casefolded[1].ucs4.value = UCHAR_UNASSIGNED;
-		dst->casefolded[2].ucs4.value = UCHAR_UNASSIGNED;
 	}
 }
 
@@ -228,13 +225,7 @@ uint8_t uchar_to_binary(const uchar_t* uch, byte* dst) {
   }
 
 	if (uch->flags & UCHAR_FLAGS_USE_CASEFOLDED) {
-		len += converter_function(&uch->casefolded[0], dst);
-		if (uch->casefolded[1].ucs4.value != UCHAR_UNASSIGNED) {
-			len += converter_function(&uch->casefolded[1], dst+len);
-			if (uch->casefolded[2].ucs4.value != UCHAR_UNASSIGNED) {
-				len += converter_function(&uch->casefolded[2], dst+len);
-			}
-		}
+		len += converter_function(&uch->casevariant, dst);
 	} else {
 		len = converter_function(&uch->character, dst);
 	}
