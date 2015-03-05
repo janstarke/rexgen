@@ -93,7 +93,9 @@
 %type <regex> SimpleRegex
 %type <class_regex> ClassRegex
 %type <class_regex> ClassContent
-%type <class_regex> ClassContentWithoutHyphen
+%type <class_regex> SimpleClassContent
+%type <class_regex> CharacterClassDigit
+%type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
 %type <regex> Stream;
@@ -157,40 +159,43 @@ SimpleRegex: T_ANY_CHAR {
 };
 
 ClassRegex:
-      T_CLASS_DIGIT {
-				$$ = new ClassRegex(context->encoding());
-				$$->addRange('0', '9', false);
-				}
-    | T_CLASS_WORD {
-				$$ = new ClassRegex(context->encoding());
-				$$->addRange('a', 'z', false);
-				$$->addRange('A', 'Z', false);
-				$$->addRange('0', '9', false);
-				$$->addCharacter('_', false);
-			}
-		| T_BEGIN_CLASS ClassContent T_END_CLASS { $$ = $2; };
-ClassContent: T_HYPHEN ClassContentWithoutHyphen {
-  ClassRegex* re = $2;
-  re->addCharacter('-');
-  $$ = re; };
-ClassContent: ClassContentWithoutHyphen { $$ = $1; };
-ClassContentWithoutHyphen:
-  T_ANY_CHAR
-  { ClassRegex* re = new ClassRegex(context->encoding());
-    re->addCharacter($1);
-    $$=re; };
-ClassContentWithoutHyphen:
-  T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = (ClassRegex*) $2; re->addCharacter($1); $$=re; };
-ClassContentWithoutHyphen:
-  T_ANY_CHAR T_HYPHEN T_ANY_CHAR
-  { ClassRegex* re = new ClassRegex(context->encoding()); 
-    if (re->addRange($1, $3) < 1) {
-      throw SyntaxError("empty range specified in class regex", @1.first_column);
-    }
-    $$=re; }
-|  T_ANY_CHAR T_HYPHEN T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = $4; re->addRange($1, $3); $$=re; };
+    CharacterClassDigit { $$ = $1; }
+  | CharacterClassWord  { $$ = $1; }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter('-'); }
+  | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
+ClassContent:
+    SimpleClassContent  { $$ = $1; }
+  | SimpleClassContent ClassContent {
+    $2->merge($1);
+    delete $1;
+    $$ = $2;
+  }
+
+SimpleClassContent:
+	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
+      $$ = new ClassRegex(context->encoding()); 
+      $$->addRange($1, $3);
+	}
+	| CharacterClassDigit { $$ = $1; }
+	| CharacterClassWord  { $$ = $1; }
+	| T_ANY_CHAR {
+    $$ = new ClassRegex(context->encoding());
+    $$->addCharacter($1);
+  }
+
+CharacterClassDigit:
+	T_CLASS_DIGIT {
+    $$ = new ClassRegex(context->encoding());
+    $$->addRange('0', '9');
+	}
+CharacterClassWord:
+  T_CLASS_WORD {
+    $$ = new ClassRegex(context->encoding());
+    $$->addRange('a', 'z');
+    $$->addRange('A', 'Z');
+    $$->addRange('0', '9');
+    $$->addCharacter('_');
+  }
   
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP

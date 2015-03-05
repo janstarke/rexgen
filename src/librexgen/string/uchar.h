@@ -100,6 +100,10 @@ struct __uchar_t {
 
   binary_character_t character; /* 4 byte */
   binary_character_t casefolded[3]; /* 12 byte */
+
+#ifdef __cplusplus
+  bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
+#endif
 };
 typedef struct __uchar_t uchar_t;
 

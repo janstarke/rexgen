@@ -43,11 +43,11 @@ class ClassRegex : public Regex {
   }
 
 
-  int addRange(const uint32_t& a, const uint32_t& b) {
+  void addRange(const uint32_t& a, const uint32_t& b) {
     uchar_t uch_a, uch_b;
     codepoint_to_uchar(&uch_a, a, encoding);
     codepoint_to_uchar(&uch_b, b, encoding);
-    return addRange(uch_a, uch_b);
+    addRange(uch_a, uch_b);
   }
 
   bool contains(const uint32_t& ch) const {
@@ -56,18 +56,20 @@ class ClassRegex : public Regex {
     return contains(uch);
   }
 
+  void merge(const ClassRegex* other);
+
   RegexType getRegexType() const { return Class; }
 
   Iterator* singleIterator(IteratorState* /* state */) const;
 
  private:
   void addCharacter(const uchar_t& ch);
-  int addRange(const uchar_t& a, const uchar_t& b);
+  void addRange(const uchar_t& a, const uchar_t& b);
   bool contains(const uchar_t& ch) const;
 
-  int __insert_character(const uchar_t& ch);
-  int __append_character(const uchar_t& ch);
-	int removeCharacterInstances(const uchar_t &ch);
+  void __insert_character(const uchar_t& ch);
+  void __append_character(const uchar_t& ch);
+	void removeCharacterInstances(const uchar_t &ch);
   vector<uchar_t> characters;
   const charset encoding;
 };
