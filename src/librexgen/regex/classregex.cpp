@@ -33,58 +33,45 @@ bool ClassRegex::contains(const uchar_t& ch) const {
 }
 
 int ClassRegex::__append_character(const uchar_t& ch) {
-  if (! contains(ch)) {
-    characters.push_back(ch);
-    return 1;
-  }
-  return 0;
+	int count = 1 - removeCharacterInstances(ch);
+	characters.push_back(ch);
+  return count;
 }
 int ClassRegex::__insert_character(const uchar_t& ch) {
-  if (! contains(ch)) {
-    characters.insert(characters.begin(), ch);
-    return 1;
-  }
-  return 0;
+	int count = 1 - removeCharacterInstances(ch);
+	characters.insert(characters.begin(), ch);
+  return count;
 }
 
-void ClassRegex::addCharacter(const uchar_t& ch, bool ignoreCase) {
+int ClassRegex::removeCharacterInstances(const uchar_t& ch) {
+	auto match_fct = [&ch](uchar_t x){return x.codepoint==ch.codepoint;};
+	int count = std::count_if( characters.begin(), characters.end(), match_fct);
+  if (count > 0) {
+		characters.erase(
+			std::remove_if(characters.begin(), characters.end(), match_fct),
+			characters.end());
+  }
+	return count;
+}
+
+void ClassRegex::addCharacter(const uchar_t& ch) {
   __insert_character(ch);
-  if (ignoreCase && uchar_isascii(ch)) {
-    uchar_t uch;
-
-    if (islower(ch.character.ansi.value)) {
-      codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
-      __insert_character(uch);
-    }
-
-    else if (isupper(ch.character.ansi.value)) {
-      codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
-      __insert_character(uch);
-    }
-  }
 }
-int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b,
-                         bool ignoreCase) {
+
+int ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
   uint32_t a = uch_a.codepoint;
   int count = 0;
-  while (a <= uch_b.codepoint) {
-    //printf("adding codepoint %x\n", a);
+	int diff = +1;
+
+	if (a > uch_b.codepoint) {
+		diff = -1;
+	}
+
+  while (a != uch_b.codepoint + diff) {
     uchar_t ch;
-    uchar_t uch;
-    codepoint_to_uchar(&ch, a++, uch_a.variant);
+    codepoint_to_uchar(&ch, a, uch_a.variant);
     count += __append_character(ch);
-
-    if (ignoreCase && uchar_isascii(ch)) {
-      if (islower(ch.character.ansi.value)) {
-        codepoint_to_uchar(&uch, toupper(ch.character.ansi.value), encoding);
-        count += __append_character(uch);
-      }
-
-      else if (isupper(ch.character.ansi.value)) {
-        codepoint_to_uchar(&uch, tolower(ch.character.ansi.value), encoding);
-        count += __append_character(uch);
-      }
-    }
+		a += diff;
   }
 
   return count;

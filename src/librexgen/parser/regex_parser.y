@@ -153,13 +153,7 @@ PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
           |     Stream          { $$ = static_cast<Regex*>($1); };
 
 SimpleRegex: T_ANY_CHAR {
-  if (context->ignoreCase()) {
-    ClassRegex* re = new ClassRegex(context->encoding());
-    re->addCharacter($1, context->ignoreCase());
-    $$=re;
-  } else {
-    $$ = new TerminalRegex($1, context->encoding());
-  }
+	$$ = new TerminalRegex($1, context->encoding());
 };
 
 ClassRegex:
@@ -177,26 +171,26 @@ ClassRegex:
 		| T_BEGIN_CLASS ClassContent T_END_CLASS { $$ = $2; };
 ClassContent: T_HYPHEN ClassContentWithoutHyphen {
   ClassRegex* re = $2;
-  re->addCharacter('-', false);
+  re->addCharacter('-');
   $$ = re; };
 ClassContent: ClassContentWithoutHyphen { $$ = $1; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR
   { ClassRegex* re = new ClassRegex(context->encoding());
-    re->addCharacter($1, context->ignoreCase());
+    re->addCharacter($1);
     $$=re; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = (ClassRegex*) $2; re->addCharacter($1, context->ignoreCase()); $$=re; };
+  { ClassRegex* re = (ClassRegex*) $2; re->addCharacter($1); $$=re; };
 ClassContentWithoutHyphen:
   T_ANY_CHAR T_HYPHEN T_ANY_CHAR
   { ClassRegex* re = new ClassRegex(context->encoding()); 
-    if (re->addRange($1, $3, context->ignoreCase()) < 1) {
+    if (re->addRange($1, $3) < 1) {
       throw SyntaxError("empty range specified in class regex", @1.first_column);
     }
     $$=re; }
 |  T_ANY_CHAR T_HYPHEN T_ANY_CHAR ClassContentWithoutHyphen
-  { ClassRegex* re = $4; re->addRange($1, $3, context->ignoreCase()); $$=re; };
+  { ClassRegex* re = $4; re->addRange($1, $3); $$=re; };
   
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP

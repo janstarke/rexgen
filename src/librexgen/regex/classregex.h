@@ -36,18 +36,18 @@ class ClassRegex : public Regex {
  public:
   ClassRegex(charset variant) : encoding(variant) { }
 
-  inline void addCharacter(const uint32_t& ch, bool ignoreCase) {
+  inline void addCharacter(const uint32_t& ch) {
     uchar_t uch;
     codepoint_to_uchar(&uch, ch, encoding);
-    addCharacter(uch, ignoreCase);
+    addCharacter(uch);
   }
 
 
-  int addRange(const uint32_t& a, const uint32_t& b, bool ignoreCase) {
+  int addRange(const uint32_t& a, const uint32_t& b) {
     uchar_t uch_a, uch_b;
     codepoint_to_uchar(&uch_a, a, encoding);
     codepoint_to_uchar(&uch_b, b, encoding);
-    return addRange(uch_a, uch_b, ignoreCase);
+    return addRange(uch_a, uch_b);
   }
 
   bool contains(const uint32_t& ch) const {
@@ -61,12 +61,13 @@ class ClassRegex : public Regex {
   Iterator* singleIterator(IteratorState* /* state */) const;
 
  private:
-  void addCharacter(const uchar_t& ch, bool ignoreCase);
-  int addRange(const uchar_t& a, const uchar_t& b, bool ignoreCase);
+  void addCharacter(const uchar_t& ch);
+  int addRange(const uchar_t& a, const uchar_t& b);
   bool contains(const uchar_t& ch) const;
 
   int __insert_character(const uchar_t& ch);
   int __append_character(const uchar_t& ch);
+	int removeCharacterInstances(const uchar_t &ch);
   vector<uchar_t> characters;
   const charset encoding;
 };
