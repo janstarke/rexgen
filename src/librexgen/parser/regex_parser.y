@@ -82,6 +82,8 @@
 %token <character> T_BEGIN_CLASS
 %token <character> T_END_CLASS
 %token <character> T_COMMA
+%token <character> T_CLASS_DIGIT
+%token <character> T_CLASS_WORD
 
 %type <regex_alternatives> T_RegexAlternatives
 %type <compound_regex> CompoundRegex
@@ -160,7 +162,19 @@ SimpleRegex: T_ANY_CHAR {
   }
 };
 
-ClassRegex:  T_BEGIN_CLASS ClassContent T_END_CLASS { $$ = $2; };
+ClassRegex:
+      T_CLASS_DIGIT {
+				$$ = new ClassRegex(context->encoding());
+				$$->addRange('0', '9', false);
+				}
+    | T_CLASS_WORD {
+				$$ = new ClassRegex(context->encoding());
+				$$->addRange('a', 'z', false);
+				$$->addRange('A', 'Z', false);
+				$$->addRange('0', '9', false);
+				$$->addCharacter('_', false);
+			}
+		| T_BEGIN_CLASS ClassContent T_END_CLASS { $$ = $2; };
 ClassContent: T_HYPHEN ClassContentWithoutHyphen {
   ClassRegex* re = $2;
   re->addCharacter('-', false);

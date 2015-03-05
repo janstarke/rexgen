@@ -111,11 +111,13 @@ ANSICHAR							\\x[0-9a-fA-F]{2,2}
 UNICODECHAR						\\u[0-9a-fA-F]{4,4}
 LINEFEED							\\n
 CARRIAGERETURN				\\r
+CLASS_DIGIT						\\d
+CLASS_WORD						\\w
 SPECIAL								[ \t\r\n,;:=/%&<>-]
 NORMAL								[^ \t\r\n.,;:=/%&?<>-]
 GROUPID								\\[1-9]
 STREAM          			\\0
-ESCAPED								\\[^xnur0-9]
+ESCAPED								\\[^xnurdw0-9]
 BEGIN_GROUP_WITH_OPTIONS				 	\(\?[i]*(-[i]+)?:
 BEGIN_GROUP 					\(
 END_GROUP							\)
@@ -128,14 +130,16 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 %s IN_CLASS
 %%
 
-{ANSICHAR}		{ yylval.character = parseAnsiChar(yytext); return T_ANY_CHAR;}
-{UNICODECHAR}		{ yylval.character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
-{UTF8_2}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_3}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_4}                { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{ESCAPED}		{ yylval.character = (char)yytext[1]; return T_ANY_CHAR; }
-{LINEFEED}		{ yylval.character = '\n'; return T_ANY_CHAR; }
+{ANSICHAR}        { yylval.character = parseAnsiChar(yytext); return T_ANY_CHAR;}
+{UNICODECHAR}		  { yylval.character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
+{UTF8_2}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_3}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{UTF8_4}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
+{ESCAPED}         { yylval.character = (char)yytext[1]; return T_ANY_CHAR; }
+{LINEFEED}        { yylval.character = '\n'; return T_ANY_CHAR; }
 {CARRIAGERETURN}	{ yylval.character = '\r'; return T_ANY_CHAR; }
+{CLASS_DIGIT}			{ yylval.character = 0; return T_CLASS_DIGIT; }
+{CLASS_WORD}      { yylval.character = 0; return T_CLASS_WORD;  }
 "|"			{ return T_PIPE; }
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"			{ BEGIN(INITIAL); return T_END_CLASS; }
