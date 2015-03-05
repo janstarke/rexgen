@@ -111,7 +111,7 @@ ANSICHAR							\\x[0-9a-fA-F]{2,2}
 UNICODECHAR						\\u[0-9a-fA-F]{4,4}
 LINEFEED							\\n
 CARRIAGERETURN				\\r
-SPECIAL								[ \t\r\n.,;:=/%&?<>-]
+SPECIAL								[ \t\r\n,;:=/%&<>-]
 NORMAL								[^ \t\r\n.,;:=/%&?<>-]
 GROUPID								\\[1-9]
 STREAM          			\\0
@@ -176,6 +176,7 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 <IN_CLASS>"-"		{ return T_HYPHEN; }
 <IN_QUANTIFIER>{DIGIT}+		{ yylval.integer = atoi(yytext); return T_NUMBER; }
 {NORMAL}                  { yylval.character = yytext[0]; return T_ANY_CHAR; }
+{SPECIAL}									{ yylval.character = yytext[0]; return T_ANY_CHAR; }
 .                       { }
 
 %%
