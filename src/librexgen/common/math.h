@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2014  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -18,27 +18,8 @@
 */
 
 
-#ifndef GROUPREFERENCE_H
-#define GROUPREFERENCE_H
+#ifndef MATH_H
+#define MATH_H
+unsigned long long int ipow(unsigned long long int base, unsigned int exp);
 
-#include <librexgen/regex/regex.h>
-#include <librexgen/string/simplestring.h>
-
-class GroupReference : public Regex {
-
- public:
-  GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
-  Iterator* singleIterator(IteratorState* state) const;
-  RegexType getRegexType() const { return Reference; }
-
-  int getGroupId() const { return groupId; }
-  const Regex* getRegex() const { return groupRef; }
-  void setRegex(const Regex* re) { groupRef = re; }
-  unsigned long long int size() const { return 1; }
-
- private:
-  const int groupId;
-  const Regex* groupRef;
-};
-
-#endif // GROUPREFERENCE_H
+#endif /* MATH_H */

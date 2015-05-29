@@ -23,6 +23,7 @@
 #include <signal.h>
 #include <locale.h>
 #include <librexgen/c/librexgen.h>
+#include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 #include "terms.h"
 
@@ -44,7 +45,7 @@ const _TCHAR* infile_name =  NULL;
 static bool prependBOM = false;
 
 enum {
-  display_syntax_tree,
+  display_size,
   generate_values
 } rexgen_operation;
 
@@ -65,7 +66,7 @@ static void rexgen_usage() {
           "USAGE: rexgen [<options>] <regex>\n");
   fprintf(stderr,
           "OPTIONS:\n"
-          "   -t:        print syntax tree\n"
+          "   -s:        number of generated elements\n"
           "   -i:        ignore case\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
@@ -166,8 +167,8 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
     case 'i':
       ignore_case = 1;
       break;
-    case 't':
-      rexgen_operation = display_syntax_tree;
+    case 's':
+      rexgen_operation = display_size;
       break;
     case 'u': /* unicode encoding */
       if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
@@ -224,10 +225,7 @@ const char* callback() {
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = c_simplestring_new();
 	char binary_string[512];
-  /*
-  SimpleString syntaxTree;
-  Regex* regex = NULL;
-  */
+  c_regex_ptr regex = NULL;
   c_iterator_ptr iter = NULL;
   int retval = 0;
   const char* regex_str = NULL;
@@ -264,8 +262,20 @@ int _tmain(int argc, _TCHAR* argv[]) {
   if (prependBOM) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
-  iter = c_regex_iterator_cb(
-           regex_str, ignore_case, encoding, callback);
+
+  regex = c_regex_cb(regex_str, ignore_case, encoding, callback);
+  if (regex == NULL) {
+    fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
+    retval = 1;
+    goto cleanup_and_exit;
+  }
+
+  if (rexgen_operation == display_size) {
+    printf("%llu\n", c_regex_size(regex));
+    goto cleanup_and_exit;
+  }
+
+  iter = c_regex_iterator(regex);
   if (iter == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

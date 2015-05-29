@@ -15,30 +15,20 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
-*/
+ */
 
+#ifndef __genericerror_h__
+#define __genericerror_h__
 
-#ifndef GROUPREFERENCE_H
-#define GROUPREFERENCE_H
-
-#include <librexgen/regex/regex.h>
-#include <librexgen/string/simplestring.h>
-
-class GroupReference : public Regex {
-
+class GenericError {
  public:
-  GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
-  Iterator* singleIterator(IteratorState* state) const;
-  RegexType getRegexType() const { return Reference; }
+  GenericError(const char* msg)
+    : message(msg) {}
 
-  int getGroupId() const { return groupId; }
-  const Regex* getRegex() const { return groupRef; }
-  void setRegex(const Regex* re) { groupRef = re; }
-  unsigned long long int size() const { return 1; }
-
+  const char* getMessage() { return message; }
  private:
-  const int groupId;
-  const Regex* groupRef;
+  const char* message;
 };
 
-#endif // GROUPREFERENCE_H
+#endif
+

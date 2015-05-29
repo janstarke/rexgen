@@ -62,6 +62,8 @@ class ClassRegex : public Regex {
 
   Iterator* singleIterator(IteratorState* /* state */) const;
 
+  unsigned long long int size() const;
+
  private:
   void addCharacter(const uchar_t& ch);
   void addRange(const uchar_t& a, const uchar_t& b);

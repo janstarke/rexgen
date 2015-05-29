@@ -54,10 +54,6 @@ class Regex  {
 
   virtual RegexType getRegexType() const = 0;
 
-  virtual inline int getMaxSize() const {
-    return getMaxOccurs();
-  }
-
   virtual Iterator* iterator(IteratorState* state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
@@ -71,6 +67,8 @@ class Regex  {
   int getId() const { return id; }
 
   virtual int getGroupId() const { return -1; }
+
+  virtual unsigned long long int size() const = 0;
 
  protected:
 

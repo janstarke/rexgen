@@ -37,18 +37,7 @@ class RegexContainer : public Regex {
     }
   }
 
-  virtual int getMaxSize() const {
-    deque<Regex*>::const_iterator iter = regexObjects.begin();
-    int __size = 0;
-    while (iter != regexObjects.end()) {
-      __size += (*iter)->getMaxSize();
-      iter++;
-    }
-    return __size * getMaxOccurs();
-  }
-
-  unsigned int size() { return getChildren()->size(); }
-
+  unsigned long long int size() const = 0;
  protected:
   deque<Regex*>* getChildren() { return &regexObjects; }
   deque<Regex*> regexObjects;

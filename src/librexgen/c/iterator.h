@@ -24,6 +24,7 @@
 #include <assert.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/c/simplestring.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/osdepend.h>
 
 #ifdef __cplusplus
@@ -31,14 +32,9 @@ extern "C" {
 #endif
 
 typedef void* c_iterator_ptr;
-typedef const char* (*callback_fp)();
 
 EXPORT
-c_iterator_ptr c_regex_iterator(
-  const char* regex_str,
-  int ignore_case,
-  charset encoding,
-  FILE* infile);
+c_iterator_ptr c_regex_iterator(c_regex_ptr regex);
 
 EXPORT
 c_iterator_ptr c_regex_iterator_cb(

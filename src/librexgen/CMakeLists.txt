@@ -48,6 +48,7 @@ set(librexgen_sources
   regex/regex.cpp
   regex/terminalregex.cpp
   regex/groupreference.cpp
+  regex/streamregex.cpp
   iterator/iteratorpermuter.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
@@ -63,6 +64,7 @@ set(librexgen_sources
 
 	librexgen.cpp
 	common/ntz.cpp
+  common/math.cpp
 
 	c/librexgen.cpp
 	c/iterator.cpp

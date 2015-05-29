@@ -21,6 +21,7 @@
 #include <vector>
 #include <librexgen/regex/classregex.h>
 #include <librexgen/string/uchar.h>
+#include <librexgen/common/math.h>
 
 void ClassRegex::merge(const ClassRegex* other) {
   for(auto  i =  other->characters.crbegin(); 
@@ -75,5 +76,12 @@ Iterator* ClassRegex::singleIterator(IteratorState* /*state*/) const {
                                 characters.size());
 }
 
-
+unsigned long long int ClassRegex::size() const {
+  unsigned long long int __size = getMinOccurs() * characters.size();
+  for (size_t k = getMinOccurs()+1; k<=getMaxOccurs(); ++k) {
+    __size += ipow(characters.size(), k);
+  }
+  printf(">>> ClassRegex::size() = %llu\n", __size);
+  return __size;
+}
 

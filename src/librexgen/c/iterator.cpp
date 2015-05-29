@@ -19,6 +19,7 @@
 
 
 #include <librexgen/iterator/iterator.h>
+#include <librexgen/iterator/topiterator.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
@@ -30,24 +31,21 @@ extern "C" {
 #endif
 
 EXPORT
-c_iterator_ptr c_regex_iterator(
-  const char* regex_str,
-  int ignore_case=0,
-  charset encoding=CHARSET_UTF8,
-  FILE* infile=NULL) {
-  RexgenOptions options;
-  options.ignore_case = (bool)ignore_case;
-  options.encoding = encoding;
-  options.infile = infile;
-  options.stream_callback = NULL;
-
-  Iterator* iter = NULL;
-  try {
-    iter = regex_iterator(regex_str, options);
-  } catch (SyntaxError& error) {
-    c_rexgen_set_last_error(error.getMessage());
+c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
+  if (regex == NULL) {
     return NULL;
   }
+  Regex* re = static_cast<Regex*>(regex);
+  IteratorState* state = new IteratorState();
+  Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
+  // register regex alternatives
+  iter->updateReferences(state);
+
+  // update references
+  iter->updateReferences(state);
+
+  // update attributes (e.g. case folding )
+  iter->updateAttributes(state);
   return iter;
 }
 
@@ -140,7 +138,6 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
   (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
   delete state;
 }
-
 
 #ifdef __cplusplus
 }

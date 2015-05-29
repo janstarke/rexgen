@@ -25,16 +25,20 @@
 #include <librexgen/iterator/caseiterator.h>
 using namespace std;
 
-int RegexAlternatives::getMaxSize() const {
-  int __max = 0;
-  int __size = 0;
-  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end();
-       ++iter) {
-    __size = (*iter)->getMaxSize();
-    __max = max(__size, __max);
+unsigned long long int RegexAlternatives::size() const {
+  unsigned long long int s = 0;
+  
+  /* calculate size() without regard of minOccurs and maxOccurs */
+  for (auto r: regexObjects) {
+    s += r->size();
   }
-  return __max * getMaxOccurs();
+
+  /* take minOccurs and maxOccurs into account */
+  int n = getMaxOccurs() - getMinOccurs();
+  assert(n >= 0);
+
+  printf(">>> RegexAlternatives::size() = %llu\n", s * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
+  return s * (getMinOccurs()*(n+1) + (n*(n+1)/2));
 }
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {

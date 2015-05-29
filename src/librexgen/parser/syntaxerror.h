@@ -20,16 +20,16 @@
 #ifndef __syntaxerror_h__
 #define __syntaxerror_h__
 
-class SyntaxError {
- public:
-  SyntaxError(const char* msg, int fc=-1)
-    : message(msg), first_column(fc) {}
+#include <librexgen/genericerror.h>
 
-  const char* getMessage() { return message; }
-	int getFirstColumn() const { return first_column; }
- private:
-  const char* message;
-	const int first_column;
+class SyntaxError : public GenericError {
+public:
+  SyntaxError(const char* msg, int fl=-1)
+    :GenericError(msg), first_line(fl) {}
+
+  int getFirstLine() const { return first_line; }
+private:
+  int first_line;
 };
 
 #endif

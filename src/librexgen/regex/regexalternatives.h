@@ -36,8 +36,6 @@ class RegexAlternatives : public RegexContainer {
 
   RegexType getRegexType() const { return Alternative; }
 
-  int getMaxSize() const;
-
   Iterator* iterator(IteratorState* state) const;
 
   Iterator* singleIterator(IteratorState* state) const;
@@ -51,6 +49,8 @@ class RegexAlternatives : public RegexContainer {
 		handle_case = opts->handle_case;
 		setGroupId(opts->group_id);
 	}
+
+  unsigned long long size() const;
  private:
   int groupId;
 	int handle_case;

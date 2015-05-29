@@ -23,16 +23,28 @@
 #include <stdio.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/c/simplestring.h>
-#include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef void* c_regex_ptr;
+typedef const char* (*callback_fp)();
+
 EXPORT
 const char* c_rexgen_get_last_error();
 void c_rexgen_set_last_error(const char* msg);
+
+EXPORT
+c_regex_ptr c_regex_cb(
+  const char* regex_str,
+  int ignore_case,
+  charset encoding,
+  callback_fp cb);
+
+EXPORT
+unsigned long long int c_regex_size(const c_regex_ptr regex);
 
 #ifdef __cplusplus
 }

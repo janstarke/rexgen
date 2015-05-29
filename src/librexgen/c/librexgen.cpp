@@ -31,13 +31,40 @@ using namespace std;
 
 static const char* c_rexgen_last_error = NULL;
 
+#ifdef __cplusplus
 extern "C" {
-  EXPORT
-  const char* c_rexgen_get_last_error() {
-    return c_rexgen_last_error;
-  }
-  void c_rexgen_set_last_error(const char* msg) {
-    c_rexgen_last_error = msg;
-  }
+#endif
+
+EXPORT
+const char* c_rexgen_get_last_error() {
+  return c_rexgen_last_error;
 }
+void c_rexgen_set_last_error(const char* msg) {
+  c_rexgen_last_error = msg;
+}
+
+EXPORT
+c_regex_ptr c_regex_cb(
+  const char* regex_str,
+  int ignore_case,
+  charset encoding,
+  callback_fp cb) {
+
+  RexgenOptions options;
+  options.ignore_case = (bool)ignore_case;
+  options.encoding = encoding;
+  options.stream_callback = cb;
+
+  return parse_regex(regex_str, options);
+}
+
+EXPORT
+unsigned long long int c_regex_size(const c_regex_ptr regex) {
+  const Regex* re = static_cast<const Regex*>(regex);
+  return re->size();
+}
+
+#ifdef __cplusplus
+}
+#endif
 

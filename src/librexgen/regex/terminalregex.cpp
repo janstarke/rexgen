@@ -30,3 +30,7 @@ void TerminalRegex::prepend(const TerminalRegex* tre) {
   }
 }
 
+unsigned long long int TerminalRegex::size() const {
+  return value.size();
+}
+

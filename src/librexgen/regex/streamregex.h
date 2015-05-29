@@ -45,6 +45,9 @@ class StreamRegex : public Regex {
   void appendContent(SimpleString& /* dst */, int /* level */) const {}
   RegexType getRegexType() const { return Stream; }
   const char* getXmlTag() const { return "stream"; }
+
+  unsigned long long int size() const;
+
   StreamRegex(FILE* in, callback_fp cb)
     : infile(in) {
     /* this will not be deleted here, but in the iterator tree */

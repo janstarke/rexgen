@@ -42,6 +42,8 @@ class CompoundRegex : public RegexContainer {
   Iterator* iterator(IteratorState* state) const;
 
   Iterator* singleIterator(IteratorState* state) const;
+
+  unsigned long long int size() const;
 };
 
 #endif // COMPOUNDREGEX_H
