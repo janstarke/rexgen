@@ -27,8 +27,8 @@
 
 class StreamRegexIterator : public Iterator {
  public:
-  StreamRegexIterator(int _id, FILE* in, callback_fp cb)
-    : Iterator(_id), infile(in), callback(cb) {
+  StreamRegexIterator(int _id, callback_fp cb)
+    : Iterator(_id), callback(cb) {
     state = resetted;
     readNextWord();
   }
@@ -54,7 +54,6 @@ class StreamRegexIterator : public Iterator {
  private:
   void readNextWord();
 
-  FILE* infile;
   callback_fp callback;
   char buffer[4096];
   bool __hasNext;

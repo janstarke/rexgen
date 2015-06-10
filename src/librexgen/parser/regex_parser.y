@@ -61,11 +61,16 @@
 	t_group_options* group_options;
   Regex* 		regex;
   RegexAlternatives* 	regex_alternatives;
-  CompoundRegex* 	compound_regex;
-  Quantifier* 		quantifier;
-  ClassRegex* 		class_regex;
-  TerminalRegex* 	terminal_regex;
-  GroupReference* 	group_reference;
+  CompoundRegex* 	    compound_regex;
+  Quantifier* 		    quantifier;
+  ClassRegex* 		    class_regex;
+  TerminalRegex* 	    terminal_regex;
+  GroupReference*     group_reference;
+
+  /* stream_regex may store a StreamRegex* or GroupReference*,
+   * see documentation of getStreamRegex for mor information
+   */
+  Regex*              stream_regex;
 
 }
 
@@ -98,7 +103,7 @@
 %type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
-%type <regex> Stream;
+%type <stream_regex> Stream;
 
 
 %%
@@ -226,7 +231,7 @@ Stream: T_STREAM {
   if (context->getInFile() == NULL && context->getStreamCallback() == NULL) {
     throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.", @1.first_column);
   }
-   $$ = context->getStreamRegex();
+  $$ = context->getStreamRegex();
 };
 
 %%

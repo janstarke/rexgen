@@ -24,20 +24,7 @@ using namespace std;
 
 void StreamRegexIterator::readNextWord() {
   __hasNext = false;
-  if (infile != NULL) {
-    if (! feof(infile)) {
-      if (NULL == fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile)) {
-        __hasNext = false;
-      } else {
-        __hasNext = true;
-        unsigned int idx = 0;
-        while (idx < sizeof(buffer)/sizeof(buffer[0])-2
-               && buffer[idx] != '\r'
-               && buffer[idx] != '\n') { ++idx; }
-        buffer[idx] = 0;
-      }
-    }
-  } else if (callback != NULL) {
+  if (callback != NULL) {
     const char* cp = callback();
     if (cp) {
       strncpy(buffer, cp, sizeof(buffer)-1);
@@ -49,13 +36,12 @@ void StreamRegexIterator::readNextWord() {
 
 SerializableState* StreamRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  const long pos = ftell(infile);
-  s->addValue(pos);
+  s->addValue(0);
   return s;
 }
 
 void StreamRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
-  fseek(infile, s->getValue(0), SEEK_SET);
+  //fseek(infile, s->getValue(0), SEEK_SET);
 }
 

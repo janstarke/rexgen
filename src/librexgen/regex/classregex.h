@@ -55,10 +55,9 @@ class ClassRegex : public Regex {
     codepoint_to_uchar(&uch, ch, encoding);
     return contains(uch);
   }
+  RegexType getRegexType() const { return Class; }
 
   void merge(const ClassRegex* other);
-
-  RegexType getRegexType() const { return Class; }
 
   Iterator* singleIterator(IteratorState* /* state */) const;
 

@@ -94,13 +94,24 @@ Regex* RexgenParserContext::getGroupRegex(int id) const {
 
 const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }
 
+/* this is the handling of \0 - terminals in the regex. the first occurance
+ * of \0 creates a StreamRegex and returns it, all following occurances
+ * return a reference to the previously created StreamRegex.
+ * We must make this distinction, because StreamReference handles   
+ * calls to next() by going to the next word, and calling next() for
+ * the whole regex would result in multiple calls to next() for each single 
+ * occurance of \0. So, we return a GroupReference, which does not forward
+ * the invocation of next() to the StreamRegex
+ */
 Regex* RexgenParserContext::getStreamRegex() {
   if (streamRegex == NULL) {
-    streamRegex = new StreamRegex(options.infile, options.stream_callback);
+    streamRegex = new StreamRegex(options.stream_callback);
+    streamRegex->size();
     return streamRegex;
   } else {
     GroupReference* gr = new GroupReference(streamRegex->getId());
     gr->setRegex(streamRegex);
+    streamRegex->size();
     return gr;
   }
 }

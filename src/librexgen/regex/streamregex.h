@@ -30,32 +30,16 @@
 class StreamRegex : public Regex {
 
  public:
-  Iterator* iterator(IteratorState* state) const {
-    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return singleIterator(state);
-    } else {
-      return new IteratorPermuter(
-               getId(), this, state, getMinOccurs(), getMaxOccurs());
-    }
-  }
-  Iterator* singleIterator(IteratorState* state) const {
-    state->setStreamIterator(iter);
-    return iter;
-  }
-  void appendContent(SimpleString& /* dst */, int /* level */) const {}
-  RegexType getRegexType() const { return Stream; }
-  const char* getXmlTag() const { return "stream"; }
-
+  Iterator* iterator(IteratorState* state) const;
+  Iterator* singleIterator(IteratorState* state) const;
   unsigned long long int size() const;
 
-  StreamRegex(FILE* in, callback_fp cb)
-    : infile(in) {
-    /* this will not be deleted here, but in the iterator tree */
-    iter = new StreamRegexIterator(getId(), infile, cb);
-  }
+  StreamRegex(callback_fp cb);
+
+  RegexType getRegexType () const { return Stream; }
 
  private:
-  FILE* infile;
+  callback_fp callback;
   StreamRegexIterator* iter;
 };
 

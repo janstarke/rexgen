@@ -24,69 +24,34 @@
 #include <cstdio>
 using namespace std;
 
+StreamRegex::StreamRegex(callback_fp cb)
+  : callback(cb) {
+  /* this will not be deleted here, but in the iterator tree */
+  iter = new StreamRegexIterator(getId(), callback);
+}
+
+Iterator* StreamRegex::iterator(IteratorState* state) const {
+  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+    return singleIterator(state);
+  } else {
+    return new IteratorPermuter(
+             getId(), this, state, getMinOccurs(), getMaxOccurs());
+  }
+}
+
+Iterator* StreamRegex::singleIterator(IteratorState* state) const {
+  state->setStreamIterator(iter);
+  return iter;
+}
+
 unsigned long long int StreamRegex::size() const {
   /* files with more than 2^32 newlines do not make sense to be handled */
   size_t __size = 0;
 
-  /* duplicate original file pointer */
-  FILE *fp2 = fdopen (dup (fileno (infile)), "r");
-  if (fp2 == NULL) {
-    throw new GenericError("unable to duplicate file pointer");
-  }
-
   /* loop through file, inspired by http://blog.fefe.de/?ts=aa3c0cd3 */
-  size_t buffer[1024*1024];
-  size_t bytes_read;
-  size_t h, t;
-  do {
-    bytes_read = fread(buffer, 1, sizeof(buffer), fp2);
-    h = bytes_read / sizeof(buffer[0]); /* number of elements read */
-    t = bytes_read % sizeof(buffer[0]); /* number of bytes after the last full element */
-
-    /* handle 4-byte values */
-    size_t idx;
-    for (idx = 0; idx<h; ++idx) {
-      size_t x = buffer[idx]
-#if UINTMAX_MAX==UINT64_MAX
-      ^ 0x0a0a0a0a0a0a0a0a;
-#elif UINTMAX_MAX==UINT32_MAX
-      ^ 0x0a0a0a0a;
-#endif
-
-    /* now, every byte in x is either 0x00 (if it contained a newline) or != 0x00 (otherwise) */
-    /*
-    __size += 0
-#if UINTMAX_MAX==UINT64_MAX || UINTMAX_MAX==UINT32_MAX
-          + ((x&((size_t)0xff<<(7*8))) == 0)
-          + ((x&((size_t)0xff<<(6*8))) == 0)
-          + ((x&((size_t)0xff<<(5*8))) == 0)
-          + ((x&((size_t)0xff<<(4*8))) == 0)
-#endif
-          + ((x&((size_t)0xff<<(3*8))) == 0)
-          + ((x&((size_t)0xff<<(2*8))) == 0)
-          + ((x&((size_t)0xff<<(1*8))) == 0)
-          + ((x&((size_t)0xff<<(0*8))) == 0);
-    */
-
-#if UINTMAX_MAX==UINT64_MAX || UINTMAX_MAX==UINT32_MAX
-    __size += ((x&((size_t)0xff<<(7*8))) == 0);
-    __size += ((x&((size_t)0xff<<(6*8))) == 0);
-    __size += ((x&((size_t)0xff<<(5*8))) == 0);
-    __size += ((x&((size_t)0xff<<(4*8))) == 0);
-#endif
-    __size += ((x&((size_t)0xff<<(3*8))) == 0);
-    __size += ((x&((size_t)0xff<<(2*8))) == 0);
-    __size += ((x&((size_t)0xff<<(1*8))) == 0);
-    __size += ((x&((size_t)0xff<<(0*8))) == 0);
-
-    }
-
-    size_t* ptr = &buffer[h];
-    for (idx=0; idx<t; ++idx, ++ptr) {
-      __size += ((*ptr) == 0x0a);
-    }
-  } while (bytes_read == sizeof(buffer));
-
+  while (NULL != callback()) {
+    ++__size;
+  }
   return __size;
 }
 
