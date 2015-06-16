@@ -37,11 +37,15 @@ unsigned long long int RegexAlternatives::size() const {
   int n = getMaxOccurs() - getMinOccurs();
   assert(n >= 0);
 
-  printf(">>> RegexAlternatives::size() = %llu\n", s * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
+  //printf(">>> RegexAlternatives::size() = %llu\n", s * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
   return s * (getMinOccurs()*(n+1) + (n*(n+1)/2));
 }
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
+  if (regexObjects.size() == 1) {
+    return regexObjects[0]->iterator(state);
+  }
+  
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
   for (deque<Regex*>::const_iterator iter = regexObjects.begin();
        iter != regexObjects.end(); iter++) {

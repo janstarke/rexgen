@@ -32,6 +32,7 @@ class StreamRegexIterator : public Iterator {
     state = resetted;
     readNextWord();
   }
+    
   bool next() {
     const bool res = (state == resetted);
     state = usable;

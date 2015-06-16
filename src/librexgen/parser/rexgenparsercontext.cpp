@@ -106,12 +106,10 @@ const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; 
 Regex* RexgenParserContext::getStreamRegex() {
   if (streamRegex == NULL) {
     streamRegex = new StreamRegex(options.stream_callback);
-    streamRegex->size();
     return streamRegex;
   } else {
     GroupReference* gr = new GroupReference(streamRegex->getId());
     gr->setRegex(streamRegex);
-    streamRegex->size();
     return gr;
   }
 }

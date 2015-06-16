@@ -86,14 +86,19 @@ unsigned long long int CompoundRegex::size() const {
   }
 
   for (auto r:regexObjects) {
-    if (r->size() > 0) {
-      __size *= r->size();
+    /*
+     * be aware that size() must be only called once, because
+     * at least StreamRegex would return 0 the second time
+     */
+    unsigned long long int s = r->size();
+    if (s > 0) {
+      __size *= s;
     }
   }
 
   int n = getMaxOccurs() - getMinOccurs();
   assert(n >= 0);
-  printf(">>> CompoundRegex::size() = %llu\n", __size * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
+  //printf(">>> CompoundRegex::size() = %llu\n", __size * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
   return __size * (getMinOccurs()*(n+1) + (n*(n+1)/2));
 }
 
