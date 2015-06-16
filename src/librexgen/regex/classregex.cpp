@@ -81,7 +81,7 @@ unsigned long long int ClassRegex::size() const {
   for (size_t k = getMinOccurs(); k<=getMaxOccurs(); ++k) {
     __size += ipow(characters.size(), k);
   }
-  printf(">>> ClassRegex::size() = %llu\n", __size);
+  //printf(">>> ClassRegex::size() = %llu\n", __size);
   return __size;
 }
 
