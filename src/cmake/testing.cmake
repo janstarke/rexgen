@@ -13,6 +13,15 @@ FILE(READ "${PROJECT_SOURCE_DIR}/test/testcases.txt" testcases)
 STRING(REGEX REPLACE ";" "\\\\;" testcases "${testcases}")
 STRING(REGEX REPLACE "\n" ";" testcases "${testcases}")
 
+if (CMAKE_CONFIGURATION_TYPES)
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} 
+        --force-new-ctest-process --output-on-failure 
+        --build-config "$<CONFIGURATION>")
+else()
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} 
+        --force-new-ctest-process --output-on-failure)
+endif()
+
 foreach(testcase ${testcases})
   STRING(REGEX REPLACE "^([^:]+):(.+):([0-9]+)\$" "\\1" test_name  ${testcase})
   STRING(REGEX REPLACE "^([^:]+):(.+):([0-9]+)\$" "\\2" test_regex ${testcase})
