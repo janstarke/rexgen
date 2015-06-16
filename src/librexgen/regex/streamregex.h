@@ -40,7 +40,6 @@ class StreamRegex : public Regex {
 
  private:
   callback_fp callback;
-  StreamRegexIterator* iter;
 };
 
 #endif // STREAMREGEX_H

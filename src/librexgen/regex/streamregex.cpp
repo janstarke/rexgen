@@ -26,8 +26,6 @@ using namespace std;
 
 StreamRegex::StreamRegex(callback_fp cb)
   : callback(cb) {
-  /* this will not be deleted here, but in the iterator tree */
-  iter = new StreamRegexIterator(getId(), callback);
 }
 
 Iterator* StreamRegex::iterator(IteratorState* state) const {
@@ -40,16 +38,21 @@ Iterator* StreamRegex::iterator(IteratorState* state) const {
 }
 
 Iterator* StreamRegex::singleIterator(IteratorState* state) const {
-  state->setStreamIterator(iter);
+  StreamRegexIterator* iter = state->getStreamIterator();
+  if (iter == NULL) {
+    iter = new StreamRegexIterator(getId(), callback);
+    state->setStreamIterator(iter);
+  }
   return iter;
 }
 
 unsigned long long int StreamRegex::size() const {
   /* files with more than 2^32 newlines do not make sense to be handled */
   size_t __size = 0;
+  const char* t;
 
   /* loop through file, inspired by http://blog.fefe.de/?ts=aa3c0cd3 */
-  while (NULL != callback()) {
+  while (NULL != (t=callback())) {
     ++__size;
   }
   return __size;

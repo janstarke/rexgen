@@ -51,7 +51,7 @@ class IteratorState {
     }
   }
 
-  void setStreamIterator(StreamRegexIterator* iter) {streamIterator = iter;}
+  void setStreamIterator(StreamRegexIterator* iter) {if (streamIterator == NULL) { streamIterator = iter;}}
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
 
  private:
