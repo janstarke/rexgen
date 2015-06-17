@@ -42,6 +42,9 @@ c_regex_ptr c_regex_cb(
   charset encoding,
   callback_fp cb);
 
+EXPORT
+void c_regex_delete(c_regex_ptr regex);
+
 #ifdef __cplusplus
 }
 #endif

@@ -308,6 +308,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 cleanup_and_exit:
   c_simplestring_delete(buffer);
   c_iterator_delete(iter);
+  c_regex_delete(regex);
 
 #ifdef REXGEN_PROFILE
   ProfilerStop();

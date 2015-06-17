@@ -56,6 +56,14 @@ c_regex_ptr c_regex_cb(
   return parse_regex(regex_str, options);
 }
 
+EXPORT
+void c_regex_delete(c_regex_ptr regex) {
+  if (regex != NULL) {
+    Regex* re = static_cast<Regex*>(regex);
+    delete re;
+  }
+}
+
 #ifdef __cplusplus
 }
 #endif
