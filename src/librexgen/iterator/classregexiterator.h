@@ -45,6 +45,9 @@ class ClassRegexIterator : public Iterator {
   }
 
   bool next();
+	bool previous();
+
+	size_t size() const { return characters.size(); }
 
   inline bool hasNext() const { return  (current < ((int)characters.size()-1)); }
   inline bool canUseValue() const { return (current < (int)characters.size()); }
@@ -55,9 +58,6 @@ class ClassRegexIterator : public Iterator {
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
  private:
-  inline void shuffle() {
-  }
-
   int current;
   vector<uchar_t> characters;
 };

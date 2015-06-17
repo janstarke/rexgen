@@ -30,12 +30,22 @@ ClassRegexIterator::ClassRegexIterator(
 }
 
 bool ClassRegexIterator::next() {
-  ++current;
+	++current;
+	
   if (current >= (int)characters.size()) {
     current = 0;
     return false;
   }
   return true;
+}
+
+bool ClassRegexIterator::previous() {
+	bool reset = (current == 0);
+	if (reset) {
+		current = (int)characters.size();
+	}
+	--current;
+	return (! reset);
 }
 
 SerializableState* ClassRegexIterator::getCurrentState() const {
