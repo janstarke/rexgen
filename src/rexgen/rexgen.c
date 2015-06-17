@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2015 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -27,6 +27,10 @@
 #include <librexgen/version.h>
 #include "terms.h"
 
+#ifdef REXGEN_PROFILE
+#include <gperftools/profiler.h>
+#endif
+
 #if ! defined(_WIN32)
 typedef char _TCHAR;
 #endif
@@ -51,7 +55,7 @@ extern int rexgen_debug;
 
 static void rexgen_usage() {
   fprintf(stderr,
-          "rexgen  Copyright (C) 2012-2013  Jan Starke <rexgen@outofbed.org>\n"
+          "rexgen  Copyright (C) 2012-2015 Jan Starke <rexgen@outofbed.org>\n"
           "This program comes with ABSOLUTELY NO WARRANTY;\n"
           "for details run rexgen with '-w'.\n"
           "This is free software, and you are welcome to redistribute it\n"
@@ -208,7 +212,7 @@ const char* callback() {
 
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = c_simplestring_new();
-	char binary_string[512];
+  char binary_string[512];
   c_regex_ptr regex = NULL;
   c_iterator_ptr iter = NULL;
   int retval = 0;
@@ -243,6 +247,10 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
+#ifdef REXGEN_PROFILE
+  ProfilerStart("rexgen.prof");
+#endif
+
   if (prependBOM) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
@@ -272,7 +280,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-		c_simplestring_to_binary_string(buffer, binary_string, sizeof(binary_string));
+    c_simplestring_to_binary_string(buffer, binary_string, sizeof(binary_string));
     printf("%s\n", binary_string);
 
 #ifdef DEBUG_STATE
@@ -294,6 +302,11 @@ int _tmain(int argc, _TCHAR* argv[]) {
 cleanup_and_exit:
   c_simplestring_delete(buffer);
   c_iterator_delete(iter);
+
+#ifdef REXGEN_PROFILE
+  ProfilerStop();
+#endif
+
 #if defined(_WIN32) && defined(_DEBUG)
   getchar();
 #endif

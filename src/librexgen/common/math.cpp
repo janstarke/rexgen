@@ -19,8 +19,7 @@
 
 unsigned long long int ipow(unsigned long long int base, unsigned int exp) {
   int result = 1;
-  while (exp)
-  {
+  while (exp) {
     if (exp & 1) {
       result *= base;
     }

@@ -44,8 +44,10 @@ void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch) {
 }
 
 EXPORT
-int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer, size_t buffer_size) {
-  return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer, buffer_size);
+int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer,
+                                    size_t buffer_size) {
+  return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer,
+         buffer_size);
 }
 
 EXPORT

@@ -30,8 +30,8 @@ class IteratorContainer : public Iterator {
  public:
   typedef vector<Iterator*> children_list_type;
 
- IteratorContainer(int _id) : Iterator(_id) {}
-  
+  IteratorContainer(int _id) : Iterator(_id) {}
+
   virtual void updateAttributes(IteratorState* iterState) {
     for (Iterator* child: iterators) {
       child->updateAttributes(iterState);
@@ -51,14 +51,14 @@ class IteratorContainer : public Iterator {
  protected:
 
   void setPosition(children_list_type::iterator i) { iter = i; }
-	void incrementPosition() { ++iter; }
-	void resetPosition() { iter = iterators.begin(); }
-	children_list_type::iterator getPosition() const { return iter; }
+  void incrementPosition() { ++iter; }
+  void resetPosition() { iter = iterators.begin(); }
+  children_list_type::iterator getPosition() const { return iter; }
 
   children_list_type iterators;
- 
-private:
- children_list_type::iterator iter;
+
+ private:
+  children_list_type::iterator iter;
 };
 
 #endif /* __cplusplus */

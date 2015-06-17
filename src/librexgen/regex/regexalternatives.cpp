@@ -1,7 +1,7 @@
 /*
   rexgen - a tool to create words based on regular expressions
   Copyright (C) 2012-2014  Jan Starke <jan.starke@outofbed.org>
-    
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License as published by the Free
   Software Foundation; either version 2 of the License, or (at your option)
@@ -29,7 +29,7 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   if (regexObjects.size() == 1) {
     return regexObjects[0]->iterator(state);
   }
-  
+
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
   for (deque<Regex*>::const_iterator iter = regexObjects.begin();
        iter != regexObjects.end(); iter++) {
@@ -52,7 +52,7 @@ Iterator* RegexAlternatives::iterator(IteratorState* state) const {
       iter = re->iterator(state);
     } else {
       iter = new IteratorPermuter(
-                                  re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
     }
   } else {
     iter = RegexContainer::iterator(state);

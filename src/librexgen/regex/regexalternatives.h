@@ -31,7 +31,7 @@
 class RegexAlternatives : public RegexContainer {
  public:
   RegexAlternatives(): RegexContainer(), groupId(-1),handle_case(CASE_IGNORE) {
-	}
+  }
   inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
 
   RegexType getRegexType() const { return Alternative; }
@@ -45,13 +45,13 @@ class RegexAlternatives : public RegexContainer {
   int getGroupId() const { return groupId; }
   void setGroupId (int _id) { groupId = _id; }
 
-	void setGroupOptions(const t_group_options* opts) {
-		handle_case = opts->handle_case;
-		setGroupId(opts->group_id);
-	}
+  void setGroupOptions(const t_group_options* opts) {
+    handle_case = opts->handle_case;
+    setGroupId(opts->group_id);
+  }
  private:
   int groupId;
-	int handle_case;
+  int handle_case;
 };
 
 #endif // REGEXALTERNATIVES_H

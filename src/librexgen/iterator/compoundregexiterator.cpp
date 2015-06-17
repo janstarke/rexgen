@@ -31,7 +31,7 @@ CompoundRegexIterator::CompoundRegexIterator(int _id)
 }
 
 CompoundRegexIterator::~CompoundRegexIterator() {
-	for (auto i: iterators) {
+  for (auto i: iterators) {
     if (! i->isSingleton()) {
       delete i;
     }
@@ -42,12 +42,12 @@ bool CompoundRegexIterator::next() {
   if (state == resetted) {
     state = usable;
     bool res = false;
-		for (auto i: iterators) {
+    for (auto i: iterators) {
       res |= i->next();
     }
     return res;
   }
-	for (auto i: iterators) {
+  for (auto i: iterators) {
     if (i->next()) {
       return true;
     }
@@ -57,7 +57,7 @@ bool CompoundRegexIterator::next() {
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
   //assert(canUseValue());
-	for (auto i: iterators) {
+  for (auto i: iterators) {
     i->value(dst);
   }
 }

@@ -60,8 +60,8 @@ class Iterator {
       throw InvalidIteratorIdException();
     }
   }
-  
-protected:
+
+ protected:
 
   enum {
     resetted,

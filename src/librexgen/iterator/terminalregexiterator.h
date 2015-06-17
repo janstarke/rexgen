@@ -32,8 +32,8 @@
 class TerminalRegexIterator : public Iterator {
  public:
 
- TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
-   : Iterator(_id) {
+  TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
+    : Iterator(_id) {
     terminal = new uchar_t[elements];
     memcpy(terminal, _terminal, elements*sizeof(terminal[0]));
     terminal_length = elements;

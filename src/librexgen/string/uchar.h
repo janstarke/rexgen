@@ -68,7 +68,7 @@ typedef enum {
 } unicode_plane_t;
 
 /*
- * this datastructure is used to cache the binary representation 
+ * this datastructure is used to cache the binary representation
  * of unicode characters. Because we use this cache, it is not
  * necessary to create the binary value during the output
  */
@@ -115,7 +115,7 @@ bool uchar_isascii(const uchar_t& uch);
 EXPORT
 inline
 void uchar_toggle_case(uchar_t& uch) {
-	uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
+  uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
 }
 
 }
@@ -135,7 +135,8 @@ EXPORT
 void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
 
 EXPORT
-uint8_t encode_codepoint(uint32_t codepoint, charset cs, binary_character_t* bch);
+uint8_t encode_codepoint(uint32_t codepoint, charset cs,
+                         binary_character_t* bch);
 
 EXPORT
 uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);

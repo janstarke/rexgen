@@ -43,7 +43,7 @@ bool CaseIterator::readNextFromChild() {
   childHadNext = child->next();
   child->value(word);
 
-  for(unsigned int n=0; n<word.size(); ++n) {
+  for (unsigned int n=0; n<word.size(); ++n) {
     if (UCHAR_CAN_CHANGE_CASE(word[n])) {
       word.tolower(n);
       changeable_characters.push_back(n);
@@ -54,17 +54,17 @@ bool CaseIterator::readNextFromChild() {
     k = (1 << changeable_characters.size())-1;
   } else {
 #warning TODO: throw exception here
-		assert(false);
+    assert(false);
   }
   parity = 0;
-	j = 0;      /* == ntz(k) & parity */
+  j = 0;      /* == ntz(k) & parity */
 
-	/* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
-	if (handle_case == CASE_PRESERVE) {
-		for (unsigned int n=0; n<word.size(); ++n) {
-			UCHAR_SET_PRESERVE_CASE(word[n]);
-		}
-	}
+  /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
+  if (handle_case == CASE_PRESERVE) {
+    for (unsigned int n=0; n<word.size(); ++n) {
+      UCHAR_SET_PRESERVE_CASE(word[n]);
+    }
+  }
 
   return childHadNext;
 }
@@ -83,22 +83,22 @@ bool CaseIterator::next() {
   if (word.empty() || k <= 0) {
     bool childHadNext = readNextFromChild();
 
-		/* keep in mind: k is the number of remaining variants */
-		//fprintf(stderr, "returning original value; k=%llu\n", k);
-		return (childHadNext);
-	}
+    /* keep in mind: k is the number of remaining variants */
+    //fprintf(stderr, "returning original value; k=%llu\n", k);
+    return (childHadNext);
+  }
 
-	return fast_next();
+  return fast_next();
 }
 
 inline bool CaseIterator::fast_next() {
   /* G4:
    * if (parity_n+1 == 0) set j <- ntz(k)
-	 * ntz() does the same as the ruler function p(k) in eq. 7.1-(00)
+   * ntz() does the same as the ruler function p(k) in eq. 7.1-(00)
    */
-	//fprintf(stderr, "ntz(k=%016x) <= %d\n", k, ntz(k));
+  //fprintf(stderr, "ntz(k=%016x) <= %d\n", k, ntz(k));
   j = ntz(k) & (parity);
-        
+
   /* G3: invert parity */
   /* we need the inverted value of parity for the fast calculation
    * of j, so we swapped the two steps. Note that the following
@@ -112,11 +112,11 @@ inline bool CaseIterator::fast_next() {
 
   /* G2: visit */
 
-	//fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
+  //fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
   //assert(j < changeable_characters.size());
   uchar_toggle_case(word[changeable_characters[j]]);
-	--k;
+  --k;
   return (k >= 0);
 }
 

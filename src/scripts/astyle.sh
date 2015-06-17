@@ -6,3 +6,7 @@ astyle $ASTYLE_OPTIONS  \
   '*.cpp'     \
   '*.c'       \
   '*.h'       \
+
+find ./ -name '*.cpp' -print -exec perl -pi -e 's/(2012-)201\d( Jan Starke jan.starke@outofbed.org)/\12015\2/' {} \;
+find ./ -name '*.c' -print -exec perl -pi -e 's/(2012-)201\d( Jan Starke jan.starke@outofbed.org)/\12015\2/' {} \;
+find ./ -name '*.h' -print -exec perl -pi -e 's/(2012-)201\d( Jan Starke jan.starke@outofbed.org)/\12015\2/' {} \;

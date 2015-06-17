@@ -28,7 +28,7 @@
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : IteratorContainer(_id) {
-	resetPosition();
+  resetPosition();
   state = resetted;
 }
 

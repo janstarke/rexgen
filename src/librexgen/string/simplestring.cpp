@@ -22,8 +22,8 @@
 #include <librexgen/string/simplestring.h>
 
 SimpleString::SimpleString(size_t msize)
-	:characters(msize) {
-	clear();
+  :characters(msize) {
+  clear();
 }
 
 const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
@@ -31,64 +31,69 @@ const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
 }
 
 bool SimpleString::isalpha(unsigned int n) const {
-	return (uchar_isascii(characters[n]) && ::isalpha(characters[n].character.ansi.value));
+  return (uchar_isascii(characters[n])
+          && ::isalpha(characters[n].character.ansi.value));
 }
 bool SimpleString::islower(unsigned int n) const {
-	return (uchar_isascii(characters[n]) && ::islower(characters[n].character.ansi.value));
+  return (uchar_isascii(characters[n])
+          && ::islower(characters[n].character.ansi.value));
 }
 
 bool SimpleString::isupper(unsigned int n) const {
-	return (uchar_isascii(characters[n]) && ::isupper(characters[n].character.ansi.value));
+  return (uchar_isascii(characters[n])
+          && ::isupper(characters[n].character.ansi.value));
 }
 
 void SimpleString::tolower(unsigned int n) {
-	if (uchar_isascii(characters[n])) {
-		characters[n].character.ansi.value = ::tolower(characters[n].character.ansi.value);
-	}
+  if (uchar_isascii(characters[n])) {
+    characters[n].character.ansi.value = ::tolower(
+                                           characters[n].character.ansi.value);
+  }
 }
 void SimpleString::toupper(unsigned int n) {
-	if (uchar_isascii(characters[n])) {
-		characters[n].character.ansi.value = ::toupper(characters[n].character.ansi.value);
-	}
+  if (uchar_isascii(characters[n])) {
+    characters[n].character.ansi.value = ::toupper(
+                                           characters[n].character.ansi.value);
+  }
 }
 
 
 void SimpleString::append(const char* ch) {
-	while (*ch != '\0') {
-		push_back(char_to_uchar(*ch++));
-	}
+  while (*ch != '\0') {
+    push_back(char_to_uchar(*ch++));
+  }
 }
 
 size_t SimpleString::get_buffer_size() const {
-	return characters.size();
+  return characters.size();
 }
 
 void SimpleString::push_back(char ch) {
-	push_back(char_to_uchar(ch));
+  push_back(char_to_uchar(ch));
 }
 
 void SimpleString::push_back(const uchar_t& c) {
-	characters.push_back(c);
+  characters.push_back(c);
 }
 
 void SimpleString::newline() {
-	return push_back('\n');
+  return push_back('\n');
 }
 
 size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
-	size_t count = 0;
-	const uchar_t zero = char_to_uchar('\0');
+  size_t count = 0;
+  const uchar_t zero = char_to_uchar('\0');
 
-	/* guarantee space for terminating zero */
-	buffer_size -= 4;
+  /* guarantee space for terminating zero */
+  buffer_size -= 4;
 
-	for (auto ch: characters) {
-		if (count >= buffer_size) { 
-			break;
-		}
-		count += uchar_to_binary(&ch, dst+count);
-	}
-	count += uchar_to_binary(&zero, dst+count);
-	return count;
+  for (auto ch: characters) {
+    if (count >= buffer_size) {
+      break;
+    }
+    count += uchar_to_binary(&ch, dst+count);
+  }
+  count += uchar_to_binary(&zero, dst+count);
+  return count;
 }
 

@@ -36,7 +36,8 @@ class IteratorPermuter : public IteratorContainer {
  public:
   void value(SimpleString& dst) const;
   bool hasNext() const;
-  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min, unsigned int max);
+  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min,
+                   unsigned int max);
   ~IteratorPermuter();
   bool next();
   void init();

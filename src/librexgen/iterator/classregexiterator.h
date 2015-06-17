@@ -41,13 +41,13 @@ class ClassRegexIterator : public Iterator {
   virtual ~ClassRegexIterator() {}
 
   inline void value(SimpleString& dst) const {
-		dst.push_back(characters[current]);
+    dst.push_back(characters[current]);
   }
 
   bool next();
-	bool previous();
+  bool previous();
 
-	size_t size() const { return characters.size(); }
+  size_t size() const { return characters.size(); }
 
   inline bool hasNext() const { return  (current < ((int)characters.size()-1)); }
   inline bool canUseValue() const { return (current < (int)characters.size()); }

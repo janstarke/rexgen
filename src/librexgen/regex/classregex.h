@@ -68,7 +68,7 @@ class ClassRegex : public Regex {
 
   void __insert_character(const uchar_t& ch);
   void __append_character(const uchar_t& ch);
-	void removeCharacterInstances(const uchar_t &ch);
+  void removeCharacterInstances(const uchar_t& ch);
   vector<uchar_t> characters;
   const charset encoding;
 };

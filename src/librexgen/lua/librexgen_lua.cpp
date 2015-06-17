@@ -40,53 +40,53 @@ static const luaL_Reg rexgen_lib[] = {
 };
 
 extern "C" {
-EXPORT
-int luaopen_rexgen(lua_State* L) {
-  luaL_newlib(L, rexgen_lib);
-  return 1;
-}
-
-EXPORT
-int rexgen_iter(lua_State* L) {
-  Iterator* iter =
-    * reinterpret_cast<Iterator**>(lua_touserdata(L, lua_upvalueindex(1)));
-  if (iter->next()) {
-    rexgen_value(L, iter);
+  EXPORT
+  int luaopen_rexgen(lua_State* L) {
+    luaL_newlib(L, rexgen_lib);
     return 1;
-  } else {
-    return 0;
   }
-}
 
-EXPORT
-int rexgen_parse_regex(lua_State* L) {
-  SimpleString xml;
-  RexgenOptions options;
+  EXPORT
+  int rexgen_iter(lua_State* L) {
+    Iterator* iter =
+      * reinterpret_cast<Iterator**>(lua_touserdata(L, lua_upvalueindex(1)));
+    if (iter->next()) {
+      rexgen_value(L, iter);
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
-  Iterator** iter;
-  iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
-  luaL_getmetatable(L, "rexgen.iter");
-  lua_setmetatable(L, -2);
-  *iter = regex_iterator(luaL_checklstring(L, 1, NULL), options);
-  lua_pushcclosure(L, rexgen_iter, 1);
+  EXPORT
+  int rexgen_parse_regex(lua_State* L) {
+    SimpleString xml;
+    RexgenOptions options;
 
-  return 1;
-}
+    Iterator** iter;
+    iter = reinterpret_cast<Iterator**>(lua_newuserdata(L, sizeof(*iter)));
+    luaL_getmetatable(L, "rexgen.iter");
+    lua_setmetatable(L, -2);
+    *iter = regex_iterator(luaL_checklstring(L, 1, NULL), options);
+    lua_pushcclosure(L, rexgen_iter, 1);
 
-EXPORT
-int rexgen_value(lua_State* L, const Iterator* iter) {
-	char* buffer = NULL;
-  SimpleString str;
+    return 1;
+  }
 
-  iter->value(str);
-	const size_t buffer_size = (str.size()+1)*4;
-	buffer = new char[buffer_size];
-	size_t bytes = str.to_binary_string(buffer, buffer_size);
-	lua_pushlstring(L, buffer, bytes);
-	delete [] buffer;
-	str.clear();
+  EXPORT
+  int rexgen_value(lua_State* L, const Iterator* iter) {
+    char* buffer = NULL;
+    SimpleString str;
 
-  return 1;
-}
+    iter->value(str);
+    const size_t buffer_size = (str.size()+1)*4;
+    buffer = new char[buffer_size];
+    size_t bytes = str.to_binary_string(buffer, buffer_size);
+    lua_pushlstring(L, buffer, bytes);
+    delete [] buffer;
+    str.clear();
+
+    return 1;
+  }
 }
 

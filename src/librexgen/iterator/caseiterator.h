@@ -35,7 +35,7 @@ class CaseIterator : public IteratorContainer {
 
   bool hasNext() const;
   bool next();
-	bool fast_next();
+  bool fast_next();
 
   void value(SimpleString& /* dst */ ) const;
 
@@ -51,10 +51,10 @@ class CaseIterator : public IteratorContainer {
 
 
  private:
- Iterator* child;
- int handle_case;
- bool readNextFromChild();
- SimpleString word;
+  Iterator* child;
+  int handle_case;
+  bool readNextFromChild();
+  SimpleString word;
 
 #if __x86_64__
   typedef long long unsigned int counter_t;
@@ -63,11 +63,11 @@ class CaseIterator : public IteratorContainer {
   typedef long unsigned int counter_t;
   static const unsigned int max_fast_character_bytes = 32;
 #endif
- 
- counter_t k;
- unsigned int j;
- unsigned int parity;
- vector<int> changeable_characters;
+
+  counter_t k;
+  unsigned int j;
+  unsigned int parity;
+  vector<int> changeable_characters;
 
 };
 

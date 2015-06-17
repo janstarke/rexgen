@@ -25,15 +25,15 @@
  * it can be casefolded (and must be switched to CASE_ITERATE
  * or it can be switched to CASE_PRESERVE
  */
-#define CASE_IGNORE		0
-#define CASE_ITERATE	1
-#define CASE_PRESERVE	2
+#define CASE_IGNORE   0
+#define CASE_ITERATE  1
+#define CASE_PRESERVE 2
 
 struct t_group_options {
   t_group_options()
     : handle_case(CASE_IGNORE),group_id(-1) {}
   int handle_case;
-	int group_id;
+  int group_id;
 };
 
 

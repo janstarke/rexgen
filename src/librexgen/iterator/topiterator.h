@@ -38,7 +38,7 @@ class TopIterator : public Iterator {
       /* this happens when we only have a StreamIterator */
       if (child == state->getStreamIterator()) {
         child = NULL;
-	delete (state->getStreamIterator());
+        delete (state->getStreamIterator());
       }
     }
 
@@ -61,8 +61,8 @@ class TopIterator : public Iterator {
   }
 
   void updateAttributes(IteratorState* /* iterState*/ ) {
-		/* nothin to do :-) */
-	}
+    /* nothin to do :-) */
+  }
 
   SerializableState* getCurrentState() const {
     return child->getCurrentState();

@@ -23,12 +23,12 @@
 #include <librexgen/genericerror.h>
 
 class SyntaxError : public GenericError {
-public:
+ public:
   SyntaxError(const char* msg, int fl=-1)
     :GenericError(msg), first_line(fl) {}
 
   int getFirstLine() const { return first_line; }
-private:
+ private:
   int first_line;
 };
 

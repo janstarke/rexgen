@@ -24,31 +24,32 @@
 #include <librexgen/common/math.h>
 
 void ClassRegex::merge(const ClassRegex* other) {
-  for(auto  i =  other->characters.crbegin(); 
-            i != other->characters.crend();
-            ++i) {
+  for (auto  i =  other->characters.crbegin();
+       i != other->characters.crend();
+       ++i) {
     addCharacter(*i);
   }
 }
 
 bool ClassRegex::contains(const uchar_t& ch) const {
-  return (std::find(characters.begin(), characters.end(), ch) != characters.end());
+  return (std::find(characters.begin(), characters.end(),
+                    ch) != characters.end());
 }
 
 void ClassRegex::__append_character(const uchar_t& ch) {
-	removeCharacterInstances(ch);
-	characters.push_back(ch);
+  removeCharacterInstances(ch);
+  characters.push_back(ch);
 }
 void ClassRegex::__insert_character(const uchar_t& ch) {
-	removeCharacterInstances(ch);
-	characters.insert(characters.begin(), ch);
+  removeCharacterInstances(ch);
+  characters.insert(characters.begin(), ch);
 }
 
 void ClassRegex::removeCharacterInstances(const uchar_t& ch) {
-	auto match_fct = [&ch](uchar_t x){return x.codepoint==ch.codepoint;};
-	characters.erase(
-		std::remove_if(characters.begin(), characters.end(), match_fct),
-		characters.end());
+  auto match_fct = [&ch](uchar_t x) {return x.codepoint==ch.codepoint;};
+  characters.erase(
+    std::remove_if(characters.begin(), characters.end(), match_fct),
+    characters.end());
 }
 
 void ClassRegex::addCharacter(const uchar_t& ch) {
@@ -57,17 +58,17 @@ void ClassRegex::addCharacter(const uchar_t& ch) {
 
 void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
   uint32_t a = uch_a.codepoint;
-	int diff = +1;
+  int diff = +1;
 
-	if (a > uch_b.codepoint) {
-		diff = -1;
-	}
+  if (a > uch_b.codepoint) {
+    diff = -1;
+  }
 
   while (a != uch_b.codepoint + diff) {
     uchar_t ch;
     codepoint_to_uchar(&ch, a, uch_a.variant);
     __append_character(ch);
-		a += diff;
+    a += diff;
   }
 }
 

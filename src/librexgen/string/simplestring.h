@@ -39,7 +39,7 @@ class SimpleString {
   SimpleString(size_t msize=512);
   uchar_t& operator[](const unsigned int& idx) { return characters[idx]; }
 
-  const uchar_t& getAt(const unsigned int& idx) const; 
+  const uchar_t& getAt(const unsigned int& idx) const;
   size_t to_binary_string(char* buffer, size_t buffer_size) const;
 
   void newline();
@@ -57,7 +57,7 @@ class SimpleString {
 
   void clear()        {        characters.clear(); }
   size_t size() const { return characters.size();  }
-	bool empty() const  { return characters.empty(); }
+  bool empty() const  { return characters.empty(); }
   size_t get_buffer_size() const;
 
  private:

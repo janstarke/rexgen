@@ -31,16 +31,16 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 extern "C" {
-	EXPORT
+  EXPORT
   int rexgen_parse_regex(lua_State* L);
 
-	EXPORT
+  EXPORT
   int rexgen_value(lua_State* L, const Iterator* iter);
 
-	EXPORT
+  EXPORT
   int luaopen_rexgen(lua_State* L);
 
-	EXPORT
+  EXPORT
   int rexgen_iter(lua_State* L);
 }
 

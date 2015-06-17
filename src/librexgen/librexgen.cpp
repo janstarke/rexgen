@@ -68,7 +68,7 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
   // update references
   iter->updateReferences(state);
 
-	// update attributes (e.g. case folding )
-	iter->updateAttributes(state);
+  // update attributes (e.g. case folding )
+  iter->updateAttributes(state);
   return iter;
 }

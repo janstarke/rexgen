@@ -97,9 +97,9 @@ const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; 
 /* this is the handling of \0 - terminals in the regex. the first occurance
  * of \0 creates a StreamRegex and returns it, all following occurances
  * return a reference to the previously created StreamRegex.
- * We must make this distinction, because StreamReference handles   
+ * We must make this distinction, because StreamReference handles
  * calls to next() by going to the next word, and calling next() for
- * the whole regex would result in multiple calls to next() for each single 
+ * the whole regex would result in multiple calls to next() for each single
  * occurance of \0. So, we return a GroupReference, which does not forward
  * the invocation of next() to the StreamRegex
  */

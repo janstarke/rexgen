@@ -57,7 +57,7 @@ Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
   if (regexObjects.size() == 1) {
     return regexObjects[0]->iterator(state);
   }
-  
+
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
   for (deque<Regex*>::const_iterator iter = regexObjects.begin();
        iter != regexObjects.end(); ++iter) {
