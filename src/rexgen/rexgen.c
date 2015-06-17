@@ -254,6 +254,12 @@ int _tmain(int argc, _TCHAR* argv[]) {
   if (prependBOM) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
+  
+  if (strstr(regex_str, "\\0") != NULL && infile == NULL) {
+    fprintf(stderr, "You must specify a filename when you use '\\0'\n");
+    retval = 1;
+    goto cleanup_and_exit;
+  }
 
   regex = c_regex_cb(regex_str, encoding, callback);
   if (regex == NULL) {
