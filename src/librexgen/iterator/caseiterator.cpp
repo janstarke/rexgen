@@ -32,6 +32,7 @@ CaseIterator::~CaseIterator() {
 
 bool CaseIterator::readNextFromChild() {
   //fprintf(stderr, "readNextFromChild()\n");
+  bool childHadNext;
 
   /* clear the previously read word
    * and the information about foldable characters */
@@ -39,9 +40,7 @@ bool CaseIterator::readNextFromChild() {
   changeable_characters.clear();
 
   /* read next word */
-	if (! child->next()) {
-		return false;
-	}
+  childHadNext = child->next();
   child->value(word);
 
   for(unsigned int n=0; n<word.size(); ++n) {
@@ -67,7 +66,7 @@ bool CaseIterator::readNextFromChild() {
 		}
 	}
 
-  return true;
+  return childHadNext;
 }
 
 bool CaseIterator::hasNext() const {
@@ -82,11 +81,11 @@ bool CaseIterator::hasNext() const {
 bool CaseIterator::next() {
   /* G1 */
   if (word.empty() || k <= 0) {
-		readNextFromChild();
+    bool childHadNext = readNextFromChild();
 
 		/* keep in mind: k is the number of remaining variants */
-		//fprintf(stderr, "returning original value; k=%d\n", k);
-		return (! word.empty());
+		//fprintf(stderr, "returning original value; k=%llu\n", k);
+		return (childHadNext);
 	}
 
 	return fast_next();
