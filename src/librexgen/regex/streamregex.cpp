@@ -45,16 +45,3 @@ Iterator* StreamRegex::singleIterator(IteratorState* state) const {
   }
   return iter;
 }
-
-unsigned long long int StreamRegex::size() const {
-  /* files with more than 2^32 newlines do not make sense to be handled */
-  size_t __size = 0;
-  const char* t;
-
-  /* loop through file, inspired by http://blog.fefe.de/?ts=aa3c0cd3 */
-  while (NULL != (t=callback())) {
-    ++__size;
-  }
-  return __size;
-}
-

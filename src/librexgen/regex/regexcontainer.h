@@ -37,7 +37,6 @@ class RegexContainer : public Regex {
     }
   }
 
-  unsigned long long int size() const = 0;
  protected:
   deque<Regex*>* getChildren() { return &regexObjects; }
   deque<Regex*> regexObjects;

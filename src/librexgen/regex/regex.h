@@ -68,8 +68,6 @@ class Regex  {
 
   virtual int getGroupId() const { return -1; }
 
-  virtual unsigned long long int size() const = 0;
-
  protected:
 
   virtual int createId() {

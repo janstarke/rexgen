@@ -38,16 +38,10 @@ typedef int bool;
 #endif
 
 static char regex_buffer[512];
-int ignore_case = 0;
 charset encoding = CHARSET_UTF8;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
 static bool prependBOM = false;
-
-enum {
-  display_size,
-  generate_values
-} rexgen_operation;
 
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -66,8 +60,6 @@ static void rexgen_usage() {
           "USAGE: rexgen [<options>] <regex>\n");
   fprintf(stderr,
           "OPTIONS:\n"
-          "   -s:        number of generated elements\n"
-          "   -i:        ignore case\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
           "   -u8:       encode values in UTF-8\n"
@@ -122,8 +114,6 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
   const char* regex = NULL;
   int n;
 
-  rexgen_operation = generate_values;
-
   for (n=1; n<argc; ++n) {
     if (argv[n][0] != '-') {
       if (regex == NULL) {
@@ -163,12 +153,6 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
     case 'f':
       ++n;
       infile_name = argv[n];
-      break;
-    case 'i':
-      ignore_case = 1;
-      break;
-    case 's':
-      rexgen_operation = display_size;
       break;
     case 'u': /* unicode encoding */
       if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
@@ -263,15 +247,10 @@ int _tmain(int argc, _TCHAR* argv[]) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
 
-  regex = c_regex_cb(regex_str, ignore_case, encoding, callback);
+  regex = c_regex_cb(regex_str, encoding, callback);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
-    goto cleanup_and_exit;
-  }
-
-  if (rexgen_operation == display_size) {
-    printf("%llu\n", c_regex_size(regex));
     goto cleanup_and_exit;
   }
 

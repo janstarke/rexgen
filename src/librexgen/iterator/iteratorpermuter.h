@@ -40,6 +40,7 @@ class IteratorPermuter : public IteratorContainer {
   ~IteratorPermuter();
   bool next();
   void init();
+  unsigned long long int size() const;
  private:
   bool existsIteratorWithNextElement() const;
 

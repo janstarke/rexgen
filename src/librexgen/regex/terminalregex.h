@@ -49,7 +49,6 @@ class TerminalRegex : public Regex {
   Iterator* singleIterator(IteratorState* /* state */) const
   { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
 
-  unsigned long long int size() const;
  private:
   vector<uchar_t> value;
 };

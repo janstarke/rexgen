@@ -32,7 +32,6 @@ class StreamRegex : public Regex {
  public:
   Iterator* iterator(IteratorState* state) const;
   Iterator* singleIterator(IteratorState* state) const;
-  unsigned long long int size() const;
 
   StreamRegex(callback_fp cb);
 

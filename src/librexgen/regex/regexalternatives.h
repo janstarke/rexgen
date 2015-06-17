@@ -49,8 +49,6 @@ class RegexAlternatives : public RegexContainer {
 		handle_case = opts->handle_case;
 		setGroupId(opts->group_id);
 	}
-
-  unsigned long long size() const;
  private:
   int groupId;
 	int handle_case;

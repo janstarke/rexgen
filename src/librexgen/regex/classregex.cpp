@@ -76,12 +76,3 @@ Iterator* ClassRegex::singleIterator(IteratorState* /*state*/) const {
                                 characters.size());
 }
 
-unsigned long long int ClassRegex::size() const {
-  unsigned long long int __size = 0;
-  for (size_t k = getMinOccurs(); k<=getMaxOccurs(); ++k) {
-    __size += ipow(characters.size(), k);
-  }
-  //printf(">>> ClassRegex::size() = %llu\n", __size);
-  return __size;
-}
-

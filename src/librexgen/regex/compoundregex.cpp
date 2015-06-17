@@ -79,26 +79,4 @@ Iterator* CompoundRegex::iterator(IteratorState* state) const {
   return RegexContainer::iterator(state);
 }
 
-unsigned long long int CompoundRegex::size() const {
-  unsigned long long int __size = 1;
-  if (regexObjects.size() == 0) {
-    return 0;
-  }
-
-  for (auto r:regexObjects) {
-    /*
-     * be aware that size() must be only called once, because
-     * at least StreamRegex would return 0 the second time
-     */
-    unsigned long long int s = r->size();
-    if (s > 0) {
-      __size *= s;
-    }
-  }
-
-  int n = getMaxOccurs() - getMinOccurs();
-  assert(n >= 0);
-  //printf(">>> CompoundRegex::size() = %llu\n", __size * (getMinOccurs()*(n+1) + (n*(n+1)/2)));
-  return __size * (getMinOccurs()*(n+1) + (n*(n+1)/2));
-}
 

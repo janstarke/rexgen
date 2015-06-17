@@ -12,12 +12,6 @@ fi
 
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $REXGEN_BINARY)
 
-CNT=$($REXGEN_BINARY -s $REGEX)
-if [ "$CNT" -ne "$COUNT" ]; then
-  echo "expected $COUNT result, but calculated $CNT results instead"
-  exit 1
-fi
-
 RESULTS=$($REXGEN_BINARY $REGEX | perl ${THISDIR}/check_results.pl "$REGEX")
 
 if [ "$?" = "-1" ]; then 

@@ -39,12 +39,8 @@ void c_rexgen_set_last_error(const char* msg);
 EXPORT
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  int ignore_case,
   charset encoding,
   callback_fp cb);
-
-EXPORT
-unsigned long long int c_regex_size(const c_regex_ptr regex);
 
 #ifdef __cplusplus
 }
