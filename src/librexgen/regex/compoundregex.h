@@ -33,8 +33,6 @@ using namespace std;
 class CompoundRegex : public RegexContainer {
  public:
 
-  virtual inline const char* getXmlTag() const { return "compound"; }
-
   void prependRegex(Regex* regex);
   void appendRegex(Regex* regex);
   void getRawValue(string& target);

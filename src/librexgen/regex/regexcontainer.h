@@ -31,9 +31,8 @@ using namespace std;
 class RegexContainer : public Regex {
  public:
   virtual ~RegexContainer() {
-    for (deque<Regex*>::iterator re=regexObjects.begin(); re!=regexObjects.end();
-         ++re) {
-      delete (*re);
+    for (auto re: regexObjects) {
+      delete re;
     }
   }
 

@@ -37,6 +37,9 @@ void CompoundRegex::prependRegex(Regex* regex) {
             && tre->getMaxOccurs() == 1) {
           TerminalRegex* tre_new = reinterpret_cast<TerminalRegex*>(regex);
           tre->prepend(tre_new);
+
+          /* we have merged two terminals, so we don't need the first one anymore */
+          delete regex;
           LEAVE_METHOD;
         }
       }
