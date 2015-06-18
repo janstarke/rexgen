@@ -27,10 +27,6 @@
 #include <librexgen/version.h>
 #include "terms.h"
 
-#ifdef REXGEN_PROFILE
-#include <gperftools/profiler.h>
-#endif
-
 #if ! defined(_WIN32)
 typedef char _TCHAR;
 #endif
@@ -247,10 +243,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-#ifdef REXGEN_PROFILE
-  ProfilerStart("rexgen.prof");
-#endif
-
   if (prependBOM) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
@@ -309,10 +301,6 @@ cleanup_and_exit:
   c_simplestring_delete(buffer);
   c_iterator_delete(iter);
   c_regex_delete(regex);
-
-#ifdef REXGEN_PROFILE
-  ProfilerStop();
-#endif
 
 #if defined(_WIN32) && defined(_DEBUG)
   getchar();
