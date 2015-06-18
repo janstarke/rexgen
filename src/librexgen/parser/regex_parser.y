@@ -110,33 +110,29 @@
 
 T_RegexAlternatives:
   CompoundRegex {
-      RegexAlternatives* alt = new RegexAlternatives();
-      alt->addRegex($1);
-      context->result = alt;
-      alt->setGroupId(0);
+      $$ = new RegexAlternatives();
+      $$->addRegex($1);
+      context->result = $$;
+      $$->setGroupId(0);
       context->updateAllGroupReferences();
-      $$ = alt;
   };
   
 T_RegexAlternatives:
   CompoundRegex T_PIPE T_RegexAlternatives
-  { RegexAlternatives* alt = $3;
-    alt->addRegex($1);
-    $$ = alt;
+  { $$ = $3;
+    $$->addRegex($1);
   };
 
 CompoundRegex:
   Regex
-  { CompoundRegex* cr = new CompoundRegex();
-    cr->prependRegex($1);
-    $$ = cr;
+  { $$ = new CompoundRegex();
+    $$->prependRegex($1);
   };
   
 CompoundRegex:
   Regex CompoundRegex
-  { CompoundRegex* cr = (CompoundRegex*)$2;
-    cr->prependRegex((Regex*)$1);
-    $$ = cr;
+  { $$ = $2;
+    $$->prependRegex($1);
   };
   
 Regex:
@@ -147,10 +143,10 @@ Regex:
 Regex:
   PlainRegex Quantifier
   {
-    Regex* re = (Regex*)$1;
+    $$ = (Regex*)$1;
     Quantifier* q = (Quantifier*)$2;
-    re->setQuantifier(*(q));
-    $$ = re;
+    $$->setQuantifier(*(q));
+    delete q;
   };
 
 PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
