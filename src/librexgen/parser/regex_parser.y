@@ -201,12 +201,11 @@ CharacterClassWord:
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP
   { 
-    RegexAlternatives* ra = $2; 
-		ra->setGroupOptions($1);
+    $$ = $2; 
+		$$->setGroupOptions($1);
 		delete $1;
-    context->registerGroup(ra);
-    context->updateGroupReferences(ra);
-    $$ = ra;
+    context->registerGroup($$);
+    context->updateGroupReferences($$);
   };
 
 Quantifier:	
@@ -218,9 +217,8 @@ Quantifier:
   };
 
 GroupReference: T_GROUPID {
-  GroupReference* gr = new GroupReference($1);
-  context->registerGroupReference(gr);
-  $$ = gr;
+  $$ = new GroupReference($1);
+  context->registerGroupReference($$);
 };
 
 Stream: T_STREAM {
