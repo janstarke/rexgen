@@ -46,6 +46,7 @@ class TopIterator : public Iterator {
       delete child;
     }
   }
+
   bool next() {
     bool res = child->next();
     if (res) { return res; }
