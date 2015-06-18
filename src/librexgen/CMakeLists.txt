@@ -56,6 +56,7 @@ set(librexgen_sources
   iterator/classregexiterator.cpp
   iterator/streamregexiterator.cpp
   iterator/caseiterator.cpp
+  iterator/terminalregexiterator.cpp
   state/serializablestate.cpp
   string/uchar.cpp
 	string/simplestring.cpp

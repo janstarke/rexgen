@@ -31,6 +31,11 @@ class IteratorContainer : public Iterator {
   typedef vector<Iterator*> children_list_type;
 
   IteratorContainer(int _id) : Iterator(_id) {}
+  virtual ~IteratorContainer() {
+    for (auto i: iterators) {
+      delete i;
+    }
+  }
 
   virtual void updateAttributes(IteratorState* iterState) {
     for (Iterator* child: iterators) {

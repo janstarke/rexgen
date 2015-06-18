@@ -32,32 +32,20 @@
 class TerminalRegexIterator : public Iterator {
  public:
 
-  TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
-    : Iterator(_id) {
-    terminal = new uchar_t[elements];
-    memcpy(terminal, _terminal, elements*sizeof(terminal[0]));
-    terminal_length = elements;
-  }
-
-  ~TerminalRegexIterator() { delete[] terminal; }
+  TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements);
 
   bool next() {
     const bool res = (state == resetted);
     state = usable;
     return res;
   }
-  void value(SimpleString& dst) const {
-    for (unsigned int idx=0; idx<terminal_length; ++idx) {
-      dst.push_back(terminal[idx]);
-    }
-  }
+  void value(SimpleString& dst) const;
   bool hasNext() const { return state == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
  private:
-  uchar_t* terminal;
-  size_t terminal_length;
+  vector<uchar_t> terminal;
 };
 
 #endif // TERMINALREGEXITERATOR_H
