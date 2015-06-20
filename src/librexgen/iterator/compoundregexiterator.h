@@ -36,8 +36,6 @@ class CompoundRegexIterator : public IteratorContainer {
  public:
   CompoundRegexIterator(int id);
 
-  virtual ~CompoundRegexIterator();
-
   bool next();
   void value(SimpleString& dst) const;
   bool hasNext() const;

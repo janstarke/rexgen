@@ -30,14 +30,6 @@ CompoundRegexIterator::CompoundRegexIterator(int _id)
   : IteratorContainer(_id) {
 }
 
-CompoundRegexIterator::~CompoundRegexIterator() {
-  for (auto i: iterators) {
-    if (! i->isSingleton()) {
-      delete i;
-    }
-  }
-}
-
 bool CompoundRegexIterator::next() {
   if (state == resetted) {
     state = usable;

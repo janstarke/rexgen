@@ -45,6 +45,8 @@ class TopIterator : public Iterator {
     if (child != NULL) {
       delete child;
     }
+
+		delete state;
   }
 
   bool next() {
@@ -75,7 +77,7 @@ class TopIterator : public Iterator {
 
  private:
   Iterator* child;
-  const IteratorState* state;
+  IteratorState* state;
 };
 
 #endif // TOPITERATOR_H
