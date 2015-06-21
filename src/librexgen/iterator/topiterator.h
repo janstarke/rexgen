@@ -34,20 +34,14 @@ class TopIterator : public Iterator {
 	}
 
   ~TopIterator() {
-    if (state->getStreamIterator() != NULL) {
-
-      /* this happens when we only have a StreamIterator */
-      if (child == state->getStreamIterator()) {
-        child = NULL;
-        delete (state->getStreamIterator());
-      }
-    }
-
-    if (child != NULL) {
+		/* StreamIterator is managed by IteratorState; it will be deleted there */
+    if (child != NULL && child != state->getStreamIterator()) {
       delete child;
     }
 
-		delete state;
+		if (state != NULL) {
+			delete state;
+		}
   }
 
   bool next() {

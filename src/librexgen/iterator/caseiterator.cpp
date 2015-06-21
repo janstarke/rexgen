@@ -27,7 +27,9 @@ CaseIterator::CaseIterator(Iterator* __child, int options)
 }
 
 CaseIterator::~CaseIterator() {
-  delete child;
+  if (child != NULL) {
+		delete child;
+	}
 }
 
 bool CaseIterator::readNextFromChild() {
