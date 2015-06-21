@@ -207,7 +207,7 @@ const char* callback() {
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
-  c_simplestring_ptr buffer = c_simplestring_new();
+  c_simplestring_ptr buffer = NULL;
   char binary_string[512];
   c_regex_ptr regex = NULL;
   c_iterator_ptr iter = NULL;
@@ -243,6 +243,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
+	buffer = c_simplestring_new();
   if (prependBOM) {
     c_simplestring_push_back(buffer, create_BOM(encoding));
   }
