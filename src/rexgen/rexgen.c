@@ -261,9 +261,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
     retval = 1;
     goto cleanup_and_exit;
   }
-	else {
-		fprintf(stderr, "not using callback\n");
-	}
 
   iter = c_regex_iterator(regex);
   if (iter == NULL) {
