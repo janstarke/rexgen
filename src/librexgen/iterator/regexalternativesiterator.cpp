@@ -108,15 +108,6 @@ bool RegexAlternativesIterator::canUseValue() const {
   return ((*(getPosition()))->canUseValue());
 }
 
-RegexAlternativesIterator::~RegexAlternativesIterator() {
-  for (auto i: iterators) {
-    if (i->isSingleton()) {
-      delete i;
-    }
-  }
-  iterators.clear();
-}
-
 SerializableState* RegexAlternativesIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
   s->addValue(getPosition() - iterators.begin());

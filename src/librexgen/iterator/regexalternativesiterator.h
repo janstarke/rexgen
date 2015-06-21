@@ -36,8 +36,6 @@ class RegexAlternativesIterator : public IteratorContainer {
 
   RegexAlternativesIterator(int id);
 
-  virtual ~RegexAlternativesIterator();
-
   bool next();
   void value(SimpleString& dst) const;
   bool hasNext() const;
