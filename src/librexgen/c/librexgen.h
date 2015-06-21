@@ -45,6 +45,9 @@ c_regex_ptr c_regex_cb(
 EXPORT
 void c_regex_delete(c_regex_ptr regex);
 
+EXPORT
+int c_regex_uses_callback(c_regex_ptr i);
+
 #ifdef __cplusplus
 }
 #endif

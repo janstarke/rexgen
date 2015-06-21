@@ -68,6 +68,8 @@ class Regex  {
 
   virtual int getGroupId() const { return -1; }
 
+	virtual bool usesCallback() const { return false; }
+
  protected:
 
   virtual int createId() {

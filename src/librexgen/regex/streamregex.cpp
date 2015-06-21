@@ -40,6 +40,7 @@ Iterator* StreamRegex::iterator(IteratorState* state) const {
 Iterator* StreamRegex::singleIterator(IteratorState* state) const {
   StreamRegexIterator* iter = state->getStreamIterator();
   if (iter == NULL) {
+		fprintf(stderr, "creating StreamRegexIterator in %08x\n", state);
     iter = new StreamRegexIterator(getId(), callback);
     state->setStreamIterator(iter);
   }

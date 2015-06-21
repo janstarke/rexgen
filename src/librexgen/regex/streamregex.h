@@ -36,6 +36,7 @@ class StreamRegex : public Regex {
   StreamRegex(callback_fp cb);
 
   RegexType getRegexType () const { return Stream; }
+	bool usesCallback() const { return true; }
 
  private:
   callback_fp callback;
