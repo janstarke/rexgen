@@ -60,15 +60,14 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
   if (re == NULL) {
     return NULL;
   }
-  IteratorState* state = new IteratorState();
-  Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
+  Iterator* iter = new TopIterator(re);
   // register regex alternatives
-  iter->updateReferences(state);
+  iter->updateReferences(NULL);
 
   // update references
-  iter->updateReferences(state);
+  iter->updateReferences(NULL);
 
   // update attributes (e.g. case folding )
-  iter->updateAttributes(state);
+  iter->updateAttributes(NULL);
   return iter;
 }

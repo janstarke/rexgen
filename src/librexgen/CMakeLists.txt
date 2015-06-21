@@ -76,7 +76,12 @@ set(parser_sources
 )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
-add_library(${librexgen} SHARED ${parser_sources} ${librexgen_sources})
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
+	add_library(${librexgen} STATIC ${parser_sources} ${librexgen_sources})
+else()
+	add_library(${librexgen} SHARED ${parser_sources} ${librexgen_sources})
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
+
 add_dependencies(${librexgen} parser_target )
 
 if(MSVC)

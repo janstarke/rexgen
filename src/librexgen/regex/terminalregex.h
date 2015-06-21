@@ -38,9 +38,6 @@ class TerminalRegex : public Regex {
   }
 
   void prepend(const TerminalRegex* tre);
-  /*
-  void setValue(const char* v);
-  */
 
   inline const char_type* getValue() const { return NULL; }
 

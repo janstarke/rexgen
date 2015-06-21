@@ -28,9 +28,10 @@
 
 class TopIterator : public Iterator {
  public:
-  TopIterator(int __id, Iterator* __child, IteratorState* __state)
-    :Iterator(__id), child(__child), state(__state) {
-  }
+  TopIterator(Regex* re) : Iterator(re->getId()) {
+  	state = new IteratorState();
+		child = re->iterator(state);
+	}
 
   ~TopIterator() {
     if (state->getStreamIterator() != NULL) {
@@ -59,12 +60,16 @@ class TopIterator : public Iterator {
 
   void value(SimpleString& dst) const { child->value(dst); }
   bool hasNext() const { return child->hasNext(); }
-  void updateReferences(IteratorState* iterState) {
-    child->updateReferences(iterState);
+  void updateReferences(IteratorState* /* ignore */) {
+		if (child != NULL && state != NULL) {
+    	child->updateReferences(state);
+		}
   }
 
-  void updateAttributes(IteratorState* /* iterState*/ ) {
-    /* nothin to do :-) */
+  void updateAttributes(IteratorState* /* ignore */ ) {
+    if (child != NULL && state != NULL) {
+			child->updateAttributes(state);
+		}
   }
 
   SerializableState* getCurrentState() const {

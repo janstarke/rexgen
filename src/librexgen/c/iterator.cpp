@@ -35,17 +35,15 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
   if (regex == NULL) {
     return NULL;
   }
-  Regex* re = static_cast<Regex*>(regex);
-  IteratorState* state = new IteratorState();
-  Iterator* iter = new TopIterator(re->getId(), re->iterator(state), state);
+  Iterator* iter = new TopIterator(static_cast<Regex*>(regex));
   // register regex alternatives
-  iter->updateReferences(state);
+  iter->updateReferences(NULL);
 
   // update references
-  iter->updateReferences(state);
+  iter->updateReferences(NULL);
 
   // update attributes (e.g. case folding )
-  iter->updateAttributes(state);
+  iter->updateAttributes(NULL);
   return iter;
 }
 
