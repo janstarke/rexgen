@@ -91,6 +91,7 @@ bool CaseIterator::next() {
   }
 
   fast_next();
+	return true;
 }
 
 inline void CaseIterator::fast_next() {
