@@ -35,7 +35,7 @@ class CaseIterator : public IteratorContainer {
 
   bool hasNext() const;
   bool next();
-  bool fast_next();
+  void fast_next();
 
   void value(SimpleString& /* dst */ ) const;
 

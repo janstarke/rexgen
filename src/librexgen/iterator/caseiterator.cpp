@@ -82,7 +82,7 @@ bool CaseIterator::hasNext() const {
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
 bool CaseIterator::next() {
   /* G1 */
-  if (word.empty() || k <= 0) {
+  if (word.empty() || k == 0) {
     bool childHadNext = readNextFromChild();
 
     /* keep in mind: k is the number of remaining variants */
@@ -90,10 +90,10 @@ bool CaseIterator::next() {
     return (childHadNext);
   }
 
-  return fast_next();
+  fast_next();
 }
 
-inline bool CaseIterator::fast_next() {
+inline void CaseIterator::fast_next() {
   /* G4:
    * if (parity_n+1 == 0) set j <- ntz(k)
    * ntz() does the same as the ruler function p(k) in eq. 7.1-(00)
@@ -119,7 +119,6 @@ inline bool CaseIterator::fast_next() {
   //assert(j < changeable_characters.size());
   uchar_toggle_case(word[changeable_characters[j]]);
   --k;
-  return (k >= 0);
 }
 
 void CaseIterator::value(SimpleString& dst) const {
