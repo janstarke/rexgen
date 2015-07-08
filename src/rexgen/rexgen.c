@@ -275,7 +275,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
   if (prependBOM) {
     byte bom[4];
     uint8_t len = create_BOM(encoding, bom);
-    for (uint8_t i=0; i<len; ++i) {
+		uint8_t i;
+    for (i=0; i<len; ++i) {
       putchar(bom[i]);
     }
   }
