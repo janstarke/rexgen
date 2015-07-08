@@ -16,4 +16,4 @@ while (my $line=<stdin>) {
 	$r{$line}++;
 }
 my $count = scalar keys %r;
-return $count;
+print $count;
