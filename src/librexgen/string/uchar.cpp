@@ -36,130 +36,54 @@ static int has_to_flip(charset cs) {
 }
 
 EXPORT
-const byte* firstByteAddressOf(const uchar_t* c) {
-  return & (c->character.bytes[
-              sizeof(c->character.bytes)/sizeof(c->character.bytes[0]) - c->char_length]);
-}
-
-EXPORT
-uchar_t char_to_uchar(char ch) {
+uchar_t codepoint_to_uchar(uint16_t ch) {
   uchar_t u;
   memset(&u, 0, sizeof(uchar_t));
-  u.character.ansi.value = ch;
-  u.variant = CHARSET_ANSI;
-  u.char_length = 1;
+  u.codepoint = ch;
   return u;
 }
 
-EXPORT
-uint8_t encode_codepoint(uint32_t codepoint, charset cs,
-                         binary_character_t* bch) {
-  size_t shift = 0;
-  size_t index = 0;
+uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
   const int flip = has_to_flip(cs);
-  bch->ucs4.value = 0;
-  uint8_t length = 0;
+  uint32_t tmp;
+  binary_character_t* bch;
 
   switch (cs) {
   case CHARSET_ANSI:
-    bch->ansi.value = (uint8_t) 0x00ff & codepoint;
-    break;
+    /* cut off the remaining bytes; but
+     * NOTE: the value of bch will be invalid
+     */
+    *dst = (uint8_t) 0x00ff & uch.codepoint;
+    return 1;
   case CHARSET_UTF8:
-    /* this is the most common case and should be very fast */
-    if (codepoint <= 0x7f) {
-      bch->ansi.value = (uint8_t) 0x00ff & codepoint;
-      length = 1;
-      break;
-    }
     /* convert codepoint to utf8 presentation */
-    length = convert_utf32_to_utf8(bch->bytes, codepoint);
-
-    /* align bytes */
-    shift = 4 - length;
-    index = 3;
-    switch (length) {
-    case 3:
-      bch->bytes[index] = bch->bytes[index-shift];
-      --index;
-    case 2:
-      bch->bytes[index] = bch->bytes[index-shift];
-      --index;
-    case 1:
-      bch->bytes[index] = bch->bytes[index-shift];
-    }
-    index = 0;
-    switch (length) {
-    case 1:
-      bch->bytes[index++] = 0;
-    case 2:
-      bch->bytes[index++] = 0;
-    case 3:
-      bch->bytes[index] = 0;
-    }
-    break;
+    return convert_utf32_to_utf8(dst, uch.full_codepoint());
   case CHARSET_UTF16LE:
   case CHARSET_UTF16BE:
-    if (codepoint <= 0xffff) {
-      const uint16_t tmp = (uint16_t)(0x0000ffff&codepoint);
-      length = 2;
-      bch->ucs2.high = 0;
-      bch->ucs2.low = (flip ? flip_byteorder16(tmp) : tmp);
-      break;
+    if (uch.plane == BMP) {
+      const uint16_t tmp16 = uch.codepoint;
+      bch = reinterpret_cast<binary_character_t*>(dst-2);
+      bch->ucs2.low = (flip ? flip_byteorder16(tmp16) : tmp16);
+      return 2;
     }
 
-    if (codepoint <= 0x10ffff) {
-      length = 4;
-      const uint32_t tmp = codepoint - 0x100000;
-      bch->ucs4.value =
-        (( 0xD8 | (((uint16_t)(tmp>>10)) & 0x3FF)) << 16) |
-        (0xDC | (((uint16_t)(tmp))     & 0x3FF));
-      if (flip) {
-        flip_byteorder32(bch->ucs4.value);
-      }
-      break;
+    tmp = uch.full_codepoint();
+    bch = reinterpret_cast<binary_character_t*>(dst);
+    bch->ucs4.value =
+      (( 0xD8 | (((uint16_t)(tmp>>10)) & 0x3FF)) << 16) |
+      (0xDC | (((uint16_t)(tmp))     & 0x3FF));
+    if (flip) {
+      flip_byteorder32(bch->ucs4.value);
     }
-    length = 0;
-    bch->ucs4.value = 0;
-    break;
+    return 4;
   case CHARSET_UTF32BE:
   case CHARSET_UTF32LE:
-    length = 4;
-    bch->ucs4.value = ( flip ? flip_byteorder32(codepoint): codepoint);
-    break;
+    bch = reinterpret_cast<binary_character_t*>(dst);
+    tmp = uch.full_codepoint();
+    bch->ucs4.value = ( flip ? flip_byteorder32(tmp): tmp);
+    return 4;
   }
-  return length;
-}
-
-EXPORT
-void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs) {
-  memset(dst, 0, sizeof(uchar_t));
-  dst->variant = cs;
-  dst->char_length = 1;
-
-  uint32_t cpUpper, cpLower;
-  if (u_isULowercase(codepoint)) {
-    cpLower = codepoint;
-    cpUpper = u_toupper(codepoint);
-  } else if (u_isUUppercase(codepoint)) {
-    cpLower = u_toupper(codepoint);
-    cpUpper = codepoint;
-  } else {
-    cpLower = codepoint;
-    cpUpper = 0xFFFFFFFF;
-    UCHAR_SET_PRESERVE_CASE(*dst);
-  }
-  dst->codepoint     = cpLower;
-
-  /* convert the character itself */
-  dst->char_length = encode_codepoint(dst->codepoint, cs, &dst->character);
-
-  /* convert the uppercase/lowercase variant of the character */
-  encode_codepoint(cpUpper, cs, &(dst->casevariant));
-
-  /* if the uppercase and lowercase variant are equal, then preserve case */
-  if (dst->casevariant.ucs4.value == dst->character.ucs4.value) {
-    UCHAR_SET_PRESERVE_CASE(*dst);
-  }
+  return -1;
 }
 
 EXPORT
@@ -210,59 +134,8 @@ uint8_t uchar_to_utf32(const binary_character_t* bch, byte* utf32_dst) {
 }
 
 EXPORT
-uint8_t uchar_to_binary(const uchar_t* uch, byte* dst) {
-
-  uint8_t len = 0;
-
-#warning this converter function must be assigned only once, for performance reasons
-  uint8_t (*converter_function)(const binary_character_t*, byte*) = NULL;
-  switch (uch->variant) {
-  case CHARSET_ANSI:
-    converter_function = uchar_to_ansi;
-    break;
-  case CHARSET_UTF8:
-    converter_function = uchar_to_utf8;
-    break;
-  case CHARSET_UTF16BE:
-  case CHARSET_UTF16LE:
-    converter_function = uchar_to_utf16;
-    break;
-  case CHARSET_UTF32BE:
-  case CHARSET_UTF32LE:
-    converter_function = uchar_to_utf32;
-    break;
-  }
-
-  if (uch->flags & UCHAR_FLAGS_USE_CASEFOLDED) {
-    len += converter_function(&uch->casevariant, dst);
-  } else {
-    len = converter_function(&uch->character, dst);
-  }
-  return len;
-}
-
-EXPORT
-bool uchar_isascii(const uchar_t& uch) {
-  return (      (uch.variant == CHARSET_ANSI)
-                ||        (uch.char_length == 1)
-                ||        (uch.character.bytes[0]==0
-                           && uch.character.bytes[1]==0
-                           && uch.character.bytes[2]==0));
-}
-
-EXPORT
-uchar_t create_BOM(charset cs) {
-  uint32_t codepoint = 0;
-  switch (cs) {
-  case CHARSET_ANSI:
-    codepoint = 0;
-    break;
-  default:
-    codepoint = 0xfeff;
-  }
-  uchar_t uc;
-  codepoint_to_uchar(&uc, codepoint, cs);
-  return uc;
+uchar_t create_BOM() {
+  return codepoint_to_uchar(0xfeff);
 }
 
 #ifdef __cplusplus

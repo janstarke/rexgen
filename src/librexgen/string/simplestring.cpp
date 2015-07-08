@@ -31,36 +31,27 @@ const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
 }
 
 bool SimpleString::isalpha(unsigned int n) const {
-  return (uchar_isascii(characters[n])
-          && ::isalpha(characters[n].character.ansi.value));
+  return (::isalpha(characters[n].codepoint));
 }
 bool SimpleString::islower(unsigned int n) const {
-  return (uchar_isascii(characters[n])
-          && ::islower(characters[n].character.ansi.value));
+  return (::islower(characters[n].codepoint));
 }
 
 bool SimpleString::isupper(unsigned int n) const {
-  return (uchar_isascii(characters[n])
-          && ::isupper(characters[n].character.ansi.value));
+  return ( ::isupper(characters[n].codepoint));
 }
 
 void SimpleString::tolower(unsigned int n) {
-  if (uchar_isascii(characters[n])) {
-    characters[n].character.ansi.value = ::tolower(
-                                           characters[n].character.ansi.value);
-  }
+  characters[n].codepoint = ::tolower(characters[n].codepoint);
 }
 void SimpleString::toupper(unsigned int n) {
-  if (uchar_isascii(characters[n])) {
-    characters[n].character.ansi.value = ::toupper(
-                                           characters[n].character.ansi.value);
-  }
+ characters[n].codepoint = ::toupper(characters[n].codepoint);
 }
 
 
 void SimpleString::append(const char* ch) {
   while (*ch != '\0') {
-    push_back(char_to_uchar(*ch++));
+    push_back(codepoint_to_uchar(*ch++));
   }
 }
 
@@ -69,7 +60,7 @@ size_t SimpleString::get_buffer_size() const {
 }
 
 void SimpleString::push_back(char ch) {
-  push_back(char_to_uchar(ch));
+  push_back(codepoint_to_uchar(ch));
 }
 
 void SimpleString::push_back(const uchar_t& c) {
@@ -80,9 +71,9 @@ void SimpleString::newline() {
   return push_back('\n');
 }
 
-size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
+size_t SimpleString::to_binary_string(char* dst, size_t buffer_size, charset cs) const {
   size_t count = 0;
-  const uchar_t zero = char_to_uchar('\0');
+  static const uchar_t zero = codepoint_to_uchar('\0');
 
   /* guarantee space for terminating zero */
   buffer_size -= 4;
@@ -91,9 +82,9 @@ size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
     if (count >= buffer_size) {
       break;
     }
-    count += uchar_to_binary(&ch, dst+count);
+    count += encode_uchar(ch, cs, dst+count);
   }
-  count += uchar_to_binary(&zero, dst+count);
+  count += encode_uchar(zero, cs, dst+count);
   return count;
 }
 

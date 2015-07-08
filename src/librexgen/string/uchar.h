@@ -90,19 +90,13 @@ typedef union {
 static const char32_t UCHAR_UNASSIGNED = 0xffffffff;
 
 struct __uchar_t {
-  charset         variant;    /* 1 byte */
-  uint8_t         char_length;/* 1 byte */
   uchar_flags_t   flags;      /* 1 byte */
-  unicode_plane_t plane;      /* 1 byte */
-
-  /* this one is needed for simple iteration in in UTF8 and UTF16 */
-  uint32_t codepoint;         /* 4 byte */
-
-  binary_character_t character; /* 4 byte */
-  binary_character_t casevariant; /* 4 byte */
+  unicode_plane_t plane;      /* 1 byte, currently not used */
+  uint16_t codepoint;
 
 #ifdef __cplusplus
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
+  uint32_t full_codepoint() const {return ((uint32_t)plane)<<16 | (uint32_t)codepoint;}
 #endif
 };
 typedef struct __uchar_t uchar_t;
@@ -129,14 +123,7 @@ EXPORT
 const byte* firstByteAddressOf(const uchar_t* c);
 
 EXPORT
-uchar_t char_to_uchar(char ch);
-
-EXPORT
-void codepoint_to_uchar(uchar_t* dst, uint32_t codepoint, charset cs);
-
-EXPORT
-uint8_t encode_codepoint(uint32_t codepoint, charset cs,
-                         binary_character_t* bch);
+uchar_t codepoint_to_uchar(uint16_t codepoint);
 
 EXPORT
 uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);
@@ -150,11 +137,24 @@ uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
 EXPORT
 uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
 
-EXPORT
-uint8_t uchar_to_binary(const uchar_t* uch, byte* dst);
+#ifdef __cplusplus
+uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst);
+
+inline
+uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
+  /* this is the most common case and should be very fast */
+  if (cs==CHARSET_ANSI || (uch.codepoint <= 0x00ff && cs==CHARSET_UTF8)) {
+    *dst = static_cast<byte>(uch.codepoint);
+    return 1;
+  }
+
+  /* all other encodings and codepoints */
+  return __encode_uchar(uch, cs, dst);
+}
+#endif
 
 EXPORT
-uchar_t create_BOM(charset cs);
+uchar_t create_BOM();
 
 #ifdef __cplusplus
 }

@@ -31,10 +31,8 @@ using std::vector;
 
 class TerminalRegex : public Regex {
  public:
-  TerminalRegex(uint32_t ch, charset encoding) {
-    uchar_t uch;
-    codepoint_to_uchar(&uch, ch, encoding);
-    value.push_back(uch);
+  TerminalRegex(uint16_t ch) {
+    value.push_back(codepoint_to_uchar(ch));
   }
 
   void prepend(const TerminalRegex* tre);

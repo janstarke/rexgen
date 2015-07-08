@@ -34,26 +34,17 @@ using namespace std;
 
 class ClassRegex : public Regex {
  public:
-  ClassRegex(charset variant) : encoding(variant) { }
-
-  inline void addCharacter(const uint32_t& ch) {
-    uchar_t uch;
-    codepoint_to_uchar(&uch, ch, encoding);
-    addCharacter(uch);
+  inline void addCharacter(const uint16_t ch) {
+    addCharacter(codepoint_to_uchar(ch));
   }
 
 
-  void addRange(const uint32_t& a, const uint32_t& b) {
-    uchar_t uch_a, uch_b;
-    codepoint_to_uchar(&uch_a, a, encoding);
-    codepoint_to_uchar(&uch_b, b, encoding);
-    addRange(uch_a, uch_b);
+  void addRange(const uint16_t a, const uint16_t b) {
+    addRange(codepoint_to_uchar(a), codepoint_to_uchar(b));
   }
 
   bool contains(const uint32_t& ch) const {
-    uchar_t uch;
-    codepoint_to_uchar(&uch, ch, encoding);
-    return contains(uch);
+    return contains(codepoint_to_uchar(ch));
   }
   RegexType getRegexType() const { return Class; }
 
@@ -70,7 +61,6 @@ class ClassRegex : public Regex {
   void __append_character(const uchar_t& ch);
   void removeCharacterInstances(const uchar_t& ch);
   vector<uchar_t> characters;
-  const charset encoding;
 };
 
 #endif // CLASSREGEX_H

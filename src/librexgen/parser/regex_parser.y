@@ -156,7 +156,7 @@ PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
           |     Stream          { $$ = static_cast<Regex*>($1); };
 
 SimpleRegex: T_ANY_CHAR {
-	$$ = new TerminalRegex($1, context->encoding());
+	$$ = new TerminalRegex($1);
 };
 
 ClassRegex:
@@ -174,24 +174,24 @@ ClassContent:
 
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
-      $$ = new ClassRegex(context->encoding()); 
+      $$ = new ClassRegex(); 
       $$->addRange($1, $3);
 	}
 	| CharacterClassDigit { $$ = $1; }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
-    $$ = new ClassRegex(context->encoding());
+    $$ = new ClassRegex();
     $$->addCharacter($1);
   }
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
-    $$ = new ClassRegex(context->encoding());
+    $$ = new ClassRegex();
     $$->addRange('0', '9');
 	}
 CharacterClassWord:
   T_CLASS_WORD {
-    $$ = new ClassRegex(context->encoding());
+    $$ = new ClassRegex();
     $$->addRange('a', 'z');
     $$->addRange('A', 'Z');
     $$->addRange('0', '9');
