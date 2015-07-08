@@ -25,6 +25,9 @@
 #include <stddef.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
+#include <unicode/uchar.h>
+#include <ctype.h>
+#include <assert.h>
 
 typedef uint8_t charset;
 #define CHARSET_ANSI    1
@@ -46,7 +49,8 @@ typedef uint8_t uchar_info_t;
 #define UCHAR_FLAGS_PRESERVE_CASE       0x02
 #define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
-#define UCHAR_CAN_CHANGE_CASE(a) (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
+#define UCHAR_CAN_CHANGE_CASE(a) ((!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))&& \
+                                  (u_isULowercase((a).codepoint)||u_isUUppercase((a).codepoint)))
 #define UCHAR_MUST_CHANGE_CASE(a) ((a).flags&UCHAR_CHANGE_CASE && !((a).flags&UCHAR_PRESERVE_CASE))
 #define UCHAR_MUST_PRESERVE_CASE(a) ((a).flags&UCHAR_FLAGS_PRESERVE_CASE)
 #define UCHAR_SET_CHANGE_CASE(a) do {            \
@@ -137,8 +141,18 @@ uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
 uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
 uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst);
 
+/* the slow Unicode version */
+void __uchar_toggle_case(uchar_t& uch);
+
+/* the fast ASCII version */
 inline void uchar_toggle_case(uchar_t& uch) {
-  uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
+  if (uch.codepoint < 128) {
+    /* this should be checked before this function is called */
+    assert(isalpha(uch.codepoint));
+    uch.codepoint ^= 0x20;
+  } else {
+    __uchar_toggle_case(uch);
+  }
 }
 
 inline uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {

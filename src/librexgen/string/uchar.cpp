@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/utf32.h>
-#include <unicode/uchar.h>
 
 /*
  * PUBLIC INTERFACE
@@ -51,7 +50,6 @@ static int has_to_flip(charset cs) {
       ( cs == CHARSET_UTF16LE || cs == CHARSET_UTF32LE) );
 }
 
-EXPORT
 uchar_t codepoint_to_uchar(uint16_t ch) {
   uchar_t u;
   memset(&u, 0, sizeof(uchar_t));
@@ -102,13 +100,11 @@ uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
   return -1;
 }
 
-EXPORT
 uint8_t uchar_to_ansi(const binary_character_t* bch, byte* ansi_dst) {
   *ansi_dst = bch->ansi.value;
   return 1;
 }
 
-EXPORT
 uint8_t uchar_to_utf8(const binary_character_t* bch, byte* utf8_dst) {
   if (bch->bytes[0]) { /* copy 4 bytes */
     *((char32_t*)utf8_dst) = bch->ucs4.value;
@@ -131,7 +127,6 @@ uint8_t uchar_to_utf8(const binary_character_t* bch, byte* utf8_dst) {
   return 1;
 }
 
-EXPORT
 uint8_t uchar_to_utf16(const binary_character_t* bch, byte* utf16_dst) {
   if (bch->ucs2.high) { /* copy 4 bytes */
     *((char32_t*)utf16_dst) = bch->ucs4.value;
@@ -143,10 +138,16 @@ uint8_t uchar_to_utf16(const binary_character_t* bch, byte* utf16_dst) {
   return 2;
 }
 
-EXPORT
 uint8_t uchar_to_utf32(const binary_character_t* bch, byte* utf32_dst) {
   *((uint32_t*)utf32_dst) = bch->ucs4.value;
   return 4;
 }
 
+void __uchar_toggle_case(uchar_t& uch) {
+  if (u_isULowercase(uch.codepoint)) {
+    uch.codepoint = u_toupper(uch.codepoint);
+  } else if(u_isUUppercase(uch.codepoint)){
+    uch.codepoint = u_tolower(uch.codepoint);
+  }
+}
 
