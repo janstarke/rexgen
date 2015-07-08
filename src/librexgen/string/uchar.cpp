@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/utf32.h>
+#include <unicode/uchar.h>
 
 /*
  * PUBLIC INTERFACE

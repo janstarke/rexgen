@@ -25,7 +25,6 @@
 #include <stddef.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
-#include <unicode/uchar.h>
 #include <ctype.h>
 #include <assert.h>
 
@@ -49,8 +48,8 @@ typedef uint8_t uchar_info_t;
 #define UCHAR_FLAGS_PRESERVE_CASE       0x02
 #define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
-#define UCHAR_CAN_CHANGE_CASE(a) ((!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))&& \
-                                  (u_isULowercase((a).codepoint)||u_isUUppercase((a).codepoint)))
+
+#define UCHAR_CAN_CHANGE_CASE(a) (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
 #define UCHAR_MUST_CHANGE_CASE(a) ((a).flags&UCHAR_CHANGE_CASE && !((a).flags&UCHAR_PRESERVE_CASE))
 #define UCHAR_MUST_PRESERVE_CASE(a) ((a).flags&UCHAR_FLAGS_PRESERVE_CASE)
 #define UCHAR_SET_CHANGE_CASE(a) do {            \

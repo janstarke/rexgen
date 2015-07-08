@@ -10,6 +10,12 @@ find_package(BISON 2.3)
 find_package(FLEX 2.5)
 find_package(ICU REQUIRED)
 
+if(ICU_FOUND)
+  message("Found ICU ${ICU_VERSION} in ${ICU_INCLUDE_DIRS}")
+else()
+  message(FATAL_ERROR "ICU not found. consider using -DICU=...")
+endif(ICU_FOUND)
+
 include_directories(${ICU_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 
 IF(MSVC)

@@ -21,6 +21,7 @@
 #include <librexgen/parser/group_options.h>
 #include <librexgen/common/ntz.h>
 #include <librexgen/string/uchar.h>
+#include <unicode/uchar.h>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
   : IteratorContainer(-1), child(__child), handle_case(options) {
@@ -46,7 +47,7 @@ bool CaseIterator::readNextFromChild() {
   child->value(word);
 
   for (unsigned int n=0; n<word.size(); ++n) {
-    if (UCHAR_CAN_CHANGE_CASE(word[n])) {
+    if (UCHAR_CAN_CHANGE_CASE(word[n]) && (u_isULowercase(word[n].codepoint) || u_isUUppercase(word[n].codepoint))) {
       word.tolower(n);
       changeable_characters.push_back(n);
     }
