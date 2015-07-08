@@ -19,7 +19,7 @@ if [ "$?" = "-1" ]; then
   exit 1
 fi
 
-if [ "$RESULTS" -ne "$COUNT" ]; then
+if [ "x$RESULTS" != "x$COUNT" ]; then
   echo "expected $COUNT results, but got $RESULTS results instead"
   exit 1
 fi

@@ -7,13 +7,13 @@ sub _die($) {
   exit -1;
 }
 
-my $regex = $ARGV[0] or die "missing regex";
+my $regex = $ARGV[0] or die "missing regex\n";
 my %r=();
 while (my $line=<stdin>) {
 	chomp $line;
-  _die "invalid value: '$line'" unless ($line =~ m/$regex/);
-	_die "value '$line' occurs more than once" if (defined($r{$line}));
+  _die "invalid value: '$line'\n" unless ($line =~ m/$regex/);
+	_die "value '$line' occurs more than once\n" if (defined($r{$line}));
 	$r{$line}++;
 }
 my $count = scalar keys %r;
-$count;
+return $count;
