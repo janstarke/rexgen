@@ -38,12 +38,11 @@ class ClassRegex : public Regex {
     addCharacter(codepoint_to_uchar(ch));
   }
 
-
   void addRange(const uint16_t a, const uint16_t b) {
     addRange(codepoint_to_uchar(a), codepoint_to_uchar(b));
   }
 
-  bool contains(const uint32_t& ch) const {
+  bool contains(const uint16_t ch) const {
     return contains(codepoint_to_uchar(ch));
   }
   RegexType getRegexType() const { return Class; }

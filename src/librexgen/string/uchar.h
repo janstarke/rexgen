@@ -58,14 +58,13 @@ typedef uint8_t uchar_info_t;
   (a).flags |= UCHAR_FLAGS_PRESERVE_CASE;        \
 } while (0)
 
-typedef enum {
-  BMP   =  0,               /* Basic Multilingual Plane            */
-  SMP   =  1,               /* Supplementary Multilingual Plane    */
-  SIP   =  2,               /* Supplementary Ideographic Plane     */
-  SSP   = 14,               /* Supplementary Special-purpose Plane */
-  PUA_A = 15,               /* Supplementary Private Use Area-A    */
-  PUA_B = 16                /* Supplementary Private Use Area-B    */
-} unicode_plane_t;
+typedef byte unicode_plane_t;
+static const unicode_plane_t BMP   =  0;               /* Basic Multilingual Plane            */
+static const unicode_plane_t SMP   =  1;               /* Supplementary Multilingual Plane    */
+static const unicode_plane_t SIP   =  2;               /* Supplementary Ideographic Plane     */
+static const unicode_plane_t SSP   = 14;               /* Supplementary Special-purpose Plane */
+static const unicode_plane_t PUA_A = 15;               /* Supplementary Private Use Area-A    */
+static const unicode_plane_t PUA_B = 16;               /* Supplementary Private Use Area-B    */
 
 /*
  * this datastructure is used to cache the binary representation
@@ -95,53 +94,54 @@ struct __uchar_t {
   uint16_t codepoint;
 
 #ifdef __cplusplus
+  __uchar_t() :flags(0), plane(BMP), codepoint(0xfffe) {}
+  __uchar_t(const struct __uchar_t &other) :flags(other.flags), plane(other.plane), codepoint(other.codepoint) {}
+  __uchar_t& operator= (const __uchar_t& other) {
+    if (this != &other) {
+      flags = other.flags;
+      plane = other.plane;
+      codepoint = other.codepoint;
+    }
+    return *this;
+  }
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
   uint32_t full_codepoint() const {return ((uint32_t)plane)<<16 | (uint32_t)codepoint;}
 #endif
 };
 typedef struct __uchar_t uchar_t;
 
+/*
+ * PUBLIC INTERFACE
+ */
 #ifdef __cplusplus
 extern "C" {
-EXPORT
-bool uchar_isascii(const uchar_t& uch);
+#endif
 
 EXPORT
-inline
-void uchar_toggle_case(uchar_t& uch) {
+uint8_t create_BOM(charset cs, byte* bom);
+
+#ifdef __cplusplus
+}
+#endif
+
+/*
+ * PRIVATE INTERFACE
+ */
+#ifdef __cplusplus
+bool uchar_isascii(const uchar_t& uch);
+const byte* firstByteAddressOf(const uchar_t* c);
+uchar_t codepoint_to_uchar(uint16_t codepoint);
+uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);
+uint8_t uchar_to_utf8(const binary_character_t*, byte* utf8_dst);
+uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
+uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
+uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst);
+
+inline void uchar_toggle_case(uchar_t& uch) {
   uch.flags ^= UCHAR_FLAGS_USE_CASEFOLDED;
 }
 
-}
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-EXPORT
-const byte* firstByteAddressOf(const uchar_t* c);
-
-EXPORT
-uchar_t codepoint_to_uchar(uint16_t codepoint);
-
-EXPORT
-uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);
-
-EXPORT
-uint8_t uchar_to_utf8(const binary_character_t*, byte* utf8_dst);
-
-EXPORT
-uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
-
-EXPORT
-uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
-
-#ifdef __cplusplus
-uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst);
-
-inline
-uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
+inline uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
   /* this is the most common case and should be very fast */
   if (cs==CHARSET_ANSI || (uch.codepoint <= 0x00ff && cs==CHARSET_UTF8)) {
     *dst = static_cast<byte>(uch.codepoint);
@@ -151,13 +151,7 @@ uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
   /* all other encodings and codepoints */
   return __encode_uchar(uch, cs, dst);
 }
-#endif
 
-EXPORT
-uchar_t create_BOM();
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif

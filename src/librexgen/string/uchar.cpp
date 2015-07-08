@@ -23,10 +23,26 @@
 #include <librexgen/string/utf32.h>
 #include <unicode/uchar.h>
 
+/*
+ * PUBLIC INTERFACE
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+EXPORT
+uint8_t create_BOM(charset cs, byte* bom ) {
+  return encode_uchar(codepoint_to_uchar(0xfeff), cs, bom);
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+/*
+ * PRIVATE INTERFACE
+ */
 static int has_to_flip(charset cs) {
   return
     ( o32_host_order.value == O32_LITTLE_ENDIAN &&
@@ -133,12 +149,4 @@ uint8_t uchar_to_utf32(const binary_character_t* bch, byte* utf32_dst) {
   return 4;
 }
 
-EXPORT
-uchar_t create_BOM() {
-  return codepoint_to_uchar(0xfeff);
-}
-
-#ifdef __cplusplus
-}
-#endif
 

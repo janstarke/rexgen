@@ -243,12 +243,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-	buffer = c_simplestring_new();
-  if (prependBOM) {
-    c_simplestring_push_back(buffer, create_BOM(encoding));
-  }
-  
-
   regex = c_regex_cb(regex_str, encoding, callback);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
@@ -278,6 +272,15 @@ int _tmain(int argc, _TCHAR* argv[]) {
   c_iterator_delete_state_buffer(state);
 #endif /* DEBUG_STATE */
 
+  if (prependBOM) {
+    byte bom[4];
+    uint8_t len = create_BOM(encoding, bom);
+    for (uint8_t i=0; i<len; ++i) {
+      putchar(bom[i]);
+    }
+  }
+
+	buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
     c_simplestring_to_binary_string(buffer, binary_string, sizeof(binary_string));

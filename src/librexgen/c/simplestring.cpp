@@ -39,11 +39,6 @@ void c_simplestring_newline(c_simplestring_ptr s) {
 }
 
 EXPORT
-void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch) {
-  (reinterpret_cast<SimpleString*>(s))->push_back(ch);
-}
-
-EXPORT
 int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer,
                                     size_t buffer_size) {
   return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer,

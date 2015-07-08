@@ -21,7 +21,6 @@
 #ifndef API_C_SIMPLESTRING_H
 #define API_C_SIMPLESTRING_H
 
-#include <librexgen/string/uchar.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
 #include <stdio.h>
@@ -42,9 +41,6 @@ void c_simplestring_delete(c_simplestring_ptr s);
 
 EXPORT
 void c_simplestring_newline(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_push_back(c_simplestring_ptr s, uchar_t ch);
 
 EXPORT
 int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer,

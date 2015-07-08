@@ -22,9 +22,10 @@
 
 ClassRegexIterator::ClassRegexIterator(
   int _id, const uchar_t* classcontent, size_t elements)
-  :Iterator(_id), current(-1) {
+  :Iterator(_id), current(-1), characters(elements) {
+
   for (size_t n=0; n<elements; ++n) {
-    characters.push_back(classcontent[n]);
+    characters[n] = classcontent[n];
   }
   state = usable;
 }
