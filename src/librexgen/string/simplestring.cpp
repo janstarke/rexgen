@@ -21,9 +21,19 @@
 #include <ctype.h>
 #include <librexgen/string/simplestring.h>
 
-SimpleString::SimpleString(size_t msize)
-  :characters(msize) {
-  clear();
+SimpleString::SimpleString(size_t msize, charset __cs)
+  :length(0), cs(__cs) {
+	switch (__cs) {
+		case CHARSET_ANSI:
+			encoder = uchar_to_ansi;
+			break;
+		case CHARSET_UTF8:
+			encoder = uchar_to_utf8;
+			break;
+		default:
+			encoder = NULL;
+			break;
+	}
 }
 
 const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
@@ -51,7 +61,7 @@ void SimpleString::toupper(unsigned int n) {
 
 void SimpleString::append(const char* ch) {
   while (*ch != '\0') {
-    push_back(codepoint_to_uchar(*ch++));
+    push_back((*ch++));
   }
 }
 
@@ -59,32 +69,25 @@ size_t SimpleString::get_buffer_size() const {
   return characters.size();
 }
 
-void SimpleString::push_back(char ch) {
-  push_back(codepoint_to_uchar(ch));
-}
-
 void SimpleString::push_back(const uchar_t& c) {
-  characters.push_back(c);
+  characters[length++] = c;
 }
 
-void SimpleString::newline() {
-  return push_back('\n');
-}
-
-size_t SimpleString::to_binary_string(char* dst, size_t buffer_size, charset cs) const {
+size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
   size_t count = 0;
-  static const uchar_t zero = codepoint_to_uchar('\0');
 
   /* guarantee space for terminating zero */
   buffer_size -= 4;
 
-  for (auto ch: characters) {
+	for (size_t idx=0; idx<length; ++idx) {
     if (count >= buffer_size) {
       break;
     }
-    count += encode_uchar(ch, cs, dst+count);
+    count += encoder(characters[idx], dst+count);
   }
-  count += encode_uchar(zero, cs, dst+count);
-  return count;
+
+	/* terminating zero */
+	dst[count++] = 0;
+	return count;
 }
 

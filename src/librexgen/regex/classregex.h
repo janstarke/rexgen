@@ -34,17 +34,9 @@ using namespace std;
 
 class ClassRegex : public Regex {
  public:
-  inline void addCharacter(const uint16_t ch) {
-    addCharacter(codepoint_to_uchar(ch));
-  }
-
-  void addRange(const uint16_t a, const uint16_t b) {
-    addRange(codepoint_to_uchar(a), codepoint_to_uchar(b));
-  }
-
-  bool contains(const uint16_t ch) const {
-    return contains(codepoint_to_uchar(ch));
-  }
+  void addCharacter(const uchar_t& ch);
+  void addRange(const uchar_t& a, const uchar_t& b);
+  bool contains(const uchar_t& ch) const;
   RegexType getRegexType() const { return Class; }
 
   void merge(const ClassRegex* other);
@@ -52,10 +44,6 @@ class ClassRegex : public Regex {
   Iterator* singleIterator(IteratorState* /* state */) const;
 
  private:
-  void addCharacter(const uchar_t& ch);
-  void addRange(const uchar_t& a, const uchar_t& b);
-  bool contains(const uchar_t& ch) const;
-
   void __insert_character(const uchar_t& ch);
   void __append_character(const uchar_t& ch);
   void removeCharacterInstances(const uchar_t& ch);

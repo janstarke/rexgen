@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
+#include <array>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
@@ -33,16 +34,15 @@
 #ifdef __cplusplus
 
 using std::vector;
+using std::array;
 
 class SimpleString {
  public:
-  SimpleString(size_t msize=512);
+  SimpleString(size_t msize=512, charset __cs=CHARSET_UTF8);
   uchar_t& operator[](const unsigned int& idx) { return characters[idx]; }
 
   const uchar_t& getAt(const unsigned int& idx) const;
-  size_t to_binary_string(char* buffer, size_t buffer_size, charset cs=CHARSET_UTF8) const;
-
-  void newline();
+  size_t to_binary_string(char* buffer, size_t buffer_size) const;
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;
@@ -51,17 +51,19 @@ class SimpleString {
   void tolower(unsigned int n);
   void toupper(unsigned int n);
 
-  void push_back(char ch);
   void push_back(const uchar_t& c);
   void append(const char* ch);
 
-  void clear()        {        characters.clear(); }
-  size_t size() const { return characters.size();  }
-  bool empty() const  { return characters.empty(); }
+  void clear()        { length=0; }
+  size_t size() const { return length;  }
+  bool empty() const  { return (length == 0); }
   size_t get_buffer_size() const;
 
  private:
-  vector<uchar_t> characters;
+  array<uchar_t, 512> characters;
+	size_t length;
+	charset cs;
+	uint8_t (*encoder)(const uchar_t&, byte*);
 };
 
 #endif /* __cplusplus */

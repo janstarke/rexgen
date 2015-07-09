@@ -34,11 +34,6 @@ void c_simplestring_delete(c_simplestring_ptr s) {
 }
 
 EXPORT
-void c_simplestring_newline(c_simplestring_ptr s) {
-  (reinterpret_cast<SimpleString*>(s))->newline();
-}
-
-EXPORT
 int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer,
                                     size_t buffer_size) {
   return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer,

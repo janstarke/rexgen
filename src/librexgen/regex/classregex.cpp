@@ -65,7 +65,7 @@ void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
   }
 
   while (a != uch_b.codepoint + diff) {
-    __append_character(codepoint_to_uchar(a));
+    __append_character(a);
     a += diff;
   }
 }

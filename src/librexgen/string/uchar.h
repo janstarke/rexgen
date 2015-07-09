@@ -98,7 +98,9 @@ struct __uchar_t {
 
 #ifdef __cplusplus
   __uchar_t() :flags(0), plane(BMP), codepoint(0xfffe) {}
+	__uchar_t(uint16_t cp): flags(0), plane(BMP), codepoint(cp) {}
   __uchar_t(const struct __uchar_t &other) :flags(other.flags), plane(other.plane), codepoint(other.codepoint) {}
+	/*
   __uchar_t& operator= (const __uchar_t& other) {
     if (this != &other) {
       flags = other.flags;
@@ -107,6 +109,7 @@ struct __uchar_t {
     }
     return *this;
   }
+	*/
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
   uint32_t full_codepoint() const {return ((uint32_t)plane)<<16 | (uint32_t)codepoint;}
 #endif
@@ -114,31 +117,13 @@ struct __uchar_t {
 typedef struct __uchar_t uchar_t;
 
 /*
- * PUBLIC INTERFACE
- */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-EXPORT
-uint8_t create_BOM(charset cs, byte* bom);
-
-#ifdef __cplusplus
-}
-#endif
-
-/*
  * PRIVATE INTERFACE
  */
 #ifdef __cplusplus
 bool uchar_isascii(const uchar_t& uch);
 const byte* firstByteAddressOf(const uchar_t* c);
-uchar_t codepoint_to_uchar(uint16_t codepoint);
-uint8_t uchar_to_ansi(const binary_character_t*, byte* ansi_dst);
-uint8_t uchar_to_utf8(const binary_character_t*, byte* utf8_dst);
-uint8_t uchar_to_utf16(const binary_character_t*, byte* utf16_dst);
-uint8_t uchar_to_utf32(const binary_character_t*, byte* utf32_dst);
-uint8_t __encode_uchar(const uchar_t& uch, charset cs, byte* dst);
+uint8_t uchar_to_ansi(const uchar_t& uch, byte* dst);
+uint8_t uchar_to_utf8(const uchar_t& uch, byte* dst);
 
 /* the slow Unicode version */
 void __uchar_toggle_case(uchar_t& uch);
@@ -152,17 +137,6 @@ inline void uchar_toggle_case(uchar_t& uch) {
   } else {
     __uchar_toggle_case(uch);
   }
-}
-
-inline uint8_t encode_uchar(const uchar_t& uch, charset cs, byte* dst) {
-  /* this is the most common case and should be very fast */
-  if (cs==CHARSET_ANSI || (uch.codepoint <= 0x00ff && cs==CHARSET_UTF8)) {
-    *dst = static_cast<byte>(uch.codepoint);
-    return 1;
-  }
-
-  /* all other encodings and codepoints */
-  return __encode_uchar(uch, cs, dst);
 }
 
 #endif

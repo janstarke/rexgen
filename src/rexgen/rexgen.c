@@ -41,7 +41,6 @@ static char regex_buffer[512];
 charset encoding = CHARSET_UTF8;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
-static bool prependBOM = false;
 
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -65,7 +64,6 @@ static void rexgen_usage() {
           "   -u8:       encode values in UTF-8\n"
           "   -u16[le]:  encode values in UTF-16BE (resp. UTF-16LE)\n"
           "   -u32[le]:  encode values in UTF-32BE (resp. UTF-32LE)\n"
-          "   -b:        prepend output with byte order mark\n"
           "   -w:        display warranty information\n"
           "   -c:        display redistribution conditions\n"
           "   -v:        display version information\n");
@@ -137,9 +135,6 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
     switch (argv[n][1]) {
     case '-':
       n = argc;
-      break;
-    case 'b':
-      prependBOM = true;
       break;
     case 'c':
       rexgen_display_conditions();
@@ -271,15 +266,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
   printf ("initial state = %s\n", state);
   c_iterator_delete_state_buffer(state);
 #endif /* DEBUG_STATE */
-
-  if (prependBOM) {
-    byte bom[4];
-    uint8_t len = create_BOM(encoding, bom);
-		uint8_t i;
-    for (i=0; i<len; ++i) {
-      putchar(bom[i]);
-    }
-  }
 
 	buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {

@@ -32,7 +32,7 @@ using std::vector;
 class TerminalRegex : public Regex {
  public:
   TerminalRegex(uint16_t ch) {
-    value.push_back(codepoint_to_uchar(ch));
+    value.push_back(uchar_t(ch));
   }
 
   void prepend(const TerminalRegex* tre);
