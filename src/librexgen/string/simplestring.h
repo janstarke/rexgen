@@ -42,8 +42,8 @@ class SimpleString {
   uchar_t& operator[](const unsigned int& idx) { return characters[idx]; }
 
   const uchar_t& getAt(const unsigned int& idx) const;
-  size_t to_ansi_string(char* buffer, size_t buffer_size) const;
-  size_t to_utf8_string(char* buffer, size_t buffer_size) const;
+  size_t to_ansi_string(char* buffer, const size_t buffer_size) const;
+  size_t to_utf8_string(char* buffer, const size_t buffer_size) const;
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;

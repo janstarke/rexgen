@@ -62,18 +62,11 @@ void SimpleString::push_back(const uchar_t& c) {
   characters[length++] = c;
 }
 
-size_t SimpleString::to_ansi_string(char* dst, size_t buffer_size) const {
+size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
   size_t idx;
+	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
-  /* prevent buffer overflow */
-  if (buffer_size > length) {
-    buffer_size = length;
-  }
-
-  /* guarantee space for terminating zero */
-  buffer_size -= 1;
-
-	for (size_t idx=0; idx<length; ++idx) {
+	for (idx=0; idx<len; ++idx) {
     dst[idx] = (char)characters[idx].codepoint;
   }
 
@@ -81,14 +74,15 @@ size_t SimpleString::to_ansi_string(char* dst, size_t buffer_size) const {
 	return idx;
 }
 
-size_t SimpleString::to_utf8_string(char* dst, size_t buffer_size) const {
-  size_t idx;
-  size_t count = 1;
+size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
+  size_t idx;     /* index in source string,
+	                 * must be <length
+									 */
+  size_t count;   /* number of bytes in the resulting output string,
+	                 * must be <buffer_size
+									 */
 
-  /* guarantee space for terminating zero */
-  buffer_size -= 1;
-
-	for (idx=0; idx<length && count<buffer_size; ++idx) {
+	for (idx=0, count=0; idx<length && count<buffer_size; ++idx) {
     if (characters[idx].plane==BMP && characters[idx].codepoint < 128) {
       *dst = static_cast<byte>(characters[idx].codepoint);
       ++count;
@@ -97,7 +91,7 @@ size_t SimpleString::to_utf8_string(char* dst, size_t buffer_size) const {
     }
   }
 
-	dst[idx] = 0;
+	dst[count] = 0;
 	return count;
 }
 
