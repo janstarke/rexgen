@@ -46,11 +46,9 @@ void c_rexgen_set_last_error(const char* msg) {
 EXPORT
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  charset encoding,
   callback_fp cb) {
 
   RexgenOptions options;
-  options.encoding = encoding;
   options.stream_callback = cb;
 
   return parse_regex(regex_str, options);

@@ -34,9 +34,16 @@ void c_simplestring_delete(c_simplestring_ptr s) {
 }
 
 EXPORT
-int c_simplestring_to_binary_string(c_simplestring_ptr s, char* buffer,
+int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
                                     size_t buffer_size) {
-  return (reinterpret_cast<SimpleString*>(s))->to_binary_string(buffer,
+  return (reinterpret_cast<SimpleString*>(s))->to_utf8_string(buffer,
+         buffer_size);
+}
+
+EXPORT
+int c_simplestring_to_ansi_string(c_simplestring_ptr s, char* buffer,
+                                    size_t buffer_size) {
+  return (reinterpret_cast<SimpleString*>(s))->to_ansi_string(buffer,
          buffer_size);
 }
 

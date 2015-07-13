@@ -19,36 +19,53 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <librexgen/string/uchar.h>
-#include <librexgen/string/utf32.h>
 #include <unicode/uchar.h>
 
 /*
  * PRIVATE INTERFACE
  */
 
-uint8_t uchar_to_ansi(const uchar_t& uch, byte* dst) {
-	if (uch.plane==BMP && uch.codepoint < 256) {
-		*dst = static_cast<byte>(uch.codepoint);
-		return 1;
-	}
-  *dst = 0xfe;
-	return 1;
-}
+#define UNI_SUR_HIGH_START      0xD800
+#define UNI_SUR_HIGH_END        0xDBFF
+#define UNI_SUR_LOW_START       0xDC00
+#define UNI_SUR_LOW_END         0xDFFF
+#define UNI_MAX_LEGAL_UTF32     0x0010FFFF
 
-uint8_t uchar_to_utf8(const uchar_t& uch, byte* dst) {
-	if (uch.plane==BMP && uch.codepoint < 128) {
-		*dst = static_cast<byte>(uch.codepoint);
-		return 1;
-	}
-  return convert_utf32_to_utf8(dst, uch.full_codepoint());
-}
+const uint32_t byte_mask = 0xbf;
+const uint32_t byte_mark = 0x80;
+const uint8_t first_byte_mark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
-void __uchar_toggle_case(uchar_t& uch) {
-  if (u_isULowercase(uch.codepoint)) {
-    uch.codepoint = u_toupper(uch.codepoint);
-  } else if(u_isUUppercase(uch.codepoint)){
-    uch.codepoint = u_tolower(uch.codepoint);
+size_t convert_utf32_to_utf8 (char* dst, uint32_t value) {
+  short bytes_to_write = 0;
+
+  if (value >= UNI_SUR_HIGH_START && value <= UNI_SUR_LOW_END) {
+    return 0;
   }
+
+  if (value < 0x80) { bytes_to_write = 1; }
+  else if (value < 0x800) { bytes_to_write = 2; }
+  else if (value < 0x10000) { bytes_to_write = 3; }
+  else if (value < UNI_MAX_LEGAL_UTF32) { bytes_to_write = 4; }
+  else { return 0; }
+
+  dst += bytes_to_write;
+  switch (bytes_to_write) {
+  case 4:
+    *--dst = ((char)value | byte_mark) & byte_mask;
+    value >>= 6;
+  case 3:
+    *--dst = ((char)value | byte_mark) & byte_mask;
+    value >>= 6;
+  case 2:
+    *--dst = ((char)value | byte_mark) & byte_mask;
+    value >>= 6;
+  case 1:
+    *--dst = ((char)value | first_byte_mark[bytes_to_write]);
+  }
+  return bytes_to_write;
 }
 

@@ -27,6 +27,7 @@
 #include <librexgen/osdepend.h>
 #include <ctype.h>
 #include <assert.h>
+#include <unicode/uchar.h>
 
 typedef uint8_t charset;
 #define CHARSET_ANSI    1
@@ -112,33 +113,25 @@ struct __uchar_t {
 	*/
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
   uint32_t full_codepoint() const {return ((uint32_t)plane)<<16 | (uint32_t)codepoint;}
+
+public:
+  inline
+  void toggle_case() {
+    if (codepoint<128 && plane==BMP) {
+      codepoint ^= 0x20;
+    } else {
+      if (u_isULowercase(codepoint)) {
+        codepoint = u_toupper(codepoint);
+      } else if(u_isUUppercase(codepoint)){
+        codepoint = u_tolower(codepoint);
+      }
+    }
+  }
 #endif
 };
 typedef struct __uchar_t uchar_t;
 
-/*
- * PRIVATE INTERFACE
- */
-#ifdef __cplusplus
-bool uchar_isascii(const uchar_t& uch);
-const byte* firstByteAddressOf(const uchar_t* c);
-uint8_t uchar_to_ansi(const uchar_t& uch, byte* dst);
-uint8_t uchar_to_utf8(const uchar_t& uch, byte* dst);
-
-/* the slow Unicode version */
-void __uchar_toggle_case(uchar_t& uch);
-
-/* the fast ASCII version */
-inline void uchar_toggle_case(uchar_t& uch) {
-  if (uch.codepoint < 128) {
-    /* this should be checked before this function is called */
-    assert(isalpha(uch.codepoint));
-    uch.codepoint ^= 0x20;
-  } else {
-    __uchar_toggle_case(uch);
-  }
-}
-
-#endif
+#warning move this to SimpleString
+size_t convert_utf32_to_utf8 (char* dst, uint32_t value);
 
 #endif

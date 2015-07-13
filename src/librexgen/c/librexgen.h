@@ -21,7 +21,6 @@
 #define __librexgen_api_c_h__
 
 #include <stdio.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/version.h>
 
@@ -39,7 +38,6 @@ void c_rexgen_set_last_error(const char* msg);
 EXPORT
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  charset encoding,
   callback_fp cb);
 
 EXPORT

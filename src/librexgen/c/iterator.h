@@ -40,7 +40,6 @@ EXPORT
 c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
   int ignore_case,
-  charset encoding,
   callback_fp cb);
 
 EXPORT

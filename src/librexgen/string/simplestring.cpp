@@ -21,19 +21,8 @@
 #include <ctype.h>
 #include <librexgen/string/simplestring.h>
 
-SimpleString::SimpleString(size_t msize, charset __cs)
-  :length(0), cs(__cs) {
-	switch (__cs) {
-		case CHARSET_ANSI:
-			encoder = uchar_to_ansi;
-			break;
-		case CHARSET_UTF8:
-			encoder = uchar_to_utf8;
-			break;
-		default:
-			encoder = NULL;
-			break;
-	}
+SimpleString::SimpleString()
+  :length(0) {
 }
 
 const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
@@ -73,21 +62,42 @@ void SimpleString::push_back(const uchar_t& c) {
   characters[length++] = c;
 }
 
-size_t SimpleString::to_binary_string(char* dst, size_t buffer_size) const {
-  size_t count = 0;
+size_t SimpleString::to_ansi_string(char* dst, size_t buffer_size) const {
+  size_t idx;
 
-  /* guarantee space for terminating zero */
-  buffer_size -= 4;
-
-	for (size_t idx=0; idx<length; ++idx) {
-    if (count >= buffer_size) {
-      break;
-    }
-    count += encoder(characters[idx], dst+count);
+  /* prevent buffer overflow */
+  if (buffer_size > length) {
+    buffer_size = length;
   }
 
-	/* terminating zero */
-	dst[count++] = 0;
+  /* guarantee space for terminating zero */
+  buffer_size -= 1;
+
+	for (size_t idx=0; idx<length; ++idx) {
+    dst[idx] = (char)characters[idx].codepoint;
+  }
+
+	dst[idx] = 0;
+	return idx;
+}
+
+size_t SimpleString::to_utf8_string(char* dst, size_t buffer_size) const {
+  size_t idx;
+  size_t count = 1;
+
+  /* guarantee space for terminating zero */
+  buffer_size -= 1;
+
+	for (idx=0; idx<length && count<buffer_size; ++idx) {
+    if (characters[idx].plane==BMP && characters[idx].codepoint < 128) {
+      *dst = static_cast<byte>(characters[idx].codepoint);
+      ++count;
+    } else {
+      count += convert_utf32_to_utf8(dst, characters[idx].full_codepoint());
+    }
+  }
+
+	dst[idx] = 0;
 	return count;
 }
 

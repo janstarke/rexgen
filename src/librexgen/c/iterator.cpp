@@ -51,11 +51,9 @@ EXPORT
 c_iterator_ptr c_regex_iterator_cb (
   const char* regex_str,
   int ignore_case=0,
-  charset encoding=CHARSET_UTF8,
   callback_fp callback=NULL) {
   RexgenOptions options;
   options.ignore_case = (bool)ignore_case;
-  options.encoding = encoding;
   options.infile = NULL;
   options.stream_callback = callback;
 

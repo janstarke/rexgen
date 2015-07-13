@@ -38,7 +38,7 @@ typedef int bool;
 #endif
 
 static char regex_buffer[512];
-charset encoding = CHARSET_UTF8;
+int(*encoder)(c_simplestring_ptr, char*, size_t) = c_simplestring_to_ansi_string;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
 
@@ -151,15 +151,7 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
       break;
     case 'u': /* unicode encoding */
       if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
-        encoding = CHARSET_UTF8;
-      } else if (0 == _tcscmp(&argv[n][1], _T("u16"))) {
-        encoding = CHARSET_UTF16BE;
-      } else if (0 == _tcscmp(&argv[n][1], _T("u32"))) {
-        encoding = CHARSET_UTF32BE;
-      } else if (0 == _tcscmp(&argv[n][1], _T("u16le"))) {
-        encoding = CHARSET_UTF16LE;
-      } else if (0 == _tcscmp(&argv[n][1], _T("u32le"))) {
-        encoding = CHARSET_UTF32LE;
+        encoder = c_simplestring_to_utf8_string;
       } else {
         fprintf(stderr, "invalid output encoding specified\n");
         rexgen_usage();
@@ -219,7 +211,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
 
   rexgen_setlocale();
-  encoding = CHARSET_UTF8; /* use UTF-8 by default */
   regex_str = rexgen_parse_arguments(argc, argv);
   if (regex_str == NULL) {
     rexgen_usage();
@@ -238,7 +229,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb(regex_str, encoding, callback);
+  regex = c_regex_cb(regex_str, callback);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
@@ -270,7 +261,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    c_simplestring_to_binary_string(buffer, binary_string, sizeof(binary_string));
+    encoder(buffer, binary_string, sizeof(binary_string));
     printf("%s\n", binary_string);
 
 #ifdef DEBUG_STATE

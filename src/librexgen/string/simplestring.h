@@ -38,11 +38,12 @@ using std::array;
 
 class SimpleString {
  public:
-  SimpleString(size_t msize=512, charset __cs=CHARSET_UTF8);
+  SimpleString();
   uchar_t& operator[](const unsigned int& idx) { return characters[idx]; }
 
   const uchar_t& getAt(const unsigned int& idx) const;
-  size_t to_binary_string(char* buffer, size_t buffer_size) const;
+  size_t to_ansi_string(char* buffer, size_t buffer_size) const;
+  size_t to_utf8_string(char* buffer, size_t buffer_size) const;
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;
@@ -59,11 +60,9 @@ class SimpleString {
   bool empty() const  { return (length == 0); }
   size_t get_buffer_size() const;
 
- private:
+ protected:
   array<uchar_t, 512> characters;
 	size_t length;
-	charset cs;
-	uint8_t (*encoder)(const uchar_t&, byte*);
 };
 
 #endif /* __cplusplus */
