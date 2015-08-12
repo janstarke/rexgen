@@ -24,6 +24,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
 
+static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 
 class StreamRegexIterator : public Iterator {
  public:
@@ -44,7 +45,7 @@ class StreamRegexIterator : public Iterator {
   }
   bool hasNext() const { return state == resetted; }
   void value(SimpleString& dst) const {
-    dst.append(buffer);
+    dst.append(buffer, length);
   }
   void updateReferences(IteratorState* /* iterState */) {}
   void updateAttributes(IteratorState* /* iterState */) {}
@@ -56,7 +57,8 @@ class StreamRegexIterator : public Iterator {
   void readNextWord();
 
   callback_fp callback;
-  char buffer[4096];
+  char buffer[STREAMREGEXITERATOR_MAXLEN];
+	size_t length;
   bool __hasNext;
 };
 

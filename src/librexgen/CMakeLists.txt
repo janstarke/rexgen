@@ -64,7 +64,6 @@ set(librexgen_sources
   iterator/caseiterator.cpp
   iterator/terminalregexiterator.cpp
   state/serializablestate.cpp
-  string/uchar.cpp
 	string/simplestring.cpp
 
   parser/rexgenparsercontext.cpp

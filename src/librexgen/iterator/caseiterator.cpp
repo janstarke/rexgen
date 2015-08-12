@@ -47,7 +47,7 @@ bool CaseIterator::readNextFromChild() {
   child->value(word);
 
   for (unsigned int n=0; n<word.size(); ++n) {
-    if (UCHAR_CAN_CHANGE_CASE(word[n]) && (u_isULowercase(word[n].codepoint) || u_isUUppercase(word[n].codepoint))) {
+    if (word.can_change_case(n)) {
       word.tolower(n);
       changeable_characters.push_back(n);
     }
@@ -64,9 +64,7 @@ bool CaseIterator::readNextFromChild() {
 
   /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
   if (handle_case == CASE_PRESERVE) {
-    for (unsigned int n=0; n<word.size(); ++n) {
-      UCHAR_SET_PRESERVE_CASE(word[n]);
-    }
+		word.set_preserve_case();
   }
 
   return childHadNext;
@@ -119,13 +117,10 @@ inline void CaseIterator::fast_next() {
   //fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
   //assert(j < changeable_characters.size());
-  word[changeable_characters[j]].toggle_case();
+	word.toggle_case(changeable_characters[j]);
   --k;
 }
 
 void CaseIterator::value(SimpleString& dst) const {
-  //fprintf(stderr, "value()\n");
-  for (unsigned int n=0; n<word.size(); ++n) {
-    dst.push_back(word.getAt(n));
-  }
+	dst.append(word);
 }

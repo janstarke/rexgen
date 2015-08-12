@@ -70,26 +70,6 @@ static const unicode_plane_t SSP   = 14;               /* Supplementary Special-
 static const unicode_plane_t PUA_A = 15;               /* Supplementary Private Use Area-A    */
 static const unicode_plane_t PUA_B = 16;               /* Supplementary Private Use Area-B    */
 
-/*
- * this datastructure is used to cache the binary representation
- * of unicode characters. Because we use this cache, it is not
- * necessary to create the binary value during the output
- */
-typedef union {
-  byte    bytes[4];
-  struct {
-    uint8_t  pad[3];
-    char     value;
-  } ansi;
-  struct {
-    char16_t high;
-    char16_t low;
-  } ucs2;
-  struct {
-    char32_t value;
-  } ucs4;
-} binary_character_t;
-
 static const char32_t UCHAR_UNASSIGNED = 0xffffffff;
 
 struct __uchar_t {
@@ -118,7 +98,7 @@ public:
   inline
   void toggle_case() {
     if (codepoint<128 && plane==BMP) {
-      codepoint ^= 0x20;
+      codepoint ^= 0x0020;
     } else {
       if (u_isULowercase(codepoint)) {
         codepoint = u_toupper(codepoint);
@@ -130,8 +110,5 @@ public:
 #endif
 };
 typedef struct __uchar_t uchar_t;
-
-#warning move this to SimpleString
-size_t convert_utf32_to_utf8 (char* dst, uint32_t value);
 
 #endif

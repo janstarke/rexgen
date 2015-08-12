@@ -24,14 +24,11 @@ using namespace std;
 
 void StreamRegexIterator::readNextWord() {
   __hasNext = false;
-  if (callback != NULL) {
-    const char* cp = callback();
-    if (cp) {
-      strncpy(buffer, cp, sizeof(buffer)-1);
-      buffer[sizeof(buffer)-1] = 0;
-      __hasNext = true;
-    }
-  }
+	assert (callback != NULL);
+	length = callback(&buffer[0], STREAMREGEXITERATOR_MAXLEN);
+	if (length > 0) {
+		__hasNext = true;
+	}
 }
 
 SerializableState* StreamRegexIterator::getCurrentState() const {

@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 typedef void* c_regex_ptr;
-typedef const char* (*callback_fp)();
+typedef size_t (*callback_fp)(char* dst, const size_t buffer_size);
 
 EXPORT
 const char* c_rexgen_get_last_error();

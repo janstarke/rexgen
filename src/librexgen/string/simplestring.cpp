@@ -23,10 +23,7 @@
 
 SimpleString::SimpleString()
   :length(0) {
-}
-
-const uchar_t& SimpleString::getAt(const unsigned int& idx) const {
-  return (const uchar_t&) characters[idx];
+	characters = new uchar_t[SIMPLESTRING_MAXLEN];
 }
 
 bool SimpleString::isalpha(unsigned int n) const {
@@ -44,22 +41,31 @@ void SimpleString::tolower(unsigned int n) {
   characters[n].codepoint = ::tolower(characters[n].codepoint);
 }
 void SimpleString::toupper(unsigned int n) {
- characters[n].codepoint = ::toupper(characters[n].codepoint);
+  characters[n].codepoint = ::toupper(characters[n].codepoint);
 }
 
+void SimpleString::append(const char* ch, size_t ch_len) {
+  fprintf(stderr, "APPEND\n");
+	/* ensure that buffer is not full */
+	if (length > SIMPLESTRING_MAXLEN) {
+		return;
+	}
 
-void SimpleString::append(const char* ch) {
-  while (*ch != '\0') {
-    push_back((*ch++));
-  }
+	/* make sure we do not write more bytes than available */
+	if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
+		ch_len = SIMPLESTRING_MAXLEN - length;
+	}
+
+	/* convert and copy characters */
+	for (size_t idx=0; idx<ch_len; ++idx) {
+		characters[length++] = ch[idx];
+
+    fprintf(stderr, "%04x\n", characters[length-1].codepoint);
+	}
 }
 
 size_t SimpleString::get_buffer_size() const {
-  return characters.size();
-}
-
-void SimpleString::push_back(const uchar_t& c) {
-  characters[length++] = c;
+  return SIMPLESTRING_MAXLEN;
 }
 
 size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
@@ -67,31 +73,62 @@ size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
 	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
 	for (idx=0; idx<len; ++idx) {
-    dst[idx] = (char)characters[idx].codepoint;
+		if (characters[idx].codepoint > 255 || characters[idx].plane!= BMP) {
+			dst[idx] = '?';
+		} else {
+    	dst[idx] = (char)characters[idx].codepoint;
+		}
   }
 
 	dst[idx] = 0;
 	return idx;
 }
 
+void SimpleString::print(FILE* out) const {
+  for (size_t idx=0; idx<length; ++idx) {
+    fputc(characters[idx].codepoint, out);
+  }
+}
+
+#define UNI_SUR_HIGH_START      0xD800
+#define UNI_SUR_HIGH_END        0xDBFF
+#define UNI_SUR_LOW_START       0xDC00
+#define UNI_SUR_LOW_END         0xDFFF
+#define UNI_MAX_LEGAL_UTF32     0x0010FFFF
+
+const uint32_t byte_mask = 0xbf;
+const uint32_t byte_mark = 0x80;
+
 size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
-  size_t idx;     /* index in source string,
+  size_t idx;     /* index in source string
 	                 * must be <length
 									 */
-  size_t count;   /* number of bytes in the resulting output string,
-	                 * must be <buffer_size
-									 */
+	size_t count;
 
-	for (idx=0, count=0; idx<length && count<buffer_size; ++idx) {
-    if (characters[idx].plane==BMP && characters[idx].codepoint < 128) {
-      *dst = static_cast<byte>(characters[idx].codepoint);
-      ++count;
-    } else {
-      count += convert_utf32_to_utf8(dst, characters[idx].full_codepoint());
-    }
+	for (idx=0, count=0; idx<length && count<buffer_size-4; ++idx) {
+		const uint32_t &value = characters[idx].full_codepoint();
+    if (value < 0x80) {
+      dst[count++] = static_cast<byte>(characters[idx].codepoint);
+		} else if (value < 0x800) {
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>6) | 0xc0);
+		} else if (value < 0x10000) {
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>12) | 0xE0);
+		} else if (value < UNI_MAX_LEGAL_UTF32) {
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>18) | 0xf0);
+		} else {
+			dst[count++] = '?';
+		}
   }
 
+	/* do not increment cur, because we do not count the terminating \0 */
 	dst[count] = 0;
 	return count;
 }
+
 

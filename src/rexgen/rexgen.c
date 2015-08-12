@@ -179,18 +179,24 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  * then start processing.  Without knowing the line count, we would simply have
  * to call c_iterator_next() many times, to restore the location of the restart.
  */
-const char* callback() {
-  static char Buf[512];
+
+size_t callback(char* dst, const size_t buffer_size) {
   unsigned int idx = 0;
-  if (feof(infile)) { return NULL; }
-  if (fgets(Buf, sizeof(Buf)-1, infile) == 0) {
-    return NULL;
+  if (feof(infile)) { return 0; }
+
+	/* read next word */
+  if (fgets(dst, buffer_size-1, infile) == 0) {
+    return 0;
   }
-  while (idx < sizeof(Buf)-2 && Buf[idx] != '\r' && Buf[idx] != '\n') {
+
+	/* fgets reads newlines; they must be removed */
+  while (idx < buffer_size-2 && dst[idx] != '\r' && dst[idx] != '\n' && dst[idx] != '\0') {
     ++idx;
   }
-  Buf[idx] = 0;
-  return Buf;
+  dst[idx] = 0;
+
+	/* return number of characters */
+  return idx;
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
