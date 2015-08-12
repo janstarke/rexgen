@@ -19,20 +19,20 @@ ELSE()
 ENDIF(MSVC)
 
 set(lua-sources librexgen_lua.cpp)
-add_library(${librexgen-lua} SHARED ${lua-sources})
-target_link_libraries(${librexgen-lua} ${librexgen} "lua${LUA_VERSION}" )
+add_library(${librexgen_lua} SHARED ${lua-sources})
+target_link_libraries(${librexgen_lua} ${librexgen} "lua${LUA_VERSION}" )
 
 if(MSVC)
 else()
-	target_link_libraries(${librexgen-lua} "stdc++")
+	target_link_libraries(${librexgen_lua} "stdc++")
 endif(MSVC)
 
-set_target_properties(${librexgen-lua} PROPERTIES
+set_target_properties(${librexgen_lua} PROPERTIES
 	PREFIX ""
 	SOVERSION "${librexgen_major}.${librexgen_minor}"
 	VERSION ${librexgen_version})
 
-install(TARGETS ${librexgen-lua}
+install(TARGETS ${librexgen_lua}
 		RUNTIME DESTINATION "bin"
 		LIBRARY DESTINATION "lib"
 		ARCHIVE DESTINATION "lib"
