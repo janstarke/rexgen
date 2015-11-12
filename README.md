@@ -27,6 +27,16 @@ cd rexgen/src
 # you can use the switches -p to enable python support and -l to enable lua support
 ```
 
+## Problems:
+
+If you have problems building rexgen, cou can change to the `build` and run `cmake .. && make` manually.
+Currently supported options rexgen's CMakefile are:
+
+* `-DCMAKE_BUILD_TYPE=Debug` creates a debug build
+* `-DICU_ROOT=/usr/local/opt/icu4c` tells cmake where to find icu4c
+* `-DUSE_PYTHON=On` tells cmake to include the python interface
+* `-DUSE_LUA=On` tells cmake to include the lua python interface
+
 # Support
 
 If you want to contribute ideas, bug reports or improvements to this project, feel free to contact me via github. 
