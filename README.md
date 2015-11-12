@@ -27,7 +27,7 @@ cd rexgen/src
 # you can use the switches -p to enable python support and -l to enable lua support
 ```
 
-## Problems:
+## Problems
 
 If you have problems building rexgen, cou can change to the `build` and run `cmake .. && make` manually.
 Currently supported options rexgen's CMakefile are:
