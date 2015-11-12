@@ -2,6 +2,17 @@
 
 a tool to create words based on regular expressions
 
+# Requirements
+
+To build rexgen, you'll need the following tools and libs:
+
+| Tool | needed for |
+|------|------------|
+| flex | Generator for lexical analysis of regular expressions |
+| bison | Generator of parser for regular expressions |
+| cmake | Creation of Makefiles |
+| icu4c | Unicode reference implementation |
+
 # Building rexgen
 
 Clone the git repository to include the required FindICU:
