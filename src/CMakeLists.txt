@@ -13,8 +13,8 @@ list(GET version_list 0 librexgen_major)
 list(GET version_list 1 librexgen_minor)
 list(GET version_list 2 librexgen_release)
 set(librexgen "lib${prj}" )
-set(librexgen-c "lib${prj}-c")
-set(librexgen-lua "lib${prj}-lua")
+set(librexgen_c "lib${prj}-c")
+set(librexgen_lua "lib${prj}-lua")
 
 message("creating ${prj} ${librexgen_version}")
 

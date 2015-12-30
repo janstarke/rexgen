@@ -100,8 +100,10 @@ set_target_properties(${librexgen} PROPERTIES
 	SOVERSION "${librexgen_major}.${librexgen_minor}"
 	VERSION ${librexgen_version})
 
+set(librexgen_filename "${librexgen}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 configure_file( "version/version.cpp" "${CMAKE_CURRENT_BINARY_DIR}/${librexgen}/version.cpp" )
 configure_file( "version/version.h" "${CMAKE_CURRENT_BINARY_DIR}/${librexgen}/version.h" )
+
 if(MSVC)
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/parser.cpp PROPERTIES COMPILE_FLAGS "/wd4065" )
 	set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp PROPERTIES COMPILE_FLAGS "/wd4005" )
