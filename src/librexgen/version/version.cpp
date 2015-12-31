@@ -28,3 +28,10 @@ EXPORT
 const char* rexgen_version () {
   return __version;
 }
+
+EXPORT
+unsigned int rexgen_version_int () {
+  return  ((((unsigned int)@librexgen_major@) <<16)
+          |(((unsigned int)@librexgen_minor@) <<8)
+          |(((unsigned int)@librexgen_release@)));
+}
