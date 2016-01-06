@@ -46,7 +46,7 @@ void SimpleString::toupper(unsigned int n) {
 }
 
 void SimpleString::append(const char* ch, size_t ch_len) {
-  fprintf(stderr, "APPEND\n");
+  //fprintf(stderr, "APPEND\n");
 	/* ensure that buffer is not full */
 	if (length > SIMPLESTRING_MAXLEN) {
 		return;
@@ -90,7 +90,7 @@ void SimpleString::append(const char* ch, size_t ch_len) {
       throw GenericError("invalid character");
     }
 		characters[length++] = codepoint;
-    fprintf(stderr, "0x%04x\n", codepoint);
+    //fprintf(stderr, "0x%04x\n", codepoint);
 	}
 }
 
@@ -140,17 +140,17 @@ size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
     if (value < 0x80) {
       dst[count++] = static_cast<byte>(characters[idx].codepoint);
 		} else if (value < 0x800) {
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
 			dst[count++] = ((char)(value>>6) | 0xc0);
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
 		} else if (value < 0x10000) {
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
-			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
 			dst[count++] = ((char)(value>>12) | 0xE0);
-		} else if (value < UNI_MAX_LEGAL_UTF32) {
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
 			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
-			dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
+		} else if (value < UNI_MAX_LEGAL_UTF32) {
 			dst[count++] = ((char)(value>>18) | 0xf0);
+			dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
+			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
+			dst[count++] = ((char)value | byte_mark) & byte_mask;
 		} else {
 			dst[count++] = '?';
 		}
