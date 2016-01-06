@@ -103,7 +103,7 @@ size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
 	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
 	for (idx=0; idx<len; ++idx) {
-		if (characters[idx].codepoint > 255 || characters[idx].plane!= BMP) {
+		if ((characters[idx].codepoint&0x80) != 0x00 || characters[idx].plane!= BMP) {
 			dst[idx] = '?';
 		} else {
     	dst[idx] = (char)characters[idx].codepoint;
@@ -137,6 +137,7 @@ size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
 
 	for (idx=0, count=0; idx<length && count<buffer_size-4; ++idx) {
 		const uint32_t &value = characters[idx].full_codepoint();
+    //fprintf(stderr, "value = 0x%08x\n", value);
     if (value < 0x80) {
       dst[count++] = static_cast<byte>(characters[idx].codepoint);
 		} else if (value < 0x800) {
