@@ -44,6 +44,7 @@ typedef uint32_t char32_t;
 
 typedef uint8_t uchar_flags_t;
 typedef uint8_t uchar_info_t;
+typedef uint16_t uchar_codepoint_t;
 
 #define UCHAR_FLAGS_CHANGE_CASE         0x01
 #define UCHAR_FLAGS_PRESERVE_CASE       0x02
@@ -73,13 +74,13 @@ static const unicode_plane_t PUA_B = 16;               /* Supplementary Private 
 static const char32_t UCHAR_UNASSIGNED = 0xffffffff;
 
 struct __uchar_t {
-  uchar_flags_t   flags;      /* 1 byte */
-  unicode_plane_t plane;      /* 1 byte, currently not used */
-  uint16_t codepoint;
+  uchar_flags_t     flags;      /* 1 byte */
+  unicode_plane_t   plane;      /* 1 byte, currently not used */
+  uchar_codepoint_t codepoint;
 
 #ifdef __cplusplus
   __uchar_t() :flags(0), plane(BMP), codepoint(0xfffe) {}
-	__uchar_t(uint16_t cp): flags(0), plane(BMP), codepoint(cp) {}
+	__uchar_t(uchar_codepoint_t cp): flags(0), plane(BMP), codepoint(cp) {}
   __uchar_t(const struct __uchar_t &other) :flags(other.flags), plane(other.plane), codepoint(other.codepoint) {}
 	/*
   __uchar_t& operator= (const __uchar_t& other) {

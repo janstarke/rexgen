@@ -20,6 +20,7 @@
 
 #include <ctype.h>
 #include <librexgen/string/simplestring.h>
+#include <librexgen/genericerror.h>
 
 SimpleString::SimpleString()
   :length(0) {
@@ -58,9 +59,38 @@ void SimpleString::append(const char* ch, size_t ch_len) {
 
 	/* convert and copy characters */
 	for (size_t idx=0; idx<ch_len; ++idx) {
-		characters[length++] = ch[idx];
-
-    fprintf(stderr, "%04x\n", characters[length-1].codepoint);
+    uchar_codepoint_t codepoint = 0;
+    if ((ch[idx] & 0x80) == 0) {
+      codepoint = ch[idx];
+    } else if (
+      ((ch[idx  ] & 0b11100000) == 0b11000000) &&
+      (idx+1 < ch_len)                         &&
+      ((ch[idx+1] & 0b11000000) == 0b10000000)) {
+      codepoint  = (ch[idx++]&0b00011111)<<6;
+      codepoint |= (ch[idx  ]&0b00111111);
+    } else if (
+      ((ch[idx  ] & 0b11110000) == 0b11100000) &&
+      (idx+2 < ch_len)                         &&
+      ((ch[idx+1] & 0b11000000) == 0b10000000) &&
+      ((ch[idx+2] & 0b11000000) == 0b10000000)) {
+      codepoint  = (ch[idx++]&0b00001111)<<12;
+      codepoint |= (ch[idx++]&0b00111111)<<6;
+      codepoint |= (ch[idx  ]&0b00111111);
+    } else if (
+      ((ch[idx  ] & 0b11111000) == 0b11110000) &&
+      (idx+3 < ch_len)                         &&
+      ((ch[idx+1] & 0b11000000) == 0b10000000) &&
+      ((ch[idx+2] & 0b11000000) == 0b10000000) &&
+      ((ch[idx+3] & 0b11000000) == 0b10000000)) {
+      codepoint  = (ch[idx++]&0b00000111)<<15;
+      codepoint |= (ch[idx++]&0b00111111)<<12;
+      codepoint |= (ch[idx++]&0b00111111)<<6;
+      codepoint |= (ch[idx  ]&0b00111111);
+    } else {
+      throw GenericError("invalid character");
+    }
+		characters[length++] = codepoint;
+    fprintf(stderr, "0x%04x\n", codepoint);
 	}
 }
 
