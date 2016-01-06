@@ -21,6 +21,7 @@
 #include <librexgen/parser/group_options.h>
 #include <librexgen/common/ntz.h>
 #include <librexgen/string/uchar.h>
+#include <librexgen/genericerror.h>
 #include <unicode/uchar.h>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
@@ -56,8 +57,8 @@ bool CaseIterator::readNextFromChild() {
   if (changeable_characters.size() <= max_fast_character_bytes) {
     k = (1 << changeable_characters.size())-1;
   } else {
-#warning TODO: throw exception here
     assert(false);
+    throw GenericError("cannot handle that much characters");
   }
   parity = 0;
   j = 0;      /* == ntz(k) & parity */
