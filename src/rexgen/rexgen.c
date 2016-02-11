@@ -38,7 +38,6 @@ typedef int bool;
 #endif
 
 static char regex_buffer[512];
-int(*encoder)(c_simplestring_ptr, char*, size_t) = c_simplestring_to_ansi_string;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
 
@@ -61,9 +60,6 @@ static void rexgen_usage() {
           "OPTIONS:\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
-          "   -u8:       encode values in UTF-8\n"
-          "   -u16[le]:  encode values in UTF-16BE (resp. UTF-16LE)\n"
-          "   -u32[le]:  encode values in UTF-32BE (resp. UTF-32LE)\n"
           "   -w:        display warranty information\n"
           "   -c:        display redistribution conditions\n"
           "   -v:        display version information\n");
@@ -148,15 +144,6 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
     case 'f':
       ++n;
       infile_name = argv[n];
-      break;
-    case 'u': /* unicode encoding */
-      if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
-        encoder = c_simplestring_to_utf8_string;
-      } else {
-        fprintf(stderr, "invalid output encoding specified\n");
-        rexgen_usage();
-        exit(1);
-      }
       break;
     default:
       fprintf(stderr, "invalid argument: %s\n", argv[n]);
@@ -267,7 +254,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    encoder(buffer, binary_string, sizeof(binary_string));
+    c_simplestring_to_external_string(buffer, binary_string, sizeof(binary_string));
     printf("%s\n", binary_string);
 
 #ifdef DEBUG_STATE
