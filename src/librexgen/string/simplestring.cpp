@@ -104,7 +104,7 @@ size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
 	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
 	for (idx=0; idx<len; ++idx) {
-		if ((characters[idx].codepoint&0x80) != 0x00 || characters[idx].plane!= BMP) {
+		if ((characters[idx].codepoint&0x80) != 0x00) {
 			dst[idx] = '?';
 		} else {
     	dst[idx] = (char)characters[idx].codepoint;

@@ -56,9 +56,9 @@ class SimpleString {
   size_t to_external_string(char* buffer, size_t buffer_size) const;
 
 	bool can_change_case(size_t idx) const {
-		return (( u_hasBinaryProperty(characters[idx].codepoint, UCHAR_CHANGES_WHEN_UPPERCASED)
-				  		|| u_hasBinaryProperty(characters[idx].codepoint, UCHAR_CHANGES_WHEN_LOWERCASED))
-					&& UCHAR_CAN_CHANGE_CASE(characters[idx]));
+    uchar_t tmp = characters[idx];
+    tmp.toggle_case();
+    return tmp.codepoint != characters[idx].codepoint;
 	}
 
 	void set_preserve_case() {
