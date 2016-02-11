@@ -4,19 +4,10 @@ cmake_policy(SET CMP0042 OLD)
 endif(CMAKE_MAJOR_VERSION GREATER 2)
 project(${librexgen})
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/FindICU.cmake")
-
 find_package(BISON 2.3)
 find_package(FLEX 2.5)
-find_package(ICU REQUIRED)
 
-if(ICU_FOUND)
-  message("Found ICU ${ICU_VERSION} in ${ICU_INCLUDE_DIRS}")
-else()
-  message(FATAL_ERROR "ICU not found. consider using -DICU=...")
-endif(ICU_FOUND)
-
-include_directories(${ICU_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
@@ -93,7 +84,6 @@ if(MSVC)
 else()
 	target_link_libraries(${librexgen} "stdc++")
 endif(MSVC)
-target_link_libraries(${librexgen} ${ICU_LIBRARIES})
 
 set_target_properties(${librexgen} PROPERTIES
 	PREFIX ""
