@@ -46,6 +46,22 @@ void SimpleString::toupper(unsigned int n) {
   characters[n].codepoint = ::toupper(characters[n].codepoint);
 }
 
+void SimpleString::append(const wchar_t* ch, size_t ch_len) {
+	/* ensure that buffer is not full */
+	if (length > SIMPLESTRING_MAXLEN) {
+		return;
+	}
+
+	/* make sure we do not write more bytes than available */
+	if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
+		ch_len = SIMPLESTRING_MAXLEN - length;
+	}
+
+  for (size_t idx=0; idx<ch_len; ++idx) {
+    characters[length++] = ch[idx];
+  }
+}
+
 void SimpleString::append(const char* ch, size_t ch_len) {
   //fprintf(stderr, "APPEND\n");
 	/* ensure that buffer is not full */

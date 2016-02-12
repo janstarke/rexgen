@@ -66,13 +66,13 @@ typedef wchar_t uchar_codepoint_t;
 static const uchar_codepoint_t UCHAR_UNASSIGNED = WEOF;
 
 struct __uchar_t {
-  uchar_flags_t     flags;      /* 1 byte */
   uchar_codepoint_t codepoint;
+  uchar_flags_t     flags;      /* 1 byte */
 
 #ifdef __cplusplus
-  __uchar_t() :flags(0), codepoint(0xfffe) {}
-	__uchar_t(uchar_codepoint_t cp): flags(0), codepoint(cp) {}
-  __uchar_t(const struct __uchar_t &other) :flags(other.flags), codepoint(other.codepoint) {}
+  __uchar_t() : codepoint(0xfffe), flags(0) {}
+	__uchar_t(uchar_codepoint_t cp): codepoint(cp), flags(0) {}
+  __uchar_t(const struct __uchar_t &other) : codepoint(other.codepoint), flags(other.flags) {}
 	/*
   __uchar_t& operator= (const __uchar_t& other) {
     if (this != &other) {

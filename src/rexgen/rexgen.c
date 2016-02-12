@@ -22,10 +22,13 @@
 #include <string.h>
 #include <signal.h>
 #include <locale.h>
+#include <wchar.h>
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 #include "terms.h"
+
+static const wchar_t REPLACEMENT_CHARACTER = 0xfffd;
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -167,23 +170,44 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  * to call c_iterator_next() many times, to restore the location of the restart.
  */
 
-size_t callback(char* dst, const size_t buffer_size) {
-  unsigned int idx = 0;
-  if (feof(infile)) { return 0; }
+size_t callback(wchar_t* dst, const size_t buffer_size) {
+  char buffer[buffer_size*6];
+  char* ptr = &buffer[0];
+  mbstate_t state;
+  size_t count = 0;
+  size_t nbytes;
+
+  if (feof(infile)) {
+    return 0; 
+  }
 
 	/* read next word */
-  if (fgets(dst, buffer_size-1, infile) == 0) {
+  if (fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile) == NULL) {
     return 0;
   }
 
-	/* fgets reads newlines; they must be removed */
-  while (idx < buffer_size-2 && dst[idx] != '\r' && dst[idx] != '\n' && dst[idx] != '\0') {
-    ++idx;
-  }
-  dst[idx] = 0;
+  /* convert multibyte to wchar_t */
+  memset(&state, '\0', sizeof(state));
+  while (count < buffer_size && 
+          *ptr != '\0' && *ptr != '\r' && *ptr != '\n') {
+    
+    nbytes = mbrtowc(dst, ptr, MB_CUR_MAX, &state);
+    if (nbytes == 0 || nbytes == (size_t)-2) {
+      return 0;
+    }
 
-	/* return number of characters */
-  return idx;
+    /* invalid character encoding */
+    if (nbytes == (size_t)-1) {
+      *dst = REPLACEMENT_CHARACTER;
+      nbytes = 1;
+    }
+
+    ptr += nbytes;
+    ++dst;
+    ++count;
+  }
+  *dst = btowc('\0');
+  return count;
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {

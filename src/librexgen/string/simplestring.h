@@ -89,6 +89,7 @@ class SimpleString {
 		characters[length++] = c;
 	}
   void append(const char* ch, const size_t ch_len);
+  void append(const wchar_t* ch, const size_t ch_len);
 	void append(const SimpleString& other) {
     const size_t chars_to_copy = std::min(SIMPLESTRING_MAXLEN-length, other.length);
     memcpy(
