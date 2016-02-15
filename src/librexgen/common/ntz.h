@@ -28,11 +28,21 @@ int ntz11(unsigned int n);
 #define __USE_INLINE_NTZ__
 
 #ifdef __USE_INLINE_NTZ__
+#ifdef WIN32
+#include <intrin.h>
+#if __x86_64__
+#define ntz(x) (__lzcnt(x)-1)
+#else
+#define ntz(x) (__lzcnt64(x)-1)
+#endif /* __x86_64__ */
+#else /* ! WIN32 */
 #if __x86_64__
 #define ntz(x) (ffsl(x)-1)
 #else
 #define ntz(x) (ffsll(x)-1)
 #endif /* __x86_64__ */
+#endif /* WIN32 */
+
 #else /* __USE_INLINE_NTZ__ */
 #if __x86_64__
 unsigned int ntz(uint64_t x);

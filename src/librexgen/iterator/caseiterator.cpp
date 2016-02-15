@@ -22,7 +22,6 @@
 #include <librexgen/common/ntz.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/genericerror.h>
-#include <unicode/uchar.h>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
   : IteratorContainer(-1), child(__child), handle_case(options) {

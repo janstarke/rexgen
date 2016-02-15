@@ -171,18 +171,20 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  */
 
 size_t callback(wchar_t* dst, const size_t buffer_size) {
-  char buffer[buffer_size*6];
-  char* ptr = &buffer[0];
   mbstate_t state;
   size_t count = 0;
   size_t nbytes;
+  char* buffer = (char*)malloc(buffer_size * 6);
+  char* ptr = &buffer[0];
 
   if (feof(infile)) {
+    free(buffer);
     return 0; 
   }
 
 	/* read next word */
   if (fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile) == NULL) {
+    free(buffer);
     return 0;
   }
 
@@ -193,6 +195,7 @@ size_t callback(wchar_t* dst, const size_t buffer_size) {
     
     nbytes = mbrtowc(dst, ptr, MB_CUR_MAX, &state);
     if (nbytes == 0 || nbytes == (size_t)-2) {
+      free(buffer);
       return 0;
     }
 
@@ -207,6 +210,7 @@ size_t callback(wchar_t* dst, const size_t buffer_size) {
     ++count;
   }
   *dst = btowc('\0');
+  free(buffer);
   return count;
 }
 
