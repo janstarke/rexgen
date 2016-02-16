@@ -23,11 +23,6 @@
 
 #include <cstdint>
 
-int ntz11(unsigned int n);
-
-#define __USE_INLINE_NTZ__
-
-#ifdef __USE_INLINE_NTZ__
 #ifdef WIN32
 #include <intrin.h>
 #if __x86_64__
@@ -43,11 +38,4 @@ int ntz11(unsigned int n);
 #endif /* __x86_64__ */
 #endif /* WIN32 */
 
-#else /* __USE_INLINE_NTZ__ */
-#if __x86_64__
-unsigned int ntz(uint64_t x);
-#else
-unsigned int ntz(uint32_t x);
-#endif /* __x86_64__ */
-#endif /* __USE_INLINE_NTZ__ */
 #endif /* NTZ_H */

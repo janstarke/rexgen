@@ -83,11 +83,11 @@ const SerializableState* SerializableState::getChildState(int id) const {
   return NULL;
 }
 
-int SerializableState::getValuesCount() const {
+size_t SerializableState::getValuesCount() const {
   return values.size();
 }
 
-int SerializableState::getChildStatesCount() const {
+size_t SerializableState::getChildStatesCount() const {
   return childStates.size();
 }
 

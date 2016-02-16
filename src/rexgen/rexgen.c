@@ -149,7 +149,7 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
       infile_name = argv[n];
       break;
     default:
-      fprintf(stderr, "invalid argument: %s\n", argv[n]);
+      fprintf(stderr, "invalid argument\n");
       rexgen_usage();
       exit(1);
     }
