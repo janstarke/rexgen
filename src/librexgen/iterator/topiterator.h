@@ -29,6 +29,7 @@
 class TopIterator : public Iterator {
  public:
   TopIterator(Regex* re) : Iterator(re->getId()) {
+  	needWord = false;
   	state = new IteratorState();
 		child = re->iterator(state);
 	}
@@ -45,11 +46,20 @@ class TopIterator : public Iterator {
   }
 
   bool next() {
+    if (needWord) {
+      bool res = state->getStreamIterator()->forceNext();
+      if (res)
+        needWord = false;
+      return res;
+    }
     bool res = child->next();
     if (res) { return res; }
 
     if (state->getStreamIterator() == NULL) { return false; }
-    return state->getStreamIterator()->forceNext();
+    res = state->getStreamIterator()->forceNext();
+    if (res) { return res; }
+    needWord = true;
+    return false;
   }
 
   void value(SimpleString& dst) const { child->value(dst); }
@@ -77,6 +87,7 @@ class TopIterator : public Iterator {
  private:
   Iterator* child;
   IteratorState* state;
+  bool needWord;
 };
 
 #endif // TOPITERATOR_H
