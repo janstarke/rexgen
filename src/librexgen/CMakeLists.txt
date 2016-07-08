@@ -60,7 +60,6 @@ set(librexgen_sources
   parser/rexgenparsercontext.cpp
 
 	librexgen.cpp
-	common/ntz.cpp
   common/math.cpp
 
 	c/librexgen.cpp
