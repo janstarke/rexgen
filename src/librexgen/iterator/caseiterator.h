@@ -40,7 +40,7 @@ class CaseIterator : public IteratorContainer {
   void value(SimpleString& /* dst */ ) const;
 
   virtual SerializableState* getCurrentState() const {
-    return new SerializableState(getId());
+    return new SerializableState(getId(), getState());
   }
 
   virtual void setCurrentState(const SerializableState* s) {

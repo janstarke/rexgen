@@ -25,8 +25,9 @@
 
 using std::size_t;
 
-SerializableState::SerializableState(SerializableState::stateword_t id) {
+SerializableState::SerializableState(SerializableState::stateword_t id, stateword_t state) {
   iterator_id = id;
+  stateEnum = state;
 }
 
 SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
@@ -36,6 +37,8 @@ SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
   size_t consumed_words = 0;
 
   iterator_id = *vptr++;
+  ++words;
+  stateEnum = *vptr++;
   ++words;
 
   size = *vptr++;
@@ -94,6 +97,8 @@ int SerializableState::getChildStatesCount() const {
 void SerializableState::serialize(vector<stateword_t>* dst) const {
   /* iterator id */
   dst->push_back(iterator_id);
+  /* state of the iterator (resetted, usable, etc) */
+  dst->push_back(stateEnum);
 
   /* serialize integer values */
   dst->push_back(values.size());

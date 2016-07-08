@@ -34,12 +34,14 @@ using std::size_t;
 class SerializableState {
  public:
   typedef int32_t stateword_t;
-  explicit SerializableState(stateword_t id);
+  explicit SerializableState(stateword_t id, stateword_t state);
   SerializableState(const stateword_t* vptr, size_t& words);
   ~SerializableState();
   void serialize(vector<stateword_t>* dst) const;
   int getIteratorId() const { return iterator_id; }
   void setIteratorId(stateword_t id) { iterator_id = id; }
+  int getStateEnum() const { return stateEnum; }
+  void setStateEnum(stateword_t state) { stateEnum = state; }
 
   void addValue(stateword_t value);
   void addValue(const SerializableState* state);
@@ -49,6 +51,7 @@ class SerializableState {
   int getChildStatesCount() const;
  private:
   stateword_t iterator_id;
+  stateword_t stateEnum;
   vector<stateword_t> values;
   map<int, const SerializableState*> childStates;
 };
