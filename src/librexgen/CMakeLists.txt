@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+  ADD_DEFINITIONS("-std=gnu++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
@@ -60,7 +60,6 @@ set(librexgen_sources
   parser/rexgenparsercontext.cpp
 
 	librexgen.cpp
-	common/ntz.cpp
   common/math.cpp
 
 	c/librexgen.cpp

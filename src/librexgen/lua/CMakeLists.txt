@@ -15,7 +15,7 @@ set(LUA_TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/lua")
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+  ADD_DEFINITIONS("-std=gnu++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
 set(lua-sources librexgen_lua.cpp)

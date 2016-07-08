@@ -58,7 +58,7 @@ typedef wchar_t uchar_codepoint_t;
   (a).flags |= UCHAR_FLAGS_PRESERVE_CASE;        \
 } while (0)
 
-static const uchar_codepoint_t UCHAR_UNASSIGNED = WEOF;
+static const uchar_codepoint_t UCHAR_UNASSIGNED = (const uchar_codepoint_t)WEOF;
 
 struct __uchar_t {
   uchar_codepoint_t codepoint;

@@ -30,7 +30,8 @@
 #else
 #define ntz(x) (__lzcnt64(x)-1)
 #endif /* __x86_64__ */
-#else /* ! WIN32 */
+#elif _GNU_SOURCE /* ! WIN32 */
+#include <strings.h>
 #if __x86_64__
 #define ntz(x) (ffsl(x)-1)
 #else
