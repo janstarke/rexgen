@@ -57,7 +57,7 @@ class StreamRegexIterator : public Iterator {
   void readNextWord();
 
   callback_fp callback;
-  char buffer[STREAMREGEXITERATOR_MAXLEN];
+  wchar_t buffer[STREAMREGEXITERATOR_MAXLEN];
 	size_t length;
   bool __hasNext;
 };

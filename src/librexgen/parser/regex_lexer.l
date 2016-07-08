@@ -148,7 +148,7 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 	bool enable_mode = true;
 	yylval.group_options = new t_group_options();
 	yylval.group_options->group_id = global_context->groupId++;
-	for (unsigned int idx=2; idx < yyleng-1; ++idx) {
+	for (int idx=2; idx < yyleng-1; ++idx) {
 		switch(yytext[idx]) {
 			case 'i':
 				yylval.group_options->handle_case = 

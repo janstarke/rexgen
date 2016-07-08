@@ -19,6 +19,7 @@
 
 
 #include <ctype.h>
+#include <wchar.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/genericerror.h>
 
@@ -43,6 +44,22 @@ void SimpleString::tolower(unsigned int n) {
 }
 void SimpleString::toupper(unsigned int n) {
   characters[n].codepoint = ::toupper(characters[n].codepoint);
+}
+
+void SimpleString::append(const wchar_t* ch, size_t ch_len) {
+	/* ensure that buffer is not full */
+	if (length > SIMPLESTRING_MAXLEN) {
+		return;
+	}
+
+	/* make sure we do not write more bytes than available */
+	if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
+		ch_len = SIMPLESTRING_MAXLEN - length;
+	}
+
+  for (size_t idx=0; idx<ch_len; ++idx) {
+    characters[length++] = ch[idx];
+  }
 }
 
 void SimpleString::append(const char* ch, size_t ch_len) {
@@ -103,7 +120,7 @@ size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
 	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
 	for (idx=0; idx<len; ++idx) {
-		if ((characters[idx].codepoint&0x80) != 0x00 || characters[idx].plane!= BMP) {
+		if ((characters[idx].codepoint&0x80) != 0x00) {
 			dst[idx] = '?';
 		} else {
     	dst[idx] = (char)characters[idx].codepoint;
@@ -162,4 +179,37 @@ size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
 	return count;
 }
 
+size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
+  size_t idx;
+  size_t nbytes;
+  char* ptr = dst;
+  mbstate_t state;
+  
+  memset(&state, '\0', sizeof(state));
+  for (idx=0; idx<length; ++idx) {
+    if (buffer_size < MB_CUR_MAX) {
+      return (size_t)-1;
+    }
+
+    nbytes = wcrtomb(ptr, characters[idx].codepoint, &state);
+    if (nbytes == (size_t) -1) {
+      return -1;
+    }
+
+    buffer_size -= nbytes;
+    ptr         += nbytes;
+  }
+
+  if (buffer_size < MB_CUR_MAX) {
+    return (size_t)-1;
+  }
+
+  nbytes = wcrtomb(ptr, (wchar_t)0, &state);
+  if (nbytes == (size_t) -1) {
+    return -1;
+  }
+  ptr         += nbytes;
+  
+  return (ptr - dst);
+}
 

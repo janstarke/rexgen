@@ -48,6 +48,13 @@ int c_simplestring_to_ansi_string(c_simplestring_ptr s, char* buffer,
 }
 
 EXPORT
+int c_simplestring_to_external_string(c_simplestring_ptr s, char* buffer,
+                                    size_t buffer_size) {
+  return (static_cast<SimpleString*>(s))->to_external_string(buffer,
+         buffer_size);
+}
+
+EXPORT
 void c_simplestring_clear(c_simplestring_ptr s) {
   (reinterpret_cast<SimpleString*>(s))->clear();
 }
