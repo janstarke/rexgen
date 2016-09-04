@@ -23,21 +23,19 @@
 
 #include <cstdint>
 
-int ntz11(unsigned int n);
-
-#define __USE_INLINE_NTZ__
-
-#ifdef __USE_INLINE_NTZ__
-#if __x86_64__
-#define ntz(x) (ffsl(x)-1)
+#ifdef WIN32
+#include <intrin.h>
+#if _WIN64
+_inline int ntz(unsigned long long x) { unsigned long v; if (!x)return -1; _BitScanForward64(&v, x); return v; }
 #else
+_inline int ntz(unsigned long x) { unsigned long v; if (!x)return -1; _BitScanForward(&v, x); return v; }
+#endif /* _WIN64 */
+#else /* ! WIN32 */
+#if __x86_64__
 #define ntz(x) (ffsll(x)-1)
-#endif /* __x86_64__ */
-#else /* __USE_INLINE_NTZ__ */
-#if __x86_64__
-unsigned int ntz(uint64_t x);
 #else
-unsigned int ntz(uint32_t x);
+#define ntz(x) (ffsl(x)-1)
 #endif /* __x86_64__ */
-#endif /* __USE_INLINE_NTZ__ */
+#endif /* WIN32 */
+
 #endif /* NTZ_H */

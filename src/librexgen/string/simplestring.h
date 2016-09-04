@@ -50,10 +50,15 @@ class SimpleString {
   size_t to_ansi_string(char* buffer, const size_t buffer_size) const;
   size_t to_utf8_string(char* buffer, const size_t buffer_size) const;
 
+  /**
+   * this function uses LC_CTYPE to determine the expected output encoding
+   */
+  size_t to_external_string(char* buffer, size_t buffer_size) const;
+
 	bool can_change_case(size_t idx) const {
-		return (( u_hasBinaryProperty(characters[idx].codepoint, UCHAR_CHANGES_WHEN_UPPERCASED)
-				  		|| u_hasBinaryProperty(characters[idx].codepoint, UCHAR_CHANGES_WHEN_LOWERCASED))
-					&& UCHAR_CAN_CHANGE_CASE(characters[idx]));
+    uchar_t tmp = characters[idx];
+    tmp.toggle_case();
+    return tmp.codepoint != characters[idx].codepoint;
 	}
 
 	void set_preserve_case() {
@@ -84,6 +89,7 @@ class SimpleString {
 		characters[length++] = c;
 	}
   void append(const char* ch, const size_t ch_len);
+  void append(const wchar_t* ch, const size_t ch_len);
 	void append(const SimpleString& other) {
     const size_t chars_to_copy = std::min(SIMPLESTRING_MAXLEN-length, other.length);
     memcpy(

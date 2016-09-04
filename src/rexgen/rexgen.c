@@ -22,10 +22,13 @@
 #include <string.h>
 #include <signal.h>
 #include <locale.h>
+#include <wchar.h>
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 #include "terms.h"
+
+static const wchar_t REPLACEMENT_CHARACTER = 0xfffd;
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -38,7 +41,6 @@ typedef int bool;
 #endif
 
 static char regex_buffer[512];
-int(*encoder)(c_simplestring_ptr, char*, size_t) = c_simplestring_to_ansi_string;
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
 
@@ -61,9 +63,6 @@ static void rexgen_usage() {
           "OPTIONS:\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
-          "   -u8:       encode values in UTF-8\n"
-          "   -u16[le]:  encode values in UTF-16BE (resp. UTF-16LE)\n"
-          "   -u32[le]:  encode values in UTF-32BE (resp. UTF-32LE)\n"
           "   -w:        display warranty information\n"
           "   -c:        display redistribution conditions\n"
           "   -v:        display version information\n");
@@ -149,17 +148,8 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
       ++n;
       infile_name = argv[n];
       break;
-    case 'u': /* unicode encoding */
-      if        (0 == _tcscmp(&argv[n][1], _T("u8"))) {
-        encoder = c_simplestring_to_utf8_string;
-      } else {
-        fprintf(stderr, "invalid output encoding specified\n");
-        rexgen_usage();
-        exit(1);
-      }
-      break;
     default:
-      fprintf(stderr, "invalid argument: %s\n", argv[n]);
+      fprintf(stderr, "invalid argument\n");
       rexgen_usage();
       exit(1);
     }
@@ -180,23 +170,48 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  * to call c_iterator_next() many times, to restore the location of the restart.
  */
 
-size_t callback(char* dst, const size_t buffer_size) {
-  unsigned int idx = 0;
-  if (feof(infile)) { return 0; }
+size_t callback(wchar_t* dst, const size_t buffer_size) {
+  mbstate_t state;
+  size_t count = 0;
+  size_t nbytes;
+  char* buffer = (char*)malloc(buffer_size * 6);
+  char* ptr = &buffer[0];
+
+  if (feof(infile)) {
+    free(buffer);
+    return 0; 
+  }
 
 	/* read next word */
-  if (fgets(dst, buffer_size-1, infile) == 0) {
+  if (fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile) == NULL) {
+    free(buffer);
     return 0;
   }
 
-	/* fgets reads newlines; they must be removed */
-  while (idx < buffer_size-2 && dst[idx] != '\r' && dst[idx] != '\n' && dst[idx] != '\0') {
-    ++idx;
-  }
-  dst[idx] = 0;
+  /* convert multibyte to wchar_t */
+  memset(&state, '\0', sizeof(state));
+  while (count < buffer_size && 
+          *ptr != '\0' && *ptr != '\r' && *ptr != '\n') {
+    
+    nbytes = mbrtowc(dst, ptr, MB_CUR_MAX, &state);
+    if (nbytes == 0 || nbytes == (size_t)-2) {
+      free(buffer);
+      return 0;
+    }
 
-	/* return number of characters */
-  return idx;
+    /* invalid character encoding */
+    if (nbytes == (size_t)-1) {
+      *dst = REPLACEMENT_CHARACTER;
+      nbytes = 1;
+    }
+
+    ptr += nbytes;
+    ++dst;
+    ++count;
+  }
+  *dst = btowc('\0');
+  free(buffer);
+  return count;
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
@@ -267,7 +282,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    encoder(buffer, binary_string, sizeof(binary_string));
+    c_simplestring_to_external_string(buffer, binary_string, sizeof(binary_string));
     printf("%s\n", binary_string);
 
 #ifdef DEBUG_STATE

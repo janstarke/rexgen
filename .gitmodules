@@ -1,3 +1,0 @@
-[submodule "src/librexgen/FindICU.cmake"]
-	path = src/librexgen/FindICU.cmake
-	url = https://github.com/julp/FindICU.cmake.git

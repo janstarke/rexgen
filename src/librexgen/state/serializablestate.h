@@ -47,8 +47,8 @@ class SerializableState {
   void addValue(const SerializableState* state);
   stateword_t getValue(int idx) const;
   const SerializableState* getChildState(int id) const;
-  int getValuesCount() const;
-  int getChildStatesCount() const;
+  size_t getValuesCount() const;
+  size_t getChildStatesCount() const;
  private:
   stateword_t iterator_id;
   stateword_t stateEnum;
