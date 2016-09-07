@@ -187,7 +187,7 @@ size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
   
   memset(&state, '\0', sizeof(state));
   for (idx=0; idx<length; ++idx) {
-    if (buffer_size < MB_CUR_MAX) {
+    if (buffer_size < (size_t)MB_CUR_MAX) {
       return (size_t)-1;
     }
 
@@ -200,7 +200,7 @@ size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
     ptr         += nbytes;
   }
 
-  if (buffer_size < MB_CUR_MAX) {
+  if (buffer_size < (size_t)MB_CUR_MAX) {
     return (size_t)-1;
   }
 
