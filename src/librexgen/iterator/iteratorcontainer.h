@@ -33,9 +33,9 @@ class IteratorContainer : public Iterator {
   IteratorContainer(int _id) : Iterator(_id) {}
   virtual ~IteratorContainer() {
     for (auto i: iterators) {
-			if (! i->isSingleton()) {
-      	delete i;
-			}
+      if (! i->isSingleton()) {
+        delete i;
+      }
     }
   }
 

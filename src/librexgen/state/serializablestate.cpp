@@ -25,7 +25,8 @@
 
 using std::size_t;
 
-SerializableState::SerializableState(SerializableState::stateword_t id, stateword_t state) {
+SerializableState::SerializableState(SerializableState::stateword_t id,
+                                     stateword_t state) {
   iterator_id = id;
   stateEnum = state;
 }

@@ -32,6 +32,6 @@ const char* rexgen_version () {
 EXPORT
 unsigned int rexgen_version_int () {
   return  ((((unsigned int)@librexgen_major@) <<16)
-          |(((unsigned int)@librexgen_minor@) <<8)
-          |(((unsigned int)@librexgen_release@)));
+           |(((unsigned int)@librexgen_minor@) <<8)
+           |(((unsigned int)@librexgen_release@)));
 }

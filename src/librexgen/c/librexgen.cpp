@@ -64,7 +64,7 @@ void c_regex_delete(c_regex_ptr regex) {
 
 EXPORT
 int c_regex_uses_callback(c_regex_ptr i) {
-	return (reinterpret_cast<Regex*>(i))->usesCallback();
+  return (reinterpret_cast<Regex*>(i))->usesCallback();
 }
 
 #ifdef __cplusplus

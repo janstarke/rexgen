@@ -26,9 +26,9 @@
 #ifdef WIN32
 #include <intrin.h>
 #if _WIN64
-_inline int ntz(unsigned long long x) { unsigned long v; if (!x)return -1; _BitScanForward64(&v, x); return v; }
+_inline int ntz(unsigned long long x) { unsigned long v; if (!x) { return -1; } _BitScanForward64(&v, x); return v; }
 #else
-_inline int ntz(unsigned long x) { unsigned long v; if (!x)return -1; _BitScanForward(&v, x); return v; }
+_inline int ntz(unsigned long x) { unsigned long v; if (!x) { return -1; } _BitScanForward(&v, x); return v; }
 #endif /* _WIN64 */
 #else /* ! WIN32 */
 #if __x86_64__

@@ -66,9 +66,10 @@ struct __uchar_t {
 
 #ifdef __cplusplus
   __uchar_t() : codepoint(0xfffe), flags(0) {}
-	__uchar_t(uchar_codepoint_t cp): codepoint(cp), flags(0) {}
-  __uchar_t(const struct __uchar_t &other) : codepoint(other.codepoint), flags(other.flags) {}
-	/*
+  __uchar_t(uchar_codepoint_t cp): codepoint(cp), flags(0) {}
+  __uchar_t(const struct __uchar_t& other) : codepoint(other.codepoint),
+    flags(other.flags) {}
+  /*
   __uchar_t& operator= (const __uchar_t& other) {
     if (this != &other) {
       flags = other.flags;
@@ -76,16 +77,16 @@ struct __uchar_t {
     }
     return *this;
   }
-	*/
+  */
   bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
   uint32_t full_codepoint() const {return (uint32_t)codepoint;}
 
-public:
+ public:
   inline
   void toggle_case() {
     if (iswlower(codepoint)) {
       codepoint = towupper(codepoint);
-    } else if(iswupper(codepoint)){
+    } else if (iswupper(codepoint)) {
       codepoint = towlower(codepoint);
     }
   }

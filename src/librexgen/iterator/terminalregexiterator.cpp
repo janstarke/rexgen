@@ -19,13 +19,14 @@
 
 #include <librexgen/iterator/terminalregexiterator.h>
 
-TerminalRegexIterator::TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements)
-    : Iterator(_id) {
-    for (size_t idx = 0; idx < elements; ++idx) {
-      terminal.push_back(_terminal[idx]);
-    }
+TerminalRegexIterator::TerminalRegexIterator(int _id, const uchar_t* _terminal,
+    size_t elements)
+  : Iterator(_id) {
+  for (size_t idx = 0; idx < elements; ++idx) {
+    terminal.push_back(_terminal[idx]);
   }
- 
+}
+
 void TerminalRegexIterator::value(SimpleString& dst) const {
   for (auto ch: terminal) {
     dst.push_back(ch);

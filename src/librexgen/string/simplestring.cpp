@@ -25,7 +25,7 @@
 
 SimpleString::SimpleString()
   :length(0) {
-	characters = new uchar_t[SIMPLESTRING_MAXLEN];
+  characters = new uchar_t[SIMPLESTRING_MAXLEN];
 }
 
 bool SimpleString::isalpha(unsigned int n) const {
@@ -47,15 +47,15 @@ void SimpleString::toupper(unsigned int n) {
 }
 
 void SimpleString::append(const wchar_t* ch, size_t ch_len) {
-	/* ensure that buffer is not full */
-	if (length > SIMPLESTRING_MAXLEN) {
-		return;
-	}
+  /* ensure that buffer is not full */
+  if (length > SIMPLESTRING_MAXLEN) {
+    return;
+  }
 
-	/* make sure we do not write more bytes than available */
-	if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
-		ch_len = SIMPLESTRING_MAXLEN - length;
-	}
+  /* make sure we do not write more bytes than available */
+  if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
+    ch_len = SIMPLESTRING_MAXLEN - length;
+  }
 
   for (size_t idx=0; idx<ch_len; ++idx) {
     characters[length++] = ch[idx];
@@ -64,18 +64,18 @@ void SimpleString::append(const wchar_t* ch, size_t ch_len) {
 
 void SimpleString::append(const char* ch, size_t ch_len) {
   //fprintf(stderr, "APPEND\n");
-	/* ensure that buffer is not full */
-	if (length > SIMPLESTRING_MAXLEN) {
-		return;
-	}
+  /* ensure that buffer is not full */
+  if (length > SIMPLESTRING_MAXLEN) {
+    return;
+  }
 
-	/* make sure we do not write more bytes than available */
-	if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
-		ch_len = SIMPLESTRING_MAXLEN - length;
-	}
+  /* make sure we do not write more bytes than available */
+  if ((length + ch_len) > SIMPLESTRING_MAXLEN) {
+    ch_len = SIMPLESTRING_MAXLEN - length;
+  }
 
-	/* convert and copy characters */
-	for (size_t idx=0; idx<ch_len; ++idx) {
+  /* convert and copy characters */
+  for (size_t idx=0; idx<ch_len; ++idx) {
     uchar_codepoint_t codepoint = 0;
     if ((ch[idx] & 0x80) == 0) {
       codepoint = ch[idx];
@@ -106,9 +106,9 @@ void SimpleString::append(const char* ch, size_t ch_len) {
     } else {
       throw GenericError("invalid character");
     }
-		characters[length++] = codepoint;
+    characters[length++] = codepoint;
     //fprintf(stderr, "0x%04x\n", codepoint);
-	}
+  }
 }
 
 size_t SimpleString::get_buffer_size() const {
@@ -117,18 +117,18 @@ size_t SimpleString::get_buffer_size() const {
 
 size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
   size_t idx;
-	const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
+  const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
 
-	for (idx=0; idx<len; ++idx) {
-		if ((characters[idx].codepoint&0x80) != 0x00) {
-			dst[idx] = '?';
-		} else {
-    	dst[idx] = (char)characters[idx].codepoint;
-		}
+  for (idx=0; idx<len; ++idx) {
+    if ((characters[idx].codepoint&0x80) != 0x00) {
+      dst[idx] = '?';
+    } else {
+      dst[idx] = (char)characters[idx].codepoint;
+    }
   }
 
-	dst[idx] = 0;
-	return idx;
+  dst[idx] = 0;
+  return idx;
 }
 
 void SimpleString::print(FILE* out) const {
@@ -148,35 +148,35 @@ const uint32_t byte_mark = 0x80;
 
 size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
   size_t idx;     /* index in source string
-	                 * must be <length
-									 */
-	size_t count;
+                   * must be <length
+                   */
+  size_t count;
 
-	for (idx=0, count=0; idx<length && count<buffer_size-4; ++idx) {
-		const uint32_t &value = characters[idx].full_codepoint();
+  for (idx=0, count=0; idx<length && count<buffer_size-4; ++idx) {
+    const uint32_t& value = characters[idx].full_codepoint();
     //fprintf(stderr, "value = 0x%08x\n", value);
     if (value < 0x80) {
       dst[count++] = static_cast<byte>(characters[idx].codepoint);
-		} else if (value < 0x800) {
-			dst[count++] = ((char)(value>>6) | 0xc0);
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
-		} else if (value < 0x10000) {
-			dst[count++] = ((char)(value>>12) | 0xE0);
-			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
-		} else if (value < UNI_MAX_LEGAL_UTF32) {
-			dst[count++] = ((char)(value>>18) | 0xf0);
-			dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
-			dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
-			dst[count++] = ((char)value | byte_mark) & byte_mask;
-		} else {
-			dst[count++] = '?';
-		}
+    } else if (value < 0x800) {
+      dst[count++] = ((char)(value>>6) | 0xc0);
+      dst[count++] = ((char)value | byte_mark) & byte_mask;
+    } else if (value < 0x10000) {
+      dst[count++] = ((char)(value>>12) | 0xE0);
+      dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
+      dst[count++] = ((char)value | byte_mark) & byte_mask;
+    } else if (value < UNI_MAX_LEGAL_UTF32) {
+      dst[count++] = ((char)(value>>18) | 0xf0);
+      dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
+      dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
+      dst[count++] = ((char)value | byte_mark) & byte_mask;
+    } else {
+      dst[count++] = '?';
+    }
   }
 
-	/* do not increment cur, because we do not count the terminating \0 */
-	dst[count] = 0;
-	return count;
+  /* do not increment cur, because we do not count the terminating \0 */
+  dst[count] = 0;
+  return count;
 }
 
 size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
@@ -184,7 +184,7 @@ size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
   size_t nbytes;
   char* ptr = dst;
   mbstate_t state;
-  
+
   memset(&state, '\0', sizeof(state));
   for (idx=0; idx<length; ++idx) {
     if (buffer_size < (size_t)MB_CUR_MAX) {
@@ -209,7 +209,7 @@ size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
     return -1;
   }
   ptr         += nbytes;
-  
+
   return (ptr - dst);
 }
 

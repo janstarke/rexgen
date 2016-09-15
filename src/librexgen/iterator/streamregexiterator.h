@@ -58,7 +58,7 @@ class StreamRegexIterator : public Iterator {
 
   callback_fp callback;
   wchar_t buffer[STREAMREGEXITERATOR_MAXLEN];
-	size_t length;
+  size_t length;
   bool __hasNext;
 };
 

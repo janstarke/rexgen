@@ -41,7 +41,7 @@ static const size_t SIMPLESTRING_MAXLEN=512;
 class SimpleString {
  public:
   SimpleString();
-	~SimpleString() { delete[] characters; }
+  ~SimpleString() { delete[] characters; }
 
   uchar_t& operator[](size_t idx) {
     return characters[idx];
@@ -55,22 +55,22 @@ class SimpleString {
    */
   size_t to_external_string(char* buffer, size_t buffer_size) const;
 
-	bool can_change_case(size_t idx) const {
+  bool can_change_case(size_t idx) const {
     uchar_t tmp = characters[idx];
     tmp.toggle_case();
     return tmp.codepoint != characters[idx].codepoint;
-	}
+  }
 
-	void set_preserve_case() {
-		for (size_t idx=0; idx<length; ++idx) {
-			UCHAR_SET_PRESERVE_CASE(characters[idx]);
-		}
-	}
+  void set_preserve_case() {
+    for (size_t idx=0; idx<length; ++idx) {
+      UCHAR_SET_PRESERVE_CASE(characters[idx]);
+    }
+  }
 
-	inline
-	void toggle_case(size_t idx) {
-		characters[idx].toggle_case();
-	}
+  inline
+  void toggle_case(size_t idx) {
+    characters[idx].toggle_case();
+  }
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;
@@ -80,24 +80,24 @@ class SimpleString {
   void toupper(unsigned int n);
 
   inline void push_back(const char ch) {
-		if (length >= SIMPLESTRING_MAXLEN) { return; }
-		characters[length++] = ch;
-	}
+    if (length >= SIMPLESTRING_MAXLEN) { return; }
+    characters[length++] = ch;
+  }
 
   inline void push_back(const uchar_t& c) {
-		if (length >= SIMPLESTRING_MAXLEN) { return; }
-		characters[length++] = c;
-	}
+    if (length >= SIMPLESTRING_MAXLEN) { return; }
+    characters[length++] = c;
+  }
   void append(const char* ch, const size_t ch_len);
   void append(const wchar_t* ch, const size_t ch_len);
-	void append(const SimpleString& other) {
+  void append(const SimpleString& other) {
     const size_t chars_to_copy = std::min(SIMPLESTRING_MAXLEN-length, other.length);
     memcpy(
       &characters[length],
       &other.characters[0],
       chars_to_copy*sizeof(characters[0]));
     length += chars_to_copy;
-	}
+  }
 
   void clear()        { length=0; }
   size_t size() const { return length;  }
@@ -107,9 +107,9 @@ class SimpleString {
   void print(FILE* out) const;
 
  protected:
-	uchar_t* characters;
-	size_t length;
-	bool use_nonansi;
+  uchar_t* characters;
+  size_t length;
+  bool use_nonansi;
 };
 
 #endif /* __cplusplus */

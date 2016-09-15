@@ -36,14 +36,14 @@ class RegexContainer : public Regex {
     }
   }
 
-	virtual bool usesCallback() const {
-		for (auto re: regexObjects) {
-			if (re->usesCallback()) {
-				return true;
-			}
-		}
-		return Regex::usesCallback();
-	}
+  virtual bool usesCallback() const {
+    for (auto re: regexObjects) {
+      if (re->usesCallback()) {
+        return true;
+      }
+    }
+    return Regex::usesCallback();
+  }
 
  protected:
   deque<Regex*>* getChildren() { return &regexObjects; }

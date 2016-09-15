@@ -29,8 +29,8 @@ CaseIterator::CaseIterator(Iterator* __child, int options)
 
 CaseIterator::~CaseIterator() {
   if (child != NULL) {
-		delete child;
-	}
+    delete child;
+  }
 }
 
 bool CaseIterator::readNextFromChild() {
@@ -64,7 +64,7 @@ bool CaseIterator::readNextFromChild() {
 
   /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
   if (handle_case == CASE_PRESERVE) {
-		word.set_preserve_case();
+    word.set_preserve_case();
   }
 
   return childHadNext;
@@ -90,7 +90,7 @@ bool CaseIterator::next() {
   }
 
   fast_next();
-	return true;
+  return true;
 }
 
 inline void CaseIterator::fast_next() {
@@ -117,10 +117,10 @@ inline void CaseIterator::fast_next() {
   //fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
   //assert(j < changeable_characters.size());
-	word.toggle_case(changeable_characters[j]);
+  word.toggle_case(changeable_characters[j]);
   --k;
 }
 
 void CaseIterator::value(SimpleString& dst) const {
-	dst.append(word);
+  dst.append(word);
 }

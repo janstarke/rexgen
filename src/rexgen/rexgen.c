@@ -179,10 +179,10 @@ size_t callback(wchar_t* dst, const size_t buffer_size) {
 
   if (feof(infile)) {
     free(buffer);
-    return 0; 
+    return 0;
   }
 
-	/* read next word */
+  /* read next word */
   if (fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile) == NULL) {
     free(buffer);
     return 0;
@@ -190,9 +190,9 @@ size_t callback(wchar_t* dst, const size_t buffer_size) {
 
   /* convert multibyte to wchar_t */
   memset(&state, '\0', sizeof(state));
-  while (count < buffer_size && 
-          *ptr != '\0' && *ptr != '\r' && *ptr != '\n') {
-    
+  while (count < buffer_size &&
+         *ptr != '\0' && *ptr != '\r' && *ptr != '\n') {
+
     nbytes = mbrtowc(dst, ptr, MB_CUR_MAX, &state);
     if (nbytes == 0 || nbytes == (size_t)-2) {
       free(buffer);
@@ -279,7 +279,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   c_iterator_delete_state_buffer(state);
 #endif /* DEBUG_STATE */
 
-	buffer = c_simplestring_new();
+  buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
     c_simplestring_to_external_string(buffer, binary_string, sizeof(binary_string));

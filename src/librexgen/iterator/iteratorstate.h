@@ -34,11 +34,11 @@ class IteratorState {
   IteratorState() : streamIterator(NULL) {
   }
 
-	virtual ~IteratorState() {
-		if (streamIterator != NULL) {
-			delete streamIterator;
-		}
-	}
+  virtual ~IteratorState() {
+    if (streamIterator != NULL) {
+      delete streamIterator;
+    }
+  }
 
   void registerIterator(int id, Iterator* iterator) {
     groupIterators[id] = iterator;

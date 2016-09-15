@@ -29,27 +29,28 @@
 class TopIterator : public Iterator {
  public:
   TopIterator(Regex* re) : Iterator(re->getId()) {
-  	needWord = false;
-  	state = new IteratorState();
-		child = re->iterator(state);
-	}
+    needWord = false;
+    state = new IteratorState();
+    child = re->iterator(state);
+  }
 
   ~TopIterator() {
-		/* StreamIterator is managed by IteratorState; it will be deleted there */
+    /* StreamIterator is managed by IteratorState; it will be deleted there */
     if (child != NULL && child != state->getStreamIterator()) {
       delete child;
     }
 
-		if (state != NULL) {
-			delete state;
-		}
+    if (state != NULL) {
+      delete state;
+    }
   }
 
   bool next() {
     if (needWord) {
       bool res = state->getStreamIterator()->forceNext();
-      if (res)
+      if (res) {
         needWord = false;
+      }
       return res;
     }
     bool res = child->next();
@@ -65,15 +66,15 @@ class TopIterator : public Iterator {
   void value(SimpleString& dst) const { child->value(dst); }
   bool hasNext() const { return child->hasNext(); }
   void updateReferences(IteratorState* /* ignore */) {
-		if (child != NULL && state != NULL) {
-    	child->updateReferences(state);
-		}
+    if (child != NULL && state != NULL) {
+      child->updateReferences(state);
+    }
   }
 
   void updateAttributes(IteratorState* /* ignore */ ) {
     if (child != NULL && state != NULL) {
-			child->updateAttributes(state);
-		}
+      child->updateAttributes(state);
+    }
   }
 
   SerializableState* getCurrentState() const {

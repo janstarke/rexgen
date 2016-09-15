@@ -48,9 +48,9 @@ class Iterator {
   int getId() const { return id; }
   virtual int getState() const { return state; }
   virtual void setState(int _state) {
-    if (_state < static_cast<int>(resetted)) state = not_usable;
-    else if (_state > static_cast<int>(not_usable)) state = not_usable;
-    else state = static_cast<state_t>(_state);
+    if (_state < static_cast<int>(resetted)) { state = not_usable; }
+    else if (_state > static_cast<int>(not_usable)) { state = not_usable; }
+    else { state = static_cast<state_t>(_state); }
   }
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
   virtual void updateAttributes(IteratorState* /* iterState */) = 0;
