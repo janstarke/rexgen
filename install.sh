@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-. ./build.config
+. ./src/build.config
 . ${BASEDIR}/build.sh
 
 cd ${BUILDDIR}

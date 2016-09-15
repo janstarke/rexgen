@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-. ./build.config
+. ./src/build.config
 
 if test ! -d ${BUILDDIR}; then
 	mkdir ${BUILDDIR}
@@ -10,7 +10,7 @@ echo "entering ${BUILDDIR}"
 OLD_CWD=$(pwd)
 cd ${BUILDDIR}
 
-echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR} <<<"
-cmake ${CMAKE_OPTIONS} ${BASEDIR} && make
+echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR}/src <<<"
+cmake ${CMAKE_OPTIONS} ${BASEDIR}/src && make
 
 cd ${OLD_CWD}
