@@ -3,10 +3,5 @@
 . ./src/build.config
 . ${BASEDIR}/build.sh
 
-cd ${BUILDDIR}
+( cd ${BUILDDIR}; sudo make install)
 
-cmake ..
-
-sudo make install
-
-cd ${BASEDIR}
