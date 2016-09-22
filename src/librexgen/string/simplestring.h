@@ -18,25 +18,26 @@
 */
 
 
-#ifndef SIMPLESTRING_H
-#define SIMPLESTRING_H
+#ifndef SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
+#define SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 
+#include <librexgen/string/uchar.h>
+#include <librexgen/string/unicode.h>
+#include <librexgen/osdepend.h>
+#include <librexgen/c/simplestring.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
 #include <array>
-#include <librexgen/string/uchar.h>
-#include <librexgen/string/unicode.h>
-#include <librexgen/osdepend.h>
-#include <librexgen/c/simplestring.h>
+#include <algorithm>
 
 #ifdef __cplusplus
 
 using std::vector;
 using std::array;
 
-static const size_t SIMPLESTRING_MAXLEN=512;
+static const size_t SIMPLESTRING_MAXLEN = 512;
 
 class SimpleString {
  public:
@@ -56,13 +57,13 @@ class SimpleString {
   size_t to_external_string(char* buffer, size_t buffer_size) const;
 
   bool can_change_case(size_t idx) const {
-    uchar_t tmp = characters[idx];
+    uchar_t tmp(characters[idx]);
     tmp.toggle_case();
     return tmp.codepoint != characters[idx].codepoint;
   }
 
   void set_preserve_case() {
-    for (size_t idx=0; idx<length; ++idx) {
+    for (size_t idx=0; idx < length; ++idx) {
       UCHAR_SET_PRESERVE_CASE(characters[idx]);
     }
   }
@@ -81,7 +82,7 @@ class SimpleString {
 
   inline void push_back(const char ch) {
     if (length >= SIMPLESTRING_MAXLEN) { return; }
-    characters[length++] = ch;
+    characters[length++] = uchar_t(ch);
   }
 
   inline void push_back(const uchar_t& c) {
@@ -91,7 +92,8 @@ class SimpleString {
   void append(const char* ch, const size_t ch_len);
   void append(const wchar_t* ch, const size_t ch_len);
   void append(const SimpleString& other) {
-    const size_t chars_to_copy = std::min(SIMPLESTRING_MAXLEN-length, other.length);
+    const size_t chars_to_copy =
+            std::min(SIMPLESTRING_MAXLEN-length, other.length);
     memcpy(
       &characters[length],
       &other.characters[0],
@@ -99,7 +101,7 @@ class SimpleString {
     length += chars_to_copy;
   }
 
-  void clear()        { length=0; }
+  void clear()        { length = 0; }
   size_t size() const { return length;  }
   bool empty() const  { return (length == 0); }
   size_t get_buffer_size() const;
@@ -114,4 +116,4 @@ class SimpleString {
 
 #endif /* __cplusplus */
 
-#endif /* SIMPLESTRING_H */
+#endif  // SRC_LIBREXGEN_STRING_SIMPLESTRING_H_

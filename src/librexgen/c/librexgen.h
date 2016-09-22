@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __librexgen_api_c_h__
-#define __librexgen_api_c_h__
+#ifndef SRC_LIBREXGEN_C_LIBREXGEN_H_
+#define SRC_LIBREXGEN_C_LIBREXGEN_H_
 
 #include <stdio.h>
 #include <wchar.h>
@@ -51,4 +51,4 @@ int c_regex_uses_callback(c_regex_ptr i);
 }
 #endif
 
-#endif /* __librexgen_api_c_h__ */
+#endif  /* SRC_LIBREXGEN_C_LIBREXGEN_H_ */

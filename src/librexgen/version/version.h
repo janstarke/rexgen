@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef SRC_LIBREXGEN_VERSION_VERSION_H_
+#define SRC_LIBREXGEN_VERSION_VERSION_H_
 #include <librexgen/osdepend.h>
 
 #ifdef __cplusplus
@@ -32,7 +32,8 @@ extern "C" {
 #define xstr(s) str(s)
 #define str(s) #s
 
-#define JS_REGEX_RELEASE xstr(JS_REGEX_MAJOR_VERSION) "." xstr(JS_REGEX_MINOR_VERSION)
+#define JS_REGEX_RELEASE xstr(JS_REGEX_MAJOR_VERSION) "." \
+        xstr(JS_REGEX_MINOR_VERSION)
 
 EXPORT
 const char* rexgen_version();
@@ -44,4 +45,4 @@ unsigned int rexgen_version_int();
 }
 #endif
 
-#endif /* __VERSION_H__ */
+#endif /* SRC_LIBREXGEN_VERSION_VERSION_H_ */

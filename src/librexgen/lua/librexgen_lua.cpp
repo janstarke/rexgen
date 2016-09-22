@@ -24,7 +24,6 @@
 #include <librexgen/string/simplestring.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/osdepend.h>
-#include <vector>
 
 extern "C" {
 #include <lua5.2/lua.h>
@@ -32,6 +31,7 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 
+#include <vector>
 #include <string>
 
 static const luaL_Reg rexgen_lib[] = {

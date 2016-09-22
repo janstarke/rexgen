@@ -18,8 +18,8 @@
 */
 
 
-#ifndef API_C_ITERATOR_H
-#define API_C_ITERATOR_H
+#ifndef SRC_LIBREXGEN_C_ITERATOR_H_
+#define SRC_LIBREXGEN_C_ITERATOR_H_
 
 #include <assert.h>
 #include <librexgen/string/unicode.h>
@@ -64,5 +64,5 @@ void c_iterator_delete_state_buffer(char* srcptr);
 }
 #endif
 
-#endif /* API_C_ITERATOR_H */
+#endif  /* SRC_LIBREXGEN_C_ITERATOR_H_ */
 

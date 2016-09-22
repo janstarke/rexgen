@@ -57,13 +57,13 @@ void SimpleString::append(const wchar_t* ch, size_t ch_len) {
     ch_len = SIMPLESTRING_MAXLEN - length;
   }
 
-  for (size_t idx=0; idx<ch_len; ++idx) {
-    characters[length++] = ch[idx];
+  for (size_t idx=0; idx < ch_len; ++idx) {
+    characters[length++] = uchar_t(ch[idx]);
   }
 }
 
 void SimpleString::append(const char* ch, size_t ch_len) {
-  //fprintf(stderr, "APPEND\n");
+  // fprintf(stderr, "APPEND\n");
   /* ensure that buffer is not full */
   if (length > SIMPLESTRING_MAXLEN) {
     return;
@@ -75,7 +75,7 @@ void SimpleString::append(const char* ch, size_t ch_len) {
   }
 
   /* convert and copy characters */
-  for (size_t idx=0; idx<ch_len; ++idx) {
+  for (size_t idx=0; idx < ch_len; ++idx) {
     uchar_codepoint_t codepoint = 0;
     if ((ch[idx] & 0x80) == 0) {
       codepoint = ch[idx];
@@ -83,15 +83,15 @@ void SimpleString::append(const char* ch, size_t ch_len) {
       ((ch[idx  ] & 0b11100000) == 0b11000000) &&
       (idx+1 < ch_len)                         &&
       ((ch[idx+1] & 0b11000000) == 0b10000000)) {
-      codepoint  = (ch[idx++]&0b00011111)<<6;
+      codepoint  = (ch[idx++]&0b00011111) << 6;
       codepoint |= (ch[idx  ]&0b00111111);
     } else if (
       ((ch[idx  ] & 0b11110000) == 0b11100000) &&
       (idx+2 < ch_len)                         &&
       ((ch[idx+1] & 0b11000000) == 0b10000000) &&
       ((ch[idx+2] & 0b11000000) == 0b10000000)) {
-      codepoint  = (ch[idx++]&0b00001111)<<12;
-      codepoint |= (ch[idx++]&0b00111111)<<6;
+      codepoint  = (ch[idx++]&0b00001111) << 12;
+      codepoint |= (ch[idx++]&0b00111111) << 6;
       codepoint |= (ch[idx  ]&0b00111111);
     } else if (
       ((ch[idx  ] & 0b11111000) == 0b11110000) &&
@@ -99,15 +99,15 @@ void SimpleString::append(const char* ch, size_t ch_len) {
       ((ch[idx+1] & 0b11000000) == 0b10000000) &&
       ((ch[idx+2] & 0b11000000) == 0b10000000) &&
       ((ch[idx+3] & 0b11000000) == 0b10000000)) {
-      codepoint  = (ch[idx++]&0b00000111)<<15;
-      codepoint |= (ch[idx++]&0b00111111)<<12;
-      codepoint |= (ch[idx++]&0b00111111)<<6;
+      codepoint  = (ch[idx++]&0b00000111) << 15;
+      codepoint |= (ch[idx++]&0b00111111) << 12;
+      codepoint |= (ch[idx++]&0b00111111) << 6;
       codepoint |= (ch[idx  ]&0b00111111);
     } else {
       throw GenericError("invalid character");
     }
-    characters[length++] = codepoint;
-    //fprintf(stderr, "0x%04x\n", codepoint);
+    characters[length++] = uchar_t(codepoint);
+    // fprintf(stderr, "0x%04x\n", codepoint);
   }
 }
 
@@ -117,13 +117,13 @@ size_t SimpleString::get_buffer_size() const {
 
 size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
   size_t idx;
-  const size_t len = (length>=buffer_size) ? (buffer_size-1) : (length);
+  const size_t len = (length >= buffer_size) ? (buffer_size-1) : (length);
 
-  for (idx=0; idx<len; ++idx) {
+  for (idx=0; idx < len; ++idx) {
     if ((characters[idx].codepoint&0x80) != 0x00) {
       dst[idx] = '?';
     } else {
-      dst[idx] = (char)characters[idx].codepoint;
+      dst[idx] = static_cast<char>(characters[idx].codepoint);
     }
   }
 
@@ -132,7 +132,7 @@ size_t SimpleString::to_ansi_string(char* dst, const size_t buffer_size) const {
 }
 
 void SimpleString::print(FILE* out) const {
-  for (size_t idx=0; idx<length; ++idx) {
+  for (size_t idx=0; idx < length; ++idx) {
     fputc(characters[idx].codepoint, out);
   }
 }
@@ -147,28 +147,26 @@ const uint32_t byte_mask = 0xbf;
 const uint32_t byte_mark = 0x80;
 
 size_t SimpleString::to_utf8_string(char* dst, const size_t buffer_size) const {
-  size_t idx;     /* index in source string
-                   * must be <length
-                   */
+  size_t idx;     /* index in source string must be <length */
   size_t count;
 
-  for (idx=0, count=0; idx<length && count<buffer_size-4; ++idx) {
+  for (idx=0, count=0; idx < length && count < buffer_size-4; ++idx) {
     const uint32_t& value = characters[idx].full_codepoint();
-    //fprintf(stderr, "value = 0x%08x\n", value);
+    // fprintf(stderr, "value = 0x%08x\n", value);
     if (value < 0x80) {
       dst[count++] = static_cast<byte>(characters[idx].codepoint);
     } else if (value < 0x800) {
-      dst[count++] = ((char)(value>>6) | 0xc0);
-      dst[count++] = ((char)value | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value>>6) | 0xc0);
+      dst[count++] = (static_cast<char>(value) | byte_mark) & byte_mask;
     } else if (value < 0x10000) {
-      dst[count++] = ((char)(value>>12) | 0xE0);
-      dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
-      dst[count++] = ((char)value | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value>>12) | 0xE0);
+      dst[count++] = (static_cast<char>(value>>6) | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value) | byte_mark) & byte_mask;
     } else if (value < UNI_MAX_LEGAL_UTF32) {
-      dst[count++] = ((char)(value>>18) | 0xf0);
-      dst[count++] = ((char)(value>>12) | byte_mark) & byte_mask;
-      dst[count++] = ((char)(value>>6) | byte_mark) & byte_mask;
-      dst[count++] = ((char)value | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value>>18) | 0xf0);
+      dst[count++] = (static_cast<char>(value>>12) | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value>>6) | byte_mark) & byte_mask;
+      dst[count++] = (static_cast<char>(value) | byte_mark) & byte_mask;
     } else {
       dst[count++] = '?';
     }
@@ -186,7 +184,7 @@ size_t SimpleString::to_external_string(char* dst, size_t buffer_size) const {
   mbstate_t state;
 
   memset(&state, '\0', sizeof(state));
-  for (idx=0; idx<length; ++idx) {
+  for (idx=0; idx < length; ++idx) {
     if (buffer_size < (size_t)MB_CUR_MAX) {
       return (size_t)-1;
     }

@@ -18,8 +18,8 @@
 */
 
 
-#ifndef API_C_SIMPLESTRING_H
-#define API_C_SIMPLESTRING_H
+#ifndef SRC_LIBREXGEN_C_SIMPLESTRING_H_
+#define SRC_LIBREXGEN_C_SIMPLESTRING_H_
 
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
@@ -57,4 +57,4 @@ void c_simplestring_clear(c_simplestring_ptr s);
 }
 #endif
 
-#endif /* API_C_SIMPLESTRING_H */
+#endif  /* SRC_LIBREXGEN_C_SIMPLESTRING_H_ */

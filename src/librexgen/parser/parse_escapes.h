@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __parse_escapes_h__
-#define __parse_escapes_h__
+#ifndef SRC_LIBREXGEN_PARSER_PARSE_ESCAPES_H_
+#define SRC_LIBREXGEN_PARSER_PARSE_ESCAPES_H_
 
 /* returns the codepoint of the character; e.g.
  * 'A'          => 0x0041
@@ -32,4 +32,4 @@ uint16_t parseFirstCharacter(const char* c);
 uint8_t parseHexChar(char c);
 uint32_t parseHexString(const char* ptr, size_t length);
 
-#endif /* __parse_escapes_h__ */
+#endif  // SRC_LIBREXGEN_PARSER_PARSE_ESCAPES_H_

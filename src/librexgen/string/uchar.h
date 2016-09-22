@@ -18,8 +18,8 @@
 */
 
 
-#ifndef __uchar_h__
-#define __uchar_h__
+#ifndef SRC_LIBREXGEN_STRING_UCHAR_H_
+#define SRC_LIBREXGEN_STRING_UCHAR_H_
 
 #include <stdint.h>
 #include <stddef.h>
@@ -45,16 +45,22 @@ typedef wchar_t uchar_codepoint_t;
 #define UCHAR_FLAGS_PRESERVE_CASE       0x02
 #define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
+#define UCHAR_CAN_CHANGE_CASE(a)                                  \
+/* NOLINT(runtime/references) */ (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
 
-#define UCHAR_CAN_CHANGE_CASE(a) (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
-#define UCHAR_MUST_CHANGE_CASE(a) ((a).flags&UCHAR_CHANGE_CASE && !((a).flags&UCHAR_PRESERVE_CASE))
-#define UCHAR_MUST_PRESERVE_CASE(a) ((a).flags&UCHAR_FLAGS_PRESERVE_CASE)
+#define UCHAR_MUST_CHANGE_CASE(a)                                 \
+/* NOLINT(runtime/references) */ ((a).flags&UCHAR_CHANGE_CASE &&  \
+/* NOLINT(runtime/references) */ !((a).flags&UCHAR_PRESERVE_CASE))
+
+#define UCHAR_MUST_PRESERVE_CASE(a)                               \
+/* NOLINT(runtime/references) */ ((a).flags&UCHAR_FLAGS_PRESERVE_CASE)
+
 #define UCHAR_SET_CHANGE_CASE(a) do {            \
   (a).flags |= UCHAR_FLAGS_CHANGE_CASE;          \
-  (a).flags &= (! UCHAR_FLAGS_PRESERVE_CASE );   \
+  (a).flags &= (!UCHAR_FLAGS_PRESERVE_CASE);   \
 } while (0)
 #define UCHAR_SET_PRESERVE_CASE(a) do {          \
-  (a).flags &= (! UCHAR_FLAGS_CHANGE_CASE );     \
+  (a).flags &= (!UCHAR_FLAGS_CHANGE_CASE);     \
   (a).flags |= UCHAR_FLAGS_PRESERVE_CASE;        \
 } while (0)
 
@@ -66,9 +72,12 @@ struct __uchar_t {
 
 #ifdef __cplusplus
   __uchar_t() : codepoint(0xfffe), flags(0) {}
-  __uchar_t(uchar_codepoint_t cp): codepoint(cp), flags(0) {}
-  __uchar_t(const struct __uchar_t& other) : codepoint(other.codepoint),
-    flags(other.flags) {}
+  explicit __uchar_t(uchar_codepoint_t cp)
+          :codepoint(cp), flags(0) {}
+
+  /* the copy constructor should not be explicit */
+  __uchar_t(const struct __uchar_t& other) /* NOLINT(runtime/explicit) */
+          :codepoint(other.codepoint), flags(other.flags) {}
   /*
   __uchar_t& operator= (const __uchar_t& other) {
     if (this != &other) {
@@ -78,8 +87,19 @@ struct __uchar_t {
     return *this;
   }
   */
-  bool operator==(const __uchar_t& other) const { return codepoint == other.codepoint; }
-  uint32_t full_codepoint() const {return (uint32_t)codepoint;}
+  bool operator==(const __uchar_t& other) const {
+    return codepoint == other.codepoint;
+  }
+
+  __uchar_t& operator= (const struct __uchar_t& other) {
+    codepoint = other.codepoint;
+    flags = other.flags;
+    return *this;
+  }
+
+  uint32_t full_codepoint() const {
+    return (uint32_t)codepoint;
+  }
 
  public:
   inline
@@ -94,4 +114,4 @@ struct __uchar_t {
 };
 typedef struct __uchar_t uchar_t;
 
-#endif
+#endif  /* SRC_LIBREXGEN_STRING_UCHAR_H_ */

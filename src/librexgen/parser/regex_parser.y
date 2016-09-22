@@ -162,7 +162,7 @@ SimpleRegex: T_ANY_CHAR {
 ClassRegex:
     CharacterClassDigit { $$ = $1; }
   | CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter('-'); }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(uchar_t('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
     SimpleClassContent  { $$ = $1; }
@@ -175,27 +175,27 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange($1, $3);
+      $$->addRange(uchar_t($1), uchar_t($3));
 	}
 	| CharacterClassDigit { $$ = $1; }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter($1);
+    $$->addCharacter(uchar_t($1));
   }
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
     $$ = new ClassRegex();
-    $$->addRange('0', '9');
+    $$->addRange(uchar_t('0'), uchar_t('9'));
 	}
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange('a', 'z');
-    $$->addRange('A', 'Z');
-    $$->addRange('0', '9');
-    $$->addCharacter('_');
+    $$->addRange(uchar_t('a'), uchar_t('z'));
+    $$->addRange(uchar_t('A'), uchar_t('Z'));
+    $$->addRange(uchar_t('0'), uchar_t('9'));
+    $$->addCharacter(uchar_t('_'));
   }
   
 GroupRegex:

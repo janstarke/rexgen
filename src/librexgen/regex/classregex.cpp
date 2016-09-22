@@ -21,7 +21,6 @@
 #include <vector>
 #include <librexgen/regex/classregex.h>
 #include <librexgen/string/uchar.h>
-#include <librexgen/common/math.h>
 
 void ClassRegex::merge(const ClassRegex* other) {
   for (auto  i =  other->characters.crbegin();
@@ -46,7 +45,7 @@ void ClassRegex::__insert_character(const uchar_t& ch) {
 }
 
 void ClassRegex::removeCharacterInstances(const uchar_t& ch) {
-  auto match_fct = [&ch](uchar_t x) {return x.codepoint==ch.codepoint;};
+  auto match_fct = [&ch](const uchar_t& x) {return x.codepoint==ch.codepoint;};
   characters.erase(
     std::remove_if(characters.begin(), characters.end(), match_fct),
     characters.end());
@@ -65,7 +64,7 @@ void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
   }
 
   while (a != uch_b.codepoint + diff) {
-    __append_character(a);
+    __append_character(uchar_t(a));
     a += diff;
   }
 }

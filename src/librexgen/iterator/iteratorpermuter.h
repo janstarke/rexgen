@@ -18,30 +18,25 @@
 */
 
 
-#ifndef ITERATORPERMUTER_H
-#define ITERATORPERMUTER_H
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATORPERMUTER_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATORPERMUTER_H_
 
-#include <vector>
-#include <algorithm>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorcontainer.h>
 
-using namespace std;
-
 class Regex;
 
 class IteratorPermuter : public IteratorContainer {
-
  public:
   void value(SimpleString& dst) const;
   bool hasNext() const;
-  IteratorPermuter(int _id, const Regex* re, IteratorState* is, unsigned int min,
-                   unsigned int max);
+  IteratorPermuter(int _id, const Regex* re, IteratorState* is,
+                   unsigned int min, unsigned int max);
   ~IteratorPermuter();
   bool next();
   void init();
-  unsigned long long int size() const;
+  uint64_t size() const;
  private:
   bool existsIteratorWithNextElement() const;
 
@@ -54,4 +49,4 @@ class IteratorPermuter : public IteratorContainer {
 };
 
 
-#endif // ITERATORPERMUTER_H
+#endif  // SRC_LIBREXGEN_ITERATOR_ITERATORPERMUTER_H_

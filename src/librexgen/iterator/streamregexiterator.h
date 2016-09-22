@@ -18,8 +18,8 @@
 */
 
 
-#ifndef STREAMREGEXITERATOR_H
-#define STREAMREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
@@ -53,6 +53,7 @@ class StreamRegexIterator : public Iterator {
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
+
  private:
   void readNextWord();
 
@@ -62,4 +63,4 @@ class StreamRegexIterator : public Iterator {
   bool __hasNext;
 };
 
-#endif // STREAMREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_

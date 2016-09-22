@@ -17,27 +17,25 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __regexcontainer_h__
-#define __regexcontainer_h__
+#ifndef SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_
+#define SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_
 
-#include <deque>
-#include <algorithm>
 #include <librexgen/regex/regex.h>
 #include <librexgen/debug.h>
 #include <librexgen/string/simplestring.h>
-
-using namespace std;
+#include <deque>
+#include <algorithm>
 
 class RegexContainer : public Regex {
  public:
   virtual ~RegexContainer() {
-    for (auto re: regexObjects) {
+    for (auto re : regexObjects) {
       delete re;
     }
   }
 
   virtual bool usesCallback() const {
-    for (auto re: regexObjects) {
+    for (auto re : regexObjects) {
       if (re->usesCallback()) {
         return true;
       }
@@ -46,8 +44,8 @@ class RegexContainer : public Regex {
   }
 
  protected:
-  deque<Regex*>* getChildren() { return &regexObjects; }
-  deque<Regex*> regexObjects;
+  std::deque<Regex*>* getChildren() { return &regexObjects; }
+  std::deque<Regex*> regexObjects;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_

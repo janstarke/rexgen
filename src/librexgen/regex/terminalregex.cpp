@@ -18,15 +18,11 @@
 */
 
 #include <librexgen/regex/terminalregex.h>
-#include <librexgen/iterator/iteratorpermuter.h>
-#include <librexgen/string/unicode.h>
-#include <vector>
 
 
 void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for (vector<uchar_t>::const_iterator iter=tre->value.begin();
-       iter!=tre->value.end(); ++iter) {
-    value.insert(value.begin(), *iter);
+  for (const uchar_t &i : tre->value) {
+    this->value.insert(this->value.begin(), i);
   }
 }
 

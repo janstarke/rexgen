@@ -17,14 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-
-#include <assert.h>
-#include <algorithm>
-#include <cstdlib>
-#include <set>
 #include <librexgen/iterator/compoundregexiterator.h>
-#include <librexgen/debug.h>
-#include <librexgen/string/unicode.h>
 
 CompoundRegexIterator::CompoundRegexIterator(int _id)
   : IteratorContainer(_id) {
@@ -34,12 +27,12 @@ bool CompoundRegexIterator::next() {
   if (state == resetted) {
     state = usable;
     bool res = false;
-    for (auto i: iterators) {
+    for (auto i : iterators) {
       res |= i->next();
     }
     return res;
   }
-  for (auto i: iterators) {
+  for (auto i : iterators) {
     if (i->next()) {
       return true;
     }
@@ -48,8 +41,8 @@ bool CompoundRegexIterator::next() {
 }
 
 void CompoundRegexIterator::value(SimpleString& dst) const {
-  //assert(canUseValue());
-  for (auto i: iterators) {
+  // assert(canUseValue());
+  for (auto i : iterators) {
     i->value(dst);
   }
 }
@@ -59,7 +52,7 @@ bool CompoundRegexIterator::hasNext() const {
   if (state == not_usable) {
     return false;
   }
-  for (auto i: iterators) {
+  for (auto i : iterators) {
     has_next |= i->hasNext();
   }
   return has_next;
@@ -67,7 +60,7 @@ bool CompoundRegexIterator::hasNext() const {
 
 SerializableState* CompoundRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
-  for (auto i: iterators) {
+  for (auto i : iterators) {
     s->addValue(i->getCurrentState());
   }
   return s;
@@ -76,7 +69,7 @@ SerializableState* CompoundRegexIterator::getCurrentState() const {
 void CompoundRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
 
-  for (auto i:iterators) {
+  for (auto i : iterators) {
     i->setCurrentState(s->getChildState(i->getId()));
   }
 }
