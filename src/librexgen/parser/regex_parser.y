@@ -115,6 +115,7 @@ T_RegexAlternatives:
       context->result = $$;
       $$->setGroupId(0);
       context->updateAllGroupReferences();
+			context->checkCycles();
   };
   
 T_RegexAlternatives:

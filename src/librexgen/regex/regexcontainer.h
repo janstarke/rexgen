@@ -22,6 +22,7 @@
 
 #include <deque>
 #include <algorithm>
+#include <functional>
 #include <librexgen/regex/regex.h>
 #include <librexgen/debug.h>
 #include <librexgen/string/simplestring.h>
@@ -44,6 +45,18 @@ class RegexContainer : public Regex {
     }
     return Regex::usesCallback();
   }
+
+	void mapToConstChildren(function<void (const Regex*)> fct) const {
+		for (auto r : regexObjects) {
+			fct(r);
+		}
+	}
+
+	void mapToChildren(function<void (const Regex*)> fct) {
+		for (auto r : regexObjects) {
+			fct(r);
+		}
+	}
 
  protected:
   deque<Regex*>* getChildren() { return &regexObjects; }

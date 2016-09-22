@@ -36,12 +36,12 @@ Regex* parse_regex(RexgenParserContext* context) {
     if (yyparse(context) != 0) {
       return NULL;
     }
+		if (context->hasInvalidGroupReferences()) {
+			throw SyntaxError("This regular expression has an invalid back reference");
+		}
   } catch (SyntaxError& exc) {
-    cerr << exc.getMessage() << endl;
+		c_rexgen_set_last_error(exc.getMessage());
     return NULL;
-  }
-  if (context->hasInvalidGroupReferences()) {
-    throw SyntaxError("This regular expression has an invalid back reference");
   }
   return context->result;
 }

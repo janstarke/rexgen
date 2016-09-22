@@ -55,6 +55,7 @@ class RexgenParserContext {
   const map<int, Regex*>& getGroups() const;
 
   void updateAllGroupReferences();
+	void checkCycles() const;
   void updateGroupReferences(const Regex* re);
   bool hasInvalidGroupReferences() const;
 
@@ -78,6 +79,8 @@ class RexgenParserContext {
   map<int, set <GroupReference*> *> groupRefs;
   map<int, Regex*> groups;
   StreamRegex* streamRegex;
+
+	void checkCycles(int groupId, const Regex* re) const;
 };
 
 #endif // REXGENPARSERCONTEXT_H

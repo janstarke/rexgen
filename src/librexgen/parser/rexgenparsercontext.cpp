@@ -19,13 +19,43 @@
 
 
 #include <librexgen/parser/rexgenparsercontext.h>
+#include <librexgen/parser/syntaxerror.h>
+#include <librexgen/regex/regexcontainer.h>
 #include <algorithm>
 #include <utility>
 
 void RexgenParserContext::updateAllGroupReferences() {
-  for (map<int, Regex*>::const_iterator p=groups.begin(); p!=groups.end(); ++p) {
-    updateGroupReferences((*p).second);
+  for (auto p : groups) {
+    updateGroupReferences(p.second);
   }
+}
+
+void RexgenParserContext::checkCycles() const {
+  for (auto p : groups) {
+		checkCycles(p.first, dynamic_cast<const Regex*>(p.second));
+  }
+}
+
+
+void RexgenParserContext::checkCycles(int gId, const Regex* re) const {
+	switch (re->getRegexType()) {
+		case Reference:
+			if (re->getGroupId() == gId) {
+					throw SyntaxError("invalid group reference found");
+			}
+			break;
+
+		case Alternative:
+		case Compound:
+			dynamic_cast<const RegexContainer*>
+				(re)->mapToConstChildren([gId,this](const Regex* r) {
+					this->checkCycles(gId, r);
+				});
+			break;
+
+		default:
+			break;
+	}
 }
 
 void RexgenParserContext::updateGroupReferences(const Regex* re) {
@@ -69,6 +99,7 @@ void RexgenParserContext::registerGroupReference(GroupReference* gr) {
     groupRefs[gr->getGroupId()] = new set<GroupReference* >();
     references = groupRefs.find(gr->getGroupId());
   }
+
   (*references).second->insert(gr);
 }
 
