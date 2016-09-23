@@ -26,6 +26,7 @@
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
+#include <librexgen/common/bool.h>
 #include "terms.h"
 
 static const wchar_t REPLACEMENT_CHARACTER = 0xfffd;
@@ -34,15 +35,10 @@ static const wchar_t REPLACEMENT_CHARACTER = 0xfffd;
 typedef char _TCHAR;
 #endif
 
-#ifndef __cplusplus
-typedef int bool;
-#define false 0
-#define true 1
-#endif
-
 static char regex_buffer[512];
 FILE* infile = NULL;
 const _TCHAR* infile_name =  NULL;
+bool use_regex_backreferences = false;
 
 #ifdef YYDEBUG
 #if YYDEBUG == 1
@@ -63,6 +59,7 @@ static void rexgen_usage() {
           "OPTIONS:\n"
           "   -f <file>: read from file; use - to read from stdin\n"
           "              you can use \\0 to refer to the current line\n"
+					"   -B         Backreferences refer to regexes instead to values\n"
           "   -w:        display warranty information\n"
           "   -c:        display redistribution conditions\n"
           "   -v:        display version information\n");
@@ -148,6 +145,9 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
       ++n;
       infile_name = argv[n];
       break;
+		case 'B':
+			use_regex_backreferences = true;
+			break;
     default:
       fprintf(stderr, "invalid argument\n");
       rexgen_usage();
@@ -250,7 +250,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb(regex_str, callback);
+  regex = c_regex_cb(regex_str, callback, use_regex_backreferences);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
@@ -263,7 +263,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     goto cleanup_and_exit;
   }
 
-  iter = c_regex_iterator(regex);
+  iter = c_regex_iterator(regex, use_regex_backreferences);
   if (iter == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

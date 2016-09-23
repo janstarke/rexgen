@@ -46,10 +46,12 @@ void c_rexgen_set_last_error(const char* msg) {
 EXPORT
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  callback_fp cb) {
+  callback_fp cb,
+	bool use_regex_backreferences) {
 
   RexgenOptions options;
   options.stream_callback = cb;
+	options.use_regex_backreferences = use_regex_backreferences;
 
   return parse_regex(regex_str, options);
 }

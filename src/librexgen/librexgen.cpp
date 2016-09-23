@@ -60,7 +60,7 @@ Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
   if (re == NULL) {
     return NULL;
   }
-  Iterator* iter = new TopIterator(re);
+  Iterator* iter = new TopIterator(re, options.use_regex_backreferences);
   // register regex alternatives
   iter->updateReferences(NULL);
 

@@ -31,7 +31,7 @@ using namespace std;
 class IteratorState {
  public:
 
-  IteratorState() : streamIterator(NULL) {
+  IteratorState() : streamIterator(NULL), useRegexBackreferences(false) {
   }
 
   virtual ~IteratorState() {
@@ -59,10 +59,13 @@ class IteratorState {
 
   void setStreamIterator(StreamRegexIterator* iter) {if (streamIterator == NULL) { streamIterator = iter;}}
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
+	void setUseRegexBackreferences(bool use) { useRegexBackreferences = use; }
+	bool getUseRegexBackreferences() const { return useRegexBackreferences; }
 
  private:
   map<int, Iterator*> groupIterators;
   StreamRegexIterator* streamIterator;
+	bool useRegexBackreferences;
 };
 
 #endif // ITERATORSTATE_H

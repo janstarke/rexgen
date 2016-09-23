@@ -102,7 +102,7 @@
 %type <class_regex> CharacterClassDigit
 %type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
-%type <group_reference> GroupReference;
+%type <regex> GroupReference;
 %type <stream_regex> Stream;
 
 
@@ -218,8 +218,13 @@ Quantifier:
   };
 
 GroupReference: T_GROUPID {
-  $$ = new GroupReference($1);
-  context->registerGroupReference($$);
+	if (context->useRegexBackreferences()) {
+		$$ = context->cloneCaptureGroup($1);
+	} else {
+  	GroupReference* re = new GroupReference($1);
+  	context->registerGroupReference(re);
+		$$ = re;
+	}
 };
 
 Stream: T_STREAM {

@@ -32,9 +32,10 @@ using namespace std;
 class RegexContainer : public Regex {
  public:
   virtual ~RegexContainer() {
-    for (auto re: regexObjects) {
-      delete re;
-    }
+    //for (auto re: regexObjects) {
+    //  delete re;
+    //}
+		regexObjects.clear();
   }
 
   virtual bool usesCallback() const {

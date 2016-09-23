@@ -28,9 +28,10 @@
 
 class TopIterator : public Iterator {
  public:
-  TopIterator(Regex* re) : Iterator(re->getId()) {
+  TopIterator(Regex* re, bool use_regex_backreferences) : Iterator(re->getId()) {
     needWord = false;
     state = new IteratorState();
+		state->setUseRegexBackreferences(use_regex_backreferences);
     child = re->iterator(state);
   }
 

@@ -68,7 +68,10 @@ class RexgenParserContext {
   FILE* getInFile() const { return options.infile; }
   callback_fp getStreamCallback() const { return options.stream_callback; }
 
+	bool useRegexBackreferences() const { return options.use_regex_backreferences; }
+
   Regex* getStreamRegex();
+	Regex* cloneCaptureGroup(int gId);
 
  protected:
   void InitScanner();

@@ -41,10 +41,12 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
 Iterator* RegexAlternatives::iterator(IteratorState* state) const {
   Iterator* iter = NULL;
 
-  iter = state->getIterator(getGroupId());
-  if (iter != NULL) {
-    return iter;
-  }
+	if (! state->getUseRegexBackreferences()) {
+		iter = state->getIterator(getGroupId());
+		if (iter != NULL) {
+			return iter;
+		}
+	}
 
   if (regexObjects.size() == 1) {
     Regex* re = regexObjects[0];

@@ -24,6 +24,7 @@
 #include <wchar.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/version.h>
+#include <librexgen/common/bool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,7 +40,8 @@ void c_rexgen_set_last_error(const char* msg);
 EXPORT
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  callback_fp cb);
+  callback_fp cb,
+	bool use_regex_backreferences);
 
 EXPORT
 void c_regex_delete(c_regex_ptr regex);

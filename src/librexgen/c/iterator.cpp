@@ -25,17 +25,18 @@
 #include <librexgen/parser/syntaxerror.h>
 #include <librexgen/version/version.h>
 #include <librexgen/c/librexgen.h>
+#include <librexgen/common/bool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 EXPORT
-c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
+c_iterator_ptr c_regex_iterator(c_regex_ptr regex, bool use_regex_backreferences) {
   if (regex == NULL) {
     return NULL;
   }
-  Iterator* iter = new TopIterator(static_cast<Regex*>(regex));
+  Iterator* iter = new TopIterator(static_cast<Regex*>(regex), use_regex_backreferences);
   // register regex alternatives
   iter->updateReferences(NULL);
 

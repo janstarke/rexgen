@@ -40,7 +40,6 @@ class CompoundRegex : public RegexContainer {
   Iterator* iterator(IteratorState* state) const;
 
   Iterator* singleIterator(IteratorState* state) const;
-
 };
 
 #endif // COMPOUNDREGEX_H

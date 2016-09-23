@@ -34,7 +34,7 @@ extern "C" {
 typedef void* c_iterator_ptr;
 
 EXPORT
-c_iterator_ptr c_regex_iterator(c_regex_ptr regex);
+c_iterator_ptr c_regex_iterator(c_regex_ptr regex, bool useRegexBackreferences);
 
 EXPORT
 c_iterator_ptr c_regex_iterator_cb(

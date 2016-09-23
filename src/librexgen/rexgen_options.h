@@ -30,11 +30,13 @@ class RexgenOptions {
     : ignore_case(false),
       encoding(CHARSET_UTF8),
       infile(NULL),
-      stream_callback(NULL) { }
+      stream_callback(NULL),
+			use_regex_backreferences(false) { }
   bool ignore_case;
   charset encoding;
   FILE* infile;
   callback_fp stream_callback;
+	bool use_regex_backreferences;
 };
 
 #endif

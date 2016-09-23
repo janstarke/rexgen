@@ -144,3 +144,8 @@ Regex* RexgenParserContext::getStreamRegex() {
     return gr;
   }
 }
+
+Regex* RexgenParserContext::cloneCaptureGroup(int gId) {
+	Regex* re = groups[gId];
+	return re;
+}
