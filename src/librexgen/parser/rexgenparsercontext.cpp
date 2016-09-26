@@ -49,7 +49,7 @@ void RexgenParserContext::checkCycles(int gId, const Regex* re) const {
 		case Alternative:
 		case Compound:
 			dynamic_cast<const RegexContainer*>
-				(re)->mapToConstChildren([gId,this](const Regex* r) {
+				(re)->mapToChildren([gId,this](const Regex* r) {
 					this->checkCycles(gId, r);
 				});
 			break;

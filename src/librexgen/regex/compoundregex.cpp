@@ -28,9 +28,9 @@ void CompoundRegex::prependRegex(Regex* regex) {
 
   /* optimization for terminals */
   if (regex->getRegexType() == Terminal) {
-    if (regexObjects.size() > 0) {
-      if (regexObjects[0]->getRegexType() == Terminal) {
-        TerminalRegex* tre = reinterpret_cast<TerminalRegex*>(regexObjects[0]);
+    if (children() > 0) {
+      if (firstChild()->getRegexType() == Terminal) {
+        TerminalRegex* tre = reinterpret_cast<TerminalRegex*>(firstChild());
         if (regex->getMinOccurs() == 1
             && regex->getMaxOccurs() == 1
             && tre->getMinOccurs() == 1
@@ -46,37 +46,35 @@ void CompoundRegex::prependRegex(Regex* regex) {
     }
   }
 
-  regexObjects.push_front(regex);
+  push_front(regex);
   LEAVE_METHOD;
 }
 
 void CompoundRegex::appendRegex(Regex* regex) {
   ENTER_METHOD;
-  regexObjects.push_back(regex);
+  push_back(regex);
   LEAVE_METHOD;
 }
 
 Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
-  if (regexObjects.size() == 1) {
-    return regexObjects[0]->iterator(state);
+  if (children() == 1) {
+    return firstChild()->iterator(state);
   }
 
   CompoundRegexIterator* cri = new CompoundRegexIterator(getId());
-  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end(); ++iter) {
-    cri->addChild((*iter)->iterator(state));
-  }
+  mapToChildren([&cri, state](const Regex* re){
+    cri->addChild(re->iterator(state));
+  });
   return cri;
 }
 
 Iterator* CompoundRegex::iterator(IteratorState* state) const {
-  if (regexObjects.size() == 1) {
-    Regex* re = regexObjects[0];
+  if (children() == 1) {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return re->iterator(state);
+      return firstChild()->iterator(state);
     } else {
       return new IteratorPermuter(
-               re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+              firstChild()->getId(), firstChild(), state, getMinOccurs(), getMaxOccurs());
     }
   }
   return RegexContainer::iterator(state);

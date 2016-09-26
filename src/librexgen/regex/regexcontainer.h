@@ -32,7 +32,7 @@ using namespace std;
 class RegexContainer : public Regex {
  public:
 
-  void mapToConstChildren(function<void (const Regex*)> fct) const {
+  void mapToChildren(function<void (const Regex*)> fct) const {
     for (auto r : regexObjects) {
       fct(r);
     }
@@ -58,9 +58,17 @@ class RegexContainer : public Regex {
     return Regex::usesCallback();
   }
 
+protected:
+  size_t children() const { return regexObjects.size(); }
 
- protected:
   deque<Regex*>* getChildren() { return &regexObjects; }
+        Regex* firstChild()       {return regexObjects[0];}
+  const Regex* firstChild() const {return regexObjects[0];}
+
+  void push_front(Regex* re) {regexObjects.push_front(re);}
+  void push_back(Regex* re) {regexObjects.push_back(re);}
+
+private:
   deque<Regex*> regexObjects;
 };
 

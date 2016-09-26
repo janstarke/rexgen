@@ -26,15 +26,14 @@
 using namespace std;
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
-  if (regexObjects.size() == 1) {
-    return regexObjects[0]->iterator(state);
+  if (children() == 1) {
+    return firstChild()->iterator(state);
   }
 
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end(); iter++) {
-    rai->addChild((*iter)->iterator(state));
-  }
+  mapToChildren([&rai, state](const Regex* re){
+    rai->addChild(re->iterator(state));});
+
   return rai;
 }
 
@@ -48,13 +47,12 @@ Iterator* RegexAlternatives::iterator(IteratorState* state) const {
 		}
 	}
 
-  if (regexObjects.size() == 1) {
-    Regex* re = regexObjects[0];
+  if (children() == 1) {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      iter = re->iterator(state);
+      iter = firstChild()->iterator(state);
     } else {
       iter = new IteratorPermuter(
-        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
+              firstChild()->getId(), firstChild(), state, getMinOccurs(), getMaxOccurs());
     }
   } else {
     iter = RegexContainer::iterator(state);
