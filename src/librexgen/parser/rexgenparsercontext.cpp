@@ -21,6 +21,7 @@
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <librexgen/regex/regexcontainer.h>
+#include <librexgen/regex/regexbackreference.h>
 #include <algorithm>
 #include <utility>
 
@@ -147,5 +148,5 @@ Regex* RexgenParserContext::getStreamRegex() {
 
 Regex* RexgenParserContext::cloneCaptureGroup(int gId) {
 	Regex* re = groups[gId];
-	return re;
+	return new RegexBackreference(re);
 }

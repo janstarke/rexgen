@@ -31,10 +31,21 @@ using namespace std;
 
 class RegexContainer : public Regex {
  public:
+
+  void mapToConstChildren(function<void (const Regex*)> fct) const {
+    for (auto r : regexObjects) {
+      fct(r);
+    }
+  }
+
+  void mapToChildren(function<void (const Regex*)> fct) {
+    for (auto r : regexObjects) {
+      fct(r);
+    }
+  }
+
   virtual ~RegexContainer() {
-    //for (auto re: regexObjects) {
-    //  delete re;
-    //}
+    mapToChildren([](const Regex* re) {delete re;});
 		regexObjects.clear();
   }
 
@@ -47,17 +58,6 @@ class RegexContainer : public Regex {
     return Regex::usesCallback();
   }
 
-	void mapToConstChildren(function<void (const Regex*)> fct) const {
-		for (auto r : regexObjects) {
-			fct(r);
-		}
-	}
-
-	void mapToChildren(function<void (const Regex*)> fct) {
-		for (auto r : regexObjects) {
-			fct(r);
-		}
-	}
 
  protected:
   deque<Regex*>* getChildren() { return &regexObjects; }
