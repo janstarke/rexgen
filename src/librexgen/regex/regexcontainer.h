@@ -61,7 +61,6 @@ class RegexContainer : public Regex {
 protected:
   size_t children() const { return regexObjects.size(); }
 
-  deque<Regex*>* getChildren() { return &regexObjects; }
         Regex* firstChild()       {return regexObjects[0];}
   const Regex* firstChild() const {return regexObjects[0];}
 

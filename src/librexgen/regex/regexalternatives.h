@@ -32,7 +32,7 @@ class RegexAlternatives : public RegexContainer {
  public:
   RegexAlternatives(): RegexContainer(), groupId(-1),handle_case(CASE_IGNORE) {
   }
-  inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
+  inline void addRegex(Regex* regex) { push_front(regex); }
 
   RegexType getRegexType() const { return Alternative; }
 
