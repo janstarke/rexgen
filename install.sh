@@ -5,7 +5,7 @@
 
 cd ${BUILDDIR}
 
-cmake ..
+cmake .
 
 sudo make install
 
