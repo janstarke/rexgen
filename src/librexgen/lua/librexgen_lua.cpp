@@ -81,7 +81,7 @@ extern "C" {
     iter->value(str);
     const size_t buffer_size = (str.size()+1)*4;
     buffer = new char[buffer_size];
-    size_t bytes = str.to_binary_string(buffer, buffer_size);
+    size_t bytes = str.to_ansi_string(buffer, buffer_size);
     lua_pushlstring(L, buffer, bytes);
     delete [] buffer;
     str.clear();
