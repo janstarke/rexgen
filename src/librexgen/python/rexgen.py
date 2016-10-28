@@ -6,8 +6,8 @@ class SimpleString:
 		self.c_simplestring_new = rexgen.c_simplestring_new
 		self.c_simplestring_new.restype = c_void_p
 
-		self.c_simplestring_to_binary_string = rexgen.c_simplestring_to_binary_string
-		self.c_simplestring_to_binary_string.argtypes = [c_void_p, c_char_p, c_uint]
+		self.c_simplestring_to_ansi_string = rexgen.c_simplestring_to_ansi_string
+		self.c_simplestring_to_ansi_string.argtypes = [c_void_p, c_char_p, c_uint]
 
 		self.c_simplestring_clear = rexgen.c_simplestring_clear
 		self.c_simplestring_clear.argtypes = [c_void_p]
@@ -21,7 +21,7 @@ class SimpleString:
 	def next(self, raw_iterator):
 		self.c_simplestring_clear(self.__str)
 		self.c_iterator_value(raw_iterator, self.__str)
-		self.c_simplestring_to_binary_string(self.__str, self.__buffer, self.__len)
+		self.c_simplestring_to_ansi_string(self.__str, self.__buffer, self.__len)
 		return self.__buffer.value
 
 class Iterator:
