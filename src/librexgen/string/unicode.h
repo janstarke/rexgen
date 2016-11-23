@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __unicode_h__
-#define __unicode_h__
+#ifndef SRC_LIBREXGEN_STRING_UNICODE_H_
+#define SRC_LIBREXGEN_STRING_UNICODE_H_
 #include <stdarg.h>
 
 /* for readability issues:
@@ -41,7 +41,8 @@ typedef char byte;
 #endif
 
 typedef wchar_t char_type;
-#define utf_snprintf(buffer,count,format,...) _snwprintf((buffer),(count),format,__VA_ARGS__)
+#define utf_snprintf(buffer, count, format, ...) \
+           _snwprintf((buffer), (count), format, __VA_ARGS__)
 #define utf_strlen wcslen
 #define utf_strncat wcsncat
 #define utf_strncpy wcsncpy
@@ -73,4 +74,4 @@ typedef uint32_t char_type;
 
 #endif /* _WIN32 */
 
-#endif /* __unicode_h__ */
+#endif /* SRC_LIBREXGEN_STRING_UNICODE_H_ */

@@ -18,20 +18,19 @@
 */
 
 
-#ifndef TERMINALREGEXITERATOR_H
-#define TERMINALREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_TERMINALREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_TERMINALREGEXITERATOR_H_
 
-#include <string.h>
-#include <vector>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/debug.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/state/invaliditeratoridexception.h>
+#include <string.h>
+#include <vector>
 
 class TerminalRegexIterator : public Iterator {
  public:
-
   TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements);
 
   bool next() {
@@ -39,13 +38,13 @@ class TerminalRegexIterator : public Iterator {
     state = usable;
     return res;
   }
-  void value(SimpleString& dst) const;
+  void value(SimpleString* dst) const;
   bool hasNext() const { return state == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
  private:
-  vector<uchar_t> terminal;
+  std::vector<uchar_t> terminal;
 };
 
-#endif // TERMINALREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_TERMINALREGEXITERATOR_H_

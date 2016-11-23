@@ -18,22 +18,21 @@
 */
 
 
-#ifndef STREAMREGEX_H
-#define STREAMREGEX_H
+#ifndef SRC_LIBREXGEN_REGEX_STREAMREGEX_H_
+#define SRC_LIBREXGEN_REGEX_STREAMREGEX_H_
 
-#include <cstdio>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/iterator/iteratorstate.h>
+#include <cstdio>
 
 class StreamRegex : public Regex {
-
  public:
   Iterator* iterator(IteratorState* state) const;
   Iterator* singleIterator(IteratorState* state) const;
 
-  StreamRegex(callback_fp cb);
+  explicit StreamRegex(callback_fp cb);
 
   RegexType getRegexType () const { return Stream; }
   bool usesCallback() const { return true; }
@@ -42,4 +41,4 @@ class StreamRegex : public Regex {
   callback_fp callback;
 };
 
-#endif // STREAMREGEX_H
+#endif  // SRC_LIBREXGEN_REGEX_STREAMREGEX_H_

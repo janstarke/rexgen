@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef SERIALIZABLESTATE_H
-#define SERIALIZABLESTATE_H
+#ifndef SRC_LIBREXGEN_STATE_SERIALIZABLESTATE_H_
+#define SRC_LIBREXGEN_STATE_SERIALIZABLESTATE_H_
 
 #ifdef __cplusplus
 #include <stdint.h>
@@ -35,7 +35,7 @@ class SerializableState {
  public:
   typedef int32_t stateword_t;
   explicit SerializableState(stateword_t id, stateword_t state);
-  SerializableState(const stateword_t* vptr, size_t& words);
+  SerializableState(const stateword_t* vptr, size_t* words);
   ~SerializableState();
   void serialize(vector<stateword_t>* dst) const;
   int getIteratorId() const { return iterator_id; }
@@ -58,4 +58,4 @@ class SerializableState {
 
 #endif /* __cplusplus */
 
-#endif /* SERIALIZABLESTATE_H */
+#endif /* SRC_LIBREXGEN_STATE_SERIALIZABLESTATE_H_ */

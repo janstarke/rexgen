@@ -18,29 +18,23 @@
 */
 
 
-#ifndef COMPOUNDREGEX_H
-#define COMPOUNDREGEX_H
+#ifndef SRC_LIBREXGEN_REGEX_COMPOUNDREGEX_H_
+#define SRC_LIBREXGEN_REGEX_COMPOUNDREGEX_H_
 
-#include <deque>
 #include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexcontainer.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 
-using namespace std;
-
 class CompoundRegex : public RegexContainer {
  public:
-
   void prependRegex(Regex* regex);
   void appendRegex(Regex* regex);
-  void getRawValue(string& target);
   RegexType getRegexType() const { return Compound; }
   Iterator* iterator(IteratorState* state) const;
 
   Iterator* singleIterator(IteratorState* state) const;
-
 };
 
-#endif // COMPOUNDREGEX_H
+#endif  // SRC_LIBREXGEN_REGEX_COMPOUNDREGEX_H_

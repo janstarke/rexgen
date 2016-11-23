@@ -23,8 +23,7 @@
 ClassRegexIterator::ClassRegexIterator(
   int _id, const uchar_t* classcontent, size_t elements)
   :Iterator(_id), current(-1), characters(elements) {
-
-  for (size_t n=0; n<elements; ++n) {
+  for (size_t n=0; n < elements; ++n) {
     characters[n] = classcontent[n];
   }
   state = usable;
@@ -33,20 +32,11 @@ ClassRegexIterator::ClassRegexIterator(
 bool ClassRegexIterator::next() {
   ++current;
 
-  if (current >= (int)characters.size()) {
+  if (current >= static_cast<int>(characters.size())) {
     current = 0;
     return false;
   }
   return true;
-}
-
-bool ClassRegexIterator::previous() {
-  bool reset = (current == 0);
-  if (reset) {
-    current = (int)characters.size();
-  }
-  --current;
-  return (! reset);
 }
 
 SerializableState* ClassRegexIterator::getCurrentState() const {

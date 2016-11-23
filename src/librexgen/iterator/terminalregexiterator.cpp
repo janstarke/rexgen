@@ -27,9 +27,9 @@ TerminalRegexIterator::TerminalRegexIterator(int _id, const uchar_t* _terminal,
   }
 }
 
-void TerminalRegexIterator::value(SimpleString& dst) const {
-  for (auto ch: terminal) {
-    dst.push_back(ch);
+void TerminalRegexIterator::value(SimpleString* dst) const {
+  for (auto ch : terminal) {
+    dst->push_back(ch);
   }
 }
 

@@ -18,18 +18,19 @@
 */
 
 
-#ifndef CASEITERATOR_H
-#define CASEITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_CASEITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_CASEITERATOR_H_
 
 #include <librexgen/iterator/iteratorcontainer.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
+#include <cinttypes>
+#include <vector>
 
 #ifdef __cplusplus
 
 class CaseIterator : public IteratorContainer {
  public:
-
   CaseIterator(Iterator* _child, int options);
   virtual ~CaseIterator();
 
@@ -37,7 +38,9 @@ class CaseIterator : public IteratorContainer {
   bool next();
   void fast_next();
 
-  void value(SimpleString& /* dst */ ) const;
+  void value(SimpleString* dst) const {
+    dst->append(word);
+  }
 
   virtual SerializableState* getCurrentState() const {
     return new SerializableState(getId(), getState());
@@ -49,7 +52,6 @@ class CaseIterator : public IteratorContainer {
     }
   }
 
-
  private:
   Iterator* child;
   int handle_case;
@@ -57,20 +59,19 @@ class CaseIterator : public IteratorContainer {
   SimpleString word;
 
 #if __x86_64__
-  typedef long long unsigned int counter_t;
+  typedef std::uint64_t counter_t;
   static const unsigned int max_fast_character_bytes = 64;
 #else
-  typedef long unsigned int counter_t;
+  typedef std::uint32_t counter_t;
   static const unsigned int max_fast_character_bytes = 32;
 #endif
 
   counter_t k;
   unsigned int j;
   unsigned int parity;
-  vector<int> changeable_characters;
-
+  std::vector<int> changeable_characters;
 };
 
 #endif /* __cplusplus */
 
-#endif /* CASEITERATOR_H */
+#endif /* SRC_LIBREXGEN_ITERATOR_CASEITERATOR_H_ */

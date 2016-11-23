@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2016  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,37 +17,15 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef SRC_LIBREXGEN_C_LIBREXGEN_H_
-#define SRC_LIBREXGEN_C_LIBREXGEN_H_
+#ifndef SRC_LIBREXGEN_C_TYPES_H_
+#define SRC_LIBREXGEN_C_TYPES_H_
 
-#include <librexgen/c/types.h>
-#include <librexgen/c/iterator.h>
-#include <librexgen/c/simplestring.h>
-#include <librexgen/version.h>
-#include <stdio.h>
-#include <wchar.h>
+/* do not include cstddef, because types.h must be includable
+ * by ANSI-C code
+ */
+#include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef void* c_regex_ptr;
+typedef size_t (*callback_fp)(wchar_t* dst, const size_t buffer_size);
 
-EXPORT
-const char* c_rexgen_get_last_error();
-void c_rexgen_set_last_error(const char* msg);
-
-EXPORT
-c_regex_ptr c_regex_cb(
-  const char* regex_str,
-  callback_fp cb);
-
-EXPORT
-void c_regex_delete(c_regex_ptr regex);
-
-EXPORT
-int c_regex_uses_callback(c_regex_ptr i);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* SRC_LIBREXGEN_C_LIBREXGEN_H_ */
+#endif  /* SRC_LIBREXGEN_C_TYPES_H_ */

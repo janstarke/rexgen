@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __librexgen_lua_h__
-#define __librexgen_lua_h__
+#ifndef SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
+#define SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
@@ -44,4 +44,4 @@ extern "C" {
   int rexgen_iter(lua_State* L);
 }
 
-#endif /* __librexgen_lua_h__ */
+#endif /* SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_ */

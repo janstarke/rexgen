@@ -18,4 +18,4 @@
  *
  */
 
-#include "invaliditeratoridexception.h"
+#include <librexgen/state/invaliditeratoridexception.h>

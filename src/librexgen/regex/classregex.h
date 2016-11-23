@@ -18,19 +18,16 @@
 */
 
 
-#ifndef CLASSREGEX_H
-#define CLASSREGEX_H
+#ifndef SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
+#define SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
 
-#include <vector>
-#include <string>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/classregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
-
-using namespace std;
+#include <vector>
 
 class ClassRegex : public Regex {
  public:
@@ -47,7 +44,7 @@ class ClassRegex : public Regex {
   void __insert_character(const uchar_t& ch);
   void __append_character(const uchar_t& ch);
   void removeCharacterInstances(const uchar_t& ch);
-  vector<uchar_t> characters;
+  std::vector<uchar_t> characters;
 };
 
-#endif // CLASSREGEX_H
+#endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
