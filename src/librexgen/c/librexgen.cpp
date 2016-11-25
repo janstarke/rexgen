@@ -17,17 +17,10 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <cstdio>
 #include <librexgen/c/librexgen.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/string/simplestring.h>
 #include <librexgen/librexgen.h>
-#include <librexgen/parser/syntaxerror.h>
-
-using namespace std;
 
 static const char* c_rexgen_last_error = NULL;
 
@@ -45,9 +38,8 @@ void c_rexgen_set_last_error(const char* msg) {
 
 EXPORT
 c_regex_ptr c_regex_cb(
-  const char* regex_str,
-  callback_fp cb) {
-
+    const char* regex_str,
+    callback_fp cb) {
   RexgenOptions options;
   options.stream_callback = cb;
 
@@ -70,4 +62,3 @@ int c_regex_uses_callback(c_regex_ptr i) {
 #ifdef __cplusplus
 }
 #endif
-

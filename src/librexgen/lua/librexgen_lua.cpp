@@ -17,7 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#include "librexgen_lua.h"
+#include <librexgen/lua/librexgen_lua.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>

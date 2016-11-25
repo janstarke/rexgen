@@ -61,13 +61,12 @@ set(librexgen_sources
 
 	librexgen.cpp
 
-	c/librexgen.cpp
-	c/iterator.cpp
+				c/librexgen.cpp
+        c/iterator.cpp
 	c/simplestring.cpp
 )
 set(parser_sources
-  ${BISON_regexparser_OUTPUTS}
-)
+  ${BISON_regexparser_OUTPUTS} )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")

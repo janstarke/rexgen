@@ -18,10 +18,9 @@
 */
 
 
-#ifndef ITERATOR_H
-#define ITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATOR_H_
 
-#include <assert.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/osdepend.h>
@@ -33,24 +32,27 @@ class IteratorState;
 
 class Iterator {
  public:
-
-  Iterator(int _id):
+  explicit Iterator(int _id):
     state(resetted),
     id(_id) {}
   virtual ~Iterator() {}
 
   virtual bool hasNext() const { return false; }
   virtual bool next() = 0;
-  virtual void value(SimpleString& /* dst */ ) const { }
+  virtual void value(SimpleString* /* dst */) const { }
 
   virtual bool canUseValue() const { return (state == usable); }
 
   int getId() const { return id; }
   virtual int getState() const { return state; }
   virtual void setState(int _state) {
-    if (_state < static_cast<int>(resetted)) { state = not_usable; }
-    else if (_state > static_cast<int>(not_usable)) { state = not_usable; }
-    else { state = static_cast<state_t>(_state); }
+    if (_state < static_cast<int>(resetted)) {
+      state = not_usable;
+    } else if (_state > static_cast<int>(not_usable)) {
+      state = not_usable;
+    } else {
+      state = static_cast<state_t>(_state);
+    }
   }
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
   virtual void updateAttributes(IteratorState* /* iterState */) = 0;
@@ -68,7 +70,6 @@ class Iterator {
   }
 
  protected:
-
   enum state_t {
     resetted,
     usable,
@@ -81,4 +82,4 @@ class Iterator {
 
 #endif /* __cplusplus */
 
-#endif /* ITERATOR_H */
+#endif /* SRC_LIBREXGEN_ITERATOR_ITERATOR_H_ */

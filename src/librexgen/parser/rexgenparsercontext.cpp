@@ -62,16 +62,16 @@ RexgenParserContext::~RexgenParserContext() {
 
 void RexgenParserContext::registerGroupReference(GroupReference* gr) {
   /* this is needed to later set the refered Regex */
-  map<int, set<GroupReference*>*>::iterator references = groupRefs.find(
-        gr->getGroupId());
+  std::map<int, std::set<GroupReference*>*>::iterator references =
+          groupRefs.find(gr->getGroupId());
   if (references == groupRefs.end()) {
-    groupRefs[gr->getGroupId()] = new set<GroupReference* >();
+    groupRefs[gr->getGroupId()] = new std::set<GroupReference* >();
     references = groupRefs.find(gr->getGroupId());
   }
   (*references).second->insert(gr);
 }
 
-const set<GroupReference*>* RexgenParserContext::getGroupReferences(
+const std::set<GroupReference*>* RexgenParserContext::getGroupReferences(
   int id) const {
   auto references = groupRefs.find(id);
   if (references == groupRefs.end()) {
@@ -84,14 +84,14 @@ void RexgenParserContext::registerGroup(Regex* re) {
   groups[re->getGroupId()] = re;
 }
 Regex* RexgenParserContext::getGroupRegex(int id) const {
-  map<int, Regex*>::const_iterator iter = groups.find(id);
+  std::map<int, Regex*>::const_iterator iter = groups.find(id);
   if (iter != groups.end()) {
     return iter->second;
   }
   return NULL;
 }
 
-const map<int, Regex*>& RexgenParserContext::getGroups() const {
+const std::map<int, Regex*>& RexgenParserContext::getGroups() const {
   return groups;
 }
 

@@ -39,7 +39,7 @@ IteratorPermuter::~IteratorPermuter() {
   }
 }
 
-void IteratorPermuter::value(SimpleString& dst) const {
+void IteratorPermuter::value(SimpleString* dst) const {
   ENTER_METHOD;
   for (unsigned int n=0; n < occurs; ++n) {
     iterators[n]->value(dst);

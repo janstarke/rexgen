@@ -20,11 +20,9 @@
 #include <librexgen/iterator/streamregexiterator.h>
 #include <cstdio>
 
-using namespace std;
-
 void StreamRegexIterator::readNextWord() {
   __hasNext = false;
-  assert (callback != NULL);
+  assert(callback != NULL);
   length = callback(&buffer[0], STREAMREGEXITERATOR_MAXLEN);
   if (length > 0) {
     __hasNext = true;
@@ -39,6 +37,6 @@ SerializableState* StreamRegexIterator::getCurrentState() const {
 
 void StreamRegexIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
-  //fseek(infile, s->getValue(0), SEEK_SET);
+  // fseek(infile, s->getValue(0), SEEK_SET);
 }
 

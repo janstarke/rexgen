@@ -18,26 +18,23 @@
 */
 
 
-#ifndef REXGENPARSERCONTEXT_H
-#define REXGENPARSERCONTEXT_H
+#ifndef SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_
+#define SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_
 
+#include <librexgen/regex/streamregex.h>
+#include <librexgen/regex/groupreference.h>
+#include <librexgen/string/uchar.h>
+#include <librexgen/rexgen_options.h>
 #include <iostream>
 #include <map>
 #include <set>
 #include <cstdio>
-#include <librexgen/regex/groupreference.h>
-#include <librexgen/regex/streamregex.h>
-#include <librexgen/string/uchar.h>
-#include <librexgen/rexgen_options.h>
-
-using namespace std;
 
 class Regex;
 
 class RexgenParserContext {
-
  public:
-  RexgenParserContext(istream* input, const RexgenOptions& __options )
+  RexgenParserContext(std::istream* input, const RexgenOptions& __options )
     : options(__options), streamRegex(NULL) {
     this->is = input;
     this->result = NULL;
@@ -48,7 +45,7 @@ class RexgenParserContext {
 
   virtual ~RexgenParserContext();
   void registerGroupReference(GroupReference* gr);
-  const set<GroupReference*>* getGroupReferences(int id) const;
+  const std::set<GroupReference*>* getGroupReferences(int id) const;
   void registerGroup(Regex* re);
   Regex* getGroupRegex(int id) const;
 
@@ -59,7 +56,7 @@ class RexgenParserContext {
   bool hasInvalidGroupReferences() const;
 
   void* scanner;
-  istream* is;
+  std::istream* is;
   Regex* result;
 
   int groupId;
@@ -70,14 +67,23 @@ class RexgenParserContext {
   Regex* getStreamRegex();
 
  protected:
+  /**
+   * initialize the scanner. This method is implemented
+   * in regex_lexer.l
+   */
   void InitScanner();
+
+  /**
+   * destroy the scanner and clean up the allocated memory.
+   * This method is implemented in regex_lexer.l
+   */
   void DestroyScanner();
 
  private:
   const RexgenOptions& options;
-  map<int, set <GroupReference*> *> groupRefs;
-  map<int, Regex*> groups;
+  std::map<int, std::set <GroupReference*> *> groupRefs;
+  std::map<int, Regex*> groups;
   StreamRegex* streamRegex;
 };
 
-#endif // REXGENPARSERCONTEXT_H
+#endif  // SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_

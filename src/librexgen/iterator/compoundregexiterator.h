@@ -18,30 +18,27 @@
 */
 
 
-#ifndef COMPOUNDREGEXITERATOR_H
-#define COMPOUNDREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_
 
-#include <deque>
-#include <vector>
-#include <algorithm>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorcontainer.h>
-
-using namespace std;
+#include <deque>
+#include <vector>
+#include <algorithm>
 
 class CompoundRegexIterator : public IteratorContainer {
-
  public:
-  CompoundRegexIterator(int id);
+  explicit CompoundRegexIterator(int id);
 
   bool next();
-  void value(SimpleString& dst) const;
+  void value(SimpleString* dst) const;
   bool hasNext() const;
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
 };
 
-#endif // COMPOUNDREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_

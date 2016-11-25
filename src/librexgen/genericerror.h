@@ -17,12 +17,12 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __genericerror_h__
-#define __genericerror_h__
+#ifndef SRC_LIBREXGEN_GENERICERROR_H_
+#define SRC_LIBREXGEN_GENERICERROR_H_
 
 class GenericError {
  public:
-  GenericError(const char* msg)
+  explicit GenericError(const char* msg)
     : message(msg) {}
 
   const char* getMessage() { return message; }
@@ -30,5 +30,4 @@ class GenericError {
   const char* message;
 };
 
-#endif
-
+#endif  // SRC_LIBREXGEN_GENERICERROR_H_

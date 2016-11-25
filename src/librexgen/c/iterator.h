@@ -22,9 +22,9 @@
 #define SRC_LIBREXGEN_C_ITERATOR_H_
 
 #include <assert.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/c/simplestring.h>
-#include <librexgen/c/librexgen.h>
 #include <librexgen/osdepend.h>
 
 #ifdef __cplusplus

@@ -17,14 +17,14 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __syntaxerror_h__
-#define __syntaxerror_h__
+#ifndef SRC_LIBREXGEN_PARSER_SYNTAXERROR_H_
+#define SRC_LIBREXGEN_PARSER_SYNTAXERROR_H_
 
 #include <librexgen/genericerror.h>
 
 class SyntaxError : public GenericError {
  public:
-  SyntaxError(const char* msg, int fl=-1)
+  explicit SyntaxError(const char* msg, int fl = -1)
     :GenericError(msg), first_line(fl) {}
 
   int getFirstLine() const { return first_line; }
@@ -32,5 +32,5 @@ class SyntaxError : public GenericError {
   int first_line;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_PARSER_SYNTAXERROR_H_
 

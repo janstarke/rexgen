@@ -17,8 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-
-#include <ctype.h>
+#include <librexgen/c/simplestring.h>
 #include <librexgen/string/simplestring.h>
 
 #ifdef __cplusplus

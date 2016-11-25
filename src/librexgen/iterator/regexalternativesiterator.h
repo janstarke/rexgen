@@ -18,34 +18,35 @@
 */
 
 
-#ifndef REGEXALTERNATIVESITERATOR_H
-#define REGEXALTERNATIVESITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_
 
-#include <algorithm>
-#include <deque>
-#include <vector>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorcontainer.h>
-
-using namespace std;
+#include <algorithm>
+#include <deque>
+#include <vector>
 
 class RegexAlternativesIterator : public IteratorContainer {
  public:
-
-  RegexAlternativesIterator(int id);
+  explicit RegexAlternativesIterator(int id);
 
   bool next();
-  void value(SimpleString& dst) const;
+  void value(SimpleString* dst) const {
+    (*getPosition())->value(dst);
+  }
+
   bool hasNext() const;
 
   void addChild(Iterator* re);
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
+
  private:
   bool canUseValue() const;
 };
 
-#endif // REGEXALTERNATIVESITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_

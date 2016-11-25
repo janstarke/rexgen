@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2016  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,31 +17,24 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
-#define SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
+#ifndef SRC_LIBREXGEN_DEFS_H_
+#define SRC_LIBREXGEN_DEFS_H_
 
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/string/unicode.h>
-#include <librexgen/string/simplestring.h>
-#include <librexgen/osdepend.h>
 
-extern "C" {
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-}
-extern "C" {
-  EXPORT
-  int rexgen_parse_regex(lua_State* L);
+typedef uint8_t charset;
+#define CHARSET_ANSI    1
+#define CHARSET_UTF8    2
+#define CHARSET_UTF16BE 3
+#define CHARSET_UTF32BE 4
+#define CHARSET_UTF16LE 5
+#define CHARSET_UTF32LE 6
 
-  EXPORT
-  int rexgen_value(lua_State* L, const Iterator* iter);
+typedef uint8_t uchar_flags_t;
+typedef uint8_t uchar_info_t;
+typedef wchar_t uchar_codepoint_t;
 
-  EXPORT
-  int luaopen_rexgen(lua_State* L);
+#define UCHAR_FLAGS_CHANGE_CASE         0x01
+#define UCHAR_FLAGS_PRESERVE_CASE       0x02
+#define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
-  EXPORT
-  int rexgen_iter(lua_State* L);
-}
-
-#endif /* SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_ */
+#endif /* SRC_LIBREXGEN_DEFS_H_ */

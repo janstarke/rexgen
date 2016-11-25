@@ -17,10 +17,10 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <algorithm>
-#include <vector>
 #include <librexgen/regex/classregex.h>
 #include <librexgen/string/uchar.h>
+#include <algorithm>
+#include <vector>
 
 void ClassRegex::merge(const ClassRegex* other) {
   for (auto  i =  other->characters.crbegin();
@@ -45,7 +45,10 @@ void ClassRegex::__insert_character(const uchar_t& ch) {
 }
 
 void ClassRegex::removeCharacterInstances(const uchar_t& ch) {
-  auto match_fct = [&ch](const uchar_t& x) {return x.codepoint==ch.codepoint;};
+  auto match_fct = [&ch](const uchar_t& x) {
+    return x.codepoint == ch.codepoint;
+  };
+
   characters.erase(
     std::remove_if(characters.begin(), characters.end(), match_fct),
     characters.end());

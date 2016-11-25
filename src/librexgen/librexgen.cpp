@@ -17,27 +17,22 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <sstream>
-#include <cstdio>
+#include <librexgen/librexgen.h>
 #include <librexgen/parser/rexgenparsercontext.h>
-#include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
-#include <librexgen/osdepend.h>
 #include <librexgen/parser/syntaxerror.h>
-
-using namespace std;
+#include <sstream>
+#include <string>
 
 int yyparse(RexgenParserContext* context);
 
 Regex* parse_regex(RexgenParserContext* context) {
-
   try {
     if (yyparse(context) != 0) {
       return NULL;
     }
   } catch (SyntaxError& exc) {
-    cerr << exc.getMessage() << endl;
+    std::cerr << exc.getMessage() << std::endl;
     return NULL;
   }
   if (context->hasInvalidGroupReferences()) {
@@ -48,8 +43,8 @@ Regex* parse_regex(RexgenParserContext* context) {
 
 EXPORT
 Regex* parse_regex(const char* regex, const RexgenOptions& options) {
-  const string strRegex(regex);
-  istringstream is(strRegex);
+  const std::string strRegex = std::string(regex);
+  std::istringstream is(strRegex);
   RexgenParserContext context(&is, options);
   return parse_regex(&context);
 }

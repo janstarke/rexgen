@@ -18,27 +18,27 @@
 */
 
 
-#ifndef GROUPREFERENCE_H
-#define GROUPREFERENCE_H
+#ifndef SRC_LIBREXGEN_REGEX_GROUPREFERENCE_H_
+#define SRC_LIBREXGEN_REGEX_GROUPREFERENCE_H_
 
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/simplestring.h>
+#include <cinttypes>
 
 class GroupReference : public Regex {
-
  public:
-  GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
+  explicit GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
   Iterator* singleIterator(IteratorState* state) const;
   RegexType getRegexType() const { return Reference; }
 
   int getGroupId() const { return groupId; }
   const Regex* getRegex() const { return groupRef; }
   void setRegex(const Regex* re) { groupRef = re; }
-  unsigned long long int size() const { return 1; }
+  std::uint64_t size() const { return 1; }
 
  private:
   const int groupId;
   const Regex* groupRef;
 };
 
-#endif // GROUPREFERENCE_H
+#endif  // SRC_LIBREXGEN_REGEX_GROUPREFERENCE_H_

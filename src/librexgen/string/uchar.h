@@ -21,29 +21,14 @@
 #ifndef SRC_LIBREXGEN_STRING_UCHAR_H_
 #define SRC_LIBREXGEN_STRING_UCHAR_H_
 
-#include <stdint.h>
-#include <stddef.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/defs.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <ctype.h>
 #include <wctype.h>
 #include <assert.h>
-
-typedef uint8_t charset;
-#define CHARSET_ANSI    1
-#define CHARSET_UTF8    2
-#define CHARSET_UTF16BE 3
-#define CHARSET_UTF32BE 4
-#define CHARSET_UTF16LE 5
-#define CHARSET_UTF32LE 6
-
-typedef uint8_t uchar_flags_t;
-typedef uint8_t uchar_info_t;
-typedef wchar_t uchar_codepoint_t;
-
-#define UCHAR_FLAGS_CHANGE_CASE         0x01
-#define UCHAR_FLAGS_PRESERVE_CASE       0x02
-#define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
 #define UCHAR_CAN_CHANGE_CASE(a)                                  \
 /* NOLINT(runtime/references) */ (!((a).flags&UCHAR_FLAGS_PRESERVE_CASE))
