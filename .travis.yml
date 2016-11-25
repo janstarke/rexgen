@@ -5,7 +5,4 @@ compiler:
   - gcc
 
 before_script: mkdir -p build && cd build
-
-before_install: cd build
-
 script: cmake .. && make && make test
