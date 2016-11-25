@@ -17,12 +17,13 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-
+#include <librexgen/c/iterator.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/parser/syntaxerror.h>
-#include <librexgen/c/librexgen.h>
+#include <vector>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,8 +73,8 @@ int c_iterator_next(c_iterator_ptr iter) {
 
 EXPORT
 void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-  (reinterpret_cast<Iterator*>(iter))->value(*(reinterpret_cast<SimpleString*>
-      (dst)));
+  (reinterpret_cast<Iterator*>(iter))->value(reinterpret_cast<SimpleString*>
+      (dst));
 }
 
 
@@ -88,7 +89,7 @@ void c_iterator_get_state(c_iterator_ptr i, char** dstptr) {
   SerializableState* state =
           (reinterpret_cast<Iterator*>(i))->getCurrentState();
   state->serialize(&dst);
-  string sDst = "RXS" JS_REGEX_RELEASE;
+  std::string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
   for (unsigned n = 0; n < dst.size(); ++n) {
     snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", dst[n]);
@@ -130,7 +131,7 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
     cp = strchr(cp+1, ',');
   }
   SerializableState* state = new SerializableState(
-    (SerializableState::stateword_t*)stp, words);
+    (SerializableState::stateword_t*)stp, &words);
   (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
   delete state;
 }

@@ -20,17 +20,16 @@
 #ifndef SRC_LIBREXGEN_C_LIBREXGEN_H_
 #define SRC_LIBREXGEN_C_LIBREXGEN_H_
 
-#include <stdio.h>
-#include <wchar.h>
+#include <librexgen/c/types.h>
+#include <librexgen/c/iterator.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/version.h>
+#include <stdio.h>
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef void* c_regex_ptr;
-typedef size_t (*callback_fp)(wchar_t* dst, const size_t buffer_size);
 
 EXPORT
 const char* c_rexgen_get_last_error();

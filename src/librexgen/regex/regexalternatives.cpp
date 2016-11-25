@@ -17,13 +17,10 @@
   51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <algorithm>
 #include <librexgen/iterator/iteratorstate.h>
-#include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/caseiterator.h>
-using namespace std;
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   if (regexObjects.size() == 1) {
@@ -31,9 +28,8 @@ Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   }
 
   RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (deque<Regex*>::const_iterator iter = regexObjects.begin();
-       iter != regexObjects.end(); iter++) {
-    rai->addChild((*iter)->iterator(state));
+  for (auto i : regexObjects) {
+    rai->addChild(i->iterator(state));
   }
   return rai;
 }

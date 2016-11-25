@@ -18,48 +18,50 @@
 */
 
 
-#ifndef CLASSREGEXITERATOR_H
-#define CLASSREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_
 
-#include <vector>
-#include <algorithm>
-#include <cstdio>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/uchar.h>
-
-using namespace std;
+#include <vector>
+#include <algorithm>
+#include <cstdio>
 
 class ClassRegexIterator : public Iterator {
-
  public:
   ClassRegexIterator(int _id,
                      const uchar_t* classcontent,
-                     size_t elements
-                    );
+                     size_t elements);
+
   virtual ~ClassRegexIterator() {}
 
-  inline void value(SimpleString& dst) const {
-    dst.push_back(characters[current]);
+  inline void value(SimpleString* dst) const {
+    dst->push_back(characters[current]);
   }
 
   bool next();
-  bool previous();
 
   size_t size() const { return characters.size(); }
 
-  inline bool hasNext() const { return  (current < ((int)characters.size()-1)); }
-  inline bool canUseValue() const { return (current < (int)characters.size()); }
+  inline bool hasNext() const {
+    return  (current < (static_cast<int>(characters.size())-1));
+  }
+
+  inline bool canUseValue() const {
+    return (current < static_cast<int>(characters.size()));
+  }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
+
  private:
   int current;
-  vector<uchar_t> characters;
+  std::vector<uchar_t> characters;
 };
 
-#endif // CLASSREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_

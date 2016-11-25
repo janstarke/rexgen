@@ -18,35 +18,36 @@
 */
 
 
-#ifndef ITERATORCONTAINER_H
-#define ITERATORCONTAINER_H
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATORCONTAINER_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATORCONTAINER_H_
 
 #include <librexgen/iterator/iterator.h>
+#include <vector>
 
 #ifdef __cplusplus
 class IteratorState;
 
 class IteratorContainer : public Iterator {
  public:
-  typedef vector<Iterator*> children_list_type;
+  typedef std::vector<Iterator*> children_list_type;
 
-  IteratorContainer(int _id) : Iterator(_id) {}
+  explicit IteratorContainer(int _id) : Iterator(_id) {}
   virtual ~IteratorContainer() {
-    for (auto i: iterators) {
-      if (! i->isSingleton()) {
+    for (auto i : iterators) {
+      if (!i->isSingleton()) {
         delete i;
       }
     }
   }
 
   virtual void updateAttributes(IteratorState* iterState) {
-    for (Iterator* child: iterators) {
+    for (Iterator* child : iterators) {
       child->updateAttributes(iterState);
     }
   }
 
   virtual void updateReferences(IteratorState* iterState) {
-    for (Iterator* child: iterators) {
+    for (Iterator* child : iterators) {
       child->updateReferences(iterState);
     }
   }
@@ -56,7 +57,6 @@ class IteratorContainer : public Iterator {
   }
 
  protected:
-
   void setPosition(children_list_type::iterator i) { iter = i; }
   void incrementPosition() { ++iter; }
   void resetPosition() { iter = iterators.begin(); }
@@ -70,4 +70,4 @@ class IteratorContainer : public Iterator {
 
 #endif /* __cplusplus */
 
-#endif /* ITERATORCONTAINER_H */
+#endif /* SRC_LIBREXGEN_ITERATOR_ITERATORCONTAINER_H_ */

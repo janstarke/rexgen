@@ -44,8 +44,8 @@ class StreamRegexIterator : public Iterator {
     return __hasNext;
   }
   bool hasNext() const { return state == resetted; }
-  void value(SimpleString& dst) const {
-    dst.append(buffer, length);
+  void value(SimpleString* dst) const {
+    dst->append(buffer, length);
   }
   void updateReferences(IteratorState* /* iterState */) {}
   void updateAttributes(IteratorState* /* iterState */) {}

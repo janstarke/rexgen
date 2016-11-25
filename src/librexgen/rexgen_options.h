@@ -17,12 +17,12 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __rexgen_options_h__
-#define __rexgen_options_h__
+#ifndef SRC_LIBREXGEN_REXGEN_OPTIONS_H_
+#define SRC_LIBREXGEN_REXGEN_OPTIONS_H_
 
+#include <librexgen/c/types.h>
+#include <librexgen/defs.h>
 #include <cstdio>
-#include <librexgen/string/uchar.h>
-#include <librexgen/c/iterator.h>
 
 class RexgenOptions {
  public:
@@ -33,9 +33,9 @@ class RexgenOptions {
       stream_callback(NULL) { }
   bool ignore_case;
   charset encoding;
-  FILE* infile;
+  std::FILE* infile;
   callback_fp stream_callback;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_REXGEN_OPTIONS_H_
 

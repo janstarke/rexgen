@@ -29,14 +29,18 @@ class Regex;
 
 class IteratorPermuter : public IteratorContainer {
  public:
-  void value(SimpleString& dst) const;
+  void value(SimpleString* dst) const;
   bool hasNext() const;
   IteratorPermuter(int _id, const Regex* re, IteratorState* is,
                    unsigned int min, unsigned int max);
   ~IteratorPermuter();
   bool next();
   void init();
-  uint64_t size() const;
+
+  /**
+   * returns the number of elements created by this iterator
+   */
+  // uint64_t size() const;
  private:
   bool existsIteratorWithNextElement() const;
 

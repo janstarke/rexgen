@@ -17,20 +17,20 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/version.h>
+#include <librexgen/version/version.h>
 #include <librexgen/osdepend.h>
 #include <cstdio>
 #include <cstdlib>
 
-static const char* __version="@librexgen_version@";
+static const char* __version = "@librexgen_version@";
 
 EXPORT
-const char* rexgen_version () {
+const char* rexgen_version() {
   return __version;
 }
 
 EXPORT
-unsigned int rexgen_version_int () {
+unsigned int rexgen_version_int() {
   return  ((((unsigned int)@librexgen_major@) <<16)
            |(((unsigned int)@librexgen_minor@) <<8)
            |(((unsigned int)@librexgen_release@)));
