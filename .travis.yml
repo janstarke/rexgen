@@ -7,11 +7,9 @@ compiler:
 addons:
   apt:
     source:
-      - george-edison55-precise-backports
-      - kalakris-cmake
+      - kubuntu-backports
     packages:
-      - cmake
-      - cmake-data
+      - cmake-2.8.12
       - python-pip
 
 before_install:
