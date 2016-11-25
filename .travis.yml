@@ -4,9 +4,17 @@ compiler:
   - clang
   - gcc
 
-before_instaLL:
-  - apt install pip
-  - pip install cpplint
+addons:
+  apt:
+    source:
+      - george-edison55-precise-backports
+    packages:
+      - cmake
+      - cmake-data
+      - pip
+
+before_install:
+  - sudo pip install cpplint
 
 before_script: mkdir -p build
 script: 
