@@ -8,6 +8,7 @@ addons:
   apt:
     source:
       - george-edison55-precise-backports
+      - kalakris-cmake
     packages:
       - cmake
       - cmake-data
