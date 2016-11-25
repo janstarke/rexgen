@@ -4,5 +4,11 @@ compiler:
   - clang
   - gcc
 
-before_script: mkdir -p build && cd build
-script: cmake .. && make && make test
+before_instaLL:
+  - apt install pip
+  - pip install cpplint
+
+before_script: mkdir -p build
+script: 
+  - cpplint --recursive src/librexgen
+  - cd build && cmake ../src && make && make test
