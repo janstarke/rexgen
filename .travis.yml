@@ -9,7 +9,7 @@ addons:
     sources:
       - kubuntu-backports
     packages:
-      - cmake-2.8.12
+      - cmake
       - python-pip
 
 before_install:
