@@ -20,5 +20,7 @@ before_install:
 
 before_script: mkdir -p build
 script: 
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
+  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
   - cpplint --recursive src/librexgen
   - cd build && cmake ../src && make && make test
