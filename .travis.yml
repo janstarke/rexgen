@@ -11,7 +11,7 @@ addons:
     packages:
       - cmake
       - cmake-data
-      - pip
+      - python-pip
 
 before_install:
   - sudo pip install cpplint
