@@ -49,7 +49,6 @@ class ClassRegexIterator : public Iterator {
      */
     const int overflow = ((int)(current >= max_index)) - 1;
 
-    assert(overflow == -1 || overflow == 0);
     current = (current - overflow) & overflow;
     return current;
   }
