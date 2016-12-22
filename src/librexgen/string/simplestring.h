@@ -89,12 +89,20 @@ class SimpleString {
     if (length >= SIMPLESTRING_MAXLEN) { return; }
     characters[length++] = c;
   }
+  void append(const uchar_t* src, const size_t ch_len) {
+    std::memcpy(
+            &characters[length],
+            src,
+            ch_len*sizeof(uchar_t)
+    );
+    length += ch_len;
+  }
   void append(const char* ch, const size_t ch_len);
   void append(const wchar_t* ch, const size_t ch_len);
   void append(const SimpleString& other) {
     const size_t chars_to_copy =
             std::min(SIMPLESTRING_MAXLEN-length, other.length);
-    memcpy(
+    std::memcpy(
       &characters[length],
       &other.characters[0],
       chars_to_copy*sizeof(characters[0]));

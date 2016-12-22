@@ -22,21 +22,11 @@
 
 ClassRegexIterator::ClassRegexIterator(
   int _id, const uchar_t* classcontent, size_t elements)
-  :Iterator(_id), current(-1), characters(elements) {
+  :Iterator(_id), current(-1), max_index(elements-1), characters(elements) {
   for (size_t n=0; n < elements; ++n) {
     characters[n] = classcontent[n];
   }
   state = usable;
-}
-
-bool ClassRegexIterator::next() {
-  ++current;
-
-  if (current >= static_cast<int>(characters.size())) {
-    current = 0;
-    return false;
-  }
-  return true;
 }
 
 SerializableState* ClassRegexIterator::getCurrentState() const {

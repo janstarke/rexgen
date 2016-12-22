@@ -38,7 +38,9 @@ class TerminalRegexIterator : public Iterator {
     state = usable;
     return res;
   }
-  void value(SimpleString* dst) const;
+  void value(SimpleString* dst) const {
+    dst->append(&terminal[0], terminal.size());
+  };
   bool hasNext() const { return state == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}

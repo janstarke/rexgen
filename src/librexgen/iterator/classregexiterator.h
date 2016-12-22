@@ -41,7 +41,18 @@ class ClassRegexIterator : public Iterator {
     dst->push_back(characters[current]);
   }
 
-  bool next();
+  bool next() {
+    /*
+     * overflow is:
+     *  -1 if there is a next character
+     *  0  if we must cycle to the beginning
+     */
+    const int overflow = ((int)(current >= max_index)) - 1;
+
+    assert(overflow == -1 || overflow == 0);
+    current = (current - overflow) & overflow;
+    return current;
+  }
 
   size_t size() const { return characters.size(); }
 
@@ -61,6 +72,7 @@ class ClassRegexIterator : public Iterator {
 
  private:
   int current;
+  const int max_index;
   std::vector<uchar_t> characters;
 };
 
