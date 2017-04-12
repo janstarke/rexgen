@@ -46,11 +46,14 @@ bool CaseIterator::readNextFromChild() {
   childHadNext = child->next();
   child->value(&word);
 
-  for (unsigned int n=0; n < word.size(); ++n) {
-    if (word.can_change_case(n)) {
-      word.tolower(n);
-      changeable_characters.push_back(n);
+  /* convert all characters with uppercase and lowercase variants to lowercase and store their indices */
+  for (unsigned int idx=0; idx<word.size();) {
+    if (word.can_change_case(idx)) {
+      word.tolower(idx);
+      changeable_characters.push_back(idx);
     }
+
+    idx += word.character_length(idx);
   }
 
   if (changeable_characters.size() <= max_fast_character_bytes) {

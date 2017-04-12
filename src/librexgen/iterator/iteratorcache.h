@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2016  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -18,35 +18,17 @@
 */
 
 
-#ifndef SRC_LIBREXGEN_C_SIMPLESTRING_H_
-#define SRC_LIBREXGEN_C_SIMPLESTRING_H_
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_
 
-#include <librexgen/string/unicode.h>
-#include <librexgen/osdepend.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <librexgen/iterator/iterator.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+class IteratorCache : public Iterator {
+public:
+  explicit IteratorCache(Iterator* _child) : child(_child) {}
 
-typedef void* c_simplestring_ptr;
+private:
+  Iterator* child;
+};
 
-EXPORT
-c_simplestring_ptr c_simplestring_new();
-
-EXPORT
-void c_simplestring_delete(c_simplestring_ptr s);
-
-EXPORT
-const char* c_simplestring_to_utf8_string(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_clear(c_simplestring_ptr s);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  /* SRC_LIBREXGEN_C_SIMPLESTRING_H_ */
+#endif //SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_

@@ -31,6 +31,8 @@
 
 class ClassRegex : public Regex {
  public:
+  ClassRegex() : requires_multibyte(false) {}
+
   void addCharacter(const uchar_t& ch);
   void addRange(const uchar_t& a, const uchar_t& b);
   bool contains(const uchar_t& ch) const;
@@ -38,13 +40,15 @@ class ClassRegex : public Regex {
 
   void merge(const ClassRegex* other);
 
-  Iterator* singleIterator(IteratorState* /* state */) const;
+  Iterator* singleIterator(IteratorState* /* state */) const {
+    return new ClassRegexIterator(getId(), &characters[0], characters.size());};
 
  private:
   void __insert_character(const uchar_t& ch);
   void __append_character(const uchar_t& ch);
   void removeCharacterInstances(const uchar_t& ch);
   std::vector<uchar_t> characters;
+  bool requires_multibyte;
 };
 
 #endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_

@@ -38,6 +38,9 @@ bool ClassRegex::contains(const uchar_t& ch) const {
 void ClassRegex::__append_character(const uchar_t& ch) {
   removeCharacterInstances(ch);
   characters.push_back(ch);
+  if (ch.codepoint > 0x80) {
+    requires_multibyte = true;
+  }
 }
 void ClassRegex::__insert_character(const uchar_t& ch) {
   removeCharacterInstances(ch);
@@ -70,10 +73,5 @@ void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
     __append_character(uchar_t(a));
     a += diff;
   }
-}
-
-Iterator* ClassRegex::singleIterator(IteratorState* /*state*/) const {
-  return new ClassRegexIterator(getId(), &characters[0],
-                                characters.size());
 }
 

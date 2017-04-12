@@ -22,13 +22,10 @@
 #include <string.h>
 #include <signal.h>
 #include <locale.h>
-#include <wchar.h>
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
 #include "terms.h"
-
-static const wchar_t REPLACEMENT_CHARACTER = 0xfffd;
 
 #if ! defined(_WIN32)
 typedef char _TCHAR;
@@ -170,53 +167,18 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  * to call c_iterator_next() many times, to restore the location of the restart.
  */
 
-size_t callback(wchar_t* dst, const size_t buffer_size) {
-  mbstate_t state;
-  size_t count = 0;
-  size_t nbytes;
-  char* buffer = (char*)malloc(buffer_size * 6);
-  char* ptr = &buffer[0];
-
-  if (feof(infile)) {
-    free(buffer);
-    return 0;
-  }
+size_t callback(char* dst, const size_t buffer_size) {
 
   /* read next word */
-  if (fgets(buffer, sizeof(buffer)/sizeof(buffer[0])-1, infile) == NULL) {
-    free(buffer);
+  if (fgets((char*)dst, buffer_size, infile) == NULL) {
     return 0;
   }
 
-  /* convert multibyte to wchar_t */
-  memset(&state, '\0', sizeof(state));
-  while (count < buffer_size &&
-         *ptr != '\0' && *ptr != '\r' && *ptr != '\n') {
-
-    nbytes = mbrtowc(dst, ptr, MB_CUR_MAX, &state);
-    if (nbytes == 0 || nbytes == (size_t)-2) {
-      free(buffer);
-      return 0;
-    }
-
-    /* invalid character encoding */
-    if (nbytes == (size_t)-1) {
-      *dst = REPLACEMENT_CHARACTER;
-      nbytes = 1;
-    }
-
-    ptr += nbytes;
-    ++dst;
-    ++count;
-  }
-  *dst = btowc('\0');
-  free(buffer);
-  return count;
+  return strlen((char*)dst);
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = NULL;
-  char binary_string[512];
   c_regex_ptr regex = NULL;
   c_iterator_ptr iter = NULL;
   int retval = 0;
@@ -282,8 +244,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    c_simplestring_to_external_string(buffer, binary_string, sizeof(binary_string));
-    printf("%s\n", binary_string);
+    printf("%s\n", c_simplestring_to_utf8_string(buffer));
 
 #ifdef DEBUG_STATE
     /* These show how to save-restore state */

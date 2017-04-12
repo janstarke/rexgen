@@ -33,24 +33,8 @@ void c_simplestring_delete(c_simplestring_ptr s) {
 }
 
 EXPORT
-int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
-                                  size_t buffer_size) {
-  return (static_cast<SimpleString*>(s))->to_utf8_string(buffer,
-         buffer_size);
-}
-
-EXPORT
-int c_simplestring_to_ansi_string(c_simplestring_ptr s, char* buffer,
-                                  size_t buffer_size) {
-  return (static_cast<SimpleString*>(s))->to_ansi_string(buffer,
-         buffer_size);
-}
-
-EXPORT
-int c_simplestring_to_external_string(c_simplestring_ptr s, char* buffer,
-                                      size_t buffer_size) {
-  return (static_cast<SimpleString*>(s))->to_external_string(buffer,
-         buffer_size);
+const char* c_simplestring_to_utf8_string(c_simplestring_ptr s) {
+  return (static_cast<SimpleString*>(s))->c_str();
 }
 
 EXPORT

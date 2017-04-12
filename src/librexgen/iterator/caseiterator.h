@@ -56,7 +56,6 @@ class CaseIterator : public IteratorContainer {
   Iterator* child;
   int handle_case;
   bool readNextFromChild();
-  SimpleString word;
 
 #if __x86_64__
   typedef std::uint64_t counter_t;
@@ -69,7 +68,8 @@ class CaseIterator : public IteratorContainer {
   counter_t k;
   unsigned int j;
   unsigned int parity;
-  std::vector<int> changeable_characters;
+  std::vector<unsigned int> changeable_characters;
+  SimpleString word;
 };
 
 #endif /* __cplusplus */

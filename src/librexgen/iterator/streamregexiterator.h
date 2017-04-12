@@ -45,7 +45,7 @@ class StreamRegexIterator : public Iterator {
   }
   bool hasNext() const { return state == resetted; }
   void value(SimpleString* dst) const {
-    dst->append(buffer, length);
+    dst->append(&buffer[0], length);
   }
   void updateReferences(IteratorState* /* iterState */) {}
   void updateAttributes(IteratorState* /* iterState */) {}
@@ -58,7 +58,7 @@ class StreamRegexIterator : public Iterator {
   void readNextWord();
 
   callback_fp callback;
-  wchar_t buffer[STREAMREGEXITERATOR_MAXLEN];
+  byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
   size_t length;
   bool __hasNext;
 };

@@ -64,11 +64,10 @@ bool IteratorPermuter::hasNext() const {
 bool IteratorPermuter::next() {
   ENTER_METHOD;
 
-  /* special case handling for resetted state */
-  if (state == resetted) { state = usable; RETURN(true); }
-
-  /* special case handling for quantifier which starts with 0, i.e. {0,3} */
-  if (state == usable && occurs == 0) { ++occurs; RETURN(true); }
+  /* no special case handling for quantifier which starts with 0, i.e. {0,3},
+   * as this is implicitely handled by the code below
+   */
+  // if (occurs == 0) { ++occurs; RETURN(true); }
 
   unsigned int n = 0;
   for (; n < occurs; ++n) { if (iterators[n]->next()) { break; } }

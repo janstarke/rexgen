@@ -24,10 +24,12 @@
 
   #include <iostream>
   #include <librexgen/debug.h>
+  #include <librexgen/regex/regex.h>
   #include <librexgen/regex/regexalternatives.h>
   #include <librexgen/regex/compoundregex.h>
   #include <librexgen/regex/terminalregex.h>
   #include <librexgen/regex/classregex.h>
+  #include <librexgen/regex/rangeregex.h>
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/regex/streamregex.h>
@@ -99,7 +101,7 @@
 %type <class_regex> ClassRegex
 %type <class_regex> ClassContent
 %type <class_regex> SimpleClassContent
-%type <class_regex> CharacterClassDigit
+%type <regex> CharacterClassDigit
 %type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
@@ -149,7 +151,9 @@ Regex:
     delete q;
   };
 
-PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+PlainRegex:
+        SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+    |   CharacterClassDigit { $$ = $1; }
 	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
@@ -160,8 +164,7 @@ SimpleRegex: T_ANY_CHAR {
 };
 
 ClassRegex:
-    CharacterClassDigit { $$ = $1; }
-  | CharacterClassWord  { $$ = $1; }
+    CharacterClassWord  { $$ = $1; }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(uchar_t('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
@@ -177,7 +180,10 @@ SimpleClassContent:
       $$ = new ClassRegex(); 
       $$->addRange(uchar_t($1), uchar_t($3));
 	}
-	| CharacterClassDigit { $$ = $1; }
+	| T_CLASS_DIGIT {
+      $$ = new ClassRegex();
+      $$->addRange(uchar_t('0'), uchar_t('9'));
+  }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
@@ -186,8 +192,7 @@ SimpleClassContent:
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
-    $$ = new ClassRegex();
-    $$->addRange(uchar_t('0'), uchar_t('9'));
+    $$ = new RangeRegex(RangeRegex::DIGITS);
 	}
 CharacterClassWord:
   T_CLASS_WORD {

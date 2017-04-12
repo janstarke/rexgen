@@ -29,6 +29,9 @@ typedef uint8_t charset;
 #define CHARSET_UTF16LE 5
 #define CHARSET_UTF32LE 6
 
+typedef char byte_t;
+typedef uint32_t codepoint_t;
+
 typedef uint8_t uchar_flags_t;
 typedef uint8_t uchar_info_t;
 typedef wchar_t uchar_codepoint_t;

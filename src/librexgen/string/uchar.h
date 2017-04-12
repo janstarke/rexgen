@@ -51,6 +51,11 @@
 
 static const uchar_codepoint_t UCHAR_UNASSIGNED = (const uchar_codepoint_t)WEOF;
 
+#ifndef UNICODE
+
+typedef __uchar_t char;
+
+#else
 struct __uchar_t {
   uchar_codepoint_t codepoint;
   uchar_flags_t     flags;      /* 1 byte */
@@ -98,5 +103,6 @@ struct __uchar_t {
 #endif
 };
 typedef struct __uchar_t uchar_t;
+#endif /* UNICODE */
 
 #endif  /* SRC_LIBREXGEN_STRING_UCHAR_H_ */
