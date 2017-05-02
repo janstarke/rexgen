@@ -32,34 +32,19 @@ bool SimpleString::isupper(unsigned int n) const {
   return (::isupper(codepoint_from_utf8(n)));
 }
 
-void SimpleString::tolower(unsigned int n) {
-  const uint32_t codepoint_upper = codepoint_from_utf8(n);
+void SimpleString::toggle_case(size_t idx) {
+  int (*toggle_fct)(int) =
+  this->islower(idx) ? (::toupper) : (::tolower);
 
-  if (codepoint_upper<0x80) {
-    at(n) = static_cast<char>(::tolower(codepoint_upper));
+  const uint32_t this_codepoint = codepoint_from_utf8(idx);
+  if (this_codepoint<0x80) {
+    at(idx) = static_cast<char>(toggle_fct(this_codepoint));
   } else {
-    const uint32_t codepoint_lower = ::tolower(codepoint_upper);
-    const std::string& lhs = substr(0, n);
-    const std::string& rhs = substr(n + 1);
+    const std::string& lhs = substr(0, idx);
+    const std::string& rhs = substr(idx + 1);
     clear();
     append(lhs);
-    append_codepoint(codepoint_lower);
-    append(rhs);
-  }
-}
-
-void SimpleString::toupper(unsigned int n) {
-  const uint32_t codepoint_lower = codepoint_from_utf8(n);
-
-  if (codepoint_lower<0x80) {
-    at(n) = static_cast<char>(::toupper(codepoint_lower));
-  } else {
-    const uint32_t codepoint_upper = ::toupper(codepoint_lower);
-    const std::string& lhs = substr(0, n);
-    const std::string& rhs = substr(n + 1);
-    clear();
-    append(lhs);
-    append_codepoint(codepoint_upper);
+    append_codepoint(toggle_fct(this_codepoint));
     append(rhs);
   }
 }

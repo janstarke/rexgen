@@ -46,10 +46,9 @@ bool CaseIterator::readNextFromChild() {
   childHadNext = child->next();
   child->value(&word);
 
-  /* convert all characters with uppercase and lowercase variants to lowercase and store their indices */
+  /* store the indices of all convertible characters */
   for (unsigned int idx=0; idx<word.size();) {
     if (word.can_change_case(idx)) {
-      word.tolower(idx);
       changeable_characters.push_back(idx);
     }
 

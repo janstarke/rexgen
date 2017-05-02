@@ -48,21 +48,11 @@ class SimpleString : public std::string {
     return lz - ((sizeof(first_byte)-1)*8) + 1;
   }
 
-  inline
-  void toggle_case(size_t idx) {
-    if (this->islower(idx)) {
-      this->toupper(idx);
-    } else if (this->isupper(idx)) {
-      this->tolower(idx);
-    }
-  }
+  void toggle_case(size_t idx);
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;
   bool isupper(unsigned int n) const;
-
-  void tolower(unsigned int n);
-  void toupper(unsigned int n);
 
   // UTF-8 handling
   codepoint_t codepoint_from_utf8(size_type at_index) const;
