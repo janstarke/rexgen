@@ -65,11 +65,6 @@ bool CaseIterator::readNextFromChild() {
   parity = 0;
   j = 0;      /* == ntz(k) & parity */
 
-  /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
-  if (handle_case == CASE_PRESERVE) {
-    word.set_preserve_case();
-  }
-
   return childHadNext;
 }
 
@@ -84,7 +79,7 @@ bool CaseIterator::hasNext() const {
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
 bool CaseIterator::next() {
   /* G1 */
-  if (word.empty() || k == 0) {
+  if (word.empty() || k == 0 || handle_case==CASE_IGNORE) {
     bool childHadNext = readNextFromChild();
 
     /* keep in mind: k is the number of remaining variants */

@@ -39,7 +39,7 @@ class SimpleString : public std::string {
  public:
 
   bool can_change_case(size_t idx) const {
-    return (character_length(idx) == 1 && isalpha(this->at(idx)));
+    return this->isalpha(idx);
   }
 
   size_t character_length(size_t idx) const {
@@ -48,17 +48,13 @@ class SimpleString : public std::string {
     return lz - ((sizeof(first_byte)-1)*8) + 1;
   }
 
-  void set_preserve_case() {
-    /*
-    for (size_t idx=0; idx < length; ++idx) {
-      UCHAR_SET_PRESERVE_CASE(characters[idx]);
-    }
-     */
-  }
-
   inline
-  void toggle_case(size_t /*idx*/) {
-    //characters[idx].toggle_case();
+  void toggle_case(size_t idx) {
+    if (this->islower(idx)) {
+      this->toupper(idx);
+    } else if (this->isupper(idx)) {
+      this->tolower(idx);
+    }
   }
 
   bool isalpha(unsigned int n) const;

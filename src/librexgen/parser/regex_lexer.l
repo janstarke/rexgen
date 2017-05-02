@@ -154,7 +154,7 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 				yylval.group_options->handle_case = 
 					enable_mode 
 									?	CASE_ITERATE
-									: CASE_PRESERVE ;
+									: CASE_IGNORE ;
 				break;
 			case '-':
 				enable_mode = false;
