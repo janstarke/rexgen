@@ -20,8 +20,8 @@
 #include <librexgen/iterator/caseiterator.h>
 #include <librexgen/parser/group_options.h>
 #include <librexgen/common/ntz.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/genericerror.h>
+#include <cassert>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
   : IteratorContainer(-1), child(__child), handle_case(options) {

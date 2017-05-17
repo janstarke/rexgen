@@ -23,6 +23,7 @@
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
+#include <librexgen/defs.h>
 
 static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 

@@ -24,7 +24,6 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
 #include <string>
 #include <vector>
@@ -34,13 +33,13 @@
 class ClassRegexIterator : public Iterator {
 public:
   ClassRegexIterator(int _id,
-                     const uchar_t* classcontent,
+                     const wchar_t * classcontent,
                      size_t elements)
           :Iterator(_id), current(-1), characters() {
     size_t n;
     std::string::size_type index = 0;
     for (n=0; n < elements; ++n) {
-      characters.append_codepoint(classcontent[n].full_codepoint());
+      characters.append_widechar(classcontent[n]);
       lengths.push_back(characters.character_length(n));
 
       indices.push_back(index);

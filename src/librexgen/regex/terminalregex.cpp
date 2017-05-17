@@ -21,7 +21,7 @@
 
 
 void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for (const uchar_t &i : tre->value) {
+  for (const wchar_t &i : tre->value) {
     this->value.insert(this->value.begin(), i);
   }
 }

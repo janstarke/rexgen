@@ -19,36 +19,62 @@
 
 
 #include <ctype.h>
+#include <wchar.h>
+#include <cstdlib>
+#include <climits>
 #include <librexgen/string/simplestring.h>
 
 bool SimpleString::isalpha(unsigned int n) const {
-  return (::isalpha(codepoint_from_utf8(n)));
+  return (::iswalpha(widechar_at(n)));
 }
 bool SimpleString::islower(unsigned int n) const {
-  return (::islower(codepoint_from_utf8(n)));
+  return (::iswlower(widechar_at(n)));
 }
 
 bool SimpleString::isupper(unsigned int n) const {
-  return (::isupper(codepoint_from_utf8(n)));
+  return (::iswupper(widechar_at(n)));
 }
 
 void SimpleString::toggle_case(size_t idx) {
-  int (*toggle_fct)(int) =
-  this->islower(idx) ? (::toupper) : (::tolower);
+  wint_t (*toggle_fct)(wint_t) =
+  this->islower(idx) ? (::towupper) : (::towlower);
 
-  const uint32_t this_codepoint = codepoint_from_utf8(idx);
-  if (this_codepoint<0x80) {
-    at(idx) = static_cast<char>(toggle_fct(this_codepoint));
+  const wchar_t this_widechar = widechar_at(idx);
+  if (this_widechar<0x80) {
+    at(idx) = static_cast<char>(toggle_fct(this_widechar));
   } else {
     const std::string& lhs = substr(0, idx);
     const std::string& rhs = substr(idx + 1);
     clear();
     append(lhs);
-    append_codepoint(toggle_fct(this_codepoint));
+    append_widechar(toggle_fct(this_widechar));
     append(rhs);
   }
 }
 
+SimpleString& SimpleString::append_widechar(const wchar_t &widechar) {
+  char buffer[MB_LEN_MAX];
+  int length = std::wctomb(&buffer[0], widechar);
+
+  if (length == -1) {
+    length = 1;
+    buffer[0] = '?';
+  }
+
+  this->append(&buffer[0], length);
+  return *this;
+}
+
+wchar_t SimpleString::widechar_at(size_t index) const {
+  wchar_t widechar = 0;
+  const int length = std::mbtowc(&widechar, & (at(index)), MB_LEN_MAX);
+  if (length == -1) {
+    const char questionmark = '?';
+    std::mbtowc(&widechar, & questionmark, sizeof(questionmark));
+  }
+  return widechar;
+}
+/*
 codepoint_t SimpleString::codepoint_from_utf8(size_type at_index) const {
   uint32_t codepoint = 0;
   if ((at(at_index + 0) & 0x80) == 0) {
@@ -80,7 +106,8 @@ codepoint_t SimpleString::codepoint_from_utf8(size_type at_index) const {
 
   return codepoint;
 }
-
+*/
+/*
 SimpleString& SimpleString::append_codepoint(const codepoint_t& codepoint) {
   const uint32_t byte_mask = 0xbf;
   const uint32_t byte_mark = 0x80;
@@ -106,3 +133,4 @@ SimpleString& SimpleString::append_codepoint(const codepoint_t& codepoint) {
 
   return *this;
 }
+*/

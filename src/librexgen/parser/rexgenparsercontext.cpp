@@ -22,6 +22,27 @@
 #include <algorithm>
 #include <utility>
 
+RexgenParserContext::RexgenParserContext(const char* input, const RexgenOptions& __options )
+        : options(__options), streamRegex(NULL) {
+  this->result = NULL;
+  this->scanner = NULL;
+  groupId = 1;
+  InitScanner();
+
+  int size;
+  wchar_t wc = 0;
+  mbstate_t mbs;
+  mbrlen ( NULL, 0, &mbs );
+  do {
+    size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
+    if (size > 0) {
+      wcinput.push_back(wc);
+      input += size;
+    }
+  } while (size > 0);
+  next_char = wcinput.cbegin();
+}
+
 /**
  * iterates through all group references and calls
  * updateGroupReferences for each
@@ -95,15 +116,6 @@ const std::map<int, Regex*>& RexgenParserContext::getGroups() const {
   return groups;
 }
 
-/** this is the handling of `\0` - terminals in the regex. the first occurance
- * of `\0` creates a StreamRegex and returns it, all following occurances
- * return a reference to the previously created StreamRegex.
- * We must make this distinction, because StreamReference handles
- * calls to next() by going to the next word, and calling next() for
- * the whole regex would result in multiple calls to next() for each single
- * occurance of `\0`. So, we return a GroupReference, which does not forward
- * the invocation of next() to the StreamRegex
- */
 Regex* RexgenParserContext::getStreamRegex() {
   if (streamRegex == NULL) {
     streamRegex = new StreamRegex(options.stream_callback);
@@ -113,4 +125,10 @@ Regex* RexgenParserContext::getStreamRegex() {
     gr->setRegex(streamRegex);
     return gr;
   }
+}
+
+wchar_t RexgenParserContext::getNextChar() {
+  current_char = *next_char;
+  ++next_char;
+  return current_char;
 }

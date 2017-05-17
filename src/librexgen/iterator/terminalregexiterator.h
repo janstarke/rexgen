@@ -32,9 +32,9 @@
 class TerminalRegexIterator : public Iterator {
  public:
 
-  TerminalRegexIterator(int _id, const uchar_t* _terminal, size_t elements): Iterator(_id) {
+  TerminalRegexIterator(int _id, const wchar_t* _terminal, size_t elements): Iterator(_id) {
     for (size_t idx = 0; idx < elements; ++idx) {
-      terminal.append_codepoint(_terminal[idx].full_codepoint());
+      terminal.append_widechar(_terminal[idx]);
     }
   }
 

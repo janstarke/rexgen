@@ -22,7 +22,6 @@
 #define SRC_LIBREXGEN_ITERATOR_CASEITERATOR_H_
 
 #include <librexgen/iterator/iteratorcontainer.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
 #include <cinttypes>
 #include <vector>

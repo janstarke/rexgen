@@ -57,7 +57,7 @@
 %start T_RegexAlternatives
 
 %union {
-  uint32_t		character;
+  wchar_t		character;
   int 			integer;
 
 	t_group_options* group_options;
@@ -165,7 +165,7 @@ SimpleRegex: T_ANY_CHAR {
 
 ClassRegex:
     CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(uchar_t('-')); }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(static_cast<wchar_t>('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
     SimpleClassContent  { $$ = $1; }
@@ -178,16 +178,16 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange(uchar_t($1), uchar_t($3));
+      $$->addRange(static_cast<wchar_t>($1), static_cast<wchar_t>($3));
 	}
 	| T_CLASS_DIGIT {
       $$ = new ClassRegex();
-      $$->addRange(uchar_t('0'), uchar_t('9'));
+      $$->addRange(static_cast<wchar_t>('0'), static_cast<wchar_t>('9'));
   }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter(uchar_t($1));
+    $$->addCharacter(static_cast<wchar_t>($1));
   }
 
 CharacterClassDigit:
@@ -197,10 +197,10 @@ CharacterClassDigit:
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange(uchar_t('a'), uchar_t('z'));
-    $$->addRange(uchar_t('A'), uchar_t('Z'));
-    $$->addRange(uchar_t('0'), uchar_t('9'));
-    $$->addCharacter(uchar_t('_'));
+    $$->addRange(static_cast<wchar_t>('a'), static_cast<wchar_t>('z'));
+    $$->addRange(static_cast<wchar_t>('A'), static_cast<wchar_t>('Z'));
+    $$->addRange(static_cast<wchar_t>('0'), static_cast<wchar_t>('9'));
+    $$->addCharacter(static_cast<wchar_t>('_'));
   }
   
 GroupRegex:

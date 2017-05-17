@@ -21,7 +21,6 @@
 #ifndef SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 #define SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 
-#include <librexgen/string/uchar.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/c/simplestring.h>
@@ -29,6 +28,7 @@
 #include <stdlib.h>
 #include <string>
 #include <algorithm>
+#include <xlocale.h>
 
 #ifdef __cplusplus
 
@@ -54,9 +54,8 @@ class SimpleString : public std::string {
   bool islower(unsigned int n) const;
   bool isupper(unsigned int n) const;
 
-  // UTF-8 handling
-  codepoint_t codepoint_from_utf8(size_type at_index) const;
-  SimpleString& append_codepoint(const codepoint_t& codepoint);
+  wchar_t widechar_at(size_t index) const;
+  SimpleString& append_widechar(const wchar_t& codepoint);
 };
 
 #endif /* __cplusplus */
