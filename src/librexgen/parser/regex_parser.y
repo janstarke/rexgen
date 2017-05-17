@@ -165,7 +165,7 @@ SimpleRegex: T_ANY_CHAR {
 
 ClassRegex:
     CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(static_cast<wchar_t>('-')); }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
     SimpleClassContent  { $$ = $1; }
@@ -178,16 +178,16 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange(static_cast<wchar_t>($1), static_cast<wchar_t>($3));
+      $$->addRange(btowc($1), btowc($3));
 	}
 	| T_CLASS_DIGIT {
       $$ = new ClassRegex();
-      $$->addRange(static_cast<wchar_t>('0'), static_cast<wchar_t>('9'));
+      $$->addRange(btowc('0'), btowc('9'));
   }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter(static_cast<wchar_t>($1));
+    $$->addCharacter(btowc($1));
   }
 
 CharacterClassDigit:
@@ -197,10 +197,10 @@ CharacterClassDigit:
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange(static_cast<wchar_t>('a'), static_cast<wchar_t>('z'));
-    $$->addRange(static_cast<wchar_t>('A'), static_cast<wchar_t>('Z'));
-    $$->addRange(static_cast<wchar_t>('0'), static_cast<wchar_t>('9'));
-    $$->addCharacter(static_cast<wchar_t>('_'));
+    $$->addRange(btowc('a'), btowc('z'));
+    $$->addRange(btowc('A'), btowc('Z'));
+    $$->addRange(btowc('0'), btowc('9'));
+    $$->addCharacter(btowc('_'));
   }
   
 GroupRegex:

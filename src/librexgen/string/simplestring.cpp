@@ -43,8 +43,9 @@ void SimpleString::toggle_case(size_t idx) {
   if (this_widechar<0x80) {
     at(idx) = static_cast<char>(toggle_fct(this_widechar));
   } else {
+    int size = mblen(&(at(idx)), MB_CUR_MAX);
     const std::string& lhs = substr(0, idx);
-    const std::string& rhs = substr(idx + 1);
+    const std::string& rhs = substr(idx + size);
     clear();
     append(lhs);
     append_widechar(toggle_fct(this_widechar));
