@@ -29,23 +29,22 @@
 #include <string>
 #include <algorithm>
 #include <xlocale.h>
+#include <cassert>
 
 #ifdef __cplusplus
 
-/**
- * internal string representation. uses UTF-8 as character encoding
- */
 class SimpleString : public std::string {
  public:
 
   bool can_change_case(size_t idx) const {
-    return this->isalpha(idx);
+    const wchar_t wc = widechar_at(idx);
+    return (::towupper(wc) != ::towlower(wc));
   }
 
   size_t character_length(size_t idx) const {
-    const char& first_byte = at(idx);
-    const int lz = __builtin_clz(~first_byte);
-    return lz - ((sizeof(first_byte)-1)*8) + 1;
+    int size = mblen(&(at(idx)), MB_CUR_MAX);
+    assert (size > 0);
+    return size;
   }
 
   void toggle_case(size_t idx);
