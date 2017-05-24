@@ -40,7 +40,7 @@ EXPORT
 void c_simplestring_delete(c_simplestring_ptr s);
 
 EXPORT
-const char* c_simplestring_to_utf8_string(c_simplestring_ptr s);
+const char* c_simplestring_to_string(c_simplestring_ptr s);
 
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s);
