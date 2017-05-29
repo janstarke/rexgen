@@ -18,14 +18,15 @@
 */
 
 
-#ifndef API_C_ITERATOR_H
-#define API_C_ITERATOR_H
+#ifndef SRC_LIBREXGEN_C_ITERATOR_H_
+#define SRC_LIBREXGEN_C_ITERATOR_H_
 
 #include <assert.h>
+#include <librexgen/c/librexgen.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/c/simplestring.h>
-#include <librexgen/c/librexgen.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/common/bool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,5 +65,5 @@ void c_iterator_delete_state_buffer(char* srcptr);
 }
 #endif
 
-#endif /* API_C_ITERATOR_H */
+#endif  /* SRC_LIBREXGEN_C_ITERATOR_H_ */
 

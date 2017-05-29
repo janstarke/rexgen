@@ -17,24 +17,22 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#ifndef __group_options_h__
-#define __group_options_h__
+#ifndef SRC_LIBREXGEN_PARSER_GROUP_OPTIONS_H_
+#define SRC_LIBREXGEN_PARSER_GROUP_OPTIONS_H_
 
 /*
  * if the specific characters is configured to CASE_IGNORE,
  * it can be casefolded (and must be switched to CASE_ITERATE
- * or it can be switched to CASE_PRESERVE
  */
 #define CASE_IGNORE   0
 #define CASE_ITERATE  1
-#define CASE_PRESERVE 2
 
 struct t_group_options {
   t_group_options()
-    : handle_case(CASE_IGNORE),group_id(-1) {}
+    : handle_case(CASE_IGNORE), group_id(-1) {}
   int handle_case;
   int group_id;
 };
 
 
-#endif /* __group_options_h__ */
+#endif /* SRC_LIBREXGEN_PARSER_GROUP_OPTIONS_H_ */

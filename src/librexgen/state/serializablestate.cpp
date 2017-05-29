@@ -18,7 +18,7 @@
  *
  */
 
-#include "serializablestate.h"
+#include <librexgen/state/serializablestate.h>
 #include <algorithm>
 #include <map>
 #include <cstddef>
@@ -32,38 +32,37 @@ SerializableState::SerializableState(SerializableState::stateword_t id,
 }
 
 SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
-                                     size_t& words) {
+                                     size_t* words) {
   stateword_t size;
-  words = 0;
+  *words = 0;
   size_t consumed_words = 0;
 
   iterator_id = *vptr++;
-  ++words;
+  ++(*words);
   stateEnum = *vptr++;
-  ++words;
+  ++(*words);
 
   size = *vptr++;
-  ++words;
+  ++(*words);
   while (size > 0) {
     values.push_back(*vptr++);
     --size;
-    ++words;
+    ++(*words);
   }
 
   size = *vptr++;
-  ++words;
+  ++(*words);
   while (size > 0) {
-    addValue(new SerializableState(vptr, consumed_words));
+    addValue(new SerializableState(vptr, &consumed_words));
     --size;
-    words += consumed_words;
+    (*words) += consumed_words;
     vptr += consumed_words;
   }
 }
 
 SerializableState::~SerializableState() {
-  for (map<int, const SerializableState*>::iterator p=childStates.begin();
-       p!=childStates.end(); ++p) {
-    delete (*p).second;
+  for (auto i : childStates) {
+    delete i.second;
   }
 }
 
@@ -80,7 +79,7 @@ SerializableState::stateword_t SerializableState::getValue(int idx) const {
 }
 
 const SerializableState* SerializableState::getChildState(int id) const {
-  map<int, const SerializableState*>::const_iterator iter = childStates.find(id);
+  auto iter = childStates.find(id);
   if (iter != childStates.end()) {
     return iter->second;
   }
@@ -103,16 +102,14 @@ void SerializableState::serialize(vector<stateword_t>* dst) const {
 
   /* serialize integer values */
   dst->push_back(values.size());
-  for (vector<stateword_t>::const_iterator v=values.begin(); v!=values.end();
-       ++v) {
-    dst->push_back(*v);
+  for (auto i : values) {
+    dst->push_back(i);
   }
 
   /* serialize child states */
   dst->push_back(childStates.size());
-  for (map<int, const SerializableState*>::const_iterator p=childStates.begin();
-       p!=childStates.end(); ++p) {
-    (*p).second->serialize(dst);
+  for (auto i : childStates) {
+    i.second->serialize(dst);
   }
 }
 

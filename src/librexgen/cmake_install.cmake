@@ -99,7 +99,6 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unsp
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/librexgen/unicode" TYPE FILE FILES
     "/home/jan/projects/rexgen/trunk/src/librexgen/unicode/simple_string.h"
-    "/home/jan/projects/rexgen/trunk/src/librexgen/unicode/uchar.h"
     "/home/jan/projects/rexgen/trunk/src/librexgen/unicode/utf32.h"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")

@@ -6,8 +6,8 @@ endif(CMAKE_MAJOR_VERSION GREATER 2)
 OPTION (USE_LUA "create API for lua" OFF)
 
 if(USE_LUA)
-find_library(LIB_LUA REQUIRED )
-MESSAGE(STATUS "found lua ${LUA_VERSION_STRING}" )
+find_package(lua REQUIRED )
+MESSAGE(STATUS "found lua '${LUA_VERSION_STRING}': '${LUA_LIBRARIES}'" )
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 set(LUA_TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/lua")
@@ -17,10 +17,11 @@ IF(MSVC)
 ELSE()
   ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
+include_directories(${LUA_INCLUDE_DIR})
 
 set(lua-sources librexgen_lua.cpp)
 add_library(${librexgen_lua} SHARED ${lua-sources})
-target_link_libraries(${librexgen_lua} ${librexgen} "lua${LUA_VERSION}" )
+target_link_libraries(${librexgen_lua} ${librexgen} "${LUA_LIBRARIES}" )
 
 if(MSVC)
 else()

@@ -25,6 +25,31 @@
 #include <algorithm>
 #include <utility>
 
+RexgenParserContext::RexgenParserContext(const char* input, const RexgenOptions& __options )
+        : options(__options), streamRegex(NULL) {
+  this->result = NULL;
+  this->scanner = NULL;
+  groupId = 1;
+  InitScanner();
+
+  int size;
+  wchar_t wc = 0;
+  mbstate_t mbs;
+  mbrlen ( NULL, 0, &mbs );
+  do {
+    size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
+    if (size > 0) {
+      wcinput.push_back(wc);
+      input += size;
+    }
+  } while (size > 0);
+  next_char = wcinput.cbegin();
+}
+
+/**
+ * iterates through all group references and calls
+ * updateGroupReferences for each
+ */
 void RexgenParserContext::updateAllGroupReferences() {
   for (auto p : groups) {
     updateGroupReferences(p.second);
@@ -60,12 +85,10 @@ void RexgenParserContext::checkCycles(int gId, const Regex* re) const {
 }
 
 void RexgenParserContext::updateGroupReferences(const Regex* re) {
-  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-       ref!=groupRefs.end(); ++ref) {
-    for (set<GroupReference*>::iterator gr=(*ref).second->begin();
-         gr!=(*ref).second->end(); ++gr) {
-      if ((*ref).first == re->getGroupId()) {
-        (*gr)->setRegex(re);
+  for (auto ref : groupRefs) {
+    for (auto gr : (*ref.second)) {
+      if (ref.first == re->getGroupId()) {
+        gr->setRegex(re);
       }
     }
   }
@@ -73,11 +96,9 @@ void RexgenParserContext::updateGroupReferences(const Regex* re) {
 
 bool RexgenParserContext::hasInvalidGroupReferences() const {
   bool invalids = false;
-  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-       ref!=groupRefs.end(); ++ref) {
-    for (set<GroupReference*>::iterator gr=(*ref).second->begin();
-         gr!=(*ref).second->end(); ++gr) {
-      invalids |= ((*gr)->getRegex() == NULL);
+  for (auto ref : groupRefs) {
+    for (auto gr : *(ref.second)) {
+      invalids |= (gr->getRegex() == NULL);
     }
   }
   return invalids;
@@ -86,27 +107,26 @@ bool RexgenParserContext::hasInvalidGroupReferences() const {
 RexgenParserContext::~RexgenParserContext() {
   DestroyScanner();
 
-  for (map<int, set<GroupReference*> *>::const_iterator ref=groupRefs.begin();
-       ref!=groupRefs.end(); ++ref) {
-    delete (*ref).second;
+  for (auto ref : groupRefs) {
+    delete ref.second;
   }
 }
 
 void RexgenParserContext::registerGroupReference(GroupReference* gr) {
-  /* this is neeeded to later set the refered Regex */
-  map<int, set<GroupReference*>*>::iterator references = groupRefs.find(
-        gr->getGroupId());
+  /* this is needed to later set the refered Regex */
+  std::map<int, std::set<GroupReference*>*>::iterator references =
+          groupRefs.find(gr->getGroupId());
   if (references == groupRefs.end()) {
-    groupRefs[gr->getGroupId()] = new set<GroupReference* >();
+    groupRefs[gr->getGroupId()] = new std::set<GroupReference* >();
     references = groupRefs.find(gr->getGroupId());
   }
 
   (*references).second->insert(gr);
 }
 
-const set<GroupReference*>* RexgenParserContext::getGroupReferences(
+const std::set<GroupReference*>* RexgenParserContext::getGroupReferences(
   int id) const {
-  map<int, set<GroupReference*>*>::const_iterator references = groupRefs.find(id);
+  auto references = groupRefs.find(id);
   if (references == groupRefs.end()) {
     return NULL;
   }
@@ -117,24 +137,17 @@ void RexgenParserContext::registerGroup(Regex* re) {
   groups[re->getGroupId()] = re;
 }
 Regex* RexgenParserContext::getGroupRegex(int id) const {
-  map<int, Regex*>::const_iterator iter = groups.find(id);
+  std::map<int, Regex*>::const_iterator iter = groups.find(id);
   if (iter != groups.end()) {
     return iter->second;
   }
   return NULL;
 }
 
-const map<int, Regex*>& RexgenParserContext::getGroups() const { return groups; }
+const std::map<int, Regex*>& RexgenParserContext::getGroups() const {
+  return groups;
+}
 
-/* this is the handling of \0 - terminals in the regex. the first occurance
- * of \0 creates a StreamRegex and returns it, all following occurances
- * return a reference to the previously created StreamRegex.
- * We must make this distinction, because StreamReference handles
- * calls to next() by going to the next word, and calling next() for
- * the whole regex would result in multiple calls to next() for each single
- * occurance of \0. So, we return a GroupReference, which does not forward
- * the invocation of next() to the StreamRegex
- */
 Regex* RexgenParserContext::getStreamRegex() {
   if (streamRegex == NULL) {
     streamRegex = new StreamRegex(options.stream_callback);
@@ -147,6 +160,12 @@ Regex* RexgenParserContext::getStreamRegex() {
 }
 
 Regex* RexgenParserContext::cloneCaptureGroup(int gId) {
-	Regex* re = groups[gId];
-	return new RegexBackreference(re);
+  Regex * re = groups[gId];
+  return new RegexBackreference(re);
+}
+
+wchar_t RexgenParserContext::getNextChar() {
+  current_char = *next_char;
+  ++next_char;
+  return current_char;
 }

@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2016  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -15,38 +15,29 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
-*/
+ */
+
+#ifndef SRC_LIBREXGEN_DEFS_H_
+#define SRC_LIBREXGEN_DEFS_H_
 
 
-#ifndef OBSERVABLE_H
-#define OBSERVABLE_H
+typedef uint8_t charset;
+#define CHARSET_ANSI    1
+#define CHARSET_UTF8    2
+#define CHARSET_UTF16BE 3
+#define CHARSET_UTF32BE 4
+#define CHARSET_UTF16LE 5
+#define CHARSET_UTF32LE 6
 
-#include <set>
+typedef char byte_t;
+typedef uint32_t codepoint_t;
 
-using namespace std;
+typedef uint8_t uchar_flags_t;
+typedef uint8_t uchar_info_t;
+typedef wchar_t uchar_codepoint_t;
 
-class Observable {
- public:
-  void addObserver(Observer* observer) {
-    if (observers.find(observer) == observers.end()) {
-      observers.insert(observer);
-    }
-  }
+#define UCHAR_FLAGS_CHANGE_CASE         0x01
+#define UCHAR_FLAGS_PRESERVE_CASE       0x02
+#define UCHAR_FLAGS_USE_CASEFOLDED      0x04
 
-  void notifyObservers() {
-    for_each(observers.begin(), observers.end(),
-    [this](Observer* o) {o->notify(this);});
-  }
-
-  void removeObserver(Observer*) {
-    auto iter = observers.find(observer);
-    if (iter != observers.end()) {
-      observers.erase(iter);
-    }
-  }
-
- private:
-  set<Oberver*> observers;
-};
-
-#endif // OBSERVABLE_H
+#endif /* SRC_LIBREXGEN_DEFS_H_ */

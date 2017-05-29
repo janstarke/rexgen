@@ -17,16 +17,16 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __Regex_h__
-#define __Regex_h__
+#ifndef SRC_LIBREXGEN_REGEX_REGEX_H_
+#define SRC_LIBREXGEN_REGEX_REGEX_H_
 
-#include <iostream>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/regex/quantifier.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/debug.h>
+#include <iostream>
 
 typedef enum {
   Compound,
@@ -34,14 +34,15 @@ typedef enum {
   Terminal,
   Class,
   Reference,
-  Stream
+  Stream,
+  Range
 } RegexType;
 
 class IteratorState;
 
 class Regex  {
  public:
-  Regex() : quantifier(1,1) {id=createId();}
+  Regex() : quantifier(1, 1) {id = createId();}
   virtual ~Regex() {}
 
   inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
@@ -71,7 +72,6 @@ class Regex  {
   virtual bool usesCallback() const { return false; }
 
  protected:
-
   virtual int createId() {
     return ++next_id;
   }
@@ -82,5 +82,5 @@ class Regex  {
   int id;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_REGEX_REGEX_H_
 

@@ -17,13 +17,10 @@
   51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <algorithm>
 #include <librexgen/iterator/iteratorstate.h>
-#include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/caseiterator.h>
-using namespace std;
 
 Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
   if (children() == 1) {

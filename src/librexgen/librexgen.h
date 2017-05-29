@@ -17,8 +17,10 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __libregex_h__
-#define __libregex_h__
+#ifndef SRC_LIBREXGEN_LIBREXGEN_H_
+#define SRC_LIBREXGEN_LIBREXGEN_H_
+
+#include <librexgen/c/librexgen.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/osdepend.h>
@@ -31,6 +33,7 @@ Regex* parse_regex(const char* regex, const RexgenOptions& options);
 EXPORT
 Iterator* regex_iterator(const char* regex, const RexgenOptions& options);
 
+class RexgenParserContext;
 Regex* parse_regex(RexgenParserContext* context);
 
-#endif /* __libregex_h__ */
+#endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */

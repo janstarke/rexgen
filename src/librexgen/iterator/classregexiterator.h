@@ -18,48 +18,86 @@
 */
 
 
-#ifndef CLASSREGEXITERATOR_H
-#define CLASSREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_
 
-#include <vector>
-#include <algorithm>
-#include <cstdio>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/uchar.h>
-
-using namespace std;
+#include <librexgen/string/simplestring.h>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
 
 class ClassRegexIterator : public Iterator {
-
- public:
+public:
   ClassRegexIterator(int _id,
-                     const uchar_t* classcontent,
-                     size_t elements
-                    );
-  virtual ~ClassRegexIterator() {}
+                     const wchar_t * classcontent,
+                     size_t elements)
+          :Iterator(_id), current(-1), characters() {
+    size_t n;
+    std::string::size_type index = 0;
+    for (n=0; n < elements; ++n) {
+      characters.append_widechar(classcontent[n]);
+      lengths.push_back(characters.character_length(n));
 
-  inline void value(SimpleString& dst) const {
-    dst.push_back(characters[current]);
+      indices.push_back(index);
+      index += characters.character_length(n);
+    }
+    state = usable;
   }
 
-  bool next();
-  bool previous();
-
-  size_t size() const { return characters.size(); }
-
-  inline bool hasNext() const { return  (current < ((int)characters.size()-1)); }
-  inline bool canUseValue() const { return (current < (int)characters.size()); }
+  virtual ~ClassRegexIterator() {}
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
 
-  SerializableState* getCurrentState() const;
-  void setCurrentState(const SerializableState* state);
+  inline void value(SimpleString* dst) const {
+    const std::string::size_type& length = lengths[current];
+    const std::string::size_type& index = indices[current];
+
+    for (std::string::size_type n=0; n<length; ++n) {
+      dst->push_back(characters[index+n]);
+    }
+  }
+
+  bool next() {
+    ++current;
+
+    if (current >= static_cast<int>(characters.size())) {
+      current = 0;
+      return false;
+    }
+    return true;
+  }
+
+  size_t size() const { return characters.size(); }
+
+  inline bool hasNext() const {
+    return  (current < (static_cast<int>(characters.size())-1));
+  }
+
+  inline bool canUseValue() const {
+    return (current < static_cast<int>(characters.size()));
+  }
+
+  SerializableState* getCurrentState() const {
+    SerializableState* s = Iterator::getCurrentState();
+    s->addValue(current);
+    return s;
+  }
+
+  void setCurrentState(const SerializableState* state) {
+    Iterator::setCurrentState(state);
+    current = state->getValue(0);
+  }
+
  private:
   int current;
-  vector<uchar_t> characters;
+  SimpleString characters;
+  vector<std::string::size_type> indices;
+  vector<std::string::size_type> lengths;
 };
 
-#endif // CLASSREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_

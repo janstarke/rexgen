@@ -15,6 +15,8 @@ ELSE()
   ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
+ADD_DEFINITIONS("-DUNICODE")
+
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
 
@@ -50,25 +52,18 @@ set(librexgen_sources
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
   iterator/groupreferenceiterator.cpp
-  iterator/classregexiterator.cpp
   iterator/streamregexiterator.cpp
   iterator/caseiterator.cpp
-  iterator/terminalregexiterator.cpp
   state/serializablestate.cpp
-	string/simplestring.cpp
-
-  parser/rexgenparsercontext.cpp
-
-	librexgen.cpp
-  common/math.cpp
-
-	c/librexgen.cpp
-	c/iterator.cpp
-	c/simplestring.cpp
+  string/simplestring.cpp
+        parser/rexgenparsercontext.cpp
+  librexgen.cpp
+  c/librexgen.cpp
+  c/iterator.cpp
+  c/simplestring.cpp
 )
 set(parser_sources
-  ${BISON_regexparser_OUTPUTS}
-)
+  ${BISON_regexparser_OUTPUTS} )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")

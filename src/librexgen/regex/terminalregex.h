@@ -17,22 +17,21 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __TerminalRegex_h__
-#define __TerminalRegex_h__
+#ifndef SRC_LIBREXGEN_REGEX_TERMINALREGEX_H_
+#define SRC_LIBREXGEN_REGEX_TERMINALREGEX_H_
 
-#include <vector>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/terminalregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/uchar.h>
+#include <vector>
 
 using std::vector;
 
 class TerminalRegex : public Regex {
  public:
-  TerminalRegex(uint16_t ch) {
-    value.push_back(uchar_t(ch));
+  explicit TerminalRegex(wchar_t ch) {
+    value.push_back(ch);
   }
 
   void prepend(const TerminalRegex* tre);
@@ -42,10 +41,12 @@ class TerminalRegex : public Regex {
   RegexType getRegexType() const { return Terminal; }
 
   Iterator* singleIterator(IteratorState* /* state */) const
-  { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
+  {
+    return new TerminalRegexIterator(getId(), &value[0], value.size());
+  }
 
  private:
-  vector<uchar_t> value;
+  vector<wchar_t> value;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_REGEX_TERMINALREGEX_H_

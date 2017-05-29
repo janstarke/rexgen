@@ -17,8 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __osdepend_h__
-#define __osdepend_h__
+#ifndef SRC_LIBREXGEN_OSDEPEND_H_
+#define SRC_LIBREXGEN_OSDEPEND_H_
 
 #if defined(_WIN32)
 #include <io.h>
@@ -45,4 +45,4 @@ typedef unsigned __int32 uint32_t;
 
 #endif
 
-#endif /* __osdepend_h__ */
+#endif  /* SRC_LIBREXGEN_OSDEPEND_H_ */

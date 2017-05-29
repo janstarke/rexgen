@@ -17,15 +17,16 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-
+#include <librexgen/c/iterator.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/librexgen.h>
-#include <librexgen/rexgen_options.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <librexgen/version/version.h>
 #include <librexgen/c/librexgen.h>
 #include <librexgen/common/bool.h>
+#include <vector>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,12 +50,12 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex, bool use_regex_backreferences
 }
 
 EXPORT
-c_iterator_ptr c_regex_iterator_cb (
+c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
-  int ignore_case=0,
-  callback_fp callback=NULL) {
+  int ignore_case = 0,
+  callback_fp callback = NULL) {
   RexgenOptions options;
-  options.ignore_case = (bool)ignore_case;
+  options.ignore_case = static_cast<bool>(ignore_case);
   options.infile = NULL;
   options.stream_callback = callback;
 
@@ -75,8 +76,8 @@ int c_iterator_next(c_iterator_ptr iter) {
 
 EXPORT
 void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-  (reinterpret_cast<Iterator*>(iter))->value(*(reinterpret_cast<SimpleString*>
-      (dst)));
+  (reinterpret_cast<Iterator*>(iter))->value(reinterpret_cast<SimpleString*>
+      (dst));
 }
 
 
@@ -88,15 +89,16 @@ void c_iterator_delete(c_iterator_ptr i) {
 EXPORT
 void c_iterator_get_state(c_iterator_ptr i, char** dstptr) {
   vector<SerializableState::stateword_t> dst;
-  SerializableState* state = (reinterpret_cast<Iterator*>(i))->getCurrentState();
+  SerializableState* state =
+          (reinterpret_cast<Iterator*>(i))->getCurrentState();
   state->serialize(&dst);
-  string sDst = "RXS" JS_REGEX_RELEASE;
+  std::string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
   for (unsigned n = 0; n < dst.size(); ++n) {
     snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", dst[n]);
     sDst += cpTmp;
   }
-  *dstptr = (char*)malloc(sDst.length()+1);
+  *dstptr = static_cast<char*>(malloc(sDst.length()+1));
   memset(*dstptr, 0, sDst.length()+1);
   strncpy(*dstptr, sDst.c_str(), sDst.length());
 }
@@ -116,14 +118,15 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
   }
 
   size_t words = 0;
-  int count=0;
+  int count = 0;
   char* cp = strchr(srcptr, ',');
   while (cp) {
     ++cp;
     ++count;
     cp = strchr(cp, ',');
   }
-  SerializableState::stateword_t* stp = new SerializableState::stateword_t[count];
+  SerializableState::stateword_t* stp =
+          new SerializableState::stateword_t[count];
   cp = strchr(srcptr, ',');
   count = 0;
   while (cp) {
@@ -131,7 +134,7 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
     cp = strchr(cp+1, ',');
   }
   SerializableState* state = new SerializableState(
-    (SerializableState::stateword_t*)stp, words);
+    (SerializableState::stateword_t*)stp, &words);
   (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
   delete state;
 }

@@ -18,17 +18,27 @@
 */
 
 
-#ifndef NTZ_H
-#define NTZ_H
+#ifndef SRC_LIBREXGEN_COMMON_NTZ_H_
+#define SRC_LIBREXGEN_COMMON_NTZ_H_
 
 #include <cstdint>
 
 #ifdef WIN32
 #include <intrin.h>
 #if _WIN64
-_inline int ntz(unsigned long long x) { unsigned long v; if (!x) { return -1; } _BitScanForward64(&v, x); return v; }
+_inline int ntz(unsigned int64 x) {
+  unsigned int32 v;
+  if (!x) { return -1; }
+  _BitScanForward64(&v, x);
+  return v;
+}
 #else
-_inline int ntz(unsigned long x) { unsigned long v; if (!x) { return -1; } _BitScanForward(&v, x); return v; }
+_inline int ntz(unsigned int32 x) {
+  unsigned int32 v;
+  if (!x) { return -1; }
+  _BitScanForward(&v, x);
+  return v;
+}
 #endif /* _WIN64 */
 #else /* ! WIN32 */
 #if __x86_64__
@@ -38,4 +48,4 @@ _inline int ntz(unsigned long x) { unsigned long v; if (!x) { return -1; } _BitS
 #endif /* __x86_64__ */
 #endif /* WIN32 */
 
-#endif /* NTZ_H */
+#endif  // SRC_LIBREXGEN_COMMON_NTZ_H_

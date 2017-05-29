@@ -17,21 +17,20 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __librexgen_api_c_h__
-#define __librexgen_api_c_h__
+#ifndef SRC_LIBREXGEN_C_LIBREXGEN_H_
+#define SRC_LIBREXGEN_C_LIBREXGEN_H_
 
-#include <stdio.h>
-#include <wchar.h>
+#include <librexgen/c/types.h>
+#include <librexgen/c/iterator.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/version.h>
 #include <librexgen/common/bool.h>
+#include <stdio.h>
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef void* c_regex_ptr;
-typedef size_t (*callback_fp)(wchar_t* dst, const size_t buffer_size);
 
 EXPORT
 const char* c_rexgen_get_last_error();
@@ -53,4 +52,4 @@ int c_regex_uses_callback(c_regex_ptr i);
 }
 #endif
 
-#endif /* __librexgen_api_c_h__ */
+#endif  /* SRC_LIBREXGEN_C_LIBREXGEN_H_ */

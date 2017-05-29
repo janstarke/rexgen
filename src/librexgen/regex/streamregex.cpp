@@ -17,11 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <cstdio>
 #include <librexgen/regex/streamregex.h>
-#include <librexgen/genericerror.h>
 
-using namespace std;
 
 StreamRegex::StreamRegex(callback_fp cb)
   : callback(cb) {

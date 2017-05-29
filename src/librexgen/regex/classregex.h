@@ -18,36 +18,36 @@
 */
 
 
-#ifndef CLASSREGEX_H
-#define CLASSREGEX_H
+#ifndef SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
+#define SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
 
-#include <vector>
-#include <string>
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/classregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/string/simplestring.h>
-
-using namespace std;
+#include <vector>
 
 class ClassRegex : public Regex {
  public:
-  void addCharacter(const uchar_t& ch);
-  void addRange(const uchar_t& a, const uchar_t& b);
-  bool contains(const uchar_t& ch) const;
+  ClassRegex() : requires_multibyte(false) {}
+
+  void addCharacter(const wchar_t & ch);
+  void addRange(const wchar_t& a, const wchar_t& b);
+  bool contains(const wchar_t& ch) const;
   RegexType getRegexType() const { return Class; }
 
   void merge(const ClassRegex* other);
 
-  Iterator* singleIterator(IteratorState* /* state */) const;
+  Iterator* singleIterator(IteratorState* /* state */) const {
+    return new ClassRegexIterator(getId(), &characters[0], characters.size());};
 
  private:
-  void __insert_character(const uchar_t& ch);
-  void __append_character(const uchar_t& ch);
-  void removeCharacterInstances(const uchar_t& ch);
-  vector<uchar_t> characters;
+  void __insert_character(const wchar_t& ch);
+  void __append_character(const wchar_t& ch);
+  void removeCharacterInstances(const wchar_t& ch);
+  std::vector<wchar_t> characters;
+  bool requires_multibyte;
 };
 
-#endif // CLASSREGEX_H
+#endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_

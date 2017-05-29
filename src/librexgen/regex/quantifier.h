@@ -18,22 +18,21 @@
 */
 
 
-#ifndef QUANTIFIER_H
-#define QUANTIFIER_H
+#ifndef SRC_LIBREXGEN_REGEX_QUANTIFIER_H_
+#define SRC_LIBREXGEN_REGEX_QUANTIFIER_H_
 
 class Quantifier {
-
  public:
   Quantifier() : min(1), max(1) {}
   Quantifier(unsigned int _min, unsigned int _max) : min(_min), max(_max) {}
-  Quantifier ( const Quantifier& other ): min(other.min), max(other.max) {}
+  Quantifier(const Quantifier& other): min(other.min), max(other.max) {} /* NOLINT(*) */
   virtual ~Quantifier() {}
-  virtual Quantifier& operator= ( const Quantifier& other ) {
+  virtual Quantifier& operator= (const Quantifier& other) {
     this->min = other.getMin();
     this->max = other.getMax();
     return *this;
   }
-  virtual bool operator== ( const Quantifier& other ) const {
+  virtual bool operator== (const Quantifier& other) const {
     return (this->min == other.min) && (this->max == other.max);
   }
 
@@ -48,4 +47,4 @@ class Quantifier {
   unsigned int max;
 };
 
-#endif // QUANTIFIER_H
+#endif  // SRC_LIBREXGEN_REGEX_QUANTIFIER_H_

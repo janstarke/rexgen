@@ -22,6 +22,7 @@
 #include <librexgen/regex/terminalregex.h>
 #include <librexgen/iterator/compoundregexiterator.h>
 #include <librexgen/debug.h>
+#include <deque>
 
 void CompoundRegex::prependRegex(Regex* regex) {
   ENTER_METHOD;
@@ -38,7 +39,9 @@ void CompoundRegex::prependRegex(Regex* regex) {
           TerminalRegex* tre_new = reinterpret_cast<TerminalRegex*>(regex);
           tre->prepend(tre_new);
 
-          /* we have merged two terminals, so we don't need the first one anymore */
+          /* we have merged two terminals,
+           * so we don't need the first one anymore
+           */
           delete regex;
           LEAVE_METHOD;
         }

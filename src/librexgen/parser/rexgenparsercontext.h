@@ -18,37 +18,27 @@
 */
 
 
-#ifndef REXGENPARSERCONTEXT_H
-#define REXGENPARSERCONTEXT_H
+#ifndef SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_
+#define SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_
 
+#include <librexgen/regex/streamregex.h>
+#include <librexgen/regex/groupreference.h>
+#include <librexgen/rexgen_options.h>
 #include <iostream>
 #include <map>
 #include <set>
+#include <vector>
 #include <cstdio>
-#include <librexgen/regex/groupreference.h>
-#include <librexgen/regex/streamregex.h>
-#include <librexgen/string/uchar.h>
-#include <librexgen/rexgen_options.h>
-
-using namespace std;
 
 class Regex;
 
 class RexgenParserContext {
-
  public:
-  RexgenParserContext(istream* input, const RexgenOptions& __options )
-    : options(__options), streamRegex(NULL) {
-    this->is = input;
-    this->result = NULL;
-    this->scanner = NULL;
-    groupId = 1;
-    InitScanner();
-  }
+  RexgenParserContext(const char* input, const RexgenOptions& __options );
 
   virtual ~RexgenParserContext();
   void registerGroupReference(GroupReference* gr);
-  const set<GroupReference*>* getGroupReferences(int id) const;
+  const std::set<GroupReference*>* getGroupReferences(int id) const;
   void registerGroup(Regex* re);
   Regex* getGroupRegex(int id) const;
 
@@ -60,7 +50,9 @@ class RexgenParserContext {
   bool hasInvalidGroupReferences() const;
 
   void* scanner;
-  istream* is;
+  std::vector<wchar_t> wcinput;
+  std::vector<wchar_t>::const_iterator next_char;
+  wchar_t current_char;
   Regex* result;
 
   int groupId;
@@ -70,20 +62,43 @@ class RexgenParserContext {
 
 	bool useRegexBackreferences() const { return options.use_regex_backreferences; }
 
+  bool hasNextChar() const { return (next_char != wcinput.cend()); };
+  wchar_t getNextChar();
+  wchar_t getCurrentChar() const { return current_char; }
+
+  /** this is the handling of `\0` - terminals in the regex. the first occurance
+   * of `\0` creates a StreamRegex and returns it, all following occurances
+   * return a reference to the previously created StreamRegex.
+   * We must make this distinction, because StreamReference handles
+   * calls to next() by going to the next word, and calling next() for
+   * the whole regex would result in multiple calls to next() for each single
+   * occurance of `\0`. So, we return a GroupReference, which does not forward
+   * the invocation of next() to the StreamRegex
+   */
+
   Regex* getStreamRegex();
 	Regex* cloneCaptureGroup(int gId);
 
  protected:
+  /**
+   * initialize the scanner. This method is implemented
+   * in regex_lexer.l
+   */
   void InitScanner();
+
+  /**
+   * destroy the scanner and clean up the allocated memory.
+   * This method is implemented in regex_lexer.l
+   */
   void DestroyScanner();
 
  private:
   const RexgenOptions& options;
-  map<int, set <GroupReference*> *> groupRefs;
-  map<int, Regex*> groups;
+  std::map<int, std::set <GroupReference*> *> groupRefs;
+  std::map<int, Regex*> groups;
   StreamRegex* streamRegex;
 
 	void checkCycles(int groupId, const Regex* re) const;
 };
 
-#endif // REXGENPARSERCONTEXT_H
+#endif  // SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_

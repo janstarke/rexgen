@@ -17,14 +17,14 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <librexgen/iterator/regexalternativesiterator.h>
+#include <librexgen/debug.h>
+#include <librexgen/string/unicode.h>
 #include <assert.h>
 #include <cstring>
 #include <deque>
 #include <vector>
 #include <set>
-#include <librexgen/iterator/regexalternativesiterator.h>
-#include <librexgen/debug.h>
-#include <librexgen/string/unicode.h>
 
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : IteratorContainer(_id) {
@@ -32,20 +32,13 @@ RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   state = resetted;
 }
 
-void RegexAlternativesIterator::value(SimpleString& dst) const {
-  ENTER_METHOD;
-  (*getPosition())->value(dst);
-  LEAVE_METHOD;
-}
-
-
 bool RegexAlternativesIterator::next() {
   ENTER_METHOD;
 
   if (state == resetted) {
     state = usable;
     bool res = false;
-    for (auto i: iterators) {
+    for (auto i : iterators) {
       res |= (i->next());
     }
     RETURN(res);
@@ -59,8 +52,8 @@ bool RegexAlternativesIterator::next() {
     resetPosition();
     RETURN(false);
   }
-  //(*iter)->next();
-  RETURN (true);
+  // (*iter)->next();
+  RETURN(true);
 }
 
 bool RegexAlternativesIterator::hasNext() const {
@@ -112,7 +105,7 @@ SerializableState* RegexAlternativesIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
   s->addValue(getPosition() - iterators.begin());
 
-  for (auto i: iterators) {
+  for (auto i : iterators) {
     s->addValue(i->getCurrentState());
   }
   return s;
@@ -121,7 +114,7 @@ SerializableState* RegexAlternativesIterator::getCurrentState() const {
 void RegexAlternativesIterator::setCurrentState(const SerializableState* s) {
   Iterator::setCurrentState(s);
 
-  for (auto i: iterators) {
+  for (auto i : iterators) {
     i->setCurrentState(s->getChildState(i->getId()));
   }
 

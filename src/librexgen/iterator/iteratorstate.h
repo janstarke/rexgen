@@ -17,20 +17,17 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef ITERATORSTATE_H
-#define ITERATORSTATE_H
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATORSTATE_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATORSTATE_H_
 
-#include <map>
-#include <algorithm>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/regex/regex.h>
-
-using namespace std;
+#include <map>
+#include <algorithm>
 
 class IteratorState {
- public:
-
+public:
   IteratorState() : streamIterator(NULL), useRegexBackreferences(false) {
   }
 
@@ -48,7 +45,7 @@ class IteratorState {
     if (id == -1) {
       return getStreamIterator();
     } else {
-      map<int, Iterator*>::const_iterator iter = groupIterators.find(id);
+      std::map<int, Iterator*>::const_iterator iter = groupIterators.find(id);
       if (iter != groupIterators.end()) {
         return iter->second;
       } else {
@@ -57,15 +54,20 @@ class IteratorState {
     }
   }
 
-  void setStreamIterator(StreamRegexIterator* iter) {if (streamIterator == NULL) { streamIterator = iter;}}
+  void setStreamIterator(StreamRegexIterator* iter) {
+    if (streamIterator == NULL) {
+      streamIterator = iter;
+    }
+  }
+
   StreamRegexIterator* getStreamIterator() const { return streamIterator; }
 	void setUseRegexBackreferences(bool use) { useRegexBackreferences = use; }
 	bool getUseRegexBackreferences() const { return useRegexBackreferences; }
 
  private:
-  map<int, Iterator*> groupIterators;
+  std::map<int, Iterator*> groupIterators;
   StreamRegexIterator* streamIterator;
 	bool useRegexBackreferences;
 };
 
-#endif // ITERATORSTATE_H
+#endif  // SRC_LIBREXGEN_ITERATOR_ITERATORSTATE_H_

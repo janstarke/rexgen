@@ -17,14 +17,14 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <librexgen/common/ntz.h>
+#include <cinttypes>
 #include <cstddef>
 #include <cstdint>
-#include <librexgen/common/ntz.h>
 
-using std::size_t;
-
-/* http://www.hackersdelight.org/hdcodetxt/ntz.c.txt */
-/* Norbert Juffa's code, answer to exercise 1 of Chapter 5 (2nd ed). */
+/* http://www.hackersdelight.org/hdcodetxt/ntz.c.txt
+ * Norbert Juffa's code, answer to exercise 1 of Chapter 5 (2nd ed).
+ */
 int ntz11(unsigned int n) {
   static unsigned char tab[32] = {
     0,  1,  2, 24,  3, 19, 6,  25,
@@ -45,10 +45,11 @@ int ntz11(unsigned int n) {
   return n ? tab[k>>27] : 32;
 }
 
-#if ! defined(__USE_INLINE_NTZ__)
+#if !defined(__USE_INLINE_NTZ__)
 #if __x86_64__
-unsigned int ntz(long long unsigned int x) {
-  const unsigned int lower_part =  (const unsigned int) (x & 0x00000000ffffffff);
+unsigned int ntz(std::uint64_t x) {
+  const unsigned int lower_part =
+      (const unsigned int) (x & 0x00000000ffffffff);
   /* no need to AND-out the 32 right-most here,
    * since they are shifted out */
   const unsigned int higher_part = (const unsigned int) (x>>32);
@@ -61,7 +62,7 @@ unsigned int ntz(long long unsigned int x) {
 }
 #else
 
-unsigned int ntz(long unsigned int x) {
+unsigned int ntz(std::uint32_t x) {
   return ntz11(x);
 }
 #endif /* __x86_64__ */

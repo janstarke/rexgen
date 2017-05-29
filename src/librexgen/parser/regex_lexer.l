@@ -30,26 +30,33 @@
   #include <librexgen/string/unicode.h>
   #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
-	#include <librexgen/parser/group_options.h>
+  #include <librexgen/parser/group_options.h>
   #include "parser.hpp"
   #include <cstdio>
 
 	static RexgenParserContext* global_context = NULL;
+	static wchar_t current_wchar_input;
   
   #define YY_EXTRA_TYPE RexgenParserContext*
 //  #define YY_USER_ACTION yylloc->first_line = yylinelo
-  //#define YY_INPUT(buf,result,max_size) __yy_input(buf, result, max_size)
+  #define YY_INPUT(buf,result,max_size) do {result=__yy_input(buf, max_size);}while(0)
 
-	#define YY_INPUT(buf, result, max_size) do {  \
-    char c;                                     \
-    *(global_context->is) >> noskipws >> c;     \
-    if (global_context->is->eof())              \
-      result = YY_NULL;                         \
-    else {                                      \
-      buf[0] = c;                               \
-      result = 1;                               \
-    }                                           \
-	} while (0);
+  static int __yy_input(char* buf, size_t max_size) {
+    if (! global_context->hasNextChar()) {
+        return YY_NULL;
+    }
+
+    const wchar_t wc = global_context->getNextChar();
+
+    int single_byte = wctob(wc);
+    if (single_byte != EOF) {
+        buf[0] = static_cast<char>(single_byte);
+        return 1;
+    }
+
+    buf[0] = static_cast<char>(0xfe);
+    return 1;
+  }
 
   static char hex2bin(const char c) {
     if (c>='0' && c<='9') return c-'0';
@@ -122,23 +129,19 @@ BEGIN_GROUP_WITH_OPTIONS				 	\(\?[i]*(-[i]+)?:
 BEGIN_GROUP 					\(
 END_GROUP							\)
 
-UTF8_2          [\xC0-\xDF][\x80-\xBF]
-UTF8_3          [\xE0-\xEF][\x80-\xBF][\x80-\xBF]
-UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
+MULTIBYTE_CHARACTER  \xFE
 
 %s IN_QUANTIFIER
 %s IN_CLASS
 %%
 
-{ANSICHAR}        { yylval.character = parseAnsiChar(yytext); return T_ANY_CHAR;}
-{UNICODECHAR}		  { yylval.character = parseUnicodeChar(yytext); return T_ANY_CHAR;}
-{UTF8_2}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_3}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{UTF8_4}          { yylval.character = parseUTF8(reinterpret_cast<unsigned char*>(yytext)); return T_ANY_CHAR;}
-{ESCAPED}         { yylval.character = (char)yytext[1]; return T_ANY_CHAR; }
-{LINEFEED}        { yylval.character = '\n'; return T_ANY_CHAR; }
-{CARRIAGERETURN}	{ yylval.character = '\r'; return T_ANY_CHAR; }
-{CLASS_DIGIT}			{ yylval.character = 0; return T_CLASS_DIGIT; }
+{ANSICHAR}        { yylval.character = parseAnsiChar(yytext);                 return T_ANY_CHAR; }
+{UNICODECHAR}     { yylval.character = parseUnicodeChar(yytext);              return T_ANY_CHAR; }
+{MULTIBYTE_CHARACTER}  { yylval.character = global_context->getCurrentChar(); return T_ANY_CHAR; }
+{ESCAPED}         { yylval.character = btowc(yytext[1]);                      return T_ANY_CHAR; }
+{LINEFEED}        { yylval.character = btowc('\n');                           return T_ANY_CHAR; }
+{CARRIAGERETURN}  { yylval.character = btowc('\r');                           return T_ANY_CHAR; }
+{CLASS_DIGIT}	  { yylval.character = 0; return T_CLASS_DIGIT; }
 {CLASS_WORD}      { yylval.character = 0; return T_CLASS_WORD;  }
 "|"			{ return T_PIPE; }
 "["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
@@ -154,7 +157,7 @@ UTF8_4          [\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]
 				yylval.group_options->handle_case = 
 					enable_mode 
 									?	CASE_ITERATE
-									: CASE_PRESERVE ;
+									: CASE_IGNORE ;
 				break;
 			case '-':
 				enable_mode = false;

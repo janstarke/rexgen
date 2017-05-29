@@ -1,0 +1,26 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+addons:
+  apt:
+    sources:
+      - kubuntu-backports
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+      - gcc-4.8
+      - g++-4.8
+      - python-pip
+
+before_install:
+  - sudo pip install cpplint
+
+before_script: mkdir -p build
+script: 
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
+  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
+  - cpplint --recursive src/librexgen
+  - cd build && cmake ../src && make && make test

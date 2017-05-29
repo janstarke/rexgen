@@ -24,10 +24,12 @@
 
   #include <iostream>
   #include <librexgen/debug.h>
+  #include <librexgen/regex/regex.h>
   #include <librexgen/regex/regexalternatives.h>
   #include <librexgen/regex/compoundregex.h>
   #include <librexgen/regex/terminalregex.h>
   #include <librexgen/regex/classregex.h>
+  #include <librexgen/regex/rangeregex.h>
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/regex/streamregex.h>
@@ -55,7 +57,7 @@
 %start T_RegexAlternatives
 
 %union {
-  uint32_t		character;
+  wchar_t		character;
   int 			integer;
 
 	t_group_options* group_options;
@@ -99,7 +101,7 @@
 %type <class_regex> ClassRegex
 %type <class_regex> ClassContent
 %type <class_regex> SimpleClassContent
-%type <class_regex> CharacterClassDigit
+%type <regex> CharacterClassDigit
 %type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
 %type <regex> GroupReference;
@@ -150,7 +152,9 @@ Regex:
     delete q;
   };
 
-PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+PlainRegex:
+        SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+    |   CharacterClassDigit { $$ = $1; }
 	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
@@ -161,9 +165,8 @@ SimpleRegex: T_ANY_CHAR {
 };
 
 ClassRegex:
-    CharacterClassDigit { $$ = $1; }
-  | CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter('-'); }
+    CharacterClassWord  { $$ = $1; }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
     SimpleClassContent  { $$ = $1; }
@@ -176,27 +179,29 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange($1, $3);
+      $$->addRange(btowc($1), btowc($3));
 	}
-	| CharacterClassDigit { $$ = $1; }
+	| T_CLASS_DIGIT {
+      $$ = new ClassRegex();
+      $$->addRange(btowc('0'), btowc('9'));
+  }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter($1);
+    $$->addCharacter(btowc($1));
   }
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
-    $$ = new ClassRegex();
-    $$->addRange('0', '9');
+    $$ = new RangeRegex(RangeRegex::DIGITS);
 	}
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange('a', 'z');
-    $$->addRange('A', 'Z');
-    $$->addRange('0', '9');
-    $$->addCharacter('_');
+    $$->addRange(btowc('a'), btowc('z'));
+    $$->addRange(btowc('A'), btowc('Z'));
+    $$->addRange(btowc('0'), btowc('9'));
+    $$->addCharacter(btowc('_'));
   }
   
 GroupRegex:

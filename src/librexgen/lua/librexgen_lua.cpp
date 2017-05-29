@@ -17,14 +17,13 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
  */
 
-#include "librexgen_lua.h"
+#include <librexgen/lua/librexgen_lua.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/osdepend.h>
-#include <vector>
 
 extern "C" {
 #include <lua5.2/lua.h>
@@ -32,6 +31,7 @@ extern "C" {
 #include <lua5.2/lauxlib.h>
 }
 
+#include <vector>
 #include <string>
 
 static const luaL_Reg rexgen_lib[] = {
@@ -81,7 +81,7 @@ extern "C" {
     iter->value(str);
     const size_t buffer_size = (str.size()+1)*4;
     buffer = new char[buffer_size];
-    size_t bytes = str.to_binary_string(buffer, buffer_size);
+    size_t bytes = str.to_ansi_string(buffer, buffer_size);
     lua_pushlstring(L, buffer, bytes);
     delete [] buffer;
     str.clear();

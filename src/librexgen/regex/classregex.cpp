@@ -17,11 +17,9 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <librexgen/regex/classregex.h>
 #include <algorithm>
 #include <vector>
-#include <librexgen/regex/classregex.h>
-#include <librexgen/string/uchar.h>
-#include <librexgen/common/math.h>
 
 void ClassRegex::merge(const ClassRegex* other) {
   for (auto  i =  other->characters.crbegin();
@@ -31,47 +29,48 @@ void ClassRegex::merge(const ClassRegex* other) {
   }
 }
 
-bool ClassRegex::contains(const uchar_t& ch) const {
+bool ClassRegex::contains(const wchar_t& ch) const {
   return (std::find(characters.begin(), characters.end(),
                     ch) != characters.end());
 }
 
-void ClassRegex::__append_character(const uchar_t& ch) {
+void ClassRegex::__append_character(const wchar_t& ch) {
   removeCharacterInstances(ch);
   characters.push_back(ch);
+  if (ch > 0x80) {
+    requires_multibyte = true;
+  }
 }
-void ClassRegex::__insert_character(const uchar_t& ch) {
+void ClassRegex::__insert_character(const wchar_t& ch) {
   removeCharacterInstances(ch);
   characters.insert(characters.begin(), ch);
 }
 
-void ClassRegex::removeCharacterInstances(const uchar_t& ch) {
-  auto match_fct = [&ch](uchar_t x) {return x.codepoint==ch.codepoint;};
+void ClassRegex::removeCharacterInstances(const wchar_t& ch) {
+  auto match_fct = [&ch](const wchar_t& x) {
+    return x == ch;
+  };
+
   characters.erase(
     std::remove_if(characters.begin(), characters.end(), match_fct),
     characters.end());
 }
 
-void ClassRegex::addCharacter(const uchar_t& ch) {
+void ClassRegex::addCharacter(const wchar_t& ch) {
   __insert_character(ch);
 }
 
-void ClassRegex::addRange(const uchar_t& uch_a, const uchar_t& uch_b) {
-  uint16_t a = uch_a.codepoint;
+void ClassRegex::addRange(const wchar_t& uch_a, const wchar_t& uch_b) {
+  wchar_t a = uch_a;
   int diff = +1;
 
-  if (a > uch_b.codepoint) {
+  if (a > uch_b) {
     diff = -1;
   }
 
-  while (a != uch_b.codepoint + diff) {
+  while (a != uch_b + diff) {
     __append_character(a);
     a += diff;
   }
-}
-
-Iterator* ClassRegex::singleIterator(IteratorState* /*state*/) const {
-  return new ClassRegexIterator(getId(), &characters[0],
-                                characters.size());
 }
 

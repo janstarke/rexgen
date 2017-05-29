@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -15,33 +15,34 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
- */
+*/
 
-#ifndef SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
-#define SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_
+#ifndef SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_
 
 #include <librexgen/iterator/iterator.h>
-#include <librexgen/string/unicode.h>
-#include <librexgen/string/simplestring.h>
-#include <librexgen/osdepend.h>
 
-extern "C" {
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-}
-extern "C" {
-  EXPORT
-  int rexgen_parse_regex(lua_State* L);
+template <char __MIN, char __MAX>
+class RangeIterator : public Iterator {
+  public:
+  RangeIterator(int _id) : Iterator(_id), current(0), offset(__MIN), max(__MAX-__MIN) {}
 
-  EXPORT
-  int rexgen_value(lua_State* L, const Iterator* iter);
+  void value(SimpleString* dst) const {
+    dst->push_back(static_cast<const byte_t>(current+offset));
+  }
 
-  EXPORT
-  int luaopen_rexgen(lua_State* L);
+  bool next() {
+    current = current<max ? current+1 : 0;
+    return current;
+  }
 
-  EXPORT
-  int rexgen_iter(lua_State* L);
-}
+  virtual void updateReferences(IteratorState* /* iterState */) {}
+  virtual void updateAttributes(IteratorState* /* iterState */) {}
 
-#endif /* SRC_LIBREXGEN_LUA_LIBREXGEN_LUA_H_ */
+  private:
+  char current;
+  const char offset;
+  const char max;
+};
+
+#endif //SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_

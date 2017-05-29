@@ -18,8 +18,8 @@
  */
 
 
-#ifndef TOPITERATOR_H
-#define TOPITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_TOPITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_TOPITERATOR_H_
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
@@ -64,7 +64,7 @@ class TopIterator : public Iterator {
     return false;
   }
 
-  void value(SimpleString& dst) const { child->value(dst); }
+  void value(SimpleString* dst) const { child->value(dst); }
   bool hasNext() const { return child->hasNext(); }
   void updateReferences(IteratorState* /* ignore */) {
     if (child != NULL && state != NULL) {
@@ -92,4 +92,4 @@ class TopIterator : public Iterator {
   bool needWord;
 };
 
-#endif // TOPITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_TOPITERATOR_H_

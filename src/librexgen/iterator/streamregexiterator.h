@@ -18,11 +18,12 @@
 */
 
 
-#ifndef STREAMREGEXITERATOR_H
-#define STREAMREGEXITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_
 
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
+#include <librexgen/defs.h>
 
 static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 
@@ -44,8 +45,8 @@ class StreamRegexIterator : public Iterator {
     return __hasNext;
   }
   bool hasNext() const { return state == resetted; }
-  void value(SimpleString& dst) const {
-    dst.append(buffer, length);
+  void value(SimpleString* dst) const {
+    dst->append(&buffer[0], length);
   }
   void updateReferences(IteratorState* /* iterState */) {}
   void updateAttributes(IteratorState* /* iterState */) {}
@@ -53,13 +54,14 @@ class StreamRegexIterator : public Iterator {
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
+
  private:
   void readNextWord();
 
   callback_fp callback;
-  wchar_t buffer[STREAMREGEXITERATOR_MAXLEN];
+  byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
   size_t length;
   bool __hasNext;
 };
 
-#endif // STREAMREGEXITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_

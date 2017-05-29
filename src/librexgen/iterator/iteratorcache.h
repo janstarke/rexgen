@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2014  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2016  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -18,8 +18,17 @@
 */
 
 
-#ifndef MATH_H
-#define MATH_H
-unsigned long long int ipow(unsigned long long int base, unsigned int exp);
+#ifndef SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_
+#define SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_
 
-#endif /* MATH_H */
+#include <librexgen/iterator/iterator.h>
+
+class IteratorCache : public Iterator {
+public:
+  explicit IteratorCache(Iterator* _child) : child(_child) {}
+
+private:
+  Iterator* child;
+};
+
+#endif //SRC_LIBREXGEN_ITERATOR_ITERATORCACHE_H_

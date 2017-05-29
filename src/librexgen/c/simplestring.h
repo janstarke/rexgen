@@ -18,8 +18,8 @@
 */
 
 
-#ifndef API_C_SIMPLESTRING_H
-#define API_C_SIMPLESTRING_H
+#ifndef SRC_LIBREXGEN_C_SIMPLESTRING_H_
+#define SRC_LIBREXGEN_C_SIMPLESTRING_H_
 
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
@@ -40,15 +40,7 @@ EXPORT
 void c_simplestring_delete(c_simplestring_ptr s);
 
 EXPORT
-int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
-                                  size_t buffer_size);
-EXPORT
-int c_simplestring_to_ansi_string(c_simplestring_ptr s, char* buffer,
-                                  size_t buffer_size);
-
-EXPORT
-int c_simplestring_to_external_string(c_simplestring_ptr s, char* buffer,
-                                      size_t buffer_size);
+const char* c_simplestring_to_string(c_simplestring_ptr s);
 
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s);
@@ -57,4 +49,4 @@ void c_simplestring_clear(c_simplestring_ptr s);
 }
 #endif
 
-#endif /* API_C_SIMPLESTRING_H */
+#endif  /* SRC_LIBREXGEN_C_SIMPLESTRING_H_ */

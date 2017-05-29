@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-. ./build.config
+. ./src/build.config
 
 if test -d ${BUILDDIR}; then
 	rm -rf ${BUILDDIR}

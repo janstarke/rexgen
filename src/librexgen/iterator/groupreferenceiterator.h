@@ -18,10 +18,9 @@
 */
 
 
-#ifndef GROUPREFERENCEITERATOR_H
-#define GROUPREFERENCEITERATOR_H
+#ifndef SRC_LIBREXGEN_ITERATOR_GROUPREFERENCEITERATOR_H_
+#define SRC_LIBREXGEN_ITERATOR_GROUPREFERENCEITERATOR_H_
 
-#include <vector>
 #include <librexgen/iterator/iteratorcontainer.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/unicode.h>
@@ -29,10 +28,9 @@
 
 
 class GroupReferenceIterator : public IteratorContainer {
-
  public:
   GroupReferenceIterator(int _id, int group)
-    : IteratorContainer(_id), groupId(group), groupRef(NULL) { };
+    : IteratorContainer(_id), groupId(group), groupRef(NULL) { }
 
   inline bool hasNext() const { return (state == resetted); }
   inline bool next() {
@@ -40,7 +38,7 @@ class GroupReferenceIterator : public IteratorContainer {
     state = usable;
     return res;
   }
-  inline void value(SimpleString& dst) const { groupRef->value(dst);}
+  inline void value(SimpleString* dst) const { groupRef->value(dst);}
 
   void updateReferences(IteratorState* iterState);
  private:
@@ -48,4 +46,4 @@ class GroupReferenceIterator : public IteratorContainer {
   const Iterator* groupRef;
 };
 
-#endif // GROUPREFERENCEITERATOR_H
+#endif  // SRC_LIBREXGEN_ITERATOR_GROUPREFERENCEITERATOR_H_

@@ -18,19 +18,19 @@
 */
 
 
-#ifndef REGEXALTERNATIVES_H
-#define REGEXALTERNATIVES_H
+#ifndef SRC_LIBREXGEN_REGEX_REGEXALTERNATIVES_H_
+#define SRC_LIBREXGEN_REGEX_REGEXALTERNATIVES_H_
 
-#include <deque>
 #include <librexgen/regex/regex.h>
 #include <librexgen/regex/regexcontainer.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/parser/group_options.h>
+#include <deque>
 
 class RegexAlternatives : public RegexContainer {
  public:
-  RegexAlternatives(): RegexContainer(), groupId(-1),handle_case(CASE_IGNORE) {
+  RegexAlternatives(): RegexContainer(), groupId(-1), handle_case(CASE_IGNORE) {
   }
   inline void addRegex(Regex* regex) { push_front(regex); }
 
@@ -40,10 +40,8 @@ class RegexAlternatives : public RegexContainer {
 
   Iterator* singleIterator(IteratorState* state) const;
 
-  Iterator* getContainerIterator();
-
   int getGroupId() const { return groupId; }
-  void setGroupId (int _id) { groupId = _id; }
+  void setGroupId(int _id) { groupId = _id; }
 
   void setGroupOptions(const t_group_options* opts) {
     handle_case = opts->handle_case;
@@ -54,4 +52,4 @@ class RegexAlternatives : public RegexContainer {
   int handle_case;
 };
 
-#endif // REGEXALTERNATIVES_H
+#endif  // SRC_LIBREXGEN_REGEX_REGEXALTERNATIVES_H_

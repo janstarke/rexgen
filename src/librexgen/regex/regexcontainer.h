@@ -17,28 +17,25 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef __regexcontainer_h__
-#define __regexcontainer_h__
+#ifndef SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_
+#define SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_
 
-#include <deque>
-#include <algorithm>
-#include <functional>
 #include <librexgen/regex/regex.h>
 #include <librexgen/debug.h>
 #include <librexgen/string/simplestring.h>
-
-using namespace std;
+#include <deque>
+#include <algorithm>
+#include <functional>
 
 class RegexContainer : public Regex {
  public:
-
-  void mapToChildren(function<void (const Regex*)> fct) const {
+  void mapToChildren(std::function<void (const Regex*)> fct) const {
     for (auto r : regexObjects) {
       fct(r);
     }
   }
 
-  void mapToChildren(function<void (const Regex*)> fct) {
+  void mapToChildren(std::function<void (const Regex*)> fct) {
     for (auto r : regexObjects) {
       fct(r);
     }
@@ -50,7 +47,7 @@ class RegexContainer : public Regex {
   }
 
   virtual bool usesCallback() const {
-    for (auto re: regexObjects) {
+    for (auto re : regexObjects) {
       if (re->usesCallback()) {
         return true;
       }
@@ -58,7 +55,6 @@ class RegexContainer : public Regex {
     return Regex::usesCallback();
   }
 
-protected:
   size_t children() const { return regexObjects.size(); }
 
         Regex* firstChild()       {return regexObjects[0];}
@@ -67,8 +63,9 @@ protected:
   void push_front(Regex* re) {regexObjects.push_front(re);}
   void push_back(Regex* re) {regexObjects.push_back(re);}
 
-private:
-  deque<Regex*> regexObjects;
+ protected:
+  std::deque<Regex*>* getChildren() { return &regexObjects; }
+  std::deque<Regex*> regexObjects;
 };
 
-#endif
+#endif  // SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_

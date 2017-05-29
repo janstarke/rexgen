@@ -20,8 +20,8 @@
 #include <librexgen/iterator/caseiterator.h>
 #include <librexgen/parser/group_options.h>
 #include <librexgen/common/ntz.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/genericerror.h>
+#include <cassert>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
   : IteratorContainer(-1), child(__child), handle_case(options) {
@@ -34,7 +34,7 @@ CaseIterator::~CaseIterator() {
 }
 
 bool CaseIterator::readNextFromChild() {
-  //fprintf(stderr, "readNextFromChild()\n");
+  // fprintf(stderr, "readNextFromChild()\n");
   bool childHadNext;
 
   /* clear the previously read word
@@ -44,13 +44,15 @@ bool CaseIterator::readNextFromChild() {
 
   /* read next word */
   childHadNext = child->next();
-  child->value(word);
+  child->value(&word);
 
-  for (unsigned int n=0; n<word.size(); ++n) {
-    if (word.can_change_case(n)) {
-      word.tolower(n);
-      changeable_characters.push_back(n);
+  /* store the indices of all convertible characters */
+  for (unsigned int idx=0; idx<word.size();) {
+    if (word.can_change_case(idx)) {
+      changeable_characters.push_back(idx);
     }
+
+    idx += word.character_length(idx);
   }
 
   if (changeable_characters.size() <= max_fast_character_bytes) {
@@ -61,11 +63,6 @@ bool CaseIterator::readNextFromChild() {
   }
   parity = 0;
   j = 0;      /* == ntz(k) & parity */
-
-  /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
-  if (handle_case == CASE_PRESERVE) {
-    word.set_preserve_case();
-  }
 
   return childHadNext;
 }
@@ -81,11 +78,11 @@ bool CaseIterator::hasNext() const {
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
 bool CaseIterator::next() {
   /* G1 */
-  if (word.empty() || k == 0) {
+  if (word.empty() || k == 0 || handle_case==CASE_IGNORE) {
     bool childHadNext = readNextFromChild();
 
     /* keep in mind: k is the number of remaining variants */
-    //fprintf(stderr, "returning original value; k=%llu\n", k);
+    // fprintf(stderr, "returning original value; k=%llu\n", k);
     return (childHadNext);
   }
 
@@ -98,7 +95,7 @@ inline void CaseIterator::fast_next() {
    * if (parity_n+1 == 0) set j <- ntz(k)
    * ntz() does the same as the ruler function p(k) in eq. 7.1-(00)
    */
-  //fprintf(stderr, "ntz(k=%016x) <= %d\n", k, ntz(k));
+  // fprintf(stderr, "ntz(k=%016x) <= %d\n", k, ntz(k));
   j = ntz(k) & (parity);
 
   /* G3: invert parity */
@@ -110,17 +107,13 @@ inline void CaseIterator::fast_next() {
   parity ^= (unsigned int) -1;
 
   /* G5 */
-  //fprintf(stderr, "p=%d, k = 0x%08x, j = %d\n", parity, k, j);
+  // fprintf(stderr, "p=%d, k = 0x%08x, j = %d\n", parity, k, j);
 
   /* G2: visit */
 
-  //fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
+  // fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
-  //assert(j < changeable_characters.size());
+  // assert(j < changeable_characters.size());
   word.toggle_case(changeable_characters[j]);
   --k;
-}
-
-void CaseIterator::value(SimpleString& dst) const {
-  dst.append(word);
 }

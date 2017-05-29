@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -18,13 +18,32 @@
 */
 
 
-#ifndef OBSERVER_H
-#define OBSERVER_H
+#ifndef SRC_LIBREXGEN_REGEX_RANGEREGEX_H_
+#define SRC_LIBREXGEN_REGEX_RANGEREGEX_H_
 
-template <class __ITERATOR>
-class Observer {
+#include <librexgen/regex/regex.h>
+#include <librexgen/iterator/rangeiterator.h>
+
+class RangeRegex : public Regex {
  public:
-  void notify(__ITERATOR* src) = 0;
+  typedef enum {
+    DIGITS
+  } CharacterClassType;
+
+  RangeRegex(CharacterClassType _type)
+    :type(_type) {}
+
+  RegexType getRegexType() const { return Range; }
+
+  Iterator* singleIterator(IteratorState* /* state */) const {
+    switch (type) {
+      case DIGITS:
+        return new RangeIterator<'0','9'>(getId());
+    }
+  }
+
+  private:
+  const CharacterClassType type;
 };
 
-#endif // OBSERVER_H
+#endif  // SRC_LIBREXGEN_REGEX_RANGEREGEX_H_
