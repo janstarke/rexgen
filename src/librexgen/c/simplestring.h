@@ -23,6 +23,7 @@
 
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/common/deprecated.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -41,6 +42,10 @@ void c_simplestring_delete(c_simplestring_ptr s);
 
 EXPORT
 const char* c_simplestring_to_string(c_simplestring_ptr s);
+
+EXPORT
+DEPRECATED(int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
+                                             size_t buffer_size));
 
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s);
