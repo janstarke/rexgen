@@ -15,6 +15,6 @@ set(PYTHON_TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/python")
 configure_file("${PROJECT_SOURCE_DIR}/python/setup.py" "${PYTHON_TMP_DIR}/setup.py")
 configure_file("${PROJECT_SOURCE_DIR}/python/rexgen.py" "${PYTHON_TMP_DIR}/rexgen.py")
 
-install(CODE "execute_process(COMMAND python setup.py install -f --prefix=\"${CMAKE_INSTALL_PREFIX}\" WORKING_DIRECTORY \"${PYTHON_TMP_DIR}\")")
+install(CODE "execute_process(COMMAND pip install -e \"${PYTHON_TMP_DIR}\")")
 
 endif(USE_PYTHON)
