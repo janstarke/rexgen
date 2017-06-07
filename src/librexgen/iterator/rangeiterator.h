@@ -24,8 +24,7 @@
 
 template <char __MIN, char __MAX>
 class RangeIterator : public Iterator {
-
-public:
+ public:
   explicit RangeIterator(int _id)
           : Iterator(_id), current(__MIN-1), minimum(__MIN), maximum(__MAX) {}
 
@@ -42,7 +41,7 @@ public:
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
 
-private:
+ private:
   char current;
   const char minimum;
   const char maximum;

@@ -26,9 +26,9 @@
 #include <librexgen/osdepend.h>
 #include <string.h>
 #include <stdlib.h>
+#include <xlocale.h>
 #include <string>
 #include <algorithm>
-#include <xlocale.h>
 #include <cassert>
 
 #ifdef __cplusplus

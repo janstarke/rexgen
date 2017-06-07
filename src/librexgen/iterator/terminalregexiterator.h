@@ -30,7 +30,6 @@
 #include <string>
 
 class TerminalRegexIterator : public Iterator {
-
  public:
   TerminalRegexIterator(int _id, const wchar_t* _terminal, size_t elements)
           : Iterator(_id) {
@@ -53,6 +52,7 @@ class TerminalRegexIterator : public Iterator {
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
+
  private:
   SimpleString terminal;
 };

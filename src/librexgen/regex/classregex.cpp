@@ -28,7 +28,7 @@ void ClassRegex::merge(const ClassRegex* other) {
     addCharacter(*i);
   }
 
-  for (CharacterClassType ct: other->ranges) {
+  for (CharacterClassType ct : other->ranges) {
     addRange(ct);
   }
 }
@@ -60,7 +60,8 @@ void ClassRegex::removeCharacterInstances(const wchar_t& ch) {
     characters.end());
 }
 
-void ClassRegex::removeCharacterInstances(const wchar_t& min, const wchar_t& max) {
+void ClassRegex::removeCharacterInstances(
+        const wchar_t& min, const wchar_t& max) {
   auto match_fct = [&min, &max](const wchar_t& x) {
     return (min <= x) && (x <= max);
   };
@@ -75,11 +76,13 @@ void ClassRegex::addCharacter(const wchar_t& ch) {
 }
 
 void ClassRegex::addRange(const wchar_t& uch_a, const wchar_t& uch_b) {
-
-  if (uch_a == L'0' && uch_b == L'9') { ranges.push_back(DIGITS); }
-  else if (uch_a == L'A' && uch_b == L'Z') { ranges.push_back(UPPERCASE); }
-  else if (uch_a == L'a' && uch_b == L'z') { ranges.push_back(LOWERCASE); }
-  else {
+  if (uch_a == L'0' && uch_b == L'9') {
+    ranges.push_back(DIGITS);
+  } else if (uch_a == L'A' && uch_b == L'Z') {
+    ranges.push_back(UPPERCASE);
+  } else if (uch_a == L'a' && uch_b == L'z') {
+    ranges.push_back(LOWERCASE);
+  } else {
     wchar_t a = uch_a;
     int diff = +1;
 
@@ -124,7 +127,7 @@ Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const {
       case LOWERCASE:
         return new RangeIterator<'a', 'z'>(getId());
       case WORDCHARACTERS: {
-        RegexAlternativesIterator* child = new RegexAlternativesIterator(getId());
+        auto child = new RegexAlternativesIterator(getId());
         child->addChild(new RangeIterator<'0', '9'>(getId()));
         child->addChild(new RangeIterator<'a', 'z'>(getId()));
         child->addChild(new RangeIterator<'A', 'Z'>(getId()));
@@ -140,7 +143,8 @@ Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const {
     RegexAlternativesIterator *child = new RegexAlternativesIterator(getId());
     single = child;
     if (characters.size() > 0) {
-      child->addChild(new ClassRegexIterator(getId(), &characters[0], characters.size()));
+      child->addChild(new ClassRegexIterator(
+              getId(), &characters[0], characters.size()));
     }
     for (CharacterClassType classType : ranges) {
       switch (classType) {

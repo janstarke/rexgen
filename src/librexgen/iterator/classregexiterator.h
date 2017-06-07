@@ -31,8 +31,7 @@
 #include <cstdio>
 
 class ClassRegexIterator : public Iterator {
-
-public:
+ public:
   ClassRegexIterator(int _id,
                      const wchar_t * classcontent,
                      size_t elements)

@@ -27,7 +27,6 @@
 #include <librexgen/iterator/rangeiterator.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/terminalregexiterator.h>
-#include <librexgen/iterator/classregexiterator.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <vector>
