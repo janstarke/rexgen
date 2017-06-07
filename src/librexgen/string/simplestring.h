@@ -30,6 +30,7 @@
 #include <string>
 #include <algorithm>
 #include <cassert>
+#include <cwctype>
 
 #ifdef __cplusplus
 
@@ -37,7 +38,7 @@ class SimpleString : public std::string {
  public:
   bool can_change_case(size_t idx) const {
     const wchar_t wc = widechar_at(idx);
-    return (::towupper(wc) != ::towlower(wc));
+    return (std::towupper(wc) != std::towlower(wc));
   }
 
   size_t character_length(size_t idx) const {
