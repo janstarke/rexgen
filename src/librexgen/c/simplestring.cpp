@@ -60,7 +60,7 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
     if (size < 1) {
       throw std::runtime_error("wctomb_l(): conversion error");
     }
-    if (size < ((int)buffer_size-result)) {
+    if (size < (static_cast<int>(buffer_size)-result)) {
       memcpy(buffer+result, tmp_buffer, size);
       result += size;
     } else {

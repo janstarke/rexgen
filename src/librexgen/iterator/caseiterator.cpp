@@ -47,7 +47,7 @@ bool CaseIterator::readNextFromChild() {
   child->value(&word);
 
   /* store the indices of all convertible characters */
-  for (unsigned int idx=0; idx<word.size();) {
+  for (unsigned int idx=0; idx < word.size();) {
     if (word.can_change_case(idx)) {
       changeable_characters.push_back(idx);
     }
@@ -78,7 +78,7 @@ bool CaseIterator::hasNext() const {
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
 bool CaseIterator::next() {
   /* G1 */
-  if (word.empty() || k == 0 || handle_case==CASE_IGNORE) {
+  if (word.empty() || k == 0 || handle_case == CASE_IGNORE) {
     bool childHadNext = readNextFromChild();
 
     /* keep in mind: k is the number of remaining variants */

@@ -22,7 +22,8 @@
 #include <algorithm>
 #include <utility>
 
-RexgenParserContext::RexgenParserContext(const char* input, const RexgenOptions& __options )
+RexgenParserContext::RexgenParserContext(const char* input,
+                                         const RexgenOptions& __options)
         : options(__options), streamRegex(NULL) {
   this->result = NULL;
   this->scanner = NULL;
@@ -32,7 +33,7 @@ RexgenParserContext::RexgenParserContext(const char* input, const RexgenOptions&
   int size;
   wchar_t wc = 0;
   mbstate_t mbs;
-  mbrlen ( NULL, 0, &mbs );
+  mbrlen(NULL, 0, &mbs);
   do {
     size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
     if (size > 0) {

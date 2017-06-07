@@ -31,6 +31,7 @@
 #include <cstdio>
 
 class ClassRegexIterator : public Iterator {
+
 public:
   ClassRegexIterator(int _id,
                      const wchar_t * classcontent,
@@ -57,7 +58,7 @@ public:
     const std::string::size_type& length = lengths[current];
     const std::string::size_type& index = indices[current];
 
-    for (std::string::size_type n=0; n<length; ++n) {
+    for (std::string::size_type n=0; n < length; ++n) {
       dst->push_back(characters[index+n]);
     }
   }

@@ -34,7 +34,7 @@ class Regex;
 
 class RexgenParserContext {
  public:
-  RexgenParserContext(const char* input, const RexgenOptions& __options );
+  RexgenParserContext(const char* input, const RexgenOptions& __options);
 
   virtual ~RexgenParserContext();
   void registerGroupReference(GroupReference* gr);
@@ -59,7 +59,7 @@ class RexgenParserContext {
   FILE* getInFile() const { return options.infile; }
   callback_fp getStreamCallback() const { return options.stream_callback; }
 
-  bool hasNextChar() const { return (next_char != wcinput.cend()); };
+  bool hasNextChar() const { return (next_char != wcinput.cend()); }
   wchar_t getNextChar();
   wchar_t getCurrentChar() const { return current_char; }
 

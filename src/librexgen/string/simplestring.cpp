@@ -18,11 +18,11 @@
 */
 
 
+#include <librexgen/string/simplestring.h>
 #include <ctype.h>
 #include <wchar.h>
 #include <cstdlib>
 #include <climits>
-#include <librexgen/string/simplestring.h>
 
 bool SimpleString::isalpha(unsigned int n) const {
   return (::iswalpha(widechar_at(n)));
@@ -40,7 +40,7 @@ void SimpleString::toggle_case(size_t idx) {
   this->islower(idx) ? (::towupper) : (::towlower);
 
   const wchar_t this_widechar = widechar_at(idx);
-  if (this_widechar<0x80) {
+  if (this_widechar < 0x80) {
     at(idx) = static_cast<char>(toggle_fct(this_widechar));
   } else {
     int size = mblen(&(at(idx)), MB_CUR_MAX);

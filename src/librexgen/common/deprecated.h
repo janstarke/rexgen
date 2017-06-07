@@ -18,8 +18,8 @@
 */
 
 
-#ifndef SRC_LIBREXGEN_COMMON_DEPRECATED_H
-#define SRC_LIBREXGEN_COMMON_DEPRECATED_H
+#ifndef SRC_LIBREXGEN_COMMON_DEPRECATED_H_
+#define SRC_LIBREXGEN_COMMON_DEPRECATED_H_
 
 #ifdef __GNUC__
 #define DEPRECATED(func) func __attribute__ ((deprecated))
@@ -30,4 +30,4 @@
 #define DEPRECATED(func) func
 #endif
 
-#endif /* SRC_LIBREXGEN_COMMON_DEPRECATED_H */
+#endif /* SRC_LIBREXGEN_COMMON_DEPRECATED_H_ */

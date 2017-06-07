@@ -29,7 +29,6 @@
   #include <librexgen/regex/compoundregex.h>
   #include <librexgen/regex/terminalregex.h>
   #include <librexgen/regex/classregex.h>
-  #include <librexgen/regex/rangeregex.h>
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/regex/streamregex.h>
@@ -101,7 +100,7 @@
 %type <class_regex> ClassRegex
 %type <class_regex> ClassContent
 %type <class_regex> SimpleClassContent
-%type <regex> CharacterClassDigit
+%type <class_regex> CharacterClassDigit
 %type <class_regex> CharacterClassWord
 %type <regex_alternatives> GroupRegex
 %type <group_reference> GroupReference;
@@ -182,7 +181,7 @@ SimpleClassContent:
 	}
 	| T_CLASS_DIGIT {
       $$ = new ClassRegex();
-      $$->addRange(btowc('0'), btowc('9'));
+      $$->addRange(ClassRegex::DIGITS);
   }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
@@ -192,15 +191,13 @@ SimpleClassContent:
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
-    $$ = new RangeRegex(RangeRegex::DIGITS);
+    $$ = new ClassRegex();
+    $$->addRange(ClassRegex::DIGITS);
 	}
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange(btowc('a'), btowc('z'));
-    $$->addRange(btowc('A'), btowc('Z'));
-    $$->addRange(btowc('0'), btowc('9'));
-    $$->addCharacter(btowc('_'));
+    $$->addRange(ClassRegex::WORDCHARACTERS);
   }
   
 GroupRegex:

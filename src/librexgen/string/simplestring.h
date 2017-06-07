@@ -21,9 +21,9 @@
 #ifndef SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 #define SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 
+#include <librexgen/c/simplestring.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
-#include <librexgen/c/simplestring.h>
 #include <string.h>
 #include <stdlib.h>
 #include <string>
@@ -34,8 +34,8 @@
 #ifdef __cplusplus
 
 class SimpleString : public std::string {
- public:
 
+ public:
   bool can_change_case(size_t idx) const {
     const wchar_t wc = widechar_at(idx);
     return (::towupper(wc) != ::towlower(wc));
@@ -43,7 +43,7 @@ class SimpleString : public std::string {
 
   size_t character_length(size_t idx) const {
     int size = mblen(&(at(idx)), MB_CUR_MAX);
-    assert (size > 0);
+    assert(size > 0);
     return size;
   }
 

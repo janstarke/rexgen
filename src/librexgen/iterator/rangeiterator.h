@@ -24,25 +24,28 @@
 
 template <char __MIN, char __MAX>
 class RangeIterator : public Iterator {
-  public:
-  RangeIterator(int _id) : Iterator(_id), current(0), offset(__MIN), max(__MAX-__MIN) {}
+
+public:
+  explicit RangeIterator(int _id)
+          : Iterator(_id), current(__MIN-1), minimum(__MIN), maximum(__MAX) {}
 
   void value(SimpleString* dst) const {
-    dst->push_back(static_cast<const byte_t>(current+offset));
+    dst->push_back(static_cast<const byte_t>(current));
   }
 
   bool next() {
-    current = current<max ? current+1 : 0;
-    return current;
+    const bool hasNext = (current < maximum);
+    current = hasNext ? (current+1) : minimum;
+    return hasNext;
   }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}
 
-  private:
+private:
   char current;
-  const char offset;
-  const char max;
+  const char minimum;
+  const char maximum;
 };
 
-#endif //SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_
+#endif /* SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_ */
