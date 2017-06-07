@@ -34,7 +34,6 @@
 #ifdef __cplusplus
 
 class SimpleString : public std::string {
-
  public:
   bool can_change_case(size_t idx) const {
     const wchar_t wc = widechar_at(idx);
