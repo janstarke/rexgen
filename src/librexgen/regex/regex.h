@@ -34,7 +34,8 @@ typedef enum {
   Terminal,
   Class,
   Reference,
-  Stream
+  Stream,
+  Range
 } RegexType;
 
 class IteratorState;

@@ -24,15 +24,14 @@
 #include <librexgen/iterator/terminalregexiterator.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/uchar.h>
 #include <vector>
 
 using std::vector;
 
 class TerminalRegex : public Regex {
  public:
-  explicit TerminalRegex(uint16_t ch) {
-    value.push_back(uchar_t(ch));
+  explicit TerminalRegex(wchar_t ch) {
+    value.push_back(ch);
   }
 
   void prepend(const TerminalRegex* tre);
@@ -41,11 +40,12 @@ class TerminalRegex : public Regex {
 
   RegexType getRegexType() const { return Terminal; }
 
-  Iterator* singleIterator(IteratorState* /* state */) const
-  { return new TerminalRegexIterator(getId(), &value[0], value.size()); }
+  Iterator* singleIterator(IteratorState* /* state */) const {
+    return new TerminalRegexIterator(getId(), &value[0], value.size());
+  }
 
  private:
-  vector<uchar_t> value;
+  vector<wchar_t> value;
 };
 
 #endif  // SRC_LIBREXGEN_REGEX_TERMINALREGEX_H_

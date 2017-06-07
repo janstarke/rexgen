@@ -43,9 +43,7 @@ Regex* parse_regex(RexgenParserContext* context) {
 
 EXPORT
 Regex* parse_regex(const char* regex, const RexgenOptions& options) {
-  const std::string strRegex = std::string(regex);
-  std::istringstream is(strRegex);
-  RexgenParserContext context(&is, options);
+  RexgenParserContext context(regex, options);
   return parse_regex(&context);
 }
 

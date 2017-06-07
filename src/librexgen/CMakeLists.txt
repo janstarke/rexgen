@@ -15,6 +15,8 @@ ELSE()
   ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
+ADD_DEFINITIONS("-DUNICODE")
+
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
 
@@ -50,20 +52,15 @@ set(librexgen_sources
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
   iterator/groupreferenceiterator.cpp
-  iterator/classregexiterator.cpp
   iterator/streamregexiterator.cpp
   iterator/caseiterator.cpp
-  iterator/terminalregexiterator.cpp
   state/serializablestate.cpp
-	string/simplestring.cpp
-
-  parser/rexgenparsercontext.cpp
-
-	librexgen.cpp
-
-				c/librexgen.cpp
-        c/iterator.cpp
-	c/simplestring.cpp
+  string/simplestring.cpp
+        parser/rexgenparsercontext.cpp
+  librexgen.cpp
+  c/librexgen.cpp
+  c/iterator.cpp
+  c/simplestring.cpp
 )
 set(parser_sources
   ${BISON_regexparser_OUTPUTS} )
@@ -109,6 +106,7 @@ SET(INSTALL_INCLUDE_DIR "include/${librexgen}")
 file(GLOB librexgen_headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB regex_headers "${CMAKE_CURRENT_SOURCE_DIR}/regex/*.h")
 file(GLOB iterator_headers "${CMAKE_CURRENT_SOURCE_DIR}/iterator/*.h")
+file(GLOB common_headers "${CMAKE_CURRENT_SOURCE_DIR}/common/*.h")
 file(GLOB parser_headers "${CMAKE_CURRENT_SOURCE_DIR}/parser/*.h")
 file(GLOB string_headers "${CMAKE_CURRENT_SOURCE_DIR}/string/*.h")
 file(GLOB state_headers "${CMAKE_CURRENT_SOURCE_DIR}/state/*.h")
@@ -117,6 +115,7 @@ file(GLOB generated_headers "${CMAKE_CURRENT_BINARY_DIR}/librexgen/*.h")
 install(FILES ${librexgen_headers} DESTINATION ${INSTALL_INCLUDE_DIR} )
 install(FILES ${regex_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/regex )
 install(FILES ${iterator_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/iterator )
+install(FILES ${common_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/common )
 install(FILES ${parser_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/parser )
 install(FILES ${string_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/string )
 install(FILES ${state_headers} DESTINATION ${INSTALL_INCLUDE_DIR}/state )

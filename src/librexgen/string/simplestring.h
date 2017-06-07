@@ -21,97 +21,40 @@
 #ifndef SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 #define SRC_LIBREXGEN_STRING_SIMPLESTRING_H_
 
-#include <librexgen/string/uchar.h>
+#include <librexgen/c/simplestring.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
-#include <librexgen/c/simplestring.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <vector>
-#include <array>
+#include <xlocale.h>
+#include <string>
 #include <algorithm>
+#include <cassert>
+#include <cwctype>
 
 #ifdef __cplusplus
 
-using std::vector;
-using std::array;
-
-static const size_t SIMPLESTRING_MAXLEN = 512;
-
-class SimpleString {
+class SimpleString : public std::string {
  public:
-  SimpleString();
-  ~SimpleString() { delete[] characters; }
-
-  uchar_t& operator[](size_t idx) {
-    return characters[idx];
-  }
-
-  size_t to_ansi_string(char* buffer, const size_t buffer_size) const;
-  size_t to_utf8_string(char* buffer, const size_t buffer_size) const;
-
-  /**
-   * this function uses LC_CTYPE to determine the expected output encoding
-   */
-  size_t to_external_string(char* buffer, size_t buffer_size) const;
-
   bool can_change_case(size_t idx) const {
-    uchar_t tmp(characters[idx]);
-    tmp.toggle_case();
-    return tmp.codepoint != characters[idx].codepoint;
+    const wchar_t wc = widechar_at(idx);
+    return (std::towupper(wc) != std::towlower(wc));
   }
 
-  void set_preserve_case() {
-    for (size_t idx=0; idx < length; ++idx) {
-      UCHAR_SET_PRESERVE_CASE(characters[idx]);
-    }
+  size_t character_length(size_t idx) const {
+    int ch_size = mblen(&(at(idx)), MB_CUR_MAX);
+    assert(ch_size > 0);
+    return ch_size;
   }
 
-  inline
-  void toggle_case(size_t idx) {
-    characters[idx].toggle_case();
-  }
+  void toggle_case(size_t idx);
 
   bool isalpha(unsigned int n) const;
   bool islower(unsigned int n) const;
   bool isupper(unsigned int n) const;
 
-  void tolower(unsigned int n);
-  void toupper(unsigned int n);
-
-  inline void push_back(const char ch) {
-    if (length >= SIMPLESTRING_MAXLEN) { return; }
-    characters[length++] = uchar_t(ch);
-  }
-
-  inline void push_back(const uchar_t& c) {
-    if (length >= SIMPLESTRING_MAXLEN) { return; }
-    characters[length++] = c;
-  }
-  void append(const char* ch, const size_t ch_len);
-  void append(const wchar_t* ch, const size_t ch_len);
-  void append(const SimpleString& other) {
-    const size_t chars_to_copy =
-            std::min(SIMPLESTRING_MAXLEN-length, other.length);
-    memcpy(
-      &characters[length],
-      &other.characters[0],
-      chars_to_copy*sizeof(characters[0]));
-    length += chars_to_copy;
-  }
-
-  void clear()        { length = 0; }
-  size_t size() const { return length;  }
-  bool empty() const  { return (length == 0); }
-  size_t get_buffer_size() const;
-
-  void print(FILE* out) const;
-
- protected:
-  uchar_t* characters;
-  size_t length;
-  bool use_nonansi;
+  wchar_t widechar_at(size_t index) const;
+  SimpleString& append_widechar(const wchar_t& codepoint);
 };
 
 #endif /* __cplusplus */

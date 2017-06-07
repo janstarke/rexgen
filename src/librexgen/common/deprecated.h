@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2013  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,12 +17,17 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/regex/terminalregex.h>
 
+#ifndef SRC_LIBREXGEN_COMMON_DEPRECATED_H_
+#define SRC_LIBREXGEN_COMMON_DEPRECATED_H_
 
-void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for (const wchar_t &i : tre->value) {
-    this->value.insert(this->value.begin(), i);
-  }
-}
+#ifdef __GNUC__
+#define DEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED(func) __declspec(deprecated) func
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED(func) func
+#endif
 
+#endif /* SRC_LIBREXGEN_COMMON_DEPRECATED_H_ */

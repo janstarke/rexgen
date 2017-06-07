@@ -20,8 +20,8 @@
 #include <librexgen/iterator/caseiterator.h>
 #include <librexgen/parser/group_options.h>
 #include <librexgen/common/ntz.h>
-#include <librexgen/string/uchar.h>
 #include <librexgen/genericerror.h>
+#include <cassert>
 
 CaseIterator::CaseIterator(Iterator* __child, int options)
   : IteratorContainer(-1), child(__child), handle_case(options) {
@@ -46,11 +46,13 @@ bool CaseIterator::readNextFromChild() {
   childHadNext = child->next();
   child->value(&word);
 
-  for (unsigned int n=0; n < word.size(); ++n) {
-    if (word.can_change_case(n)) {
-      word.tolower(n);
-      changeable_characters.push_back(n);
+  /* store the indices of all convertible characters */
+  for (unsigned int idx=0; idx < word.size();) {
+    if (word.can_change_case(idx)) {
+      changeable_characters.push_back(idx);
     }
+
+    idx += word.character_length(idx);
   }
 
   if (changeable_characters.size() <= max_fast_character_bytes) {
@@ -61,11 +63,6 @@ bool CaseIterator::readNextFromChild() {
   }
   parity = 0;
   j = 0;      /* == ntz(k) & parity */
-
-  /* delete UCHAR_FLAGS_CAN_CHANGE_CASE for all characters */
-  if (handle_case == CASE_PRESERVE) {
-    word.set_preserve_case();
-  }
 
   return childHadNext;
 }
@@ -81,7 +78,7 @@ bool CaseIterator::hasNext() const {
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
 bool CaseIterator::next() {
   /* G1 */
-  if (word.empty() || k == 0) {
+  if (word.empty() || k == 0 || handle_case == CASE_IGNORE) {
     bool childHadNext = readNextFromChild();
 
     /* keep in mind: k is the number of remaining variants */

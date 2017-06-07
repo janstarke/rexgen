@@ -26,7 +26,6 @@
 #include <librexgen/osdepend.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/parser/rexgenparsercontext.h>
-#include <librexgen/string/uchar.h>
 
 EXPORT
 Regex* parse_regex(const char* regex, const RexgenOptions& options);

@@ -24,6 +24,7 @@
 
   #include <iostream>
   #include <librexgen/debug.h>
+  #include <librexgen/regex/regex.h>
   #include <librexgen/regex/regexalternatives.h>
   #include <librexgen/regex/compoundregex.h>
   #include <librexgen/regex/terminalregex.h>
@@ -55,7 +56,7 @@
 %start T_RegexAlternatives
 
 %union {
-  uint32_t		character;
+  wchar_t		character;
   int 			integer;
 
 	t_group_options* group_options;
@@ -149,7 +150,9 @@ Regex:
     delete q;
   };
 
-PlainRegex:	SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+PlainRegex:
+        SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
+    |   CharacterClassDigit { $$ = $1; }
 	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
 	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
@@ -160,9 +163,8 @@ SimpleRegex: T_ANY_CHAR {
 };
 
 ClassRegex:
-    CharacterClassDigit { $$ = $1; }
-  | CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(uchar_t('-')); }
+    CharacterClassWord  { $$ = $1; }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 ClassContent:
     SimpleClassContent  { $$ = $1; }
@@ -175,27 +177,27 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange(uchar_t($1), uchar_t($3));
+      $$->addRange(btowc($1), btowc($3));
 	}
-	| CharacterClassDigit { $$ = $1; }
+	| T_CLASS_DIGIT {
+      $$ = new ClassRegex();
+      $$->addRange(ClassRegex::DIGITS);
+  }
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter(uchar_t($1));
+    $$->addCharacter(btowc($1));
   }
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
     $$ = new ClassRegex();
-    $$->addRange(uchar_t('0'), uchar_t('9'));
+    $$->addRange(ClassRegex::DIGITS);
 	}
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
-    $$->addRange(uchar_t('a'), uchar_t('z'));
-    $$->addRange(uchar_t('A'), uchar_t('Z'));
-    $$->addRange(uchar_t('0'), uchar_t('9'));
-    $$->addCharacter(uchar_t('_'));
+    $$->addRange(ClassRegex::WORDCHARACTERS);
   }
   
 GroupRegex:
