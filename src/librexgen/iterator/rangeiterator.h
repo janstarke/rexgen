@@ -33,9 +33,9 @@ class RangeIterator : public Iterator {
   }
 
   bool next() {
-    const bool hasNext = (current < maximum);
-    current = hasNext ? (current+1) : minimum;
-    return hasNext;
+    const bool has_next = (current < maximum);
+    current = has_next ? (current+1) : minimum;
+    return has_next;
   }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}

@@ -42,9 +42,9 @@ class SimpleString : public std::string {
   }
 
   size_t character_length(size_t idx) const {
-    int size = mblen(&(at(idx)), MB_CUR_MAX);
-    assert(size > 0);
-    return size;
+    int ch_size = mblen(&(at(idx)), MB_CUR_MAX);
+    assert(ch_size > 0);
+    return ch_size;
   }
 
   void toggle_case(size_t idx);

@@ -20,6 +20,7 @@
 #include <librexgen/c/simplestring.h>
 #include <librexgen/string/simplestring.h>
 #include <cstdlib>
+#include <clocale>
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,7 +46,8 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
   char tmp_buffer[8];
   wchar_t wc;
   int result = 0;
-  locale_t utf8_locale = newlocale(LC_ALL_MASK, "en_US.UTF-8", 0);
+  char* current_locale = std::setlocale(LC_ALL, NULL);
+  std::setlocale(LC_ALL, "en_US.UTF-8");
 
   const char* ptr = str->data();
   const char* end = ptr + str->size();
@@ -56,9 +58,9 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
     }
 
     std::mbtowc(&wc, ptr, end-ptr);
-    const int size = std::wctomb_l(&tmp_buffer[0], wc, utf8_locale);
+    const int size = std::wctomb(&tmp_buffer[0], wc);
     if (size < 1) {
-      throw std::runtime_error("wctomb_l(): conversion error");
+      throw std::runtime_error("wctomb(): conversion error");
     }
     if (size < (static_cast<int>(buffer_size)-result)) {
       memcpy(buffer+result, tmp_buffer, size);
@@ -69,6 +71,7 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
     }
     ptr += next;
   }
+  std::setlocale(LC_ALL, current_locale);
 
   return result;
 }

@@ -88,9 +88,9 @@ class ClassRegexIterator : public Iterator {
     return s;
   }
 
-  void setCurrentState(const SerializableState* state) {
-    Iterator::setCurrentState(state);
-    current = state->getValue(0);
+  void setCurrentState(const SerializableState* s) {
+    Iterator::setCurrentState(s);
+    current = s->getValue(0);
   }
 
  private:
