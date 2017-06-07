@@ -55,8 +55,8 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
       throw std::runtime_error("mblen(): conversion error");
     }
 
-    mbtowc(&wc, ptr, end-ptr);
-    const int size = wctomb_l(&tmp_buffer[0], wc, utf8_locale);
+    std::mbtowc(&wc, ptr, end-ptr);
+    const int size = std::wctomb_l(&tmp_buffer[0], wc, utf8_locale);
     if (size < 1) {
       throw std::runtime_error("wctomb_l(): conversion error");
     }
