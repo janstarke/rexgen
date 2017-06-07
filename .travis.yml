@@ -19,7 +19,7 @@ addons:
       - python-pip
 
 before_install:
-  - sudo pip install cpplint
+  - pip install cpplint
 
 before_script: mkdir -p build
 script: 
