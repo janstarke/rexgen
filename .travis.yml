@@ -1,3 +1,6 @@
+dist: trusty
+sudo: false
+
 language: cpp
 
 compiler:
@@ -9,7 +12,6 @@ addons:
     sources:
       - kubuntu-backports
       - ubuntu-toolchain-r-test
-      - kalakris-cmake
     packages:
       - cmake
       - gcc-4.8
