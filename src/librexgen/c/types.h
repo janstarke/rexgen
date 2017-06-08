@@ -25,8 +25,14 @@
  */
 #include <stddef.h>
 #include <stdint.h>
+#include <wchar.h>
 
 typedef void* c_regex_ptr;
-typedef size_t (*callback_fp)(char* dst, const size_t buffer_size);
+
+/* callback to read multibyte strings */
+typedef size_t (*callback_fp_mb)(char* dst, const size_t buffer_size);
+
+/* callback to read wide character strings */
+typedef size_t (*callback_fp)(wchar_t* dst, const size_t buffer_size);
 
 #endif  /* SRC_LIBREXGEN_C_TYPES_H_ */

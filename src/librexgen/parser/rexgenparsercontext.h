@@ -57,7 +57,7 @@ class RexgenParserContext {
   int groupId;
 
   FILE* getInFile() const { return options.infile; }
-  callback_fp getStreamCallback() const { return options.stream_callback; }
+  callback_fp_mb getStreamCallback() const { return options.stream_callback; }
 
   bool hasNextChar() const { return (next_char != wcinput.cend()); }
   wchar_t getNextChar();

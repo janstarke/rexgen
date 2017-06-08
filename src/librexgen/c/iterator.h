@@ -26,6 +26,7 @@
 #include <librexgen/string/unicode.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/common/deprecated.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,10 +38,16 @@ EXPORT
 c_iterator_ptr c_regex_iterator(c_regex_ptr regex);
 
 EXPORT
-c_iterator_ptr c_regex_iterator_cb(
+c_iterator_ptr c_regex_iterator_cb_mb(
   const char* regex_str,
   int ignore_case,
-  callback_fp cb);
+  callback_fp_mb cb);
+
+EXPORT
+DEPRECATED(c_iterator_ptr c_regex_iterator_cb(
+        const char* regex_str,
+        int ignore_case,
+        callback_fp cb));
 
 EXPORT
 int c_iterator_next(c_iterator_ptr iter);

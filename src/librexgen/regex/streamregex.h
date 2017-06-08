@@ -32,13 +32,13 @@ class StreamRegex : public Regex {
   Iterator* iterator(IteratorState* state) const;
   Iterator* singleIterator(IteratorState* state) const;
 
-  explicit StreamRegex(callback_fp cb);
+  explicit StreamRegex(callback_fp_mb cb);
 
   RegexType getRegexType () const { return Stream; }
   bool usesCallback() const { return true; }
 
  private:
-  callback_fp callback;
+  callback_fp_mb callback;
 };
 
 #endif  // SRC_LIBREXGEN_REGEX_STREAMREGEX_H_

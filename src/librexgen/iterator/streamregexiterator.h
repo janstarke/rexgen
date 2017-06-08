@@ -29,7 +29,7 @@ static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 
 class StreamRegexIterator : public Iterator {
  public:
-  StreamRegexIterator(int _id, callback_fp cb)
+  StreamRegexIterator(int _id, callback_fp_mb cb)
     : Iterator(_id), callback(cb) {
     state = resetted;
     readNextWord();
@@ -58,7 +58,7 @@ class StreamRegexIterator : public Iterator {
  private:
   void readNextWord();
 
-  callback_fp callback;
+  callback_fp_mb callback;
   byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
   size_t length;
   bool __hasNext;

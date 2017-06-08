@@ -23,7 +23,7 @@
 #include <librexgen/c/types.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/c/simplestring.h>
-#include <librexgen/version.h>
+#include <librexgen/common/deprecated.h>
 #include <stdio.h>
 #include <wchar.h>
 
@@ -36,9 +36,15 @@ const char* c_rexgen_get_last_error();
 void c_rexgen_set_last_error(const char* msg);
 
 EXPORT
+DEPRECATED(
 c_regex_ptr c_regex_cb(
   const char* regex_str,
-  callback_fp cb);
+  callback_fp cb));
+
+EXPORT
+c_regex_ptr c_regex_cb_mb(
+        const char* regex_str,
+        callback_fp_mb cb);
 
 EXPORT
 void c_regex_delete(c_regex_ptr regex);

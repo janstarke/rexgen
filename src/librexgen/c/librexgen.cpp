@@ -21,6 +21,7 @@
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/librexgen.h>
+#include <wchar.h>
 
 static const char* c_rexgen_last_error = NULL;
 
@@ -36,12 +37,30 @@ void c_rexgen_set_last_error(const char* msg) {
   c_rexgen_last_error = msg;
 }
 
+static callback_fp CALLBACK_WCWRAPPER = NULL;
+static wchar_t callback_buffer[BUFSIZ];
+static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
+  CALLBACK_WCWRAPPER(&callback_buffer[0], sizeof(callback_buffer) / sizeof(callback_buffer[0]));
+  return wcstombs(dst, callback_buffer, buffer_size);
+}
+
 EXPORT
-c_regex_ptr c_regex_cb(
+c_regex_ptr c_regex_cb_mb(
     const char* regex_str,
-    callback_fp cb) {
+    callback_fp_mb cb) {
   RexgenOptions options;
   options.stream_callback = cb;
+
+  return parse_regex(regex_str, options);
+}
+
+EXPORT
+c_regex_ptr c_regex_cb(
+        const char* regex_str,
+        callback_fp cb) {
+  RexgenOptions options;
+  CALLBACK_WCWRAPPER = cb;
+  options.stream_callback = callback_wc_wrapper;
 
   return parse_regex(regex_str, options);
 }

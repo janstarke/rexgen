@@ -34,7 +34,7 @@ class RexgenOptions {
   bool ignore_case;
   charset encoding;
   std::FILE* infile;
-  callback_fp stream_callback;
+  callback_fp_mb stream_callback;
 };
 
 #endif  // SRC_LIBREXGEN_REXGEN_OPTIONS_H_

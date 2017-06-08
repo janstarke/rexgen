@@ -22,6 +22,7 @@
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/librexgen.h>
 #include <librexgen/parser/syntaxerror.h>
+#include <librexgen/version.h>
 #include <vector>
 #include <string>
 
@@ -46,11 +47,40 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
   return iter;
 }
 
+static callback_fp CALLBACK_WCWRAPPER = NULL;
+static wchar_t callback_buffer[BUFSIZ];
+static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
+  CALLBACK_WCWRAPPER(&callback_buffer[0], sizeof(callback_buffer) / sizeof(callback_buffer[0]));
+  return wcstombs(dst, callback_buffer, buffer_size);
+}
+
 EXPORT
 c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
   int ignore_case = 0,
   callback_fp callback = NULL) {
+  RexgenOptions options;
+  options.ignore_case = static_cast<bool>(ignore_case);
+  options.infile = NULL;
+
+  CALLBACK_WCWRAPPER = callback;
+  options.stream_callback = callback_wc_wrapper;
+
+  Iterator* iter = NULL;
+  try {
+    iter = regex_iterator(regex_str, options);
+  } catch (SyntaxError& error) {
+    c_rexgen_set_last_error(error.getMessage());
+    return NULL;
+  }
+  return iter;
+}
+
+EXPORT
+c_iterator_ptr c_regex_iterator_cb_mb(
+        const char* regex_str,
+        int ignore_case = 0,
+        callback_fp_mb callback = NULL) {
   RexgenOptions options;
   options.ignore_case = static_cast<bool>(ignore_case);
   options.infile = NULL;

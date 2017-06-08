@@ -20,7 +20,7 @@
 #include <librexgen/regex/streamregex.h>
 
 
-StreamRegex::StreamRegex(callback_fp cb)
+StreamRegex::StreamRegex(callback_fp_mb cb)
   : callback(cb) {
 }
 

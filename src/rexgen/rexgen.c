@@ -212,7 +212,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb(regex_str, callback);
+  regex = c_regex_cb_mb(regex_str, callback);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
