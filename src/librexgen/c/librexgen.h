@@ -24,6 +24,7 @@
 #include <librexgen/c/iterator.h>
 #include <librexgen/c/simplestring.h>
 #include <librexgen/common/deprecated.h>
+#include <librexgen/version.h>
 #include <stdio.h>
 #include <wchar.h>
 
