@@ -47,6 +47,12 @@ class SimpleString : public std::string {
     return ch_size;
   }
 
+  void truncate_bytes(size_t length) {
+    if (length < size()) {
+      resize(length);
+    }
+  }
+
   void toggle_case(size_t idx);
 
   bool isalpha(unsigned int n) const;

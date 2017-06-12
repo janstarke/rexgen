@@ -81,6 +81,11 @@ void c_simplestring_clear(c_simplestring_ptr s) {
   (reinterpret_cast<SimpleString*>(s))->clear();
 }
 
+EXPORT
+void c_simplestring_truncate_bytes(c_simplestring_ptr s, size_t length) {
+  (static_cast<SimpleString*>(s))->truncate_bytes(length);
+}
+
 #ifdef __cplusplus
 }
 #endif
