@@ -50,6 +50,9 @@ DEPRECATED(int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s);
 
+EXPORT
+void c_simplestring_truncate_bytes(c_simplestring_ptr s, size_t length);
+
 #ifdef __cplusplus
 }
 #endif
