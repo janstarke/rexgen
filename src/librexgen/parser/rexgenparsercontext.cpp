@@ -30,6 +30,14 @@ RexgenParserContext::RexgenParserContext(const char* input,
   groupId = 1;
   InitScanner();
 
+  /*
+   * configure the requested locale
+   */
+  const char* original_locale = setlocale(LC_CTYPE, options.regex_ctype);
+
+  /*
+   * convert input to widechar, using the (possibly) defined locale
+   */
   int size;
   wchar_t wc = 0;
   mbstate_t mbs;
@@ -42,6 +50,11 @@ RexgenParserContext::RexgenParserContext(const char* input,
     }
   } while (size > 0);
   next_char = wcinput.cbegin();
+
+  /*
+   * restore locale
+   */
+  setlocale(LC_CTYPE, original_locale);
 }
 
 /**
