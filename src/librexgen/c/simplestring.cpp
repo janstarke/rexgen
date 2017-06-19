@@ -20,6 +20,8 @@
 #include <librexgen/c/simplestring.h>
 #include <librexgen/string/simplestring.h>
 #include <stdexcept>
+#include <cstdlib>
+#include <clocale>
 
 #ifdef __cplusplus
 extern "C" {
