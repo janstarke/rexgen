@@ -28,7 +28,6 @@ class RexgenOptions {
  public:
   RexgenOptions()
     : ignore_case(false),
-      encoding(CHARSET_UTF8),
       infile(NULL),
       stream_callback(NULL),
       regex_ctype(NULL),
