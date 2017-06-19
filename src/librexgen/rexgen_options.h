@@ -30,11 +30,17 @@ class RexgenOptions {
     : ignore_case(false),
       encoding(CHARSET_UTF8),
       infile(NULL),
-      stream_callback(NULL) { }
+      stream_callback(NULL),
+      regex_ctype(NULL),
+      wordlist_ctype(NULL),
+      output_ctype(NULL) { }
   bool ignore_case;
-  charset encoding;
   std::FILE* infile;
   callback_fp_mb stream_callback;
+
+  const char* regex_ctype;
+  const char* wordlist_ctype;
+  const char* output_ctype;
 };
 
 #endif  // SRC_LIBREXGEN_REXGEN_OPTIONS_H_
