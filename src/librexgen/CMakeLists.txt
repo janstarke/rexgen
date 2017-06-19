@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 IF(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+  ADD_DEFINITIONS("-std=c++11 -Wall -pedantic -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 ENDIF(MSVC)
 
 ADD_DEFINITIONS("-DUNICODE")
