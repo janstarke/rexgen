@@ -34,6 +34,7 @@ class IteratorState {
   virtual ~IteratorState() {
     if (streamIterator != NULL) {
       delete streamIterator;
+      streamIterator = NULL;
     }
   }
 
