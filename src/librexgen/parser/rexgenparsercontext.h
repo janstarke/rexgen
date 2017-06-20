@@ -23,7 +23,7 @@
 
 #include <librexgen/regex/streamregex.h>
 #include <librexgen/regex/groupreference.h>
-#include <librexgen/rexgen_options.h>
+#include <librexgen/options.h>
 #include <iostream>
 #include <map>
 #include <set>
@@ -34,7 +34,7 @@ class Regex;
 
 class RexgenParserContext {
  public:
-  RexgenParserContext(const char* input, const RexgenOptions& __options);
+  RexgenParserContext(const char* input, const RexgenOptions* __options);
 
   virtual ~RexgenParserContext();
   void registerGroupReference(GroupReference* gr);
@@ -56,10 +56,7 @@ class RexgenParserContext {
 
   int groupId;
 
-  FILE* getInFile() const { return options.infile; }
-  callback_fp_mb getStreamCallback() const { return options.stream_callback; }
-  const char* getOutputCType() const {return options.output_ctype; }
-  const char* getWordlistCType() const {return options.wordlist_ctype; }
+  callback_fp_mb getStreamCallback() const { return options->stream_callback; }
 
   bool hasNextChar() const { return (next_char != wcinput.cend()); }
   wchar_t getNextChar();
@@ -90,7 +87,7 @@ class RexgenParserContext {
   void DestroyScanner();
 
  private:
-  const RexgenOptions& options;
+  const RexgenOptions* options;
   std::map<int, std::set <GroupReference*> *> groupRefs;
   std::map<int, Regex*> groups;
   StreamRegex* streamRegex;

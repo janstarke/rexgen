@@ -24,14 +24,14 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/osdepend.h>
-#include <librexgen/rexgen_options.h>
+#include <librexgen/options.h>
 #include <librexgen/parser/rexgenparsercontext.h>
 
 EXPORT
-Regex* parse_regex(const char* regex, const RexgenOptions& options);
+Regex* parse_regex(const char* regex, const RexgenOptions* options);
 
 EXPORT
-Iterator* regex_iterator(const char* regex, const RexgenOptions& options);
+Iterator* regex_iterator(const char* regex, const RexgenOptions* options);
 
 class RexgenParserContext;
 Regex* parse_regex(RexgenParserContext* context);

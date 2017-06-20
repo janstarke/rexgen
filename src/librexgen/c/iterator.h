@@ -40,13 +40,11 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex);
 EXPORT
 c_iterator_ptr c_regex_iterator_cb_mb(
   const char* regex_str,
-  int ignore_case,
   callback_fp_mb cb);
 
 EXPORT
 DEPRECATED(c_iterator_ptr c_regex_iterator_cb(
         const char* regex_str,
-        int ignore_case,
         callback_fp cb));
 
 EXPORT

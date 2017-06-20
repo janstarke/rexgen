@@ -24,15 +24,22 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/defs.h>
+#include <clocale>
 
 static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 
 class StreamRegexIterator : public Iterator {
  public:
-  StreamRegexIterator(int _id, callback_fp_mb cb)
-    : Iterator(_id), callback(cb) {
+  StreamRegexIterator(int _id, callback_fp_mb cb, const char* cb_ctype=NULL)
+    : Iterator(_id),
+      callback(cb),
+      callback_ctype(cb_ctype) {
     state = resetted;
     readNextWord();
+
+    if (callback_ctype != NULL) {
+      callback_locale = newlocale(LC_CTYPE, callback_ctype, 0);
+    }
   }
 
   bool next() {
@@ -45,9 +52,7 @@ class StreamRegexIterator : public Iterator {
     return __hasNext;
   }
   bool hasNext() const { return state == resetted; }
-  void value(SimpleString* dst) const {
-    dst->append(&buffer[0], length);
-  }
+  void value(SimpleString* dst) const;
   void updateReferences(IteratorState* /* iterState */) {}
   void updateAttributes(IteratorState* /* iterState */) {}
   bool isSingleton() const { return true; }
@@ -62,6 +67,10 @@ class StreamRegexIterator : public Iterator {
   byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
   size_t length;
   bool __hasNext;
+
+  const char* callback_ctype;
+
+  locale_t callback_locale;
 };
 
 #endif  // SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_

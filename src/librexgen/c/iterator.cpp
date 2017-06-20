@@ -59,18 +59,16 @@ static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
 EXPORT
 c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
-  int ignore_case = 0,
   callback_fp callback = NULL) {
   RexgenOptions options;
-  options.ignore_case = static_cast<bool>(ignore_case);
-  options.infile = NULL;
+  bzero(&options, sizeof(options));
 
   CALLBACK_WCWRAPPER = callback;
   options.stream_callback = callback_wc_wrapper;
 
   Iterator* iter = NULL;
   try {
-    iter = regex_iterator(regex_str, options);
+    iter = regex_iterator(regex_str, &options);
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
     return NULL;
@@ -81,16 +79,14 @@ c_iterator_ptr c_regex_iterator_cb(
 EXPORT
 c_iterator_ptr c_regex_iterator_cb_mb(
         const char* regex_str,
-        int ignore_case = 0,
         callback_fp_mb callback = NULL) {
   RexgenOptions options;
-  options.ignore_case = static_cast<bool>(ignore_case);
-  options.infile = NULL;
+  bzero(&options, sizeof(options));
   options.stream_callback = callback;
 
   Iterator* iter = NULL;
   try {
-    iter = regex_iterator(regex_str, options);
+    iter = regex_iterator(regex_str, &options);
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
     return NULL;

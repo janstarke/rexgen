@@ -18,7 +18,33 @@
 */
 
 #include <librexgen/iterator/streamregexiterator.h>
-#include <cstdio>
+#include <stdlib.h>
+
+void StreamRegexIterator::value(SimpleString* dst) const {
+
+  if (callback_ctype == NULL) {
+    /* we do not really which CTYPE we've stored or
+     * which CTYPE we're required to create, so we
+     * don't do character conversion
+     */
+    dst->append(&buffer[0], length);
+  } else {
+    /* we need to convert the characters */
+
+    /* allocate temporary buffer; assume that one byte maps to one wide character */
+    wchar_t *tmp = new wchar_t[(length + 1) * sizeof(wchar_t)];
+
+    /* first, convert all characters to widechar */
+    mbstowcs_l(tmp, &buffer[0], length + 1, callback_locale);
+
+    /* next, convert widechar by widechar to the output encoding */
+    wchar_t *ptr = tmp;
+    while (*ptr != u'\0') {
+      dst->append_widechar(*ptr);
+      ptr++;
+    }
+  }
+}
 
 void StreamRegexIterator::readNextWord() {
   __hasNext = false;

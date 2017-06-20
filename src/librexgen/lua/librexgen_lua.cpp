@@ -22,7 +22,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/simplestring.h>
-#include <librexgen/rexgen_options.h>
+#include <librexgen/options.h>
 #include <librexgen/osdepend.h>
 
 extern "C" {

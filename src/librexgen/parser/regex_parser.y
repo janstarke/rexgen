@@ -224,7 +224,7 @@ GroupReference: T_GROUPID {
 };
 
 Stream: T_STREAM {
-  if (context->getInFile() == NULL && context->getStreamCallback() == NULL) {
+  if (context->getStreamCallback() == NULL) {
     throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.", @1.first_column);
   }
   $$ = context->getStreamRegex();

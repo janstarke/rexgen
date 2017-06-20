@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <climits>
 #include <cwctype>
+#include <clocale>
 
 bool SimpleString::isalpha(unsigned int n) const {
   return (std::iswalpha(widechar_at(n)));
@@ -56,8 +57,8 @@ void SimpleString::toggle_case(size_t idx) {
 
 SimpleString& SimpleString::append_widechar(const wchar_t &widechar) {
   char buffer[MB_LEN_MAX];
+  const char* old = std::setlocale(LC_CTYPE, NULL);
   int ch_size = std::wctomb(&buffer[0], widechar);
-
   if (ch_size == -1) {
     ch_size = 1;
     buffer[0] = '?';

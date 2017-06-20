@@ -25,6 +25,7 @@
 #include <librexgen/c/simplestring.h>
 #include <librexgen/common/deprecated.h>
 #include <librexgen/version.h>
+#include <librexgen/options.h>
 #include <stdio.h>
 #include <wchar.h>
 
@@ -46,6 +47,11 @@ EXPORT
 c_regex_ptr c_regex_cb_mb(
         const char* regex_str,
         callback_fp_mb cb);
+
+EXPORT
+c_regex_ptr c_regex(
+        const char* regex_str,
+        const RexgenOptions* options);
 
 EXPORT
 void c_regex_delete(c_regex_ptr regex);

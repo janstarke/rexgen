@@ -23,7 +23,7 @@
 #include <utility>
 
 RexgenParserContext::RexgenParserContext(const char* input,
-                                         const RexgenOptions& __options)
+                                         const RexgenOptions* __options)
         : options(__options), streamRegex(NULL) {
   this->result = NULL;
   this->scanner = NULL;
@@ -33,7 +33,8 @@ RexgenParserContext::RexgenParserContext(const char* input,
   /*
    * configure the requested locale
    */
-  const char* original_locale = setlocale(LC_CTYPE, options.regex_ctype);
+  const char* original_locale = std::setlocale(LC_CTYPE, NULL);
+  std::setlocale(LC_CTYPE, options->regex_ctype);
 
   /*
    * convert input to widechar, using the (possibly) defined locale
@@ -54,7 +55,7 @@ RexgenParserContext::RexgenParserContext(const char* input,
   /*
    * restore locale
    */
-  setlocale(LC_CTYPE, original_locale);
+  std::setlocale(LC_CTYPE, original_locale);
 }
 
 /**
@@ -132,7 +133,7 @@ const std::map<int, Regex*>& RexgenParserContext::getGroups() const {
 
 Regex* RexgenParserContext::getStreamRegex() {
   if (streamRegex == NULL) {
-    streamRegex = new StreamRegex(options.stream_callback);
+    streamRegex = new StreamRegex(options->stream_callback);
     return streamRegex;
   } else {
     GroupReference* gr = new GroupReference(streamRegex->getId());

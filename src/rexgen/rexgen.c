@@ -65,25 +65,6 @@ static void rexgen_usage() {
           "   -v:        display version information\n");
 }
 
-
-static void rexgen_setlocale() {
-  const char* defaultLocale = "en_US.UTF8";
-  const char* sysLocale = NULL;
-
-  if ((sysLocale = getenv("LC_CTYPE")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if ((sysLocale = getenv("LC_MESSAGES")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if ((sysLocale = getenv("LC_ALL")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if (sysLocale == NULL) {
-    setlocale(LC_ALL, defaultLocale);
-  }
-}
-
 static void rexgen_display_warranty() {
   fprintf(stderr,
           "THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\n"
@@ -167,6 +148,7 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  * to call c_iterator_next() many times, to restore the location of the restart.
  */
 
+
 size_t callback(char* dst, const size_t buffer_size) {
   size_t len = 0;
   while (len == 0) {
@@ -201,7 +183,6 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
 #endif
 
-  rexgen_setlocale();
   regex_str = rexgen_parse_arguments(argc, argv);
   if (regex_str == NULL) {
     rexgen_usage();
@@ -220,7 +201,15 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb_mb(regex_str, callback);
+  RexgenOptions options;
+  bzero(&options, sizeof(options));
+
+  options.stream_callback = callback;
+  options.regex_ctype = "en_US.UTF-8";
+  options.callback_ctype = "en_US.UTF-8";
+  setlocale(LC_CTYPE, "de_DE.ISO8859-1");
+  regex = c_regex(regex_str, &options); 
+
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

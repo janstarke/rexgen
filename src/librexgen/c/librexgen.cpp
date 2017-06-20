@@ -18,7 +18,7 @@
 */
 
 #include <librexgen/c/librexgen.h>
-#include <librexgen/rexgen_options.h>
+#include <librexgen/options.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/librexgen.h>
 #include <wchar.h>
@@ -51,9 +51,10 @@ c_regex_ptr c_regex_cb_mb(
     const char* regex_str,
     callback_fp_mb cb) {
   RexgenOptions options;
+  bzero(&options, sizeof(options));
   options.stream_callback = cb;
 
-  return parse_regex(regex_str, options);
+  return parse_regex(regex_str, &options);
 }
 
 EXPORT
@@ -61,9 +62,17 @@ c_regex_ptr c_regex_cb(
         const char* regex_str,
         callback_fp cb) {
   RexgenOptions options;
+  bzero(&options, sizeof(options));
   CALLBACK_WCWRAPPER = cb;
   options.stream_callback = callback_wc_wrapper;
 
+  return parse_regex(regex_str, &options);
+}
+
+EXPORT
+c_regex_ptr c_regex(
+        const char* regex_str,
+        const RexgenOptions* options) {
   return parse_regex(regex_str, options);
 }
 
