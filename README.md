@@ -11,18 +11,17 @@ To build rexgen, you'll need the following tools and libs:
 | flex | Generator for lexical analysis of regular expressions |
 | bison | Generator of parser for regular expressions |
 | cmake | Creation of Makefiles |
-| icu4c | Unicode reference implementation |
 
 # Building rexgen
 
 Clone the git repository to include the required FindICU:
 ```
-git clone --recursive https://github.com/teeshop/rexgen.git
+git clone https://github.com/teeshop/rexgen.git
 ```
 
 Build and install:
 ```bash
-cd rexgen/src
+cd rexgen
 ./install.sh
 # you can use the switches -p to enable python support and -l to enable lua support
 ```
@@ -33,7 +32,6 @@ If you have problems building rexgen, cou can change to the `build` and run `cma
 Currently supported options rexgen's CMakefile are:
 
 * `-DCMAKE_BUILD_TYPE=Debug` creates a debug build
-* `-DICU_ROOT=/usr/local/opt/icu4c` tells cmake where to find icu4c
 * `-DUSE_PYTHON=On` tells cmake to include the python interface
 * `-DUSE_LUA=On` tells cmake to include the lua python interface
 
