@@ -168,13 +168,21 @@ const char* rexgen_parse_arguments(int argc, _TCHAR** argv) {
  */
 
 size_t callback(char* dst, const size_t buffer_size) {
+  size_t len = 0;
+  while (len == 0) {
+    /* read next word */
+    if (fgets(dst, buffer_size, infile) == NULL) {
+      return 0;
+    }
 
-  /* read next word */
-  if (fgets((char*)dst, buffer_size, infile) == NULL) {
-    return 0;
+    /* remove trailing newlines */
+    len = strnlen(dst, buffer_size);
+    while (len > 0 && dst[len - 1] == '\n') {
+      --len;
+      dst[len] = '\0';
+    }
   }
-
-  return strlen((char*)dst);
+  return len;
 }
 
 int _tmain(int argc, _TCHAR* argv[]) {
