@@ -33,7 +33,8 @@ RexgenParserContext::RexgenParserContext(const char* input,
   /*
    * configure the requested locale
    */
-  const char* original_locale = std::setlocale(LC_CTYPE, NULL);
+  char original_locale[256];
+  strncpy(&original_locale[0], std::setlocale(LC_CTYPE, NULL), sizeof(original_locale));
   std::setlocale(LC_CTYPE, options->regex_ctype);
 
   /*

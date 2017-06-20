@@ -205,10 +205,17 @@ int _tmain(int argc, _TCHAR* argv[]) {
   bzero(&options, sizeof(options));
 
   options.stream_callback = callback;
-  options.regex_ctype = "en_US.UTF-8";
+
+  /* use enviroment settings for regex encoding */
+  options.regex_ctype = "";
+
+  /* use UTF-8 when reading files */
   options.callback_ctype = "en_US.UTF-8";
-  setlocale(LC_CTYPE, "de_DE.ISO8859-1");
-  regex = c_regex(regex_str, &options); 
+
+  /* use environment settings for input */
+  setlocale(LC_CTYPE, "");
+  
+  regex = c_regex(regex_str, &options);
 
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());

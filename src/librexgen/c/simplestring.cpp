@@ -47,7 +47,8 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
   char tmp_buffer[8];
   wchar_t wc;
   int result = 0;
-  const char* current_locale = std::setlocale(LC_CTYPE, NULL);
+  char original_locale[256];
+  strncpy(&original_locale[0], std::setlocale(LC_CTYPE, NULL), sizeof(original_locale));
   std::setlocale(LC_CTYPE, "en_US.UTF-8");
 
   const char* ptr = str->data();
@@ -72,7 +73,7 @@ int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
     }
     ptr += next;
   }
-  std::setlocale(LC_CTYPE, current_locale);
+  std::setlocale(LC_CTYPE, original_locale);
 
   return result;
 }
