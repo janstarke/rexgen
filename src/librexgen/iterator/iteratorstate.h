@@ -25,6 +25,7 @@
 #include <librexgen/regex/regex.h>
 #include <map>
 #include <algorithm>
+#include <stdexcept>
 
 class IteratorState {
  public:
@@ -34,6 +35,7 @@ class IteratorState {
   virtual ~IteratorState() {
     if (streamIterator != NULL) {
       delete streamIterator;
+      streamIterator = NULL;
     }
   }
 
@@ -57,6 +59,8 @@ class IteratorState {
   void setStreamIterator(StreamRegexIterator* iter) {
     if (streamIterator == NULL) {
       streamIterator = iter;
+    } else {
+      throw std::runtime_error("multiple stream iterator assignment");
     }
   }
 
