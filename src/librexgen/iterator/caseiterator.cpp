@@ -28,7 +28,7 @@ CaseIterator::CaseIterator(Iterator* __child, int options)
 }
 
 CaseIterator::~CaseIterator() {
-  if (child != NULL) {
+  if (child != NULL && (! child->isSingleton())) {
     delete child;
   }
 }
