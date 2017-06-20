@@ -27,11 +27,15 @@
 int yyparse(RexgenParserContext* context);
 
 Regex* parse_regex(RexgenParserContext* context) {
+  const char* original_locale = setlocale(LC_CTYPE, context->getOutputCType());
   try {
     if (yyparse(context) != 0) {
+      setlocale(LC_CTYPE, original_locale);
       return NULL;
     }
+    setlocale(LC_CTYPE, original_locale);
   } catch (SyntaxError& exc) {
+    setlocale(LC_CTYPE, original_locale);
     std::cerr << exc.getMessage() << std::endl;
     return NULL;
   }

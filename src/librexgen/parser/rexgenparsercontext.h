@@ -58,6 +58,8 @@ class RexgenParserContext {
 
   FILE* getInFile() const { return options.infile; }
   callback_fp_mb getStreamCallback() const { return options.stream_callback; }
+  const char* getOutputCType() const {return options.output_ctype; }
+  const char* getWordlistCType() const {return options.wordlist_ctype; }
 
   bool hasNextChar() const { return (next_char != wcinput.cend()); }
   wchar_t getNextChar();
