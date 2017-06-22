@@ -26,6 +26,10 @@ cd rexgen
 # you can use the switches -p to enable python support and -l to enable lua support
 ```
 
+# Architecture
+
+If you are interested in contribution, please have a look at the (Architecture Documentation)[doc/architecture.md]
+
 ## Problems
 
 If you have problems building rexgen, cou can change to the `build` and run `cmake .. && make` manually.
