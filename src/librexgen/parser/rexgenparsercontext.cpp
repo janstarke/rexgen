@@ -21,6 +21,7 @@
 #include <librexgen/parser/rexgenparsercontext.h>
 #include <algorithm>
 #include <utility>
+#include <cstring>
 
 RexgenParserContext::RexgenParserContext(const char* input,
                                          const RexgenOptions& __options)
@@ -33,7 +34,7 @@ RexgenParserContext::RexgenParserContext(const char* input,
   int size;
   wchar_t wc = 0;
   mbstate_t mbs;
-  mbrlen(NULL, 0, &mbs);
+  std::memset(&mbs, 0, sizeof(mbs));
   do {
     size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
     if (size > 0) {
