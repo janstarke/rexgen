@@ -116,22 +116,22 @@
   }
 %}
 
-DIGIT									[0-9]
-ALPHA									[_a-zA-Z]
-ANSICHAR							\\x[0-9a-fA-F]{2,2}
-UNICODECHAR						\\u[0-9a-fA-F]{4,4}
-LINEFEED							\\n
-CARRIAGERETURN				\\r
-CLASS_DIGIT						\\d
-CLASS_WORD						\\w
-SPECIAL								[ \t\r\n,;:=/%&<>-]
-NORMAL								[^ \t\r\n.,;:=/%&?<>-]
-GROUPID								\\[1-9]
-STREAM          			\\0
-ESCAPED								\\[^xnurdw0-9]
-BEGIN_GROUP_WITH_OPTIONS				 	\(\?[i]*(-[i]+)?:
-BEGIN_GROUP 					\(
-END_GROUP							\)
+DIGIT                       [0-9]
+ALPHA                       [_a-zA-Z]
+ANSICHAR                    \\x[0-9a-fA-F]{2,2}
+UNICODECHAR                 \\u[0-9a-fA-F]{4,4}
+LINEFEED                    \\n
+CARRIAGERETURN              \\r
+CLASS_DIGIT                 \\d
+CLASS_WORD                  \\w
+SPECIAL                     [ \t\r\n,;:=/%&<>-]
+NORMAL                      [^ \t\r\n.,;:=/%&?<>-]
+GROUPID                     \\[1-9]
+STREAM                      \\0
+ESCAPED                     \\[^xnurdw0-9]
+BEGIN_GROUP_WITH_OPTIONS    \(\?[i]*(-[i]+)?:
+BEGIN_GROUP                 \(
+END_GROUP                   \)
 
 MULTIBYTE_CHARACTER  \xFE
 
@@ -139,17 +139,17 @@ MULTIBYTE_CHARACTER  \xFE
 %s IN_CLASS
 %%
 
-{ANSICHAR}        { yylval.character = parseAnsiChar(yytext);                 return T_ANY_CHAR; }
-{UNICODECHAR}     { yylval.character = parseUnicodeChar(yytext);              return T_ANY_CHAR; }
-{MULTIBYTE_CHARACTER}  { yylval.character = global_context->getCurrentChar(); return T_ANY_CHAR; }
-{ESCAPED}         { yylval.character = btowc(yytext[1]);                      return T_ANY_CHAR; }
-{LINEFEED}        { yylval.character = btowc('\n');                           return T_ANY_CHAR; }
-{CARRIAGERETURN}  { yylval.character = btowc('\r');                           return T_ANY_CHAR; }
-{CLASS_DIGIT}	  { yylval.character = 0; return T_CLASS_DIGIT; }
-{CLASS_WORD}      { yylval.character = 0; return T_CLASS_WORD;  }
-"|"			{ return T_PIPE; }
-"["			{ BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
-"]"			{ BEGIN(INITIAL); return T_END_CLASS; }
+{ANSICHAR}              { yylval.character = parseAnsiChar(yytext);                 return T_ANY_CHAR; }
+{UNICODECHAR}           { yylval.character = parseUnicodeChar(yytext);              return T_ANY_CHAR; }
+{MULTIBYTE_CHARACTER}   { yylval.character = global_context->getCurrentChar(); return T_ANY_CHAR; }
+{ESCAPED}               { yylval.character = btowc(yytext[1]);                      return T_ANY_CHAR; }
+{LINEFEED}              { yylval.character = btowc('\n');                           return T_ANY_CHAR; }
+{CARRIAGERETURN}        { yylval.character = btowc('\r');                           return T_ANY_CHAR; }
+{CLASS_DIGIT}	        { yylval.character = 0; return T_CLASS_DIGIT; }
+{CLASS_WORD}            { yylval.character = 0; return T_CLASS_WORD;  }
+"|"                     { return T_PIPE; }
+"["                     { BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
+"]"                     { BEGIN(INITIAL); return T_END_CLASS; }
 
 {BEGIN_GROUP_WITH_OPTIONS}	{
 	bool enable_mode = true;
@@ -173,21 +173,21 @@ MULTIBYTE_CHARACTER  \xFE
 	return T_BEGIN_GROUP;
 }
 
-{BEGIN_GROUP}			{ 
+{BEGIN_GROUP}           {
 	yylval.group_options = new t_group_options();
 	yylval.group_options->group_id = global_context->groupId++;
 	return T_BEGIN_GROUP; 
 }
-{END_GROUP}			{ return T_END_GROUP; }
-"{"			{ BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
-"}"			{ BEGIN(INITIAL); return T_END_QUANTIFIER; }
-{GROUPID}		{ yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
+{END_GROUP}             { return T_END_GROUP; }
+"{"                     { BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
+"}"                     { BEGIN(INITIAL); return T_END_QUANTIFIER; }
+{GROUPID}               { yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
 {STREAM}                { yylval.integer = atoi(&yytext[1]); return T_STREAM; }
-<IN_QUANTIFIER>","	{ return T_COMMA; }
-<IN_CLASS>"-"		{ return T_HYPHEN; }
-<IN_QUANTIFIER>{DIGIT}+		{ yylval.integer = atoi(yytext); return T_NUMBER; }
-{NORMAL}                  { yylval.character = yytext[0]; return T_ANY_CHAR; }
-{SPECIAL}									{ yylval.character = yytext[0]; return T_ANY_CHAR; }
+<IN_QUANTIFIER>","      { return T_COMMA; }
+<IN_CLASS>"-"           { return T_HYPHEN; }
+<IN_QUANTIFIER>{DIGIT}+ { yylval.integer = atoi(yytext); return T_NUMBER; }
+{NORMAL}                { yylval.character = yytext[0]; return T_ANY_CHAR; }
+{SPECIAL}               { yylval.character = yytext[0]; return T_ANY_CHAR; }
 .                       { }
 
 %%
