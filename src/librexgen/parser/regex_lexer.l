@@ -54,6 +54,10 @@
         return 1;
     }
 
+    /* if we read a multibyte character, we simply return 0xfe in yytext
+     * to flag the situation. In this case, the scanner must explicitly
+     * call global_context->getCurrentChar to retrieve the widechar
+     */
     buf[0] = static_cast<char>(0xfe);
     return 1;
   }

@@ -40,11 +40,14 @@ class ClassRegexIterator : public Iterator {
     std::string::size_type index = 0;
     for (n=0; n < elements; ++n) {
       characters.append_widechar(classcontent[n]);
+
+      //TODO: the call to character_length is very slow and shoud be removed
       lengths.push_back(characters.character_length(n));
 
       indices.push_back(index);
       index += characters.character_length(n);
     }
+    characters_count = static_cast<size_t>(elements);
     state = usable;
   }
 
@@ -65,21 +68,21 @@ class ClassRegexIterator : public Iterator {
   bool next() {
     ++current;
 
-    if (current >= static_cast<int>(characters.size())) {
+    if (current >= static_cast<int>(characters_count)) {
       current = 0;
       return false;
     }
     return true;
   }
 
-  size_t size() const { return characters.size(); }
+  size_t size() const { return characters_count; }
 
   inline bool hasNext() const {
-    return  (current < (static_cast<int>(characters.size())-1));
+    return  (current < (static_cast<int>(characters_count)-1));
   }
 
   inline bool canUseValue() const {
-    return (current < static_cast<int>(characters.size()));
+    return (current < static_cast<int>(characters_count));
   }
 
   SerializableState* getCurrentState() const {
@@ -94,7 +97,11 @@ class ClassRegexIterator : public Iterator {
   }
 
  private:
-  int current;
+  /* use a signed int to by able to use index -1 */
+  signed int current;
+
+  /* we must use this because multibate characters cannot be counted effectively */
+  int characters_count;
   SimpleString characters;
   vector<std::string::size_type> indices;
   vector<std::string::size_type> lengths;

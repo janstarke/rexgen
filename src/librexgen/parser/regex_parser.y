@@ -177,7 +177,7 @@ ClassContent:
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
-      $$->addRange(btowc($1), btowc($3));
+      $$->addRange($1, $3);
 	}
 	| T_CLASS_DIGIT {
       $$ = new ClassRegex();
@@ -186,7 +186,7 @@ SimpleClassContent:
 	| CharacterClassWord  { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
-    $$->addCharacter(btowc($1));
+    $$->addCharacter($1);
   }
 
 CharacterClassDigit:

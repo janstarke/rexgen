@@ -76,3 +76,15 @@ wchar_t SimpleString::widechar_at(size_t index) const {
   }
   return widechar;
 }
+
+size_t SimpleString::character_length(size_t idx) const {
+  int ch_size;
+  int pos = 0;
+  for (size_t i=0; i<idx; ++i) {
+    ch_size = mblen(&(at(pos)), MB_CUR_MAX);
+    assert(ch_size > 0 && ch_size <= 8);
+    pos += ch_size;
+  }
+  ch_size = mblen(&(at(pos)), MB_CUR_MAX);
+  return static_cast<size_t>(ch_size);
+}

@@ -41,11 +41,7 @@ class SimpleString : public std::string {
     return (std::towupper(wc) != std::towlower(wc));
   }
 
-  size_t character_length(size_t idx) const {
-    int ch_size = mblen(&(at(idx)), MB_CUR_MAX);
-    assert(ch_size > 0);
-    return ch_size;
-  }
+  size_t character_length(size_t idx) const;
 
   void truncate_bytes(size_t length) {
     if (length < size()) {

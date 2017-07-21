@@ -65,25 +65,6 @@ static void rexgen_usage() {
           "   -v:        display version information\n");
 }
 
-
-static void rexgen_setlocale() {
-  const char* defaultLocale = "en_US.UTF8";
-  const char* sysLocale = NULL;
-
-  if ((sysLocale = getenv("LC_CTYPE")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if ((sysLocale = getenv("LC_MESSAGES")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if ((sysLocale = getenv("LC_ALL")) != NULL) {
-    setlocale(LC_CTYPE, sysLocale);
-  }
-  if (sysLocale == NULL) {
-    setlocale(LC_ALL, defaultLocale);
-  }
-}
-
 static void rexgen_display_warranty() {
   fprintf(stderr,
           "THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\n"
@@ -201,7 +182,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
 #endif
 #endif
 
-  rexgen_setlocale();
+  /* use user configured locale */
+  setlocale(LC_CTYPE, "");
   regex_str = rexgen_parse_arguments(argc, argv);
   if (regex_str == NULL) {
     rexgen_usage();
