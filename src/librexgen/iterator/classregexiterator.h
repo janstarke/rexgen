@@ -41,7 +41,10 @@ class ClassRegexIterator : public Iterator {
     for (n=0; n < elements; ++n) {
       characters.append_widechar(classcontent[n]);
 
-      //TODO: the call to character_length is very slow and shoud be removed
+      /*
+       * TODO(jasa):
+       * the call to character_length is very slow and shoud be removed
+       */
       lengths.push_back(characters.character_length(n));
 
       indices.push_back(index);
@@ -100,7 +103,10 @@ class ClassRegexIterator : public Iterator {
   /* use a signed int to by able to use index -1 */
   signed int current;
 
-  /* we must use this because multibate characters cannot be counted effectively */
+  /*
+   * we must use this because multibyte characters
+   * cannot be counted effectively
+   */
   int characters_count;
   SimpleString characters;
   vector<std::string::size_type> indices;

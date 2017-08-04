@@ -50,7 +50,8 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
 static callback_fp CALLBACK_WCWRAPPER = NULL;
 static wchar_t callback_buffer[BUFSIZ];
 static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
-  CALLBACK_WCWRAPPER(&callback_buffer[0], sizeof(callback_buffer) / sizeof(callback_buffer[0]));
+  CALLBACK_WCWRAPPER(&callback_buffer[0],
+                     sizeof(callback_buffer) / sizeof(callback_buffer[0]));
   return wcstombs(dst, callback_buffer, buffer_size);
 }
 
