@@ -204,5 +204,5 @@ MULTIBYTE_CHARACTER  \xFE
   }
   
   void RexgenParserContext::DestroyScanner() {
-    //yylex_destroy(scanner);
+    yylex_destroy();
   }
