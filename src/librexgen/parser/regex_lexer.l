@@ -179,6 +179,7 @@ MULTIBYTE_CHARACTER  \xFE
 	return T_BEGIN_GROUP; 
 }
 {END_GROUP}             { return T_END_GROUP; }
+"?"                     { return T_OPTIONAL_QUANTIFIER; }
 "{"                     { BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"                     { BEGIN(INITIAL); return T_END_QUANTIFIER; }
 {GROUPID}               { yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
