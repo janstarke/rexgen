@@ -80,6 +80,7 @@
 %token <character> T_HYPHEN
 %token <character> T_BEGIN_QUANTIFIER
 %token <character> T_END_QUANTIFIER
+%token <character> T_OPTIONAL_QUANTIFIER
 %token <integer>   T_NUMBER
 %token <integer>   T_GROUPID
 %token <integer>   T_STREAM
@@ -210,8 +211,11 @@ GroupRegex:
     context->updateGroupReferences($$);
   };
 
-Quantifier:	
-    T_BEGIN_QUANTIFIER T_NUMBER T_END_QUANTIFIER {
+Quantifier:
+  T_OPTIONAL_QUANTIFIER {
+    $$ = new Quantifier(0, 1);
+  }
+  | T_BEGIN_QUANTIFIER T_NUMBER T_END_QUANTIFIER {
       $$ = new Quantifier($2, $2);
     }
   | T_BEGIN_QUANTIFIER T_NUMBER T_COMMA T_NUMBER T_END_QUANTIFIER {
