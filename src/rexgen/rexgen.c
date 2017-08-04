@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2015 Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -49,7 +49,7 @@ extern int rexgen_debug;
 
 static void rexgen_usage() {
   fprintf(stderr,
-          "rexgen  Copyright (C) 2012-2015 Jan Starke <rexgen@outofbed.org>\n"
+          "rexgen  Copyright (C) 2012-2017 Jan Starke <rexgen@outofbed.org>\n"
           "This program comes with ABSOLUTELY NO WARRANTY;\n"
           "for details run rexgen with '-w'.\n"
           "This is free software, and you are welcome to redistribute it\n"
