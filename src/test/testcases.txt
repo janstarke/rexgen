@@ -1,4 +1,9 @@
-simple:test[0-9]:10
+simple1:test[0-9]:10
+simple2:test[\d]:10
+simple3:test[a\d]:11
+simple4:test[\da]:11
+simple5:test\da:10
+simple6:a\dtest:10
 alternatives1:([a-b])test([0-1]|[g-h]):8
 class1:([a-b])test([0-1g-h]):8
 case1:(?i:abc):8
