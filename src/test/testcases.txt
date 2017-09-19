@@ -6,5 +6,11 @@ simple5:test\da:10
 simple6:a\dtest:10
 alternatives1:([a-b])test([0-1]|[g-h]):8
 class1:([a-b])test([0-1g-h]):8
+class2:[-0-9a-zA-Z]:63
+class3:\w:63
+class4:[a-f]:6
+class5:[A-F]:6
+class6:[c-a]:0
+class7:[3-6c-a]:4
 case1:(?i:abc):8
 case2:(?i:[abc])-[pP]:12

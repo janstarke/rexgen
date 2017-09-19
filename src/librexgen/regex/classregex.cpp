@@ -83,16 +83,8 @@ void ClassRegex::addRange(const wchar_t& uch_a, const wchar_t& uch_b) {
   } else if (uch_a == L'a' && uch_b == L'z') {
     ranges.push_back(LOWERCASE);
   } else {
-    wchar_t a = uch_a;
-    int diff = +1;
-
-    if (a > uch_b) {
-      diff = -1;
-    }
-
-    while (a != uch_b + diff) {
+    for (wchar_t a = uch_a; a <= uch_b; ++a) {
       __append_character(a);
-      a += diff;
     }
   }
 }
