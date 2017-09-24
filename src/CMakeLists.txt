@@ -59,5 +59,6 @@ endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
+add_subdirectory(tests)
 
 #include (cmake/ctags.cmake)

@@ -49,6 +49,7 @@ set(librexgen_sources
   regex/groupreference.cpp
   regex/streamregex.cpp
   iterator/iteratorpermuter.cpp
+  iterator/classregexiterator.cpp
   iterator/regexalternativesiterator.cpp
   iterator/compoundregexiterator.cpp
   iterator/groupreferenceiterator.cpp
