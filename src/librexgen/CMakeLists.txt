@@ -80,6 +80,8 @@ else()
 	target_link_libraries(${librexgen} "stdc++")
 endif(MSVC)
 
+target_link_libraries(${librexgen} "${GCC_COVERAGE_LINK_FLAGS}")
+
 set_target_properties(${librexgen} PROPERTIES
 	PREFIX ""
 	SOVERSION "${librexgen_major}.${librexgen_minor}"

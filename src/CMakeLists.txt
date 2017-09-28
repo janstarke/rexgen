@@ -4,7 +4,6 @@ set(prj rexgen)
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-include (cmake/testing.cmake)
 include (cmake/doxygen.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
@@ -21,7 +20,7 @@ message("creating ${prj} ${librexgen_version}")
 
 ADD_DEFINITIONS("-funsigned-char")
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   MESSAGE(STATUS "USING DEBUG MODE")
   ADD_DEFINITIONS("-DREXGEN_DEBUG=0" "-DDEBUG"  "-O0" "-g")
 
@@ -33,6 +32,8 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
     SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
     SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
   endif ("${CMAKE_COMPILER_IS_GNUCXX}" OR "${CMAKE_COMPILER_IS_GNUCC}")
+    
+  enable_testing()
 
 elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
   MESSAGE(STATUS "USING PROFILE MODE")
@@ -43,7 +44,7 @@ elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
 else()
   MESSAGE(STATUS "COMPILING OPTIMIZED VERSION: ${CMAKE_BUILD_TYPE}")
   ADD_DEFINITIONS("-DREXGEN_DEBUG=0 -DNDEBUG -O3")
-endif("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
 if("${CYGWIN}")
   ADD_DEFINITIONS("-D_GNU_SOURCE")
