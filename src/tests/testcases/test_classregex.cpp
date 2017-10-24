@@ -55,6 +55,8 @@ TEST(ClassIteratorTest, TestIteratorWithOneElement) {
   delete iter;
 }
 
+TEST(ClassIteratorTest, TestSingle1) {validateRegex("[]",                    0);}
+TEST(ClassIteratorTest, TestSingle2) {validateRegex("[a]",                   1);}
 TEST(ClassIteratorTest, TestDigits1) {validateRegex("\\d",                  10);}
 TEST(ClassIteratorTest, TestDigits2) {validateRegex("[\\d]",                10);}
 TEST(ClassIteratorTest, TestDigits3) {validateRegex("[\\d\\d]",             10);}

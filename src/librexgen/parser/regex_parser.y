@@ -163,6 +163,7 @@ ClassRegex:
     CharacterClassWord  { $$ = $1; }
   | CharacterClassDigit { $$ = $1; }
   | CharacterClassSpaces { $$ = $1; }
+  | T_BEGIN_CLASS                       T_END_CLASS { $$ = new ClassRegex() }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 
