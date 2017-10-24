@@ -33,17 +33,9 @@ void ClassRegex::merge(const ClassRegex* other) {
   }
 }
 
-bool ClassRegex::contains(const wchar_t& ch) const {
-  return (std::find(characters.begin(), characters.end(),
-                    ch) != characters.end());
-}
-
 void ClassRegex::__append_character(const wchar_t& ch) {
   removeCharacterInstances(ch);
   characters.push_back(ch);
-  if (ch > 0x80) {
-    requires_multibyte = true;
-  }
 }
 void ClassRegex::__insert_character(const wchar_t& ch) {
   removeCharacterInstances(ch);

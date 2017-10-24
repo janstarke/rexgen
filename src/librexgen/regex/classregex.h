@@ -41,12 +41,9 @@ class ClassRegex : public Regex {
     SPACES
   } CharacterClassType;
 
-  ClassRegex() : requires_multibyte(false) {}
-
   void addCharacter(const wchar_t & ch);
   void addRange(const wchar_t& a, const wchar_t& b);
   void addRange(CharacterClassType ct);
-  bool contains(const wchar_t& ch) const;
   RegexType getRegexType() const { return Class; }
 
   void merge(const ClassRegex* other);
@@ -84,7 +81,6 @@ class ClassRegex : public Regex {
 
   std::vector<wchar_t> characters;
   std::vector<CharacterClassType> ranges;
-  bool requires_multibyte;
 };
 
 #endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_
