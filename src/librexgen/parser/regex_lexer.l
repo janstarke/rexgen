@@ -124,11 +124,12 @@ LINEFEED                    \\n
 CARRIAGERETURN              \\r
 CLASS_DIGIT                 \\d
 CLASS_WORD                  \\w
+CLASS_SPACES                \\s
 SPECIAL                     [ \t\r\n,;:=/%&<>-]
 NORMAL                      [^ \t\r\n.,;:=/%&?<>-]
 GROUPID                     \\[1-9]
 STREAM                      \\0
-ESCAPED                     \\[^xnurdw0-9]
+ESCAPED                     \\[^xnurdws0-9]
 BEGIN_GROUP_WITH_OPTIONS    \(\?[i]*(-[i]+)?:
 BEGIN_GROUP                 \(
 END_GROUP                   \)
@@ -147,6 +148,7 @@ MULTIBYTE_CHARACTER  \xFE
 {CARRIAGERETURN}        { yylval.character = btowc('\r');                           return T_ANY_CHAR; }
 {CLASS_DIGIT}	        { yylval.character = 0; return T_CLASS_DIGIT; }
 {CLASS_WORD}            { yylval.character = 0; return T_CLASS_WORD;  }
+{CLASS_SPACES}          { yylval.character = 0; return T_CLASS_SPACES;  }
 "|"                     { return T_PIPE; }
 "["                     { BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"                     { BEGIN(INITIAL); return T_END_CLASS; }

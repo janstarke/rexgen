@@ -83,7 +83,9 @@ void ClassRegex::addRange(const wchar_t& uch_a, const wchar_t& uch_b) {
 
 void ClassRegex::addRange(CharacterClassType ct) {
   for (CharacterClassType classType : ranges) {
-    if (classType == ct) { /* nothing to do*/
+    if (classType == ct) {
+      /* nothing to do,
+       * because this character class type has already been added*/
       return;
     }
 

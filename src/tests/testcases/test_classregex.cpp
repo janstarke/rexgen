@@ -55,11 +55,23 @@ TEST(ClassIteratorTest, TestIteratorWithOneElement) {
   delete iter;
 }
 
-TEST(ClassIteratorTest, TestDigits) {validateRegex("\\d",                  10);}
-TEST(ClassIteratorTest, TestClass1) {validateRegex("([a-b])test([0-1g-h])", 8);}
-TEST(ClassIteratorTest, TestClass2) {validateRegex("[-0-9a-zA-Z]",         63);}
-TEST(ClassIteratorTest, TestClass3) {validateRegex("\\w",                  63);}
-TEST(ClassIteratorTest, TestClass4) {validateRegex("[a-f]",                 6);}
-TEST(ClassIteratorTest, TestClass5) {validateRegex("[A-F]",                 6);}
-TEST(ClassIteratorTest, TestClass6) {validateRegex("[c-a]",                 0);}
-TEST(ClassIteratorTest, TestClass7) {validateRegex("[3-6]",                 4);}
+TEST(ClassIteratorTest, TestDigits1) {validateRegex("\\d",                  10);}
+TEST(ClassIteratorTest, TestDigits2) {validateRegex("[\\d]",                10);}
+TEST(ClassIteratorTest, TestDigits3) {validateRegex("[\\d\\d]",             10);}
+TEST(ClassIteratorTest, TestSpaces1) {validateRegex("\\s",                   2);}
+TEST(ClassIteratorTest, TestSpaces2) {validateRegex("[\\s]",                 2);}
+TEST(ClassIteratorTest, TestSpaces3) {validateRegex("[\\s\\s]",              2);}
+TEST(ClassIteratorTest, TestClass01) {validateRegex("([a-b])test([0-1g-h])", 8);}
+TEST(ClassIteratorTest, TestClass02) {validateRegex("[-0-9a-zA-Z]",         63);}
+TEST(ClassIteratorTest, TestClass03) {validateRegex("\\w",                  63);}
+TEST(ClassIteratorTest, TestClass04) {validateRegex("[a-z]",                26);}
+TEST(ClassIteratorTest, TestClass05) {validateRegex("[A-Z]",                26);}
+TEST(ClassIteratorTest, TestClass06) {validateRegex("[a-f]",                 6);}
+TEST(ClassIteratorTest, TestClass07) {validateRegex("[A-F]",                 6);}
+TEST(ClassIteratorTest, TestClass08) {validateRegex("[c-a]",                 0);}
+TEST(ClassIteratorTest, TestClass09) {validateRegex("[3-6]",                 4);}
+TEST(ClassIteratorTest, TestClass10) {validateRegex("[0-9]",                10);}
+TEST(ClassIteratorTest, TestClass11) {validateRegex("[\\d0-9]",             10);}
+TEST(ClassIteratorTest, TestClass12) {validateRegex("[\\w0-9]",             63);}
+TEST(ClassIteratorTest, TestClass13) {validateRegex("[\\wa-z]",             63);}
+TEST(ClassIteratorTest, TestClass14) {validateRegex("[\\wA-Z]",             63);}

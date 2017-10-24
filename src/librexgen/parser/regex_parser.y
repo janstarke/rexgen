@@ -91,6 +91,7 @@
 %token <character> T_COMMA
 %token <character> T_CLASS_DIGIT
 %token <character> T_CLASS_WORD
+%token <character> T_CLASS_SPACES
 
 %type <regex_alternatives> T_RegexAlternatives
 %type <compound_regex> CompoundRegex
@@ -103,10 +104,10 @@
 %type <class_regex> SimpleClassContent
 %type <class_regex> CharacterClassDigit
 %type <class_regex> CharacterClassWord
+%type <class_regex> CharacterClassSpaces
 %type <regex_alternatives> GroupRegex
-%type <group_reference> GroupReference;
-%type <stream_regex> Stream;
-
+%type <group_reference> GroupReference
+%type <stream_regex> Stream
 
 %%
 
@@ -138,12 +139,8 @@ CompoundRegex:
   };
   
 Regex:
-  PlainRegex
-  {
-    $$ = $1;
-  };
-Regex:
-  PlainRegex Quantifier
+    PlainRegex { $$ = $1; }
+  | PlainRegex Quantifier
   {
     $$ = (Regex*)$1;
     Quantifier* q = (Quantifier*)$2;
@@ -152,12 +149,11 @@ Regex:
   };
 
 PlainRegex:
-        SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
-    |   CharacterClassDigit { $$ = $1; }
-	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
-	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
-	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
-          |     Stream          { $$ = static_cast<Regex*>($1); };
+        SimpleRegex 	  { $$ = static_cast<Regex*>($1); }
+	  | 	ClassRegex 	    { $$ = static_cast<Regex*>($1); }
+	  |	  GroupRegex	    { $$ = static_cast<Regex*>($1); }
+	  |	  GroupReference	{ $$ = static_cast<Regex*>($1); }
+    |   Stream          { $$ = static_cast<Regex*>($1); };
 
 SimpleRegex: T_ANY_CHAR {
 	$$ = new TerminalRegex($1);
@@ -165,26 +161,27 @@ SimpleRegex: T_ANY_CHAR {
 
 ClassRegex:
     CharacterClassWord  { $$ = $1; }
+  | CharacterClassDigit { $$ = $1; }
+  | CharacterClassSpaces { $$ = $1; }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
+
 ClassContent:
     SimpleClassContent  { $$ = $1; }
   | SimpleClassContent ClassContent {
     $2->merge($1);
     delete $1;
     $$ = $2;
-  }
+  };
 
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = new ClassRegex(); 
       $$->addRange($1, $3);
 	}
-	| T_CLASS_DIGIT {
-      $$ = new ClassRegex();
-      $$->addRange(ClassRegex::DIGITS);
-  }
-	| CharacterClassWord  { $$ = $1; }
+	| CharacterClassDigit  { $$ = $1; }
+	| CharacterClassWord   { $$ = $1; }
+  | CharacterClassSpaces { $$ = $1; }
 	| T_ANY_CHAR {
     $$ = new ClassRegex();
     $$->addCharacter($1);
@@ -194,13 +191,17 @@ CharacterClassDigit:
 	T_CLASS_DIGIT {
     $$ = new ClassRegex();
     $$->addRange(ClassRegex::DIGITS);
-	}
+	};
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = new ClassRegex();
     $$->addRange(ClassRegex::WORDCHARACTERS);
-  }
-  
+  };
+CharacterClassSpaces:
+  T_CLASS_SPACES {
+    $$ = new ClassRegex();
+    $$->addRange(ClassRegex::SPACES);
+  };
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP
   { 
