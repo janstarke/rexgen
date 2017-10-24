@@ -107,23 +107,26 @@ Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const {
   } else if (characters.size() == 0 && ranges.size() == 1) {
     switch (ranges[0]) {
       case DIGITS:
-        return new RangeIterator<'0', '9'>(getId());
+        single = new RangeIterator<'0', '9'>(getId());
+        break;
       case UPPERCASE:
-        return new RangeIterator<'A', 'Z'>(getId());
+        single = new RangeIterator<'A', 'Z'>(getId());
+        break;
       case LOWERCASE:
-        return new RangeIterator<'a', 'z'>(getId());
+        single = new RangeIterator<'a', 'z'>(getId());
+        break;
       case WORDCHARACTERS: {
         auto child = new RegexAlternativesIterator(getId());
         child->addChild(new RangeIterator<'0', '9'>(getId()));
         child->addChild(new RangeIterator<'a', 'z'>(getId()));
         child->addChild(new RangeIterator<'A', 'Z'>(getId()));
         child->addChild(new TerminalRegexIterator(getId(), L"_", 1));
-        return child;
+        single = child;
+        break;
       }
       case SPACES:
-         return new ClassRegexIterator(getId(), L" \t", 2);
-      default:
-          return NULL;
+        single = new ClassRegexIterator(getId(), L" \t", 2);
+        break;
     }
   } else { /* we must combine at least two different iterators */
     RegexAlternativesIterator *child = new RegexAlternativesIterator(getId());
