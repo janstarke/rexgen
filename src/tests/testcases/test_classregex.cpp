@@ -77,3 +77,5 @@ TEST(ClassIteratorTest, TestClass11) {validateRegex("[\\d0-9]",             10);
 TEST(ClassIteratorTest, TestClass12) {validateRegex("[\\w0-9]",             63);}
 TEST(ClassIteratorTest, TestClass13) {validateRegex("[\\wa-z]",             63);}
 TEST(ClassIteratorTest, TestClass14) {validateRegex("[\\wA-Z]",             63);}
+TEST(ClassIteratorTest, TestClass15) {validateRegex("[\\w\\d]",             63);}
+TEST(ClassIteratorTest, TestClass16) {validateRegex("[\\d\\w]",             63);}
