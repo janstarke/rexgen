@@ -50,3 +50,16 @@ void validateRegex(const char* input_regex,
   delete iter;
   delete regex;
 }
+
+void validateFailure(const char* input_regex) {
+  RexgenOptions options;
+  Regex* regex = parse_regex(input_regex, options);
+
+  IteratorState state;
+  Iterator* iter = regex->singleIterator(&state);
+
+  ASSERT_ANY_THROW(iter->next());
+
+  delete iter;
+  delete regex;
+}

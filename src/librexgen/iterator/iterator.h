@@ -63,9 +63,7 @@ class Iterator {
   }
 
   virtual void setCurrentState(const SerializableState* s) {
-    if (getId() != s->getIteratorId()) {
-      throw InvalidIteratorIdException();
-    }
+    assert (getId() == s->getIteratorId());
     setState(s->getStateEnum());
   }
 

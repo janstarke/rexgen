@@ -46,14 +46,6 @@ class ClassRegexIterator : public Iterator {
 
   size_t size() const { return characters_count; }
 
-  inline bool hasNext() const {
-    return  (current < (static_cast<int>(characters_count)-1));
-  }
-
-  inline bool canUseValue() const {
-    return (current < static_cast<int>(characters_count));
-  }
-
   SerializableState* getCurrentState() const;
 
   void setCurrentState(const SerializableState* s);

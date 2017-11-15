@@ -58,20 +58,12 @@ bool CaseIterator::readNextFromChild() {
   if (changeable_characters.size() <= max_fast_character_bytes) {
     k = (1 << changeable_characters.size())-1;
   } else {
-    assert(false);
     throw GenericError("cannot handle that much characters");
   }
   parity = 0;
   j = 0;      /* == ntz(k) & parity */
 
   return childHadNext;
-}
-
-bool CaseIterator::hasNext() const {
-  if (word.size() == 0) {
-    return child->hasNext();
-  }
-  return true;
 }
 
 /* this function is inspired by the algorithm for Grey binary generation

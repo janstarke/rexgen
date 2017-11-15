@@ -33,7 +33,6 @@ class CaseIterator : public IteratorContainer {
   CaseIterator(Iterator* _child, int options);
   virtual ~CaseIterator();
 
-  bool hasNext() const;
   bool next();
   void fast_next();
 
@@ -46,9 +45,7 @@ class CaseIterator : public IteratorContainer {
   }
 
   virtual void setCurrentState(const SerializableState* s) {
-    if (getId() != s->getIteratorId()) {
-      throw InvalidIteratorIdException();
-    }
+    assert (getId() == s->getIteratorId());
   }
 
  private:
