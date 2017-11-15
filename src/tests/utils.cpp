@@ -18,6 +18,7 @@
 */
 
 #include <list>
+#include <librexgen/iterator/topiterator.h>
 #include "utils.h"
 
 bool matches(const char* value, const char* regex) {
@@ -31,8 +32,17 @@ void validateRegex(const char* input_regex,
   RexgenOptions options;
   Regex* regex = parse_regex(input_regex, options);
 
-  IteratorState state;
-  Iterator* iter = regex->singleIterator(&state);
+  Iterator* iter = new TopIterator(regex);
+
+  // register regex alternatives
+  iter->updateReferences(NULL);
+
+  // update references
+  iter->updateReferences(NULL);
+
+  // update attributes (e.g. case folding )
+  iter->updateAttributes(NULL);
+
   SimpleString str;
   std::list<string> generated_values;
   while (iter->next()) {

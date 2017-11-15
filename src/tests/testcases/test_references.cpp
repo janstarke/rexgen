@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,27 +17,15 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include "gtest/gtest.h"
+#include <utils.h>
+#include <librexgen/librexgen.h>
+#include <librexgen/rexgen_options.h>
+#include <librexgen/regex/classregex.h>
+#include <librexgen/iterator/classregexiterator.h>
+#include <set>
+#include <pcrecpp.h>
 
-#ifndef SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_
-#define SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_
-
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/regex/regex.h>
-#include <librexgen/string/unicode.h>
-#include <librexgen/iterator/iteratorcontainer.h>
-#include <deque>
-#include <vector>
-#include <algorithm>
-
-class CompoundRegexIterator : public IteratorContainer {
- public:
-  explicit CompoundRegexIterator(int id);
-
-  bool next();
-  void value(SimpleString* dst) const;
-
-  SerializableState* getCurrentState() const;
-  void setCurrentState(const SerializableState* state);
-};
-
-#endif  // SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_
+TEST(ReferencesTest, TestReference01) {validateRegex("(a)\\1",  1);}
+TEST(ReferencesTest, TestReference02) {validateRegex("([abc])\\1",  3);}
+TEST(ReferencesTest, TestReference03) {validateRegex("([a-z])\\1",  26);}

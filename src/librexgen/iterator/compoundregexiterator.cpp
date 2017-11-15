@@ -47,17 +47,6 @@ void CompoundRegexIterator::value(SimpleString* dst) const {
   }
 }
 
-bool CompoundRegexIterator::hasNext() const {
-  bool has_next = false;
-  if (state == not_usable) {
-    return false;
-  }
-  for (auto i : iterators) {
-    has_next |= i->hasNext();
-  }
-  return has_next;
-}
-
 SerializableState* CompoundRegexIterator::getCurrentState() const {
   SerializableState* s = Iterator::getCurrentState();
   for (auto i : iterators) {
