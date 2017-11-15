@@ -41,6 +41,10 @@ void validateRegex(const char* input_regex,
     const char* generated_value = str.c_str();
     ASSERT_PRED2(matches, generated_value, input_regex);
     generated_values.push_back(str);
+
+    /* save and restore the iterator state */
+    SerializableState* s = iter->getCurrentState();
+    iter->setCurrentState(s);
   }
   ASSERT_EQ(generated_values.size(), nValues);
   delete iter;

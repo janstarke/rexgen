@@ -71,8 +71,7 @@ class Regex  {
 
   virtual bool usesCallback() const { return false; }
 
- protected:
-  virtual int createId() {
+  static int createId() {
     return ++next_id;
   }
 

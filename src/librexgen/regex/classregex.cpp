@@ -214,31 +214,31 @@ Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const {
     single = child;
     if (characters.size() > 0) {
       child->addChild(new ClassRegexIterator(
-              getId(), &characters[0], characters.size()));
+              Regex::createId(), &characters[0], characters.size()));
     }
     for (CharacterClassType classType : ranges) {
       switch (classType) {
         case DIGITS:
-          child->addChild(new RangeIterator<'0', '9'>(getId()));
+          child->addChild(new RangeIterator<'0', '9'>(Regex::createId()));
           break;
 
         case UPPERCASE:
-          child->addChild(new RangeIterator<'A', 'Z'>(getId()));
+          child->addChild(new RangeIterator<'A', 'Z'>(Regex::createId()));
           break;
 
         case LOWERCASE:
-          child->addChild(new RangeIterator<'a', 'z'>(getId()));
+          child->addChild(new RangeIterator<'a', 'z'>(Regex::createId()));
           break;
 
         case WORDCHARACTERS: {
-          child->addChild(new RangeIterator<'0', '9'>(getId()));
-          child->addChild(new RangeIterator<'a', 'z'>(getId()));
-          child->addChild(new RangeIterator<'A', 'Z'>(getId()));
-          child->addChild(new TerminalRegexIterator(getId(), L"_", 1));
+          child->addChild(new RangeIterator<'0', '9'>(Regex::createId()));
+          child->addChild(new RangeIterator<'a', 'z'>(Regex::createId()));
+          child->addChild(new RangeIterator<'A', 'Z'>(Regex::createId()));
+          child->addChild(new TerminalRegexIterator(Regex::createId(), L"_", 1));
           break;
         }
         case SPACES:
-          child->addChild(new ClassRegexIterator(getId(), L" \t", 2));
+          child->addChild(new ClassRegexIterator(Regex::createId(), L" \t", 2));
           break;
       }
     }
