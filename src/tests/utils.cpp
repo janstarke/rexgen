@@ -17,6 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <list>
 #include "utils.h"
 
 bool matches(const char* value, const char* regex) {
@@ -33,13 +34,15 @@ void validateRegex(const char* input_regex,
   IteratorState state;
   Iterator* iter = regex->singleIterator(&state);
   SimpleString str;
-  std::set<string> generated_values;
+  std::list<string> generated_values;
   while (iter->next()) {
     str.clear();
     iter->value(&str);
     const char* generated_value = str.c_str();
     ASSERT_PRED2(matches, generated_value, input_regex);
-    generated_values.insert(str);
+    generated_values.push_back(str);
   }
   ASSERT_EQ(generated_values.size(), nValues);
+  delete iter;
+  delete regex;
 }

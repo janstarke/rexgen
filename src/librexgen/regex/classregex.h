@@ -43,7 +43,7 @@ class ClassRegex : public Regex {
 
   void addCharacter(const wchar_t & ch);
   void addRange(const wchar_t& a, const wchar_t& b);
-  void addRange(CharacterClassType ct);
+  void addRange(CharacterClassType newClassType);
   RegexType getRegexType() const { return Class; }
 
   void merge(const ClassRegex* other);
@@ -55,32 +55,12 @@ class ClassRegex : public Regex {
   void __append_character(const wchar_t& ch);
   void removeCharacterInstances(const wchar_t& ch);
   void removeCharacterInstances(const wchar_t& min, const wchar_t& max);
-  void removeCharacterInstances(CharacterClassType ct) {
-    switch (ct) {
-      case DIGITS:
-        removeCharacterInstances(L'0', L'9');
-        break;
-      case UPPERCASE:
-        removeCharacterInstances(L'A', L'Z');
-        break;
-      case LOWERCASE:
-        removeCharacterInstances(L'a', L'z');
-        break;
-      case WORDCHARACTERS:
-        removeCharacterInstances(DIGITS);
-        removeCharacterInstances(UPPERCASE);
-        removeCharacterInstances(LOWERCASE);
-        removeCharacterInstances(L'_');
-        break;
-      case SPACES:
-        removeCharacterInstances(L' ');
-        removeCharacterInstances(L'\t');
-        break;
-    }
-  }
+  void removeCharacterInstances(CharacterClassType ct);
 
   std::vector<wchar_t> characters;
   std::vector<CharacterClassType> ranges;
+
+  bool hasCharacter(const wchar_t &ch) const;
 };
 
 #endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_

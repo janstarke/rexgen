@@ -34,12 +34,61 @@ void ClassRegex::merge(const ClassRegex* other) {
 }
 
 void ClassRegex::__append_character(const wchar_t& ch) {
-  removeCharacterInstances(ch);
-  characters.push_back(ch);
+  if (! hasCharacter(ch)) {
+    characters.push_back(ch);
+  }
 }
+
 void ClassRegex::__insert_character(const wchar_t& ch) {
-  removeCharacterInstances(ch);
-  characters.insert(characters.begin(), ch);
+  if (! hasCharacter(ch)) {
+    characters.insert(characters.begin(), ch);
+  }
+}
+
+bool ClassRegex::hasCharacter(const wchar_t &ch) const {
+  for (const wchar_t c: characters) {
+    if (ch == c) {
+      return true;
+    }
+  }
+
+  for (CharacterClassType ct: ranges) {
+    switch (ct) {
+      case DIGITS:
+        if (L'0' <= ch && ch <= L'9') {
+          return true;
+        }
+        break;
+
+      case LOWERCASE:
+        if (L'a' <= ch && ch <= L'z') {
+          return true;
+        }
+        break;
+
+      case UPPERCASE:
+        if (L'A' <= ch && ch <= L'Z') {
+          return true;
+        }
+        break;
+
+      case SPACES:
+        if (L'\t' == ch || ch == L' ') {
+          return true;
+        }
+        break;
+
+      case WORDCHARACTERS:
+        if (        (L'0' <= ch && ch <= L'9')
+                ||  (L'a' <= ch && ch <= L'z')
+                ||  (L'A' <= ch && ch <= L'Z')
+                ||  (L'_' == ch)) {
+          return true;
+        }
+        break;
+    }
+  }
+  return false;
 }
 
 void ClassRegex::removeCharacterInstances(const wchar_t& ch) {
@@ -63,6 +112,30 @@ void ClassRegex::removeCharacterInstances(
           characters.end());
 }
 
+void ClassRegex::removeCharacterInstances(CharacterClassType ct) {
+  switch (ct) {
+    case DIGITS:
+      removeCharacterInstances(L'0', L'9');
+      break;
+    case UPPERCASE:
+      removeCharacterInstances(L'A', L'Z');
+      break;
+    case LOWERCASE:
+      removeCharacterInstances(L'a', L'z');
+      break;
+    case WORDCHARACTERS:
+      removeCharacterInstances(DIGITS);
+      removeCharacterInstances(UPPERCASE);
+      removeCharacterInstances(LOWERCASE);
+      removeCharacterInstances(L'_');
+      break;
+    case SPACES:
+      removeCharacterInstances(L' ');
+      removeCharacterInstances(L'\t');
+      break;
+  }
+}
+
 void ClassRegex::addCharacter(const wchar_t& ch) {
   __insert_character(ch);
 }
@@ -81,22 +154,30 @@ void ClassRegex::addRange(const wchar_t& uch_a, const wchar_t& uch_b) {
   }
 }
 
-void ClassRegex::addRange(CharacterClassType ct) {
-  for (CharacterClassType classType : ranges) {
-    if (classType == ct) {
+void ClassRegex::addRange(CharacterClassType newClassType) {
+  /* remove all subsets of characters */
+  if (newClassType == WORDCHARACTERS) {
+    ranges.erase( std::remove_if(ranges.begin(), ranges.end(),
+        [] (CharacterClassType const & ct) {
+          return ct == DIGITS || ct == UPPERCASE || ct == LOWERCASE;
+        }), ranges.end());
+  }
+
+  for (CharacterClassType existingClassType : ranges) {
+    if (existingClassType == newClassType) {
       /* nothing to do,
        * because this character class type has already been added*/
       return;
     }
 
-    if (classType == WORDCHARACTERS) {
-      if (ct == DIGITS || ct == UPPERCASE || ct == LOWERCASE) {
+    if (existingClassType == WORDCHARACTERS) {
+      if (newClassType == DIGITS || newClassType == UPPERCASE || newClassType == LOWERCASE) {
         return;
       }
     }
   }
-  ranges.push_back(ct);
-  removeCharacterInstances(ct);
+  ranges.push_back(newClassType);
+  removeCharacterInstances(newClassType);
 }
 
 Iterator* ClassRegex::singleIterator(IteratorState* /* state */) const {

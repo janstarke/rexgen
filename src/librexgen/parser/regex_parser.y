@@ -112,28 +112,22 @@
 %%
 
 T_RegexAlternatives:
-  CompoundRegex {
+    CompoundRegex {
       $$ = new RegexAlternatives();
       $$->addRegex($1);
       context->result = $$;
       $$->setGroupId(0);
-      context->updateAllGroupReferences();
-  };
-  
-T_RegexAlternatives:
-  CompoundRegex T_PIPE T_RegexAlternatives
+      context->updateAllGroupReferences() }
+  | CompoundRegex T_PIPE T_RegexAlternatives
   { $$ = $3;
     $$->addRegex($1);
   };
 
 CompoundRegex:
-  Regex
-  { $$ = new CompoundRegex();
+    Regex { $$ = new CompoundRegex();
     $$->prependRegex($1);
-  };
-  
-CompoundRegex:
-  Regex CompoundRegex
+  }
+  | Regex CompoundRegex
   { $$ = $2;
     $$->prependRegex($1);
   };

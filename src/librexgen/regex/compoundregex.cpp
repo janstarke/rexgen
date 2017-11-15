@@ -53,12 +53,6 @@ void CompoundRegex::prependRegex(Regex* regex) {
   LEAVE_METHOD;
 }
 
-void CompoundRegex::appendRegex(Regex* regex) {
-  ENTER_METHOD;
-  regexObjects.push_back(regex);
-  LEAVE_METHOD;
-}
-
 Iterator* CompoundRegex::singleIterator(IteratorState* state) const {
   if (regexObjects.size() == 1) {
     return regexObjects[0]->iterator(state);

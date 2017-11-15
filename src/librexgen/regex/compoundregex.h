@@ -30,7 +30,6 @@
 class CompoundRegex : public RegexContainer {
  public:
   void prependRegex(Regex* regex);
-  void appendRegex(Regex* regex);
   RegexType getRegexType() const { return Compound; }
   Iterator* iterator(IteratorState* state) const;
 
