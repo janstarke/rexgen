@@ -47,20 +47,6 @@ void IteratorPermuter::value(SimpleString* dst) const {
   LEAVE_METHOD;
 }
 
-bool IteratorPermuter::hasNext() const {
-  ENTER_METHOD;
-
-  if (state == resetted) {
-    RETURN(true);
-  }
-
-  if (occurs < max_occurs) {
-    RETURN(true);
-  }
-
-  RETURN(existsIteratorWithNextElement());
-}
-
 bool IteratorPermuter::next() {
   ENTER_METHOD;
 
@@ -80,26 +66,13 @@ bool IteratorPermuter::next() {
 void IteratorPermuter::init() {
   ENTER_METHOD;
 
-  bool has_next = false;
   for (auto i : iterators) {
     i->next();
-    has_next |= i->hasNext();
   }
-  hasNextElement = has_next;
 
   occurs = min_occurs;
   current = 0;
   state = resetted;
   LEAVE_METHOD;
-}
-
-bool IteratorPermuter::existsIteratorWithNextElement() const {
-  ENTER_METHOD;
-  for (auto i : iterators) {
-    if (i->hasNext()) {
-      RETURN(true);
-    }
-  }
-  RETURN(false);
 }
 

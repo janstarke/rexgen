@@ -64,7 +64,6 @@ class TopIterator : public Iterator {
   }
 
   void value(SimpleString* dst) const { child->value(dst); }
-  bool hasNext() const { return child->hasNext(); }
   void updateReferences(IteratorState* /* ignore */) {
     if (child != NULL && state != NULL) {
       child->updateReferences(state);

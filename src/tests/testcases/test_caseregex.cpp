@@ -25,3 +25,4 @@ TEST(CaseIteratorTest, TestCases02) {validateRegex("(?i:a(?i:bc))",2*2*8);}
 TEST(CaseIteratorTest, TestCases03) {validateRegex("(?i:[abc])-[pP]", 12);}
 TEST(CaseIteratorTest, TestCases04) {validateFailure("(?i:abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde)");}
 TEST(CaseIteratorTest, TestCases05) {validateRegex(  "(?i:a1234567890123456789012345678901234567890123456789012345678901234)", 2);}
+TEST(CaseIteratorTest, TestCases06) {validateRegex("(?i:[123]abc){3}", 3*3*3*8*8*8);}

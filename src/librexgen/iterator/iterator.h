@@ -37,7 +37,6 @@ class Iterator {
     id(_id) {}
   virtual ~Iterator() {}
 
-  virtual bool hasNext() const { return false; }
   virtual bool next() = 0;
   virtual void value(SimpleString* /* dst */) const { }
 

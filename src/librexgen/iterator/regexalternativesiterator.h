@@ -38,8 +38,6 @@ class RegexAlternativesIterator : public IteratorContainer {
     (*getPosition())->value(dst);
   }
 
-  bool hasNext() const;
-
   void addChild(Iterator* re);
 
   SerializableState* getCurrentState() const;

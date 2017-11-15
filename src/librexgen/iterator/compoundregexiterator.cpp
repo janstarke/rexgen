@@ -41,7 +41,6 @@ bool CompoundRegexIterator::next() {
 }
 
 void CompoundRegexIterator::value(SimpleString* dst) const {
-  // assert(canUseValue());
   for (auto i : iterators) {
     i->value(dst);
   }
