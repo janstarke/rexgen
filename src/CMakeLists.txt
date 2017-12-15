@@ -60,6 +60,9 @@ endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
-add_subdirectory(tests)
+
+if("${TEST_ENABLED}")
+  add_subdirectory(tests)
+endif("${TEST_ENABLED}")
 
 #include (cmake/ctags.cmake)
