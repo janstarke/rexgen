@@ -26,7 +26,7 @@
 #include <librexgen/osdepend.h>
 #include <string.h>
 #include <stdlib.h>
-#include <xlocale.h>
+#include <bits/types/locale_t.h>
 #include <string>
 #include <algorithm>
 #include <cassert>
