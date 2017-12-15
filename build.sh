@@ -13,7 +13,7 @@ cd ${BUILDDIR}
 echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR}/src <<<"
 cmake ${CMAKE_OPTIONS} ${BASEDIR}/src && make
 
-if test "${TEST_ENABLED}" -eq "1" -a $? -eq "0"; then
+if test "x${TEST_ENABLED}" = "x1" -a $? -eq "0"; then
   lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -z
   make test
   if test "${COVERAGE_ENABLED}" -eq "1" -a $? -eq "0"; then
