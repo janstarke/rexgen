@@ -1,6 +1,6 @@
 project(${prj})
 
-cmake_minimum_required(VERSION 3.9.3)
+cmake_minimum_required(VERSION 3.9.1)
 set(testrexgen_exename tests)
 set(CMAKE_MACOSX_RPATH 1)
 include(CodeCoverage.cmake)
