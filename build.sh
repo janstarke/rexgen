@@ -16,10 +16,11 @@ cmake ${CMAKE_OPTIONS} ${BASEDIR}/src && make
 if test "x${TEST_ENABLED}" = "x1" -a $? -eq "0"; then
   lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -z
   make test
+  GCOV=$(which gcov-7)
   if test "${COVERAGE_ENABLED}" -eq "1" -a $? -eq "0"; then
-    lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -c -o librexgen.info
-    lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -r librexgen.info '*.l' -o librexgen.info
-    lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -r librexgen.info '*.y' -o librexgen.info
+    lcov --gcov-tool ${GCOV} -d . -b . -c -o librexgen.info
+    lcov --gcov-tool ${GCOV} -d . -b . -r librexgen.info '*.l' -o librexgen.info
+    lcov --gcov-tool ${GCOV} -d . -b . -r librexgen.info '*.y' -o librexgen.info
     genhtml -o test_coverage librexgen.info
   fi
 fi
