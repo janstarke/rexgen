@@ -19,6 +19,7 @@ set(librexgen_lua "lib${prj}-lua")
 message("creating ${prj} ${librexgen_version}")
 
 ADD_DEFINITIONS("-funsigned-char")
+ADD_DEFINITIONS("-D_GNU_SOURCE")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   MESSAGE(STATUS "USING DEBUG MODE")

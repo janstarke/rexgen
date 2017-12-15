@@ -157,7 +157,7 @@ size_t callback(char* dst, const size_t buffer_size) {
     }
 
     /* remove trailing newlines */
-    len = strnlen(dst, buffer_size);
+    len = strnlen#dst, buffer_size);
     while (len > 0 && dst[len - 1] == '\n') {
       --len;
       dst[len] = '\0';
