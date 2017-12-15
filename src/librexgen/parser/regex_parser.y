@@ -117,7 +117,7 @@ T_RegexAlternatives:
       $$->addRegex($1);
       context->result = $$;
       $$->setGroupId(0);
-      context->updateAllGroupReferences() }
+      context->updateAllGroupReferences(); }
   | CompoundRegex T_PIPE T_RegexAlternatives
   { $$ = $3;
     $$->addRegex($1);
@@ -157,7 +157,7 @@ ClassRegex:
     CharacterClassWord  { $$ = $1; }
   | CharacterClassDigit { $$ = $1; }
   | CharacterClassSpaces { $$ = $1; }
-  | T_BEGIN_CLASS                       T_END_CLASS { $$ = new ClassRegex() }
+  | T_BEGIN_CLASS                       T_END_CLASS { $$ = new ClassRegex(); }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
 

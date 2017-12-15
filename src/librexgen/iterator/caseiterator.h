@@ -44,8 +44,12 @@ class CaseIterator : public IteratorContainer {
     return new SerializableState(getId(), getState());
   }
 
-  virtual void setCurrentState(const SerializableState* s) {
-    assert (getId() == s->getIteratorId());
+  virtual void setCurrentState(const SerializableState*
+#ifndef NDEBUG
+  stateVar
+#endif
+  ) {
+    assert (getId() == stateVar->getIteratorId());
   }
 
  private:
