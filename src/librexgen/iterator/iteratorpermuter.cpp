@@ -51,10 +51,10 @@ bool IteratorPermuter::next() {
   ENTER_METHOD;
 
   /* special case handling for resetted state */
-  if (state == resetted) { state = usable; RETURN(true); }
+  if (getState() == resetted) { setState(usable); RETURN(true); }
 
   /* special case handling for quantifier which starts with 0, i.e. {0,3} */
-  if (state == usable && occurs == 0) { ++occurs; RETURN(true); }
+  if (getState() == usable && occurs == 0) { ++occurs; RETURN(true); }
 
   unsigned int n = 0;
   for (; n < occurs; ++n) { if (iterators[n]->next()) { break; } }
@@ -69,10 +69,11 @@ void IteratorPermuter::init() {
   for (auto i : iterators) {
     i->next();
   }
+  //hasNextElement = has_next;
 
   occurs = min_occurs;
   current = 0;
-  state = resetted;
+  setState(resetted);
   LEAVE_METHOD;
 }
 

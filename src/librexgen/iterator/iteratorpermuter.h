@@ -41,7 +41,6 @@ class IteratorPermuter : public IteratorContainer {
    */
   // uint64_t size() const;
  private:
-
   const unsigned int min_occurs, max_occurs;
   const Regex* regex;
   bool hasNextElement;

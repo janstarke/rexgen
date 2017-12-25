@@ -9,6 +9,9 @@ find_package(FLEX 2.5)
 include(CheckIncludeFiles)
 
 check_include_files("xlocale.h" HAVE_XLOCALE_H)
+if(HAVE_XLOCALE_H)
+	ADD_DEFINITIONS("-DHAVE_XLOCALE_H")
+endif(HAVE_XLOCALE_H)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

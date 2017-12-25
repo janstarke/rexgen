@@ -19,6 +19,7 @@
 
 #include <list>
 #include <librexgen/iterator/topiterator.h>
+#include <librexgen/rexgen_options.h>
 #include "utils.h"
 
 bool matches(const char* value, const char* regex) {
@@ -30,6 +31,7 @@ void validateRegex(const char* input_regex,
                    const size_t nValues) {
 
   RexgenOptions options;
+  options.stream_callback = streamCallback;
   Regex* regex = parse_regex(input_regex, options);
 
   Iterator* iter = new TopIterator(regex);
@@ -72,4 +74,33 @@ void validateFailure(const char* input_regex) {
 
   delete iter;
   delete regex;
+}
+
+static Iterator* streamGenerator = NULL;
+size_t streamCallback(char* dst, const size_t buffer_size){
+  if (streamGenerator == NULL) {
+    RexgenOptions options;
+    Regex* regex = parse_regex("(Lorem|ipsum|123)", options);
+
+    streamGenerator = new TopIterator(regex);
+
+    // register regex alternatives
+    streamGenerator->updateReferences(NULL);
+
+    // update references
+    streamGenerator->updateReferences(NULL);
+
+    // update attributes (e.g. case folding )
+    streamGenerator->updateAttributes(NULL);
+  }
+
+  if (! streamGenerator->next()) {
+    streamGenerator = NULL;
+    return 0;
+  }
+
+  SimpleString str;
+  streamGenerator->value(&str);
+  strncpy(dst, str.c_str(), buffer_size);
+  return str.length();
 }

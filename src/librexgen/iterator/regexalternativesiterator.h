@@ -42,9 +42,6 @@ class RegexAlternativesIterator : public IteratorContainer {
 
   SerializableState* getCurrentState() const;
   void setCurrentState(const SerializableState* state);
-
- private:
-  bool canUseValue() const;
 };
 
 #endif  // SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_

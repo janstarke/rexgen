@@ -28,10 +28,12 @@
 #include <pcrecpp.h>
 
 #define TESTS_UTILS_H
+#define STREAM_VALUES 3
 
 void validateRegex(const char* input_regex,
                    const size_t nValues);
 void validateFailure(const char* input_regex);
+size_t streamCallback(char* dst, const size_t buffer_size);
 bool matches(const char* value, const char* regex);
 
 #endif /* TESTS_UTILS_H */

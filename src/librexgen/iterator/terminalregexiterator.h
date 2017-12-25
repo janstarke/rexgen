@@ -39,8 +39,8 @@ class TerminalRegexIterator : public Iterator {
   }
 
   bool next() {
-    const bool res = (state == resetted);
-    state = usable;
+    const bool res = (getState() == resetted);
+    setState(usable);
     return res;
   }
 
@@ -48,7 +48,7 @@ class TerminalRegexIterator : public Iterator {
     dst->append(terminal);
   }
 
-  bool hasNext() const { return state == resetted; }
+  bool hasNext() const { return getState() == resetted; }
 
   virtual void updateReferences(IteratorState* /* iterState */) {}
   virtual void updateAttributes(IteratorState* /* iterState */) {}

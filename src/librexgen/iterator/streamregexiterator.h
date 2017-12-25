@@ -31,20 +31,19 @@ class StreamRegexIterator : public Iterator {
  public:
   StreamRegexIterator(int _id, callback_fp_mb cb)
     : Iterator(_id), callback(cb) {
-    state = resetted;
+    setState(resetted);
     readNextWord();
   }
 
   bool next() {
-    const bool res = (state == resetted);
-    state = usable;
+    const bool res = (getState() == resetted);
+    setState(usable);
     return res;
   }
   bool forceNext() {
     readNextWord();
     return __hasNext;
   }
-  bool hasNext() const { return state == resetted; }
   void value(SimpleString* dst) const {
     dst->append(&buffer[0], length);
   }

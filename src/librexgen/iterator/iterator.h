@@ -38,20 +38,17 @@ class Iterator {
   virtual ~Iterator() {}
 
   virtual bool next() = 0;
-  virtual void value(SimpleString* /* dst */) const { }
-
-  virtual bool canUseValue() const { return (state == usable); }
+  virtual void value(SimpleString* /* dst */) const = 0;
 
   int getId() const { return id; }
+
+  typedef enum {
+    resetted,
+    usable
+  } state_t;
   virtual int getState() const { return state; }
-  virtual void setState(int _state) {
-    if (_state < static_cast<int>(resetted)) {
-      state = not_usable;
-    } else if (_state > static_cast<int>(not_usable)) {
-      state = not_usable;
-    } else {
-      state = static_cast<state_t>(_state);
-    }
+  virtual void setState(state_t _state) {
+    state = _state;
   }
   virtual void updateReferences(IteratorState* /* iterState */) = 0;
   virtual void updateAttributes(IteratorState* /* iterState */) = 0;
@@ -63,17 +60,12 @@ class Iterator {
 
   virtual void setCurrentState(const SerializableState* s) {
     assert (getId() == s->getIteratorId());
-    setState(s->getStateEnum());
+    setState(static_cast<state_t>(s->getStateEnum()));
   }
 
- protected:
-  enum state_t {
-    resetted,
-    usable,
-    not_usable
-  } state;
+private:
+  state_t state;
 
- private:
   const int id;
 };
 

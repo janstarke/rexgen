@@ -29,14 +29,14 @@
 RegexAlternativesIterator::RegexAlternativesIterator(int _id)
   : IteratorContainer(_id) {
   resetPosition();
-  state = resetted;
+  setState(resetted);
 }
 
 bool RegexAlternativesIterator::next() {
   ENTER_METHOD;
 
-  if (state == resetted) {
-    state = usable;
+  if (getState() == resetted) {
+    setState(usable);
     bool res = false;
     for (auto i : iterators) {
       res |= (i->next());
@@ -62,16 +62,6 @@ void RegexAlternativesIterator::addChild(Iterator* i) {
   resetPosition();
 //  i->next();
   LEAVE_METHOD;
-}
-
-bool RegexAlternativesIterator::canUseValue() const {
-  if (!Iterator::canUseValue()) {
-    return false;
-  }
-  if (getPosition() == iterators.end()) {
-    return false;
-  }
-  return ((*(getPosition()))->canUseValue());
 }
 
 SerializableState* RegexAlternativesIterator::getCurrentState() const {

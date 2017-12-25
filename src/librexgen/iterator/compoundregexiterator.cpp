@@ -24,8 +24,8 @@ CompoundRegexIterator::CompoundRegexIterator(int _id)
 }
 
 bool CompoundRegexIterator::next() {
-  if (state == resetted) {
-    state = usable;
+  if (getState() == resetted) {
+    setState(usable);
     bool res = false;
     for (auto i : iterators) {
       res |= i->next();

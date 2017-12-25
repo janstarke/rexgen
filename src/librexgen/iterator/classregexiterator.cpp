@@ -38,7 +38,7 @@ ClassRegexIterator::ClassRegexIterator(int _id,
     index += characters.character_length(n);
   }
   characters_count = static_cast<size_t>(elements);
-  state = usable;
+  setState(usable);
 }
 
 void ClassRegexIterator::value(SimpleString* dst) const {

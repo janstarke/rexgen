@@ -9,6 +9,11 @@ include(GoogleTest)
 add_subdirectory("${PROJECT_SOURCE_DIR}/googletest")
 add_subdirectory("pcre")
 
+check_include_files("xlocale.h" HAVE_XLOCALE_H)
+if(HAVE_XLOCALE_H)
+	ADD_DEFINITIONS("-DHAVE_XLOCALE_H")
+endif(HAVE_XLOCALE_H)
+
 file(GLOB_RECURSE testrexgen_sources "testcases/test*.cpp")
 
 add_executable(${testrexgen_exename} "main.cpp" ${testrexgen_sources} utils.cpp)

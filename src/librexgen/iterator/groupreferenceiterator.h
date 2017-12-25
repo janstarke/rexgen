@@ -32,10 +32,10 @@ class GroupReferenceIterator : public IteratorContainer {
   GroupReferenceIterator(int _id, int group)
     : IteratorContainer(_id), groupId(group), groupRef(NULL) { }
 
-  inline bool hasNext() const { return (state == resetted); }
+  inline bool hasNext() const { return (getState() == resetted); }
   inline bool next() {
-    bool res = (state == resetted);
-    state = usable;
+    bool res = (getState() == resetted);
+    setState(usable);
     return res;
   }
   inline void value(SimpleString* dst) const { groupRef->value(dst);}

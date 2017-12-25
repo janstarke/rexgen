@@ -26,7 +26,4 @@
 #include <set>
 #include <pcrecpp.h>
 
-TEST(ReferencesTest, TestReference01) {validateRegex("(a)\\1",  1);}
-TEST(ReferencesTest, TestReference02) {validateRegex("([abc])\\1",  3);}
-TEST(ReferencesTest, TestReference03) {validateRegex("([a-z])\\1",  26);}
-TEST(ReferencesTest, TestReference04) {validateRegex("(a)\\1{1,2}",  2);}
+//TEST(StreamRegexTest, TestStream01) {validateRegex("\\0",  STREAM_VALUES);}
