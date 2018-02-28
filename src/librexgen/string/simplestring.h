@@ -29,10 +29,10 @@
 #include <features.h>
 #ifdef __GLIBC__
 #include <bits/types/__locale_t.h>
-#include <string>
 #else
 #include <xlocale.h>
 #endif
+#include <string>
 #include <algorithm>
 #include <cassert>
 #include <cwctype>
