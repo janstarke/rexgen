@@ -26,8 +26,13 @@
 #include <librexgen/osdepend.h>
 #include <string.h>
 #include <stdlib.h>
+#include <features.h>
+#ifdef __GLIBC__
 #include <bits/types/__locale_t.h>
 #include <string>
+#else
+#include <xlocale.h>
+#endif
 #include <algorithm>
 #include <cassert>
 #include <cwctype>
