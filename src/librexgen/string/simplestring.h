@@ -24,6 +24,7 @@
 #include <librexgen/c/simplestring.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/config.h>
 #include <string.h>
 #include <stdlib.h>
 
