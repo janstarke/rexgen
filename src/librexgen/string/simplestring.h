@@ -26,7 +26,13 @@
 #include <librexgen/osdepend.h>
 #include <string.h>
 #include <stdlib.h>
+
+#if HAVE_XLOCALE_H
 #include <xlocale.h>
+#else
+#include <bits/types/locale_t.h>
+#endif /* HAVE_XLOCALE_H */
+
 #include <string>
 #include <algorithm>
 #include <cassert>
