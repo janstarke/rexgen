@@ -25,6 +25,7 @@
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
+#include <memory.h>
 #include "terms.h"
 
 #if ! defined(_WIN32)

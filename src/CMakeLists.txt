@@ -1,11 +1,12 @@
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 set(prj rexgen)
+project(rexgen_root)
 
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-include (cmake/testing.cmake)
-include (cmake/doxygen.cmake)
+#include (cmake/testing.cmake)
+#include (cmake/doxygen.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
 string(REPLACE "\n" "" librexgen_version ${librexgen_version_line})
@@ -20,6 +21,7 @@ set(librexgen_lua "lib${prj}-lua")
 message("creating ${prj} ${librexgen_version}")
 
 ADD_DEFINITIONS("-funsigned-char")
+ADD_DEFINITIONS("-D_GNU_SOURCE")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   MESSAGE(STATUS "USING DEBUG MODE")
