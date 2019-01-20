@@ -22,6 +22,12 @@ ENDIF(MSVC)
 
 ADD_DEFINITIONS("-DUNICODE")
 
+if(CMAKE_BUILD_TYPE MATCHES FUZZER)
+	ADD_DEFINITIONS("-DUSE_LIBFUZZER")
+	ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
+	ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
+endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
+
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
 BISON_TARGET(regexparser parser/regex_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp COMPILE_FLAGS "")
 

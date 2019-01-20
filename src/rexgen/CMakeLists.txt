@@ -4,15 +4,21 @@ set(rexgen_exename rexgen)
 set(rexgen_sources rexgen.c)
 set(rexgen_manpages rexgen.1)
 
-add_executable(${rexgen_exename} ${rexgen_sources})
-target_link_libraries(${rexgen_exename} ${librexgen})
-
 # set compiler flags
 if(MSVC)
   ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 else()
   ADD_DEFINITIONS("--std=c89 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 endif(MSVC)
+
+if(CMAKE_BUILD_TYPE MATCHES FUZZER)
+	ADD_DEFINITIONS("-DUSE_LIBFUZZER")
+	ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
+	ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
+endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
+
+add_executable(${rexgen_exename} ${rexgen_sources})
+target_link_libraries(${rexgen_exename} ${librexgen})
 
 install(TARGETS ${rexgen_exename} RUNTIME DESTINATION bin)
 

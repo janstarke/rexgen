@@ -25,7 +25,7 @@
 #include <librexgen/c/librexgen.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/version.h>
-#include <memory.h>
+#include <math.h>
 #include "terms.h"
 
 #if ! defined(_WIN32)
@@ -167,6 +167,40 @@ size_t callback(char* dst, const size_t buffer_size) {
   return len;
 }
 
+#ifdef USE_LIBFUZZER
+
+size_t fuzzer_callback(char* dst, const size_t buffer_size) {
+    const char* word = "abcdefg1234567890";
+    strncpy(dst, word, buffer_size);
+    if (buffer_size < strlen(word)) {
+        return buffer_size;
+    } else {
+        return strlen(word)+1;
+    }
+}
+
+int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+    c_simplestring_ptr buffer = NULL;
+    c_regex_ptr regex = NULL;
+    c_iterator_ptr iter = NULL;
+    uint8_t tmp[Size];
+    memcpy(&tmp[0], Data, Size-1);
+    tmp[Size-1] = 0;
+
+    regex = c_regex_cb_mb((const char*)&tmp[0], fuzzer_callback);
+    iter = c_regex_iterator(regex);
+
+    buffer = c_simplestring_new();
+    while (c_iterator_next(iter)) {
+        c_iterator_value(iter, buffer);
+    }
+
+    c_simplestring_delete(buffer);
+    c_iterator_delete(iter);
+    c_regex_delete(regex);
+  return 0;
+}
+#else
 int _tmain(int argc, _TCHAR* argv[]) {
   c_simplestring_ptr buffer = NULL;
   c_regex_ptr regex = NULL;
@@ -263,4 +297,4 @@ cleanup_and_exit:
 #endif
   return retval;
 }
-
+#endif /* USE_LIBFUZZER */
