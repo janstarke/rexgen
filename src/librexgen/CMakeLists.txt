@@ -15,9 +15,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/..")
 
 IF(MSVC)
-  ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
+  ADD_DEFINITIONS("-D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+  ADD_DEFINITIONS("-std=c++11")
+  ADD_DEFINITIONS("-Wall")
+  ADD_DEFINITIONS("-Wextra")
+  ADD_DEFINITIONS("-Wshadow")
+  ADD_DEFINITIONS("-Wpointer-arith")
+  ADD_DEFINITIONS("-Wcast-qual")
+  ADD_DEFINITIONS("-Winline")
 ENDIF(MSVC)
 
 ADD_DEFINITIONS("-DUNICODE")
@@ -67,7 +73,7 @@ set(librexgen_sources
   iterator/caseiterator.cpp
   state/serializablestate.cpp
   string/simplestring.cpp
-        parser/rexgenparsercontext.cpp
+  parser/rexgenparsercontext.cpp
   librexgen.cpp
   c/librexgen.cpp
   c/iterator.cpp
@@ -77,18 +83,18 @@ set(parser_sources
   ${BISON_regexparser_OUTPUTS} )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
+if (CMAKE_BUILD_TYPE MATCHES PROFILE)
 	add_library(${librexgen} STATIC ${parser_sources} ${librexgen_sources})
+
+elseif (CMAKE_BUILD_TYPE MATCHES FUZZER)
+	add_library(${librexgen} SHARED ${parser_sources} ${librexgen_sources})
+
 else()
 	add_library(${librexgen} SHARED ${parser_sources} ${librexgen_sources})
-endif("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
+
+endif(CMAKE_BUILD_TYPE MATCHES PROFILE)
 
 add_dependencies(${librexgen} parser_target )
-
-if(MSVC)
-else()
-	target_link_libraries(${librexgen} "stdc++")
-endif(MSVC)
 
 set_target_properties(${librexgen} PROPERTIES
 	PREFIX ""

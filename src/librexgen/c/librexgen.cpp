@@ -48,9 +48,11 @@ static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
 EXPORT
 c_regex_ptr c_regex_cb_mb(
     const char* regex_str,
-    callback_fp_mb cb) {
+    callback_fp_mb cb,
+    void (*parser_error)(const char* msg)) {
   RexgenOptions options;
   options.stream_callback = cb;
+  options.parser_error = parser_error;
 
   return parse_regex(regex_str, options);
 }

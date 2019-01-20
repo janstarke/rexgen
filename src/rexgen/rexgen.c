@@ -167,6 +167,10 @@ size_t callback(char* dst, const size_t buffer_size) {
   return len;
 }
 
+void parser_error(const char* msg) {
+    fprintf(stderr, "%s\n", msg);
+}
+
 #ifdef USE_LIBFUZZER
 
 size_t fuzzer_callback(char* dst, const size_t buffer_size) {
@@ -190,7 +194,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     memcpy(&tmp[0], Data, Size - 1);
     tmp[Size - 1] = 0;
 
-    regex = c_regex_cb_mb((const char*)&tmp[0], fuzzer_callback);
+    regex = c_regex_cb_mb((const char*)&tmp[0], fuzzer_callback, parser_error);
     iter = c_regex_iterator(regex);
     if (iter != NULL) {
         buffer = c_simplestring_new();

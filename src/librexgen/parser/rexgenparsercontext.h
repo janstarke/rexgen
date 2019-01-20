@@ -58,6 +58,11 @@ class RexgenParserContext {
 
   FILE* getInFile() const { return options.infile; }
   callback_fp_mb getStreamCallback() const { return options.stream_callback; }
+  void handleParserError(const char* msg) const {
+    if (options.parser_error) {
+      options.parser_error(msg);
+    }
+  }
 
   bool hasNextChar() const { return (next_char != wcinput.cend()); }
   wchar_t getNextChar();

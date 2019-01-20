@@ -32,11 +32,12 @@ Regex* parse_regex(RexgenParserContext* context) {
       return NULL;
     }
   } catch (SyntaxError& exc) {
-    std::cerr << exc.getMessage() << std::endl;
+    context->handleParserError(exc.getMessage());
     return NULL;
   }
   if (context->hasInvalidGroupReferences()) {
-    throw SyntaxError("This regular expression has an invalid back reference");
+    context->handleParserError("This regular expression has an invalid back reference");
+    return NULL;
   }
   return context->result;
 }
