@@ -183,18 +183,21 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     c_simplestring_ptr buffer = NULL;
     c_regex_ptr regex = NULL;
     c_iterator_ptr iter = NULL;
+    if (Size < 1) {
+        return 0;
+    }
     uint8_t tmp[Size];
-    memcpy(&tmp[0], Data, Size-1);
-    tmp[Size-1] = 0;
+    memcpy(&tmp[0], Data, Size - 1);
+    tmp[Size - 1] = 0;
 
     regex = c_regex_cb_mb((const char*)&tmp[0], fuzzer_callback);
     iter = c_regex_iterator(regex);
-
-    buffer = c_simplestring_new();
-    while (c_iterator_next(iter)) {
-        c_iterator_value(iter, buffer);
+    if (iter != NULL) {
+        buffer = c_simplestring_new();
+        while (c_iterator_next(iter)) {
+            c_iterator_value(iter, buffer);
+        }
     }
-
     c_simplestring_delete(buffer);
     c_iterator_delete(iter);
     c_regex_delete(regex);
