@@ -1,6 +1,6 @@
 # rexgen
 
-a tool to create words based on regular expressions
+A tool to create words based on regular expressions.
 
 # Requirements
 
@@ -28,12 +28,12 @@ cd rexgen
 
 # Architecture
 
-If you are interested in contribution, please have a look at the (Architecture Documentation)[doc/architecture.md]
+If you are interested in contributing, please have a look at the (Architecture Documentation)[doc/architecture.md]
 
 ## Problems
 
-If you have problems building rexgen, cou can change to the `build` and run `cmake .. && make` manually.
-Currently supported options rexgen's CMakefile are:
+If you have problems building rexgen, you can change to the `build` directory and run `cmake .. && make` manually.
+Currently supported options for rexgen's CMakefile are:
 
 * `-DCMAKE_BUILD_TYPE=Debug` creates a debug build
 * `-DUSE_PYTHON=On` tells cmake to include the python interface
