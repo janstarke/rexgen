@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 if(CMAKE_MAJOR_VERSION GREATER 2)
 #cmake_policy(SET CMP0042 OLD)
 endif(CMAKE_MAJOR_VERSION GREATER 2)
-project(${librexgen})
+project(${librexgen} CXX)
 
 find_package(BISON 2.3)
 find_package(FLEX 2.5)

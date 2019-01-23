@@ -46,10 +46,7 @@
   int yylex(/*YYSTYPE* lvalp, YYLTYPE *llocp*/);
   void yyerror(/*YYLTYPE* locp, */RexgenParserContext * /* ctx */, const char *s)
   {
-        //cerr << "error in col " << locp->first_column << ": " << s << endl;
-        #ifndef USE_LIBFUZZER
-        cerr << "error: " << s << endl;
-        #endif
+  
   }
   
   //#define scanner context->scanner

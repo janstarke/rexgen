@@ -166,13 +166,24 @@ size_t callback(char* dst, const size_t buffer_size) {
   }
   return len;
 }
+#if defined(__cplusplus)
+#define UNUSED(x)       // = nothing
+#elif defined(__GNUC__)
+#define UNUSED(x)       x##_UNUSED __attribute__((unused))
+#else
+#define UNUSED(x)       x##_UNUSED
+#endif
 
+#if USE_LIBFUZZER
+void parser_error(const char* UNUSED(msg)) {
+}
+#else
 void parser_error(const char* msg) {
     fprintf(stderr, "%s\n", msg);
 }
+#endif
 
-#ifdef USE_LIBFUZZER
-
+#if USE_LIBFUZZER
 size_t fuzzer_callback(char* dst, const size_t buffer_size) {
     const char* word = "abcdefg1234567890";
     strncpy(dst, word, buffer_size);
@@ -244,7 +255,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb_mb(regex_str, callback);
+  regex = c_regex_cb_mb(regex_str, callback, parser_error);
   if (regex == NULL) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

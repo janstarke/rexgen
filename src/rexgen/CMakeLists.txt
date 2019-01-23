@@ -1,4 +1,4 @@
-project(${prj})
+project(${prj} C)
 set(rexgen_exename rexgen)
 
 set(rexgen_sources rexgen.c)
@@ -11,11 +11,11 @@ else()
   ADD_DEFINITIONS("--std=c89 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 endif(MSVC)
 
-if(CMAKE_BUILD_TYPE MATCHES FUZZER)
-	ADD_DEFINITIONS("-DUSE_LIBFUZZER")
+if(CMAKE_BUILD_TYPE MATCHES libFuzzer)
+	add_compile_definitions("USE_LIBFUZZER=1")
 	ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
 	ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
-endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
+endif(CMAKE_BUILD_TYPE MATCHES libFuzzer)
 
 add_executable(${rexgen_exename} ${rexgen_sources})
 target_link_libraries(${rexgen_exename} ${librexgen})

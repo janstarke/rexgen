@@ -1,3 +1,4 @@
+project("rexgen")
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 set(prj rexgen)
 project(rexgen_root)
