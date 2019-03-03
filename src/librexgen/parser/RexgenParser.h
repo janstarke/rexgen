@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,26 +17,20 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef SRC_LIBREXGEN_LIBREXGEN_H_
-#define SRC_LIBREXGEN_LIBREXGEN_H_
+#ifndef PROJECT_REXGENPARSER_H
+#define PROJECT_REXGENPARSER_H
 
-#include <librexgen/c/librexgen.h>
 #include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/osdepend.h>
 #include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsercontext.h>
-#include <librexgen/config.h>
-
-EXPORT
-std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
-
-EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
-
+#include <string>
+#include <memory>
 namespace rexgen {
-  class RexgenParserContext;
-}
-rexgen::Regex* parse_regex(rexgen::RexgenParserContext* context);
+  class RexgenParser {
+  public:
+    std::shared_ptr<Regex> parse(const std::string &regex_str, const RexgenOptions &__options) const;
 
-#endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */
+  private:
+  };
+}
+
+#endif //PROJECT_REXGENPARSER_H

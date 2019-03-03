@@ -25,49 +25,54 @@
 #include <vector>
 
 #ifdef __cplusplus
-class IteratorState;
+namespace rexgen {
+  class IteratorState;
 
-class IteratorContainer : public Iterator {
- public:
-  typedef std::vector<Iterator*> children_list_type;
+  class IteratorContainer : public Iterator {
+  public:
+    typedef std::vector<Iterator *> children_list_type;
 
-  explicit IteratorContainer(int _id) : Iterator(_id) {}
-  virtual ~IteratorContainer() {
-    for (auto i : iterators) {
-      if (!i->isSingleton()) {
-        delete i;
+    explicit IteratorContainer(int _id) : Iterator(_id) {}
+
+    virtual ~IteratorContainer() {
+      for (auto i : iterators) {
+        if (!i->isSingleton()) {
+          delete i;
+        }
       }
     }
-  }
 
-  virtual void updateAttributes(IteratorState* iterState) {
-    for (Iterator* child : iterators) {
-      child->updateAttributes(iterState);
+    virtual void updateAttributes(IteratorState *iterState) {
+      for (Iterator *child : iterators) {
+        child->updateAttributes(iterState);
+      }
     }
-  }
 
-  virtual void updateReferences(IteratorState* iterState) {
-    for (Iterator* child : iterators) {
-      child->updateReferences(iterState);
+    virtual void updateReferences(IteratorState *iterState) {
+      for (Iterator *child : iterators) {
+        child->updateReferences(iterState);
+      }
     }
-  }
 
-  virtual void addChild(Iterator* i) {
-    iterators.push_back(i);
-  }
+    virtual void addChild(Iterator *i) {
+      iterators.push_back(i);
+    }
 
- protected:
-  void setPosition(children_list_type::iterator i) { iter = i; }
-  void incrementPosition() { ++iter; }
-  void resetPosition() { iter = iterators.begin(); }
-  children_list_type::iterator getPosition() const { return iter; }
+  protected:
+    void setPosition(children_list_type::iterator i) { iter = i; }
 
-  children_list_type iterators;
+    void incrementPosition() { ++iter; }
 
- private:
-  children_list_type::iterator iter;
-};
+    void resetPosition() { iter = iterators.begin(); }
 
+    children_list_type::iterator getPosition() const { return iter; }
+
+    children_list_type iterators;
+
+  private:
+    children_list_type::iterator iter;
+  };
+}
 #endif /* __cplusplus */
 
 #endif /* SRC_LIBREXGEN_ITERATOR_ITERATORCONTAINER_H_ */

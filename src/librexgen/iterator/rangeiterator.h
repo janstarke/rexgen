@@ -21,30 +21,32 @@
 #define SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_
 
 #include <librexgen/iterator/iterator.h>
+namespace rexgen {
+  template<char __MIN, char __MAX>
+  class RangeIterator : public Iterator {
+  public:
+    explicit RangeIterator(int _id)
+            : Iterator(_id), current(__MIN - 1), minimum(__MIN), maximum(__MAX) {}
 
-template <char __MIN, char __MAX>
-class RangeIterator : public Iterator {
- public:
-  explicit RangeIterator(int _id)
-          : Iterator(_id), current(__MIN-1), minimum(__MIN), maximum(__MAX) {}
+    void value(SimpleString *dst) const {
+      dst->push_back(static_cast<const byte_t>(current));
+    }
 
-  void value(SimpleString* dst) const {
-    dst->push_back(static_cast<const byte_t>(current));
-  }
+    bool next() {
+      const bool has_next = (current < maximum);
+      current = has_next ? (current + 1) : minimum;
+      return has_next;
+    }
 
-  bool next() {
-    const bool has_next = (current < maximum);
-    current = has_next ? (current+1) : minimum;
-    return has_next;
-  }
+    virtual void updateReferences(IteratorState * /* iterState */) {}
 
-  virtual void updateReferences(IteratorState* /* iterState */) {}
-  virtual void updateAttributes(IteratorState* /* iterState */) {}
+    virtual void updateAttributes(IteratorState * /* iterState */) {}
 
- private:
-  char current;
-  const char minimum;
-  const char maximum;
-};
+  private:
+    char current;
+    const char minimum;
+    const char maximum;
+  };
+}
 
 #endif /* SRC_LIBREXGEN_ITERATOR_RANGEITERATOR_H_ */

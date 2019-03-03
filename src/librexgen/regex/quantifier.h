@@ -20,31 +20,37 @@
 
 #ifndef SRC_LIBREXGEN_REGEX_QUANTIFIER_H_
 #define SRC_LIBREXGEN_REGEX_QUANTIFIER_H_
+namespace rexgen {
+  class Quantifier {
+  public:
+    Quantifier() : min(1), max(1) {}
 
-class Quantifier {
- public:
-  Quantifier() : min(1), max(1) {}
-  Quantifier(unsigned int _min, unsigned int _max) : min(_min), max(_max) {}
-  Quantifier(const Quantifier& other): min(other.min), max(other.max) {} /* NOLINT(*) */
-  virtual ~Quantifier() {}
-  virtual Quantifier& operator= (const Quantifier& other) {
-    this->min = other.getMin();
-    this->max = other.getMax();
-    return *this;
-  }
-  virtual bool operator== (const Quantifier& other) const {
-    return (this->min == other.min) && (this->max == other.max);
-  }
+    Quantifier(unsigned int _min, unsigned int _max) : min(_min), max(_max) {}
 
-  inline unsigned int getMin() const { return min; }
-  inline unsigned int getMax() const { return max; }
+    Quantifier(const Quantifier &other) : min(other.min), max(other.max) {} /* NOLINT(*) */
+    virtual ~Quantifier() {}
 
-  inline void setMin(unsigned _min) { min = _min; }
-  inline void setMax(unsigned _max) { max = _max; }
+    virtual Quantifier &operator=(const Quantifier &other) {
+      this->min = other.getMin();
+      this->max = other.getMax();
+      return *this;
+    }
 
- public:
-  unsigned int min;
-  unsigned int max;
-};
+    virtual bool operator==(const Quantifier &other) const {
+      return (this->min == other.min) && (this->max == other.max);
+    }
 
+    inline unsigned int getMin() const { return min; }
+
+    inline unsigned int getMax() const { return max; }
+
+    inline void setMin(unsigned _min) { min = _min; }
+
+    inline void setMax(unsigned _max) { max = _max; }
+
+  public:
+    unsigned int min;
+    unsigned int max;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_QUANTIFIER_H_

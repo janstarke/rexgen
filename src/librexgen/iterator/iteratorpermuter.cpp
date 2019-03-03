@@ -20,86 +20,96 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <set>
-
-IteratorPermuter::IteratorPermuter(int _id, const Regex* re, IteratorState* is,
-                                   unsigned int min, unsigned int max)
-  : IteratorContainer(_id), min_occurs(min), max_occurs(max), regex(re),
-    hasNextElement(true), occurs(min_occurs) {
-  for (unsigned int n=0; n < max_occurs; ++n) {
-    addChild(regex->singleIterator(is));
+namespace rexgen {
+  IteratorPermuter::IteratorPermuter(int _id, const Regex *re, IteratorState *is,
+                                     unsigned int min, unsigned int max)
+          : IteratorContainer(_id), min_occurs(min), max_occurs(max), regex(re),
+            hasNextElement(true), occurs(min_occurs) {
+    for (unsigned int n = 0; n < max_occurs; ++n) {
+      addChild(regex->singleIterator(is));
+    }
+    init();
   }
-  init();
-}
 
-IteratorPermuter::~IteratorPermuter() {
-  for (auto i : iterators) {
-    if (i->isSingleton()) {
-      delete i;
+  IteratorPermuter::~IteratorPermuter() {
+    for (auto i : iterators) {
+      if (i->isSingleton()) {
+        delete i;
+      }
     }
   }
-}
 
-void IteratorPermuter::value(SimpleString* dst) const {
-  ENTER_METHOD;
-  for (unsigned int n=0; n < occurs; ++n) {
-    iterators[n]->value(dst);
-  }
-  LEAVE_METHOD;
-}
-
-bool IteratorPermuter::hasNext() const {
-  ENTER_METHOD;
-
-  if (state == resetted) {
-    RETURN(true);
+  void IteratorPermuter::value(SimpleString *dst) const {
+    ENTER_METHOD;
+    for (unsigned int n = 0; n < occurs; ++n) {
+      iterators[n]->value(dst);
+    }
+    LEAVE_METHOD;
   }
 
-  if (occurs < max_occurs) {
-    RETURN(true);
-  }
+  bool IteratorPermuter::hasNext() const {
+    ENTER_METHOD;
 
-  RETURN(existsIteratorWithNextElement());
-}
-
-bool IteratorPermuter::next() {
-  ENTER_METHOD;
-
-  /* special case handling for resetted state */
-  if (state == resetted) { state = usable; RETURN(true); }
-
-  /* special case handling for quantifier which starts with 0, i.e. {0,3} */
-  if (state == usable && occurs == 0) { ++occurs; RETURN(true); }
-
-  unsigned int n = 0;
-  for (; n < occurs; ++n) { if (iterators[n]->next()) { break; } }
-  if (n == max_occurs) { occurs = min_occurs; RETURN(false); }
-  if (n == occurs)  { ++occurs; }
-  RETURN(true);
-}
-
-void IteratorPermuter::init() {
-  ENTER_METHOD;
-
-  bool has_next = false;
-  for (auto i : iterators) {
-    i->next();
-    has_next |= i->hasNext();
-  }
-  hasNextElement = has_next;
-
-  occurs = min_occurs;
-  current = 0;
-  state = resetted;
-  LEAVE_METHOD;
-}
-
-bool IteratorPermuter::existsIteratorWithNextElement() const {
-  ENTER_METHOD;
-  for (auto i : iterators) {
-    if (i->hasNext()) {
+    if (state == resetted) {
       RETURN(true);
     }
-  }
-  RETURN(false);
-}
 
+    if (occurs < max_occurs) {
+      RETURN(true);
+    }
+
+    RETURN(existsIteratorWithNextElement());
+  }
+
+  bool IteratorPermuter::next() {
+    ENTER_METHOD;
+
+    /* special case handling for resetted state */
+    if (state == resetted) {
+      state = usable;
+      RETURN(true);
+    }
+
+    /* special case handling for quantifier which starts with 0, i.e. {0,3} */
+    if (state == usable && occurs == 0) {
+      ++occurs;
+      RETURN(true);
+    }
+
+    unsigned int n = 0;
+    for (; n < occurs; ++n) { if (iterators[n]->next()) { break; }}
+    if (n == max_occurs) {
+      occurs = min_occurs;
+      RETURN(false);
+    }
+    if (n == occurs) { ++occurs; }
+    RETURN(true);
+  }
+
+  void IteratorPermuter::init() {
+    ENTER_METHOD;
+
+    bool has_next = false;
+    for (auto i : iterators) {
+      i->next();
+      has_next |= i->hasNext();
+    }
+    hasNextElement = has_next;
+
+    occurs = min_occurs;
+    current = 0;
+    state = resetted;
+    LEAVE_METHOD;
+  }
+
+  bool IteratorPermuter::existsIteratorWithNextElement() const {
+    ENTER_METHOD;
+    for (auto i : iterators) {
+      if (i->hasNext()) {
+        RETURN(true);
+      }
+    }
+    RETURN(false);
+  }
+
+}

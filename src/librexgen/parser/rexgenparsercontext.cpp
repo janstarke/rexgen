@@ -22,115 +22,111 @@
 #include <algorithm>
 #include <utility>
 #include <cstring>
+namespace rexgen {
+  RexgenParserContext::RexgenParserContext(const char *input,
+                                           const RexgenOptions &__options)
+          : scanner(nullptr),
+            result(nullptr),
+            groupId(1),
+            options(__options),
+            streamRegex(nullptr) {
+    InitScanner();
+    assert(scanner != nullptr);
 
-RexgenParserContext::RexgenParserContext(const char* input,
-                                         const RexgenOptions& __options)
-        : options(__options), streamRegex(NULL) {
-  this->result = NULL;
-  this->scanner = NULL;
-  groupId = 1;
-  InitScanner();
-
-  int size;
-  wchar_t wc = 0;
-  mbstate_t mbs;
-  std::memset(&mbs, 0, sizeof(mbs));
-  do {
-    size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
-    if (size > 0) {
-      wcinput.push_back(wc);
-      input += size;
-    }
-  } while (size > 0);
-  next_char = wcinput.cbegin();
-}
+    int size;
+    wchar_t wc = 0;
+    mbstate_t mbs;
+    std::memset(&mbs, 0, sizeof(mbs));
+    do {
+      size = mbrtowc(&wc, input, MB_CUR_MAX, &mbs);
+      if (size > 0) {
+        wcinput.push_back(wc);
+        input += size;
+      }
+    } while (size > 0);
+    next_char = wcinput.cbegin();
+  }
 
 /**
  * iterates through all group references and calls
  * updateGroupReferences for each
  */
-void RexgenParserContext::updateAllGroupReferences() {
-  for (auto p : groups) {
-    updateGroupReferences(p.second);
+  void RexgenParserContext::updateAllGroupReferences() {
+    for (auto p : groups) {
+      if (auto ptr = p.second.lock())
+      updateGroupReferences(p.second);
+    }
   }
-}
 
-void RexgenParserContext::updateGroupReferences(const Regex* re) {
-  for (auto ref : groupRefs) {
-    for (auto gr : (*ref.second)) {
-      if (ref.first == re->getGroupId()) {
-        gr->setRegex(re);
+  void RexgenParserContext::updateGroupReferences(const std::weak_ptr<Regex>& wre) {
+    if (auto re = wre.lock()) {
+      for (auto ref : groupRefs) {
+        for (auto gr : (*ref.second)) {
+          if (ref.first == re->getGroupId()) {
+            gr->setRegex(re);
+          }
+        }
       }
     }
   }
-}
 
-bool RexgenParserContext::hasInvalidGroupReferences() const {
-  bool invalids = false;
-  for (auto ref : groupRefs) {
-    for (auto gr : *(ref.second)) {
-      invalids |= (gr->getRegex() == NULL);
+  bool RexgenParserContext::hasInvalidGroupReferences() const {
+    bool invalids = false;
+    for (auto ref : groupRefs) {
+      for (auto gr : *(ref.second)) {
+        invalids |= (gr->getRegex().expired() == false);
+      }
+    }
+    return invalids;
+  }
+
+  RexgenParserContext::~RexgenParserContext() {
+    DestroyScanner();
+  }
+
+  void RexgenParserContext::registerGroupReference(std::shared_ptr<GroupReference> gr) {
+    /* this is needed to later set the refered Regex */
+    decltype(groupRefs)::iterator references = groupRefs.find(gr->getGroupId());
+    if (references == groupRefs.end()) {
+      groupRefs[gr->getGroupId()] = std::make_shared<std::set<std::shared_ptr<GroupReference> >>();
+      references = groupRefs.find(gr->getGroupId());
+    }
+    (*references).second->insert(gr);
+  }
+
+  const std::shared_ptr<std::set<std::shared_ptr<GroupReference>>>& RexgenParserContext::getGroupReferences(
+          int id) const {
+    return groupRefs.at(id);
+  }
+
+  void RexgenParserContext::registerGroup(std::weak_ptr<Regex>& wre) {
+    if (auto re = wre.lock()) {
+      groups.insert(std::make_pair(re->getGroupId(),wre));
     }
   }
-  return invalids;
-}
 
-RexgenParserContext::~RexgenParserContext() {
-  DestroyScanner();
-
-  for (auto ref : groupRefs) {
-    delete ref.second;
+  const std::weak_ptr<Regex>& RexgenParserContext::getGroupRegex(int id) const {
+    return groups.at(id);
   }
-}
 
-void RexgenParserContext::registerGroupReference(GroupReference* gr) {
-  /* this is needed to later set the refered Regex */
-  std::map<int, std::set<GroupReference*>*>::iterator references =
-          groupRefs.find(gr->getGroupId());
-  if (references == groupRefs.end()) {
-    groupRefs[gr->getGroupId()] = new std::set<GroupReference* >();
-    references = groupRefs.find(gr->getGroupId());
+  const std::map<int, std::weak_ptr<Regex>> &RexgenParserContext::getGroups() const {
+    return groups;
   }
-  (*references).second->insert(gr);
-}
 
-const std::set<GroupReference*>* RexgenParserContext::getGroupReferences(
-  int id) const {
-  auto references = groupRefs.find(id);
-  if (references == groupRefs.end()) {
-    return NULL;
+  std::shared_ptr<Regex> RexgenParserContext::getStreamRegex() {
+    if (streamRegex == nullptr) {
+      streamRegex = std::make_shared<StreamRegex>(options.stream_callback);
+      return streamRegex;
+    } else {
+      std::shared_ptr<GroupReference> gr = std::make_shared<GroupReference>(streamRegex->getId());
+      gr->setRegex(streamRegex);
+      return gr;
+    }
   }
-  return (*references).second;
-}
 
-void RexgenParserContext::registerGroup(Regex* re) {
-  groups[re->getGroupId()] = re;
-}
-Regex* RexgenParserContext::getGroupRegex(int id) const {
-  std::map<int, Regex*>::const_iterator iter = groups.find(id);
-  if (iter != groups.end()) {
-    return iter->second;
+  wchar_t RexgenParserContext::getNextChar() {
+    current_char = *next_char;
+    ++next_char;
+    return current_char;
   }
-  return NULL;
-}
-
-const std::map<int, Regex*>& RexgenParserContext::getGroups() const {
-  return groups;
-}
-
-Regex* RexgenParserContext::getStreamRegex() {
-  if (streamRegex == NULL) {
-    streamRegex = new StreamRegex(options.stream_callback);
-    return streamRegex;
-  } else {
-    GroupReference* gr = new GroupReference(streamRegex->getId());
-    gr->setRegex(streamRegex);
-    return gr;
-  }
-}
-
-wchar_t RexgenParserContext::getNextChar() {
-  current_char = *next_char;
-  ++next_char;
-  return current_char;
 }

@@ -27,50 +27,54 @@
 #include <vector>
 
 #ifdef __cplusplus
+namespace rexgen {
+  class CaseIterator : public IteratorContainer {
+  public:
+    CaseIterator(Iterator *_child, int options);
 
-class CaseIterator : public IteratorContainer {
- public:
-  CaseIterator(Iterator* _child, int options);
-  virtual ~CaseIterator();
+    virtual ~CaseIterator();
 
-  bool hasNext() const;
-  bool next();
-  void fast_next();
+    bool hasNext() const;
 
-  void value(SimpleString* dst) const {
-    dst->append(word);
-  }
+    bool next();
 
-  virtual SerializableState* getCurrentState() const {
-    return new SerializableState(getId(), getState());
-  }
+    void fast_next();
 
-  virtual void setCurrentState(const SerializableState* s) {
-    if (getId() != s->getIteratorId()) {
-      throw InvalidIteratorIdException();
+    void value(SimpleString *dst) const {
+      dst->append(word);
     }
-  }
 
- private:
-  Iterator* child;
-  int handle_case;
-  bool readNextFromChild();
+    virtual SerializableState *getCurrentState() const {
+      return new SerializableState(getId(), getState());
+    }
+
+    virtual void setCurrentState(const SerializableState *s) {
+      if (getId() != s->getIteratorId()) {
+        throw InvalidIteratorIdException();
+      }
+    }
+
+  private:
+    Iterator *child;
+    int handle_case;
+
+    bool readNextFromChild();
 
 #if __x86_64__
-  typedef std::uint64_t counter_t;
-  static const unsigned int max_fast_character_bytes = 64;
+    typedef std::uint64_t counter_t;
+    static const unsigned int max_fast_character_bytes = 64;
 #else
-  typedef std::uint32_t counter_t;
-  static const unsigned int max_fast_character_bytes = 32;
+    typedef std::uint32_t counter_t;
+    static const unsigned int max_fast_character_bytes = 32;
 #endif
 
-  counter_t k;
-  unsigned int j;
-  unsigned int parity;
-  std::vector<unsigned int> changeable_characters;
-  SimpleString word;
-};
-
+    counter_t k;
+    unsigned int j;
+    unsigned int parity;
+    std::vector<unsigned int> changeable_characters;
+    SimpleString word;
+  };
+}
 #endif /* __cplusplus */
 
 #endif /* SRC_LIBREXGEN_ITERATOR_CASEITERATOR_H_ */

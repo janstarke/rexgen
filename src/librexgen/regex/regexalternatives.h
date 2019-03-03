@@ -27,29 +27,37 @@
 #include <librexgen/string/simplestring.h>
 #include <librexgen/parser/group_options.h>
 #include <deque>
+#include <memory>
 
-class RegexAlternatives : public RegexContainer {
- public:
-  RegexAlternatives(): RegexContainer(), groupId(-1), handle_case(CASE_IGNORE) {
-  }
-  inline void addRegex(Regex* regex) { getChildren()->push_front(regex); }
+namespace rexgen {
 
-  RegexType getRegexType() const { return Alternative; }
+  class RegexAlternatives : public RegexContainer {
+  public:
+    RegexAlternatives() : RegexContainer(), groupId(-1), handle_case(CASE_IGNORE) {
+    }
 
-  Iterator* iterator(IteratorState* state) const;
+    inline void addRegex(std::shared_ptr<Regex>& regex) { getChildren().push_front(regex); }
 
-  Iterator* singleIterator(IteratorState* state) const;
+    RegexType getRegexType() const { return Alternative; }
 
-  int getGroupId() const { return groupId; }
-  void setGroupId(int _id) { groupId = _id; }
+    Iterator *iterator(IteratorState *state) const;
 
-  void setGroupOptions(const t_group_options* opts) {
-    handle_case = opts->handle_case;
-    setGroupId(opts->group_id);
-  }
- private:
-  int groupId;
-  int handle_case;
-};
+    Iterator *singleIterator(IteratorState *state) const;
+
+    int getGroupId() const { return groupId; }
+
+    void setGroupId(int _id) { groupId = _id; }
+
+    void setGroupOptions(const t_group_options& opts) {
+      handle_case = opts.handle_case;
+      setGroupId(opts.group_id);
+    }
+
+  private:
+    int groupId;
+    int handle_case;
+  };
+
+}
 
 #endif  // SRC_LIBREXGEN_REGEX_REGEXALTERNATIVES_H_

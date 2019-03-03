@@ -26,19 +26,21 @@
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <cstdio>
+namespace rexgen {
+  class StreamRegex : public Regex {
+  public:
+    Iterator *iterator(IteratorState *state) const;
 
-class StreamRegex : public Regex {
- public:
-  Iterator* iterator(IteratorState* state) const;
-  Iterator* singleIterator(IteratorState* state) const;
+    Iterator *singleIterator(IteratorState *state) const;
 
-  explicit StreamRegex(callback_fp_mb cb);
+    explicit StreamRegex(callback_fp_mb cb);
 
-  RegexType getRegexType () const { return Stream; }
-  bool usesCallback() const { return true; }
+    RegexType getRegexType() const { return Stream; }
 
- private:
-  callback_fp_mb callback;
-};
+    bool usesCallback() const { return true; }
 
+  private:
+    callback_fp_mb callback;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_STREAMREGEX_H_

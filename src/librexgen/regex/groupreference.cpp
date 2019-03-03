@@ -22,9 +22,10 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/string/simplestring.h>
-
-Iterator* GroupReference::singleIterator(IteratorState* /* state */) const {
-  assert(groupRef != NULL);
-  return new GroupReferenceIterator(getId(), groupRef->getGroupId());
+namespace rexgen {
+  Iterator *GroupReference::singleIterator(IteratorState * /* state */) const {
+    auto ref = groupRef.lock();
+    assert(ref != nullptr);
+    return new GroupReferenceIterator(getId(), ref->getGroupId());
+  }
 }
-

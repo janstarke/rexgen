@@ -24,21 +24,28 @@
 #include <librexgen/regex/regex.h>
 #include <librexgen/string/simplestring.h>
 #include <cinttypes>
+#include <memory>
 
-class GroupReference : public Regex {
- public:
-  explicit GroupReference(int _groupId): groupId(_groupId), groupRef(NULL) {}
-  Iterator* singleIterator(IteratorState* state) const;
-  RegexType getRegexType() const { return Reference; }
+namespace rexgen {
+  class GroupReference : public Regex {
+  public:
+    explicit GroupReference(int _groupId) : groupId(_groupId){}
 
-  int getGroupId() const { return groupId; }
-  const Regex* getRegex() const { return groupRef; }
-  void setRegex(const Regex* re) { groupRef = re; }
-  std::uint64_t size() const { return 1; }
+    Iterator *singleIterator(IteratorState *state) const;
 
- private:
-  const int groupId;
-  const Regex* groupRef;
-};
+    RegexType getRegexType() const { return Reference; }
 
+    int getGroupId() const { return groupId; }
+
+    const std::weak_ptr<Regex>& getRegex() const { return groupRef; }
+
+    void setRegex(const std::weak_ptr<Regex>& re) { groupRef = re; }
+
+    std::uint64_t size() const { return 1; }
+
+  private:
+    const int groupId;
+    std::weak_ptr<Regex> groupRef;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_GROUPREFERENCE_H_

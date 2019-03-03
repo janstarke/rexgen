@@ -26,24 +26,28 @@
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorstate.h>
 
+namespace rexgen {
+  class GroupReferenceIterator : public IteratorContainer {
+  public:
+    GroupReferenceIterator(int _id, int group)
+            : IteratorContainer(_id), groupId(group), groupRef(NULL) {}
 
-class GroupReferenceIterator : public IteratorContainer {
- public:
-  GroupReferenceIterator(int _id, int group)
-    : IteratorContainer(_id), groupId(group), groupRef(NULL) { }
+    inline bool hasNext() const { return (state == resetted); }
 
-  inline bool hasNext() const { return (state == resetted); }
-  inline bool next() {
-    bool res = (state == resetted);
-    state = usable;
-    return res;
-  }
-  inline void value(SimpleString* dst) const { groupRef->value(dst);}
+    inline bool next() {
+      bool res = (state == resetted);
+      state = usable;
+      return res;
+    }
 
-  void updateReferences(IteratorState* iterState);
- private:
-  int groupId;
-  const Iterator* groupRef;
-};
+    inline void value(SimpleString *dst) const { groupRef->value(dst); }
+
+    void updateReferences(IteratorState *iterState);
+
+  private:
+    int groupId;
+    const Iterator *groupRef;
+  };
+}
 
 #endif  // SRC_LIBREXGEN_ITERATOR_GROUPREFERENCEITERATOR_H_

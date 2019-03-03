@@ -19,25 +19,26 @@
 
 #include <librexgen/regex/streamregex.h>
 
-
-StreamRegex::StreamRegex(callback_fp_mb cb)
-  : callback(cb) {
-}
-
-Iterator* StreamRegex::iterator(IteratorState* state) const {
-  if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-    return singleIterator(state);
-  } else {
-    return new IteratorPermuter(
-             getId(), this, state, getMinOccurs(), getMaxOccurs());
+namespace rexgen {
+  StreamRegex::StreamRegex(callback_fp_mb cb)
+          : callback(cb) {
   }
-}
 
-Iterator* StreamRegex::singleIterator(IteratorState* state) const {
-  StreamRegexIterator* iter = state->getStreamIterator();
-  if (iter == NULL) {
-    iter = new StreamRegexIterator(getId(), callback);
-    state->setStreamIterator(iter);
+  Iterator *StreamRegex::iterator(IteratorState *state) const {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      return singleIterator(state);
+    } else {
+      return new IteratorPermuter(
+              getId(), this, state, getMinOccurs(), getMaxOccurs());
+    }
   }
-  return iter;
+
+  Iterator *StreamRegex::singleIterator(IteratorState *state) const {
+    StreamRegexIterator *iter = state->getStreamIterator();
+    if (iter == NULL) {
+      iter = new StreamRegexIterator(getId(), callback);
+      state->setStreamIterator(iter);
+    }
+    return iter;
+  }
 }

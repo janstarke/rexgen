@@ -29,88 +29,89 @@
 #include <vector>
 #include <algorithm>
 #include <cstdio>
+namespace rexgen {
+  class ClassRegexIterator : public Iterator {
+  public:
+    ClassRegexIterator(int _id,
+                       const wchar_t *classcontent,
+                       size_t elements)
+            : Iterator(_id), current(-1), characters() {
+      size_t n;
+      std::string::size_type index = 0;
+      for (n = 0; n < elements; ++n) {
+        characters.append_widechar(classcontent[n]);
 
-class ClassRegexIterator : public Iterator {
- public:
-  ClassRegexIterator(int _id,
-                     const wchar_t * classcontent,
-                     size_t elements)
-          :Iterator(_id), current(-1), characters() {
-    size_t n;
-    std::string::size_type index = 0;
-    for (n=0; n < elements; ++n) {
-      characters.append_widechar(classcontent[n]);
+        /*
+         * TODO(jasa):
+         * the call to character_length is very slow and shoud be removed
+         */
+        lengths.push_back(characters.character_length(n));
 
-      /*
-       * TODO(jasa):
-       * the call to character_length is very slow and shoud be removed
-       */
-      lengths.push_back(characters.character_length(n));
-
-      indices.push_back(index);
-      index += characters.character_length(n);
+        indices.push_back(index);
+        index += characters.character_length(n);
+      }
+      characters_count = static_cast<size_t>(elements);
+      state = usable;
     }
-    characters_count = static_cast<size_t>(elements);
-    state = usable;
-  }
 
-  virtual ~ClassRegexIterator() {}
+    virtual ~ClassRegexIterator() {}
 
-  virtual void updateReferences(IteratorState* /* iterState */) {}
-  virtual void updateAttributes(IteratorState* /* iterState */) {}
+    virtual void updateReferences(IteratorState * /* iterState */) {}
 
-  inline void value(SimpleString* dst) const {
-    const std::string::size_type& length = lengths[current];
-    const std::string::size_type& index = indices[current];
+    virtual void updateAttributes(IteratorState * /* iterState */) {}
 
-    for (std::string::size_type n=0; n < length; ++n) {
-      dst->push_back(characters[index+n]);
+    inline void value(SimpleString *dst) const {
+      const std::string::size_type &length = lengths[current];
+      const std::string::size_type &index = indices[current];
+
+      for (std::string::size_type n = 0; n < length; ++n) {
+        dst->push_back(characters[index + n]);
+      }
     }
-  }
 
-  bool next() {
-    ++current;
+    bool next() {
+      ++current;
 
-    if (current >= static_cast<int>(characters_count)) {
-      current = 0;
-      return false;
+      if (current >= static_cast<int>(characters_count)) {
+        current = 0;
+        return false;
+      }
+      return true;
     }
-    return true;
-  }
 
-  size_t size() const { return characters_count; }
+    size_t size() const { return characters_count; }
 
-  inline bool hasNext() const {
-    return  (current < (static_cast<int>(characters_count)-1));
-  }
+    inline bool hasNext() const {
+      return (current < (static_cast<int>(characters_count) - 1));
+    }
 
-  inline bool canUseValue() const {
-    return (current < static_cast<int>(characters_count));
-  }
+    inline bool canUseValue() const {
+      return (current < static_cast<int>(characters_count));
+    }
 
-  SerializableState* getCurrentState() const {
-    SerializableState* s = Iterator::getCurrentState();
-    s->addValue(current);
-    return s;
-  }
+    SerializableState *getCurrentState() const {
+      SerializableState *s = Iterator::getCurrentState();
+      s->addValue(current);
+      return s;
+    }
 
-  void setCurrentState(const SerializableState* s) {
-    Iterator::setCurrentState(s);
-    current = s->getValue(0);
-  }
+    void setCurrentState(const SerializableState *s) {
+      Iterator::setCurrentState(s);
+      current = s->getValue(0);
+    }
 
- private:
-  /* use a signed int to by able to use index -1 */
-  signed int current;
+  private:
+    /* use a signed int to by able to use index -1 */
+    signed int current;
 
-  /*
-   * we must use this because multibyte characters
-   * cannot be counted effectively
-   */
-  int characters_count;
-  SimpleString characters;
-  vector<std::string::size_type> indices;
-  vector<std::string::size_type> lengths;
-};
-
+    /*
+     * we must use this because multibyte characters
+     * cannot be counted effectively
+     */
+    int characters_count;
+    SimpleString characters;
+    vector<std::string::size_type> indices;
+    vector<std::string::size_type> lengths;
+  };
+}
 #endif  // SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_

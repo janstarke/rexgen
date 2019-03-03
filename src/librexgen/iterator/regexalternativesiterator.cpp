@@ -25,98 +25,99 @@
 #include <deque>
 #include <vector>
 #include <set>
-
-RegexAlternativesIterator::RegexAlternativesIterator(int _id)
-  : IteratorContainer(_id) {
-  resetPosition();
-  state = resetted;
-}
-
-bool RegexAlternativesIterator::next() {
-  ENTER_METHOD;
-
-  if (state == resetted) {
-    state = usable;
-    bool res = false;
-    for (auto i : iterators) {
-      res |= (i->next());
-    }
-    RETURN(res);
-  }
-
-  if ((*getPosition())->next()) {
-    RETURN(true);
-  }
-  incrementPosition();
-  if (getPosition() == iterators.end()) {
+namespace rexgen {
+  RegexAlternativesIterator::RegexAlternativesIterator(int _id)
+          : IteratorContainer(_id) {
     resetPosition();
-    RETURN(false);
-  }
-  // (*iter)->next();
-  RETURN(true);
-}
-
-bool RegexAlternativesIterator::hasNext() const {
-  ENTER_METHOD;
-  if (iterators.size() == 0 || state == not_usable) {
-    /* if we don't have any iterator, you cannot call next() */
-    RETURN(false);
+    state = resetted;
   }
 
-  if (state == resetted) {
-    /* we can return true here,
-     * because we know that we have at least one iterator
-     */
+  bool RegexAlternativesIterator::next() {
+    ENTER_METHOD;
+
+    if (state == resetted) {
+      state = usable;
+      bool res = false;
+      for (auto i : iterators) {
+        res |= (i->next());
+      }
+      RETURN(res);
+    }
+
+    if ((*getPosition())->next()) {
+      RETURN(true);
+    }
+    incrementPosition();
+    if (getPosition() == iterators.end()) {
+      resetPosition();
+      RETURN(false);
+    }
+    // (*iter)->next();
     RETURN(true);
   }
 
-  if (getPosition() == iterators.end()) {
-    RETURN(false);
+  bool RegexAlternativesIterator::hasNext() const {
+    ENTER_METHOD;
+    if (iterators.size() == 0 || state == not_usable) {
+      /* if we don't have any iterator, you cannot call next() */
+      RETURN(false);
+    }
+
+    if (state == resetted) {
+      /* we can return true here,
+       * because we know that we have at least one iterator
+       */
+      RETURN(true);
+    }
+
+    if (getPosition() == iterators.end()) {
+      RETURN(false);
+    }
+
+    if ((*(getPosition()))->hasNext()) {
+      RETURN(true);
+    } else {
+      children_list_type::iterator tmp = getPosition();
+      ++tmp;
+      RETURN(tmp != iterators.end());
+    }
   }
 
-  if ((*(getPosition()))->hasNext()) {
-    RETURN(true);
-  } else {
-    children_list_type::iterator tmp = getPosition();
-    ++tmp;
-    RETURN(tmp != iterators.end());
-  }
-}
-
-void RegexAlternativesIterator::addChild(Iterator* i) {
-  ENTER_METHOD;
-  iterators.push_back(i);
-  resetPosition();
+  void RegexAlternativesIterator::addChild(Iterator *i) {
+    ENTER_METHOD;
+    iterators.push_back(i);
+    resetPosition();
 //  i->next();
-  LEAVE_METHOD;
-}
-
-bool RegexAlternativesIterator::canUseValue() const {
-  if (!Iterator::canUseValue()) {
-    return false;
-  }
-  if (getPosition() == iterators.end()) {
-    return false;
-  }
-  return ((*(getPosition()))->canUseValue());
-}
-
-SerializableState* RegexAlternativesIterator::getCurrentState() const {
-  SerializableState* s = Iterator::getCurrentState();
-  s->addValue(getPosition() - iterators.begin());
-
-  for (auto i : iterators) {
-    s->addValue(i->getCurrentState());
-  }
-  return s;
-}
-
-void RegexAlternativesIterator::setCurrentState(const SerializableState* s) {
-  Iterator::setCurrentState(s);
-
-  for (auto i : iterators) {
-    i->setCurrentState(s->getChildState(i->getId()));
+    LEAVE_METHOD;
   }
 
-  setPosition(iterators.begin() + s->getValue(0));
+  bool RegexAlternativesIterator::canUseValue() const {
+    if (!Iterator::canUseValue()) {
+      return false;
+    }
+    if (getPosition() == iterators.end()) {
+      return false;
+    }
+    return ((*(getPosition()))->canUseValue());
+  }
+
+  SerializableState *RegexAlternativesIterator::getCurrentState() const {
+    SerializableState *s = Iterator::getCurrentState();
+    s->addValue(getPosition() - iterators.begin());
+
+    for (auto i : iterators) {
+      s->addValue(i->getCurrentState());
+    }
+    return s;
+  }
+
+  void RegexAlternativesIterator::setCurrentState(const SerializableState *s) {
+    Iterator::setCurrentState(s);
+
+    for (auto i : iterators) {
+      i->setCurrentState(s->getChildState(i->getId()));
+    }
+
+    setPosition(iterators.begin() + s->getValue(0));
+  }
 }

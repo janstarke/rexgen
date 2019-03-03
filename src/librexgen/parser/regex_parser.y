@@ -1,7 +1,11 @@
 %locations
 %defines
 %error-verbose
-%parse-param {RexgenParserContext* context}
+%require "3"
+%language "c++"
+%define api.value.type variant
+%parse-param {rexgen::RexgenParserContext& context}
+%lex-param   {rexgen::RexgenParserContext& context}
 %{
 /*
     rexgen - a tool to create words based on regular expressions    
@@ -36,201 +40,189 @@
   #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
   #include "parser.hpp"
-	#include <librexgen/parser/group_options.h>
+  #include <librexgen/parser/group_options.h>
   
   #include <cstdio>
-  
-  using namespace std;
-
-  //extern "C"
-  int yylex(/*YYSTYPE* lvalp, YYLTYPE *llocp*/);
-  void yyerror(/*YYLTYPE* locp, */RexgenParserContext * /* ctx */, const char *s)
-  {
-  
-  }
-  
-  //#define scanner context->scanner
+  #include <memory>
 %}
 
 %start T_RegexAlternatives
-
+/*
 %union {
   wchar_t		character;
   int 			integer;
-
-	t_group_options* group_options;
+  t_group_options* group_options;
   Regex* 		regex;
-  RegexAlternatives* 	regex_alternatives;
+  RegexAlternatives* regex_alternatives;
   CompoundRegex* 	    compound_regex;
   Quantifier* 		    quantifier;
   ClassRegex* 		    class_regex;
   TerminalRegex* 	    terminal_regex;
   GroupReference*     group_reference;
 
-  /* stream_regex may store a StreamRegex* or GroupReference*,
-   * see documentation of getStreamRegex for mor information
-   */
+  // stream_regex may store a StreamRegex* or GroupReference*,
+  // see documentation of getStreamRegex for mor information
+  //
   Regex*              stream_regex;
 
 }
+*/
 
-%token <character> T_PIPE
-%token <character> T_ANY_CHAR
-%token <character> T_HYPHEN
-%token <character> T_BEGIN_QUANTIFIER
-%token <character> T_END_QUANTIFIER
-%token <character> T_OPTIONAL_QUANTIFIER
-%token <integer>   T_NUMBER
-%token <integer>   T_GROUPID
-%token <integer>   T_STREAM
-%token <group_options> T_BEGIN_GROUP
-%token <character> T_END_GROUP
-%token <character> T_BEGIN_CLASS
-%token <character> T_END_CLASS
-%token <character> T_COMMA
-%token <character> T_CLASS_DIGIT
-%token <character> T_CLASS_WORD
+%token <wchar_t> T_PIPE
+%token <wchar_t> T_ANY_CHAR
+%token <wchar_t> T_HYPHEN
+%token <wchar_t> T_BEGIN_QUANTIFIER
+%token <wchar_t> T_END_QUANTIFIER
+%token <wchar_t> T_OPTIONAL_QUANTIFIER
+%token <int>   T_NUMBER
+%token <int>   T_GROUPID
+%token <int>   T_STREAM
+%token <t_group_options> T_BEGIN_GROUP
+%token <wchar_t> T_END_GROUP
+%token <wchar_t> T_BEGIN_CLASS
+%token <wchar_t> T_END_CLASS
+%token <wchar_t> T_COMMA
+%token <wchar_t> T_CLASS_DIGIT
+%token <wchar_t> T_CLASS_WORD
 
-%type <regex_alternatives> T_RegexAlternatives
-%type <compound_regex> CompoundRegex
-%type <regex> Regex
-%type <regex> PlainRegex
-%type <quantifier> Quantifier
-%type <regex> SimpleRegex
-%type <class_regex> ClassRegex
-%type <class_regex> ClassContent
-%type <class_regex> SimpleClassContent
-%type <class_regex> CharacterClassDigit
-%type <class_regex> CharacterClassWord
-%type <regex_alternatives> GroupRegex
-%type <group_reference> GroupReference;
-%type <stream_regex> Stream;
+%type <std::shared_ptr<rexgen::RegexAlternatives>> T_RegexAlternatives
+%type <std::shared_ptr<rexgen::Regex>> CompoundRegex
+%type <std::shared_ptr<rexgen::Regex>> Regex
+%type <std::shared_ptr<rexgen::Regex>> PlainRegex
+%type <std::shared_ptr<rexgen::Quantifier>> Quantifier
+%type <std::shared_ptr<rexgen::Regex>> SimpleRegex
+%type <std::shared_ptr<rexgen::ClassRegex>> ClassRegex
+%type <std::shared_ptr<rexgen::ClassRegex>> ClassContent
+%type <std::shared_ptr<rexgen::ClassRegex>> SimpleClassContent
+%type <std::shared_ptr<rexgen::ClassRegex>> CharacterClassDigit
+%type <std::shared_ptr<rexgen::ClassRegex>> CharacterClassWord
+%type <std::shared_ptr<rexgen::RegexAlternatives>> GroupRegex
+%type <std::shared_ptr<rexgen::GroupReference>> GroupReference;
+%type <std::shared_ptr<rexgen::Regex>> Stream;
 
 
 %%
 
 T_RegexAlternatives:
   CompoundRegex {
-      $$ = new RegexAlternatives();
-      $$->addRegex($1);
-      context->result = $$;
+      $$ = std::make_shared<rexgen::RegexAlternatives>();
+      std::shared_ptr<rexgen::Regex> re = std::move($1);
+      $$->addRegex(re);
       $$->setGroupId(0);
-      context->updateAllGroupReferences();
+      context.setResult($$);
+      context.updateAllGroupReferences();
   };
-  
+
 T_RegexAlternatives:
   CompoundRegex T_PIPE T_RegexAlternatives
-  { $$ = $3;
+  { $$ = std::move($3);
     $$->addRegex($1);
   };
 
 CompoundRegex:
   Regex
-  { $$ = new CompoundRegex();
-    $$->prependRegex($1);
+  { $$ = std::make_shared<rexgen::CompoundRegex>();
+    static_cast<rexgen::CompoundRegex*>($$.get())->prependRegex($1);
   };
-  
+
 CompoundRegex:
   Regex CompoundRegex
-  { $$ = $2;
-    $$->prependRegex($1);
+  { $$ = std::move($2);
+    static_cast<rexgen::CompoundRegex*>($$.get())->prependRegex($1);
   };
-  
+
 Regex:
   PlainRegex
   {
-    $$ = $1;
+    $$ = std::move($1);
   };
 Regex:
   PlainRegex Quantifier
   {
-    $$ = (Regex*)$1;
-    Quantifier* q = (Quantifier*)$2;
-    $$->setQuantifier(*(q));
-    delete q;
+    $$ = std::move($1);
+    $$->setQuantifier(*($2));
   };
 
 PlainRegex:
-        SimpleRegex 	{ $$ = static_cast<Regex*>($1); }
-    |   CharacterClassDigit { $$ = $1; }
-	  | 	ClassRegex 	{ $$ = static_cast<Regex*>($1); }
-	  |	GroupRegex	{ $$ = static_cast<Regex*>($1); }
-	  |	GroupReference	{ $$ = static_cast<Regex*>($1);	}
-          |     Stream          { $$ = static_cast<Regex*>($1); };
+        SimpleRegex 	    { $$ = std::move($1); }
+    |   CharacterClassDigit { $$ = std::move($1); }
+    | 	ClassRegex 	    { $$ = std::move($1); }
+    |	GroupRegex	    { $$ = std::move($1); }
+    |	GroupReference	    { $$ = std::move($1); }
+    |   Stream              { $$ = std::move($1); };
 
 SimpleRegex: T_ANY_CHAR {
-	$$ = new TerminalRegex($1);
+	$$ = std::make_shared<rexgen::TerminalRegex>($1);
 };
 
 ClassRegex:
-    CharacterClassWord  { $$ = $1; }
-  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = $3; $$->addCharacter(btowc('-')); }
-  | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = $2; };
+    CharacterClassWord  { $$ = std::move($1); }
+  | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = std::move($3); $$->addCharacter(btowc('-')); }
+  | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = std::move($2); };
 ClassContent:
-    SimpleClassContent  { $$ = $1; }
+    SimpleClassContent  { $$ = std::move($1); }
   | SimpleClassContent ClassContent {
     $2->merge($1);
-    delete $1;
-    $$ = $2;
+    $$ = std::move($2);
   }
 
 SimpleClassContent:
 	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
-      $$ = new ClassRegex(); 
+      $$ = std::make_shared<rexgen::ClassRegex>();
       $$->addRange($1, $3);
 	}
 	| T_CLASS_DIGIT {
-      $$ = new ClassRegex();
-      $$->addRange(ClassRegex::DIGITS);
+      $$ = std::make_shared<rexgen::ClassRegex>();
+      $$->addRange(rexgen::ClassRegex::DIGITS);
   }
-	| CharacterClassWord  { $$ = $1; }
+	| CharacterClassWord  { $$ = std::move($1); }
 	| T_ANY_CHAR {
-    $$ = new ClassRegex();
+    $$ = std::make_shared<rexgen::ClassRegex>();
     $$->addCharacter($1);
   }
 
 CharacterClassDigit:
 	T_CLASS_DIGIT {
-    $$ = new ClassRegex();
-    $$->addRange(ClassRegex::DIGITS);
+    $$ = std::make_shared<rexgen::ClassRegex>();
+    $$->addRange(rexgen::ClassRegex::DIGITS);
 	}
 CharacterClassWord:
   T_CLASS_WORD {
-    $$ = new ClassRegex();
-    $$->addRange(ClassRegex::WORDCHARACTERS);
+    $$ = std::make_shared<rexgen::ClassRegex>();
+    $$->addRange(rexgen::ClassRegex::WORDCHARACTERS);
   }
   
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP
-  { 
-    $$ = $2; 
-		$$->setGroupOptions($1);
-		delete $1;
-    context->registerGroup($$);
-    context->updateGroupReferences($$);
+  {
+    $$ = std::move($2);
+    std::weak_ptr<rexgen::Regex> ptr = std::static_pointer_cast<rexgen::Regex>($$);
+    $$->setGroupOptions($1);
+    context.registerGroup(ptr);
+    context.updateGroupReferences(ptr);
   };
 
 Quantifier:
   T_OPTIONAL_QUANTIFIER {
-    $$ = new Quantifier(0, 1);
+    $$ = std::make_shared<rexgen::Quantifier>(0, 1);
   }
   | T_BEGIN_QUANTIFIER T_NUMBER T_END_QUANTIFIER {
-      $$ = new Quantifier($2, $2);
+      $$ = std::make_shared<rexgen::Quantifier>($2, $2);
     }
   | T_BEGIN_QUANTIFIER T_NUMBER T_COMMA T_NUMBER T_END_QUANTIFIER {
-      $$ = new Quantifier($2, $4);
+      $$ = std::make_shared<rexgen::Quantifier>($2, $4);
   };
 
 GroupReference: T_GROUPID {
-  $$ = new GroupReference($1);
-  context->registerGroupReference($$);
+  $$ = std::make_shared<rexgen::GroupReference>($1);
+  context.registerGroupReference($$);
 };
 
 Stream: T_STREAM {
-  if (context->getInFile() == NULL && context->getStreamCallback() == NULL) {
+  if (context.getInFile() == NULL && context.getStreamCallback() == NULL) {
     throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.", @1.first_column);
   }
-  $$ = context->getStreamRegex();
+  $$ = context.getStreamRegex();
 };
 
 %%

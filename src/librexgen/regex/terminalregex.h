@@ -25,27 +25,28 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
 #include <vector>
+#include <memory>
 
-using std::vector;
+namespace rexgen {
 
-class TerminalRegex : public Regex {
- public:
-  explicit TerminalRegex(wchar_t ch) {
-    value.push_back(ch);
-  }
+  class TerminalRegex : public Regex {
+  public:
+    explicit TerminalRegex(wchar_t ch) {
+      value.push_back(ch);
+    }
 
-  void prepend(const TerminalRegex* tre);
+    void prepend(const std::shared_ptr<TerminalRegex>& tre);
 
-  inline const char_type* getValue() const { return NULL; }
+    inline const char_type *getValue() const { return NULL; }
 
-  RegexType getRegexType() const { return Terminal; }
+    RegexType getRegexType() const { return Terminal; }
 
-  Iterator* singleIterator(IteratorState* /* state */) const {
-    return new TerminalRegexIterator(getId(), &value[0], value.size());
-  }
+    Iterator *singleIterator(IteratorState * /* state */) const {
+      return new TerminalRegexIterator(getId(), &value[0], value.size());
+    }
 
- private:
-  vector<wchar_t> value;
-};
-
+  private:
+    std::vector<wchar_t> value;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_TERMINALREGEX_H_

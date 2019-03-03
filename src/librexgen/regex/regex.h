@@ -27,60 +27,64 @@
 #include <librexgen/string/simplestring.h>
 #include <librexgen/debug.h>
 #include <iostream>
+namespace rexgen {
+  typedef enum {
+    Compound,
+    Alternative,
+    Terminal,
+    Class,
+    Reference,
+    Stream,
+    Range
+  } RegexType;
 
-typedef enum {
-  Compound,
-  Alternative,
-  Terminal,
-  Class,
-  Reference,
-  Stream,
-  Range
-} RegexType;
+  class IteratorState;
 
-class IteratorState;
+  class Regex {
+  public:
+    Regex() : quantifier(1, 1) { id = createId(); }
 
-class Regex  {
- public:
-  Regex() : quantifier(1, 1) {id = createId();}
-  virtual ~Regex() {}
+    virtual ~Regex() {}
 
-  inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
-  inline unsigned int getMaxOccurs() const { return quantifier.getMax(); }
+    inline unsigned int getMinOccurs() const { return quantifier.getMin(); }
 
-  inline void setMinOccurs(unsigned int _min) { quantifier.setMin(_min); }
-  inline void setMaxOccurs(unsigned int _max) { quantifier.setMax(_max); }
+    inline unsigned int getMaxOccurs() const { return quantifier.getMax(); }
 
-  inline void setQuantifier(const Quantifier& q) { quantifier = q; }
+    inline void setMinOccurs(unsigned int _min) { quantifier.setMin(_min); }
 
-  virtual RegexType getRegexType() const = 0;
+    inline void setMaxOccurs(unsigned int _max) { quantifier.setMax(_max); }
 
-  virtual Iterator* iterator(IteratorState* state) const {
-    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return singleIterator(state);
-    } else {
-      return new IteratorPermuter(
-               getId(), this, state, getMinOccurs(), getMaxOccurs());
+    inline void setQuantifier(const Quantifier &q) { quantifier = q; }
+
+    virtual RegexType getRegexType() const = 0;
+
+    virtual Iterator *iterator(IteratorState *state) const {
+      if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+        return singleIterator(state);
+      } else {
+        return new IteratorPermuter(
+                getId(), this, state, getMinOccurs(), getMaxOccurs());
+      }
     }
-  }
-  virtual Iterator* singleIterator(IteratorState* state) const = 0;
 
-  int getId() const { return id; }
+    virtual Iterator *singleIterator(IteratorState *state) const = 0;
 
-  virtual int getGroupId() const { return -1; }
+    int getId() const { return id; }
 
-  virtual bool usesCallback() const { return false; }
+    virtual int getGroupId() const { return -1; }
 
- protected:
-  virtual int createId() {
-    return ++next_id;
-  }
+    virtual bool usesCallback() const { return false; }
 
- private:
-  Quantifier quantifier;
-  static int next_id;
-  int id;
-};
+  protected:
+    virtual int createId() {
+      return ++next_id;
+    }
 
+  private:
+    Quantifier quantifier;
+    static int next_id;
+    int id;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_REGEX_H_
 

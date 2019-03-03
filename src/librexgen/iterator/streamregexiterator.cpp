@@ -19,24 +19,25 @@
 
 #include <librexgen/iterator/streamregexiterator.h>
 #include <cstdio>
-
-void StreamRegexIterator::readNextWord() {
-  __hasNext = false;
-  assert(callback != NULL);
-  length = callback(&buffer[0], STREAMREGEXITERATOR_MAXLEN);
-  if (length > 0) {
-    __hasNext = true;
+namespace rexgen {
+  void StreamRegexIterator::readNextWord() {
+    __hasNext = false;
+    assert(callback != NULL);
+    length = callback(&buffer[0], STREAMREGEXITERATOR_MAXLEN);
+    if (length > 0) {
+      __hasNext = true;
+    }
   }
-}
 
-SerializableState* StreamRegexIterator::getCurrentState() const {
-  SerializableState* s = Iterator::getCurrentState();
-  s->addValue(0);
-  return s;
-}
+  SerializableState *StreamRegexIterator::getCurrentState() const {
+    SerializableState *s = Iterator::getCurrentState();
+    s->addValue(0);
+    return s;
+  }
 
-void StreamRegexIterator::setCurrentState(const SerializableState* s) {
-  Iterator::setCurrentState(s);
-  // fseek(infile, s->getValue(0), SEEK_SET);
-}
+  void StreamRegexIterator::setCurrentState(const SerializableState *s) {
+    Iterator::setCurrentState(s);
+    // fseek(infile, s->getValue(0), SEEK_SET);
+  }
 
+}

@@ -19,49 +19,33 @@
 
 #include <librexgen/librexgen.h>
 #include <librexgen/parser/rexgenparsercontext.h>
+#include <librexgen/parser/RexgenParser.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <sstream>
 #include <string>
+#include <memory>
 
-int yyparse(RexgenParserContext* context);
-
-Regex* parse_regex(RexgenParserContext* context) {
-  try {
-    if (yyparse(context) != 0) {
-      return NULL;
-    }
-  } catch (SyntaxError& exc) {
-    context->handleParserError(exc.getMessage());
-    return NULL;
-  }
-  if (context->hasInvalidGroupReferences()) {
-    context->handleParserError("This regular expression has an invalid back reference");
-    return NULL;
-  }
-  return context->result;
+EXPORT
+std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options) {
+  std::unique_ptr<rexgen::RexgenParser> parser = std::make_unique<rexgen::RexgenParser>();
+  return parser->parse(regex, options);
 }
 
 EXPORT
-Regex* parse_regex(const char* regex, const RexgenOptions& options) {
-  RexgenParserContext context(regex, options);
-  return parse_regex(&context);
-}
-
-EXPORT
-Iterator* regex_iterator(const char* regex, const RexgenOptions& options) {
-  Regex* re = parse_regex(regex, options);
-  if (re == NULL) {
-    return NULL;
+rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
+  rexgen::Regex* re = parse_regex(regex, options);
+  if (re == nullptr) {
+    return nullptr;
   }
-  Iterator* iter = new TopIterator(re);
+  rexgen::Iterator* iter = new rexgen::TopIterator(re);
   // register regex alternatives
-  iter->updateReferences(NULL);
+  iter->updateReferences(nullptr);
 
   // update references
-  iter->updateReferences(NULL);
+  iter->updateReferences(nullptr);
 
   // update attributes (e.g. case folding )
-  iter->updateAttributes(NULL);
+  iter->updateAttributes(nullptr);
   return iter;
 }

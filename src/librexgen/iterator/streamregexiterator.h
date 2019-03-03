@@ -24,44 +24,51 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/c/iterator.h>
 #include <librexgen/defs.h>
+namespace rexgen {
+  static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
 
-static const size_t STREAMREGEXITERATOR_MAXLEN = 1024;
+  class StreamRegexIterator : public Iterator {
+  public:
+    StreamRegexIterator(int _id, callback_fp_mb cb)
+            : Iterator(_id), callback(cb) {
+      state = resetted;
+      readNextWord();
+    }
 
-class StreamRegexIterator : public Iterator {
- public:
-  StreamRegexIterator(int _id, callback_fp_mb cb)
-    : Iterator(_id), callback(cb) {
-    state = resetted;
-    readNextWord();
-  }
+    bool next() {
+      const bool res = (state == resetted);
+      state = usable;
+      return res;
+    }
 
-  bool next() {
-    const bool res = (state == resetted);
-    state = usable;
-    return res;
-  }
-  bool forceNext() {
-    readNextWord();
-    return __hasNext;
-  }
-  bool hasNext() const { return state == resetted; }
-  void value(SimpleString* dst) const {
-    dst->append(&buffer[0], length);
-  }
-  void updateReferences(IteratorState* /* iterState */) {}
-  void updateAttributes(IteratorState* /* iterState */) {}
-  bool isSingleton() const { return true; }
+    bool forceNext() {
+      readNextWord();
+      return __hasNext;
+    }
 
-  SerializableState* getCurrentState() const;
-  void setCurrentState(const SerializableState* state);
+    bool hasNext() const { return state == resetted; }
 
- private:
-  void readNextWord();
+    void value(SimpleString *dst) const {
+      dst->append(&buffer[0], length);
+    }
 
-  callback_fp_mb callback;
-  byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
-  size_t length;
-  bool __hasNext;
-};
+    void updateReferences(IteratorState * /* iterState */) {}
 
+    void updateAttributes(IteratorState * /* iterState */) {}
+
+    bool isSingleton() const { return true; }
+
+    SerializableState *getCurrentState() const;
+
+    void setCurrentState(const SerializableState *state);
+
+  private:
+    void readNextWord();
+
+    callback_fp_mb callback;
+    byte_t buffer[STREAMREGEXITERATOR_MAXLEN];
+    size_t length;
+    bool __hasNext;
+  };
+}
 #endif  // SRC_LIBREXGEN_ITERATOR_STREAMREGEXITERATOR_H_

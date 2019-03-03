@@ -28,25 +28,27 @@
 #include <algorithm>
 #include <deque>
 #include <vector>
+namespace rexgen {
+  class RegexAlternativesIterator : public IteratorContainer {
+  public:
+    explicit RegexAlternativesIterator(int id);
 
-class RegexAlternativesIterator : public IteratorContainer {
- public:
-  explicit RegexAlternativesIterator(int id);
+    bool next();
 
-  bool next();
-  void value(SimpleString* dst) const {
-    (*getPosition())->value(dst);
-  }
+    void value(SimpleString *dst) const {
+      (*getPosition())->value(dst);
+    }
 
-  bool hasNext() const;
+    bool hasNext() const;
 
-  void addChild(Iterator* re);
+    void addChild(Iterator *re);
 
-  SerializableState* getCurrentState() const;
-  void setCurrentState(const SerializableState* state);
+    SerializableState *getCurrentState() const;
 
- private:
-  bool canUseValue() const;
-};
+    void setCurrentState(const SerializableState *state);
 
+  private:
+    bool canUseValue() const;
+  };
+}
 #endif  // SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_

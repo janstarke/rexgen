@@ -1,9 +1,13 @@
+%option prefix="rexgen_"
+%option bison-bridge
+%option bison-locations
+%option reentrant
 %option noyywrap
 %option nounput
 %{
 /*
     rexgen - a tool to create words based on regular expressions    
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -34,14 +38,14 @@
   #include "parser.hpp"
   #include <cstdio>
 
-	static RexgenParserContext* global_context = NULL;
+//	static RexgenParserContext* global_context = NULL;
 	static wchar_t current_wchar_input;
   
-  #define YY_EXTRA_TYPE RexgenParserContext*
+//  #define YY_EXTRA_TYPE RexgenParserContext*
 //  #define YY_USER_ACTION yylloc->first_line = yylinelo
-  #define YY_INPUT(buf,result,max_size) do {result=__yy_input(buf, max_size);}while(0)
+  #define YY_INPUT(buffer,result,max_size) do {result=__yy_input(buffer, max_size);}while(0)
 
-  static int __yy_input(char* buf, size_t max_size) {
+  static int __yy_input(char* buffer, size_t max_size) {
     if (! global_context->hasNextChar()) {
         return YY_NULL;
     }
@@ -50,7 +54,7 @@
 
     int single_byte = wctob(wc);
     if (single_byte != EOF) {
-        buf[0] = static_cast<char>(single_byte);
+        buffer[0] = static_cast<char>(single_byte);
         return 1;
     }
 
@@ -58,7 +62,7 @@
      * to flag the situation. In this case, the scanner must explicitly
      * call global_context->getCurrentChar to retrieve the widechar
      */
-    buf[0] = static_cast<char>(0xfe);
+    buffer[0] = static_cast<char>(0xfe);
     return 1;
   }
 
@@ -139,26 +143,26 @@ MULTIBYTE_CHARACTER  \xFE
 %s IN_CLASS
 %%
 
-{ANSICHAR}              { yylval.character = parseAnsiChar(yytext);                 return T_ANY_CHAR; }
-{UNICODECHAR}           { yylval.character = parseUnicodeChar(yytext);              return T_ANY_CHAR; }
-{MULTIBYTE_CHARACTER}   { yylval.character = global_context->getCurrentChar(); return T_ANY_CHAR; }
-{ESCAPED}               { yylval.character = btowc(yytext[1]);                      return T_ANY_CHAR; }
-{LINEFEED}              { yylval.character = btowc('\n');                           return T_ANY_CHAR; }
-{CARRIAGERETURN}        { yylval.character = btowc('\r');                           return T_ANY_CHAR; }
-{CLASS_DIGIT}	        { yylval.character = 0; return T_CLASS_DIGIT; }
-{CLASS_WORD}            { yylval.character = 0; return T_CLASS_WORD;  }
+{ANSICHAR}              { yylval->character = parseAnsiChar(yytext);                 return T_ANY_CHAR; }
+{UNICODECHAR}           { yylval->character = parseUnicodeChar(yytext);              return T_ANY_CHAR; }
+{MULTIBYTE_CHARACTER}   { yylval->character = global_context->getCurrentChar(); return T_ANY_CHAR; }
+{ESCAPED}               { yylval->character = btowc(yytext[1]);                      return T_ANY_CHAR; }
+{LINEFEED}              { yylval->character = btowc('\n');                           return T_ANY_CHAR; }
+{CARRIAGERETURN}        { yylval->character = btowc('\r');                           return T_ANY_CHAR; }
+{CLASS_DIGIT}	        { yylval->character = 0; return T_CLASS_DIGIT; }
+{CLASS_WORD}            { yylval->character = 0; return T_CLASS_WORD;  }
 "|"                     { return T_PIPE; }
 "["                     { BEGIN(IN_CLASS); return T_BEGIN_CLASS; }
 "]"                     { BEGIN(INITIAL); return T_END_CLASS; }
 
 {BEGIN_GROUP_WITH_OPTIONS}	{
 	bool enable_mode = true;
-	yylval.group_options = new t_group_options();
-	yylval.group_options->group_id = global_context->groupId++;
+	yylval->group_options = new t_group_options();
+	yylval->group_options->group_id = global_context->groupId++;
 	for (int idx=2; idx < yyleng-1; ++idx) {
 		switch(yytext[idx]) {
 			case 'i':
-				yylval.group_options->handle_case = 
+				yylval->group_options->handle_case =
 					enable_mode 
 									?	CASE_ITERATE
 									: CASE_IGNORE ;
@@ -174,35 +178,32 @@ MULTIBYTE_CHARACTER  \xFE
 }
 
 {BEGIN_GROUP}           {
-	yylval.group_options = new t_group_options();
-	yylval.group_options->group_id = global_context->groupId++;
+	yylval->group_options = new t_group_options();
+	yylval->group_options->group_id = global_context->groupId++;
 	return T_BEGIN_GROUP; 
 }
 {END_GROUP}             { return T_END_GROUP; }
 "?"                     { return T_OPTIONAL_QUANTIFIER; }
 "{"                     { BEGIN(IN_QUANTIFIER); return T_BEGIN_QUANTIFIER; }
 "}"                     { BEGIN(INITIAL); return T_END_QUANTIFIER; }
-{GROUPID}               { yylval.integer = atoi(&yytext[1]); return T_GROUPID; }
-{STREAM}                { yylval.integer = atoi(&yytext[1]); return T_STREAM; }
+{GROUPID}               { yylval->integer = atoi(&yytext[1]); return T_GROUPID; }
+{STREAM}                { yylval->integer = atoi(&yytext[1]); return T_STREAM; }
 <IN_QUANTIFIER>","      { return T_COMMA; }
 <IN_CLASS>"-"           { return T_HYPHEN; }
-<IN_QUANTIFIER>{DIGIT}+ { yylval.integer = atoi(yytext); return T_NUMBER; }
-{NORMAL}                { yylval.character = yytext[0]; return T_ANY_CHAR; }
-{SPECIAL}               { yylval.character = yytext[0]; return T_ANY_CHAR; }
+<IN_QUANTIFIER>{DIGIT}+ { yylval->integer = atoi(yytext); return T_NUMBER; }
+{NORMAL}                { yylval->character = yytext[0]; return T_ANY_CHAR; }
+{SPECIAL}               { yylval->character = yytext[0]; return T_ANY_CHAR; }
 .                       { }
 
 %%
 
-
+namespace rexgen {
   void RexgenParserContext::InitScanner() {
-    //yylex_init(&scanner);
-    //yyset_extra(this, scanner);
-		global_context = this;
-#ifdef YYDEBUG
-    //yyset_debug(1, scanner);
-#endif
+    yylex_init(&scanner);
+    yyset_extra(this, scanner);
   }
-  
+
   void RexgenParserContext::DestroyScanner() {
-    yylex_destroy();
+    yylex_destroy(scanner);
   }
+}

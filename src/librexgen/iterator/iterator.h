@@ -28,58 +28,67 @@
 #include <librexgen/state/invaliditeratoridexception.h>
 
 #ifdef __cplusplus
-class IteratorState;
+namespace rexgen {
+  class IteratorState;
 
-class Iterator {
- public:
-  explicit Iterator(int _id):
-    state(resetted),
-    id(_id) {}
-  virtual ~Iterator() {}
+  class Iterator {
+  public:
+    explicit Iterator(int _id) :
+            state(resetted),
+            id(_id) {}
 
-  virtual bool hasNext() const { return false; }
-  virtual bool next() = 0;
-  virtual void value(SimpleString* /* dst */) const { }
+    virtual ~Iterator() {}
 
-  virtual bool canUseValue() const { return (state == usable); }
+    virtual bool hasNext() const { return false; }
 
-  int getId() const { return id; }
-  virtual int getState() const { return state; }
-  virtual void setState(int _state) {
-    if (_state < static_cast<int>(resetted)) {
-      state = not_usable;
-    } else if (_state > static_cast<int>(not_usable)) {
-      state = not_usable;
-    } else {
-      state = static_cast<state_t>(_state);
+    virtual bool next() = 0;
+
+    virtual void value(SimpleString * /* dst */) const {}
+
+    virtual bool canUseValue() const { return (state == usable); }
+
+    int getId() const { return id; }
+
+    virtual int getState() const { return state; }
+
+    virtual void setState(int _state) {
+      if (_state < static_cast<int>(resetted)) {
+        state = not_usable;
+      } else if (_state > static_cast<int>(not_usable)) {
+        state = not_usable;
+      } else {
+        state = static_cast<state_t>(_state);
+      }
     }
-  }
-  virtual void updateReferences(IteratorState* /* iterState */) = 0;
-  virtual void updateAttributes(IteratorState* /* iterState */) = 0;
-  virtual bool isSingleton() const { return false; }
 
-  virtual SerializableState* getCurrentState() const {
-    return new SerializableState(getId(), getState());
-  }
+    virtual void updateReferences(IteratorState * /* iterState */) = 0;
 
-  virtual void setCurrentState(const SerializableState* s) {
-    if (getId() != s->getIteratorId()) {
-      throw InvalidIteratorIdException();
+    virtual void updateAttributes(IteratorState * /* iterState */) = 0;
+
+    virtual bool isSingleton() const { return false; }
+
+    virtual SerializableState *getCurrentState() const {
+      return new SerializableState(getId(), getState());
     }
-    setState(s->getStateEnum());
-  }
 
- protected:
-  enum state_t {
-    resetted,
-    usable,
-    not_usable
-  } state;
+    virtual void setCurrentState(const SerializableState *s) {
+      if (getId() != s->getIteratorId()) {
+        throw InvalidIteratorIdException();
+      }
+      setState(s->getStateEnum());
+    }
 
- private:
-  const int id;
-};
+  protected:
+    enum state_t {
+      resetted,
+      usable,
+      not_usable
+    } state;
 
+  private:
+    const int id;
+  };
+}
 #endif /* __cplusplus */
 
 #endif /* SRC_LIBREXGEN_ITERATOR_ITERATOR_H_ */

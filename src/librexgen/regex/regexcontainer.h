@@ -25,27 +25,24 @@
 #include <librexgen/string/simplestring.h>
 #include <deque>
 #include <algorithm>
+#include <memory>
+namespace rexgen {
+  class RegexContainer : public Regex {
+  public:
 
-class RegexContainer : public Regex {
- public:
-  virtual ~RegexContainer() {
-    for (auto re : regexObjects) {
-      delete re;
-    }
-  }
-
-  virtual bool usesCallback() const {
-    for (auto re : regexObjects) {
-      if (re->usesCallback()) {
-        return true;
+    virtual bool usesCallback() const {
+      for (const std::shared_ptr<Regex>& re : regexObjects) {
+        if (re->usesCallback()) {
+          return true;
+        }
       }
+      return Regex::usesCallback();
     }
-    return Regex::usesCallback();
-  }
 
- protected:
-  std::deque<Regex*>* getChildren() { return &regexObjects; }
-  std::deque<Regex*> regexObjects;
-};
+  protected:
+    std::deque< std::shared_ptr<Regex> >& getChildren() { return regexObjects; }
 
+    std::deque< std::shared_ptr<Regex> > regexObjects;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_REGEXCONTAINER_H_

@@ -21,46 +21,47 @@
 #include <librexgen/regex/regexalternatives.h>
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/caseiterator.h>
+namespace rexgen {
+  Iterator *RegexAlternatives::singleIterator(IteratorState *state) const {
+    if (regexObjects.size() == 1) {
+      return regexObjects[0]->iterator(state);
+    }
 
-Iterator* RegexAlternatives::singleIterator(IteratorState* state) const {
-  if (regexObjects.size() == 1) {
-    return regexObjects[0]->iterator(state);
+    RegexAlternativesIterator *rai = new RegexAlternativesIterator(getId());
+    for (const std::shared_ptr<Regex>& i : regexObjects) {
+      rai->addChild(i->iterator(state));
+    }
+    return rai;
   }
 
-  RegexAlternativesIterator* rai = new RegexAlternativesIterator(getId());
-  for (auto i : regexObjects) {
-    rai->addChild(i->iterator(state));
-  }
-  return rai;
-}
+  Iterator *RegexAlternatives::iterator(IteratorState *state) const {
+    Iterator *iter = NULL;
 
-Iterator* RegexAlternatives::iterator(IteratorState* state) const {
-  Iterator* iter = NULL;
+    iter = state->getIterator(getGroupId());
+    if (iter != NULL) {
+      return iter;
+    }
 
-  iter = state->getIterator(getGroupId());
-  if (iter != NULL) {
+    if (regexObjects.size() == 1) {
+      const std::shared_ptr<Regex>& re = regexObjects[0];
+      if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+        iter = re->iterator(state);
+      } else {
+        iter = new IteratorPermuter(
+                re->getId(), re.get(), state, getMinOccurs(), getMaxOccurs());
+      }
+    } else {
+      iter = RegexContainer::iterator(state);
+    }
+
+    if (getGroupId() > 0) {
+      state->registerIterator(getGroupId(), iter);
+    }
+
+    if (handle_case != CASE_IGNORE) {
+      iter = new CaseIterator(iter, handle_case);
+    }
+
     return iter;
   }
-
-  if (regexObjects.size() == 1) {
-    Regex* re = regexObjects[0];
-    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      iter = re->iterator(state);
-    } else {
-      iter = new IteratorPermuter(
-        re->getId(), re, state, getMinOccurs(), getMaxOccurs());
-    }
-  } else {
-    iter = RegexContainer::iterator(state);
-  }
-
-  if (getGroupId() > 0) {
-    state->registerIterator(getGroupId(), iter);
-  }
-
-  if (handle_case != CASE_IGNORE) {
-    iter = new CaseIterator(iter, handle_case);
-  }
-
-  return iter;
 }

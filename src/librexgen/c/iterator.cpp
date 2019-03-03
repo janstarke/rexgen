@@ -35,7 +35,7 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
   if (regex == NULL) {
     return NULL;
   }
-  Iterator* iter = new TopIterator(static_cast<Regex*>(regex));
+  rexgen::Iterator* iter = new rexgen::TopIterator(static_cast<rexgen::Regex*>(regex));
   // register regex alternatives
   iter->updateReferences(NULL);
 
@@ -60,14 +60,14 @@ c_iterator_ptr c_regex_iterator_cb(
   const char* regex_str,
   int ignore_case = 0,
   callback_fp callback = NULL) {
-  RexgenOptions options;
+  rexgen::RexgenOptions options;
   options.ignore_case = static_cast<bool>(ignore_case);
   options.infile = NULL;
 
   CALLBACK_WCWRAPPER = callback;
   options.stream_callback = callback_wc_wrapper;
 
-  Iterator* iter = NULL;
+  rexgen::Iterator* iter = NULL;
   try {
     iter = regex_iterator(regex_str, options);
   } catch (SyntaxError& error) {
@@ -82,12 +82,12 @@ c_iterator_ptr c_regex_iterator_cb_mb(
         const char* regex_str,
         int ignore_case = 0,
         callback_fp_mb callback = NULL) {
-  RexgenOptions options;
+  rexgen::RexgenOptions options;
   options.ignore_case = static_cast<bool>(ignore_case);
   options.infile = NULL;
   options.stream_callback = callback;
 
-  Iterator* iter = NULL;
+  rexgen::Iterator* iter = NULL;
   try {
     iter = regex_iterator(regex_str, options);
   } catch (SyntaxError& error) {
@@ -99,26 +99,26 @@ c_iterator_ptr c_regex_iterator_cb_mb(
 
 EXPORT
 int c_iterator_next(c_iterator_ptr iter) {
-  return (reinterpret_cast<Iterator*>(iter))->next();
+  return (reinterpret_cast<rexgen::Iterator*>(iter))->next();
 }
 
 EXPORT
 void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-  (reinterpret_cast<Iterator*>(iter))->value(reinterpret_cast<SimpleString*>
+  (reinterpret_cast<rexgen::Iterator*>(iter))->value(reinterpret_cast<SimpleString*>
       (dst));
 }
 
 
 EXPORT
 void c_iterator_delete(c_iterator_ptr i) {
-  delete (reinterpret_cast<Iterator*>(i));
+  delete (reinterpret_cast<rexgen::Iterator*>(i));
 }
 
 EXPORT
 void c_iterator_get_state(c_iterator_ptr i, char** dstptr) {
   vector<SerializableState::stateword_t> dst;
   SerializableState* state =
-          (reinterpret_cast<Iterator*>(i))->getCurrentState();
+          (reinterpret_cast<rexgen::Iterator*>(i))->getCurrentState();
   state->serialize(&dst);
   std::string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
@@ -163,7 +163,7 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
   }
   SerializableState* state = new SerializableState(
     (SerializableState::stateword_t*)stp, &words);
-  (reinterpret_cast<Iterator*>(i))->setCurrentState(state);
+  (reinterpret_cast<rexgen::Iterator*>(i))->setCurrentState(state);
   delete state;
 }
 

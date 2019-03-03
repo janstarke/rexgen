@@ -26,15 +26,20 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
+#include <memory>
 
-class CompoundRegex : public RegexContainer {
- public:
-  void prependRegex(Regex* regex);
-  void appendRegex(Regex* regex);
-  RegexType getRegexType() const { return Compound; }
-  Iterator* iterator(IteratorState* state) const;
+namespace rexgen {
+  class CompoundRegex : public RegexContainer {
+  public:
+    void prependRegex(const std::shared_ptr<Regex>& regex);
 
-  Iterator* singleIterator(IteratorState* state) const;
-};
+    void appendRegex(const std::shared_ptr<Regex>& regex);
 
+    RegexType getRegexType() const { return Compound; }
+
+    Iterator *iterator(IteratorState *state) const;
+
+    Iterator *singleIterator(IteratorState *state) const;
+  };
+}
 #endif  // SRC_LIBREXGEN_REGEX_COMPOUNDREGEX_H_

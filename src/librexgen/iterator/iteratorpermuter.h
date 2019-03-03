@@ -24,33 +24,38 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/iterator/iteratorcontainer.h>
+namespace rexgen {
+  class Regex;
 
-class Regex;
+  class IteratorPermuter : public IteratorContainer {
+  public:
+    void value(SimpleString *dst) const;
 
-class IteratorPermuter : public IteratorContainer {
- public:
-  void value(SimpleString* dst) const;
-  bool hasNext() const;
-  IteratorPermuter(int _id, const Regex* re, IteratorState* is,
-                   unsigned int min, unsigned int max);
-  ~IteratorPermuter();
-  bool next();
-  void init();
+    bool hasNext() const;
 
-  /**
-   * returns the number of elements created by this iterator
-   */
-  // uint64_t size() const;
- private:
-  bool existsIteratorWithNextElement() const;
+    IteratorPermuter(int _id, const Regex *re, IteratorState *is,
+                     unsigned int min, unsigned int max);
 
-  const unsigned int min_occurs, max_occurs;
-  const Regex* regex;
-  bool hasNextElement;
+    ~IteratorPermuter();
 
-  unsigned int current;
-  unsigned int occurs;
-};
+    bool next();
 
+    void init();
+
+    /**
+     * returns the number of elements created by this iterator
+     */
+    // uint64_t size() const;
+  private:
+    bool existsIteratorWithNextElement() const;
+
+    const unsigned int min_occurs, max_occurs;
+    const Regex *regex;
+    bool hasNextElement;
+
+    unsigned int current;
+    unsigned int occurs;
+  };
+}
 
 #endif  // SRC_LIBREXGEN_ITERATOR_ITERATORPERMUTER_H_

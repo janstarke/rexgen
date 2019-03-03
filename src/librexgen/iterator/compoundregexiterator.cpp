@@ -18,59 +18,60 @@
 */
 
 #include <librexgen/iterator/compoundregexiterator.h>
+namespace rexgen {
+  CompoundRegexIterator::CompoundRegexIterator(int _id)
+          : IteratorContainer(_id) {
+  }
 
-CompoundRegexIterator::CompoundRegexIterator(int _id)
-  : IteratorContainer(_id) {
-}
-
-bool CompoundRegexIterator::next() {
-  if (state == resetted) {
-    state = usable;
-    bool res = false;
+  bool CompoundRegexIterator::next() {
+    if (state == resetted) {
+      state = usable;
+      bool res = false;
+      for (auto i : iterators) {
+        res |= i->next();
+      }
+      return res;
+    }
     for (auto i : iterators) {
-      res |= i->next();
+      if (i->next()) {
+        return true;
+      }
     }
-    return res;
-  }
-  for (auto i : iterators) {
-    if (i->next()) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void CompoundRegexIterator::value(SimpleString* dst) const {
-  // assert(canUseValue());
-  for (auto i : iterators) {
-    i->value(dst);
-  }
-}
-
-bool CompoundRegexIterator::hasNext() const {
-  bool has_next = false;
-  if (state == not_usable) {
     return false;
   }
-  for (auto i : iterators) {
-    has_next |= i->hasNext();
+
+  void CompoundRegexIterator::value(SimpleString *dst) const {
+    // assert(canUseValue());
+    for (auto i : iterators) {
+      i->value(dst);
+    }
   }
-  return has_next;
-}
 
-SerializableState* CompoundRegexIterator::getCurrentState() const {
-  SerializableState* s = Iterator::getCurrentState();
-  for (auto i : iterators) {
-    s->addValue(i->getCurrentState());
+  bool CompoundRegexIterator::hasNext() const {
+    bool has_next = false;
+    if (state == not_usable) {
+      return false;
+    }
+    for (auto i : iterators) {
+      has_next |= i->hasNext();
+    }
+    return has_next;
   }
-  return s;
-}
 
-void CompoundRegexIterator::setCurrentState(const SerializableState* s) {
-  Iterator::setCurrentState(s);
-
-  for (auto i : iterators) {
-    i->setCurrentState(s->getChildState(i->getId()));
+  SerializableState *CompoundRegexIterator::getCurrentState() const {
+    SerializableState *s = Iterator::getCurrentState();
+    for (auto i : iterators) {
+      s->addValue(i->getCurrentState());
+    }
+    return s;
   }
-}
 
+  void CompoundRegexIterator::setCurrentState(const SerializableState *s) {
+    Iterator::setCurrentState(s);
+
+    for (auto i : iterators) {
+      i->setCurrentState(s->getChildState(i->getId()));
+    }
+  }
+
+}

@@ -26,49 +26,50 @@
 #include <map>
 #include <algorithm>
 #include <stdexcept>
-
-class IteratorState {
- public:
-  IteratorState() : streamIterator(NULL) {
-  }
-
-  virtual ~IteratorState() {
-    if (streamIterator != NULL) {
-      delete streamIterator;
-      streamIterator = NULL;
+namespace rexgen {
+  class IteratorState {
+  public:
+    IteratorState() : streamIterator(NULL) {
     }
-  }
 
-  void registerIterator(int id, Iterator* iterator) {
-    groupIterators[id] = iterator;
-  }
-
-  Iterator* getIterator(int id) const {
-    if (id == -1) {
-      return getStreamIterator();
-    } else {
-      std::map<int, Iterator*>::const_iterator iter = groupIterators.find(id);
-      if (iter != groupIterators.end()) {
-        return iter->second;
-      } else {
-        return NULL;
+    virtual ~IteratorState() {
+      if (streamIterator != NULL) {
+        delete streamIterator;
+        streamIterator = NULL;
       }
     }
-  }
 
-  void setStreamIterator(StreamRegexIterator* iter) {
-    if (streamIterator == NULL) {
-      streamIterator = iter;
-    } else {
-      throw std::runtime_error("multiple stream iterator assignment");
+    void registerIterator(int id, Iterator *iterator) {
+      groupIterators[id] = iterator;
     }
-  }
 
-  StreamRegexIterator* getStreamIterator() const { return streamIterator; }
+    Iterator *getIterator(int id) const {
+      if (id == -1) {
+        return getStreamIterator();
+      } else {
+        std::map<int, Iterator *>::const_iterator iter = groupIterators.find(id);
+        if (iter != groupIterators.end()) {
+          return iter->second;
+        } else {
+          return NULL;
+        }
+      }
+    }
 
- private:
-  std::map<int, Iterator*> groupIterators;
-  StreamRegexIterator* streamIterator;
-};
+    void setStreamIterator(StreamRegexIterator *iter) {
+      if (streamIterator == NULL) {
+        streamIterator = iter;
+      } else {
+        throw std::runtime_error("multiple stream iterator assignment");
+      }
+    }
+
+    StreamRegexIterator *getStreamIterator() const { return streamIterator; }
+
+  private:
+    std::map<int, Iterator *> groupIterators;
+    StreamRegexIterator *streamIterator;
+  };
+}
 
 #endif  // SRC_LIBREXGEN_ITERATOR_ITERATORSTATE_H_

@@ -18,6 +18,6 @@
 */
 
 #include <librexgen/regex/regex.h>
-
-int Regex::next_id = 0;
-
+namespace rexgen {
+  int Regex::next_id = 0;
+}

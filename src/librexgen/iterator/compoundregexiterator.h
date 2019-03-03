@@ -28,17 +28,20 @@
 #include <deque>
 #include <vector>
 #include <algorithm>
+namespace rexgen {
+  class CompoundRegexIterator : public IteratorContainer {
+  public:
+    explicit CompoundRegexIterator(int id);
 
-class CompoundRegexIterator : public IteratorContainer {
- public:
-  explicit CompoundRegexIterator(int id);
+    bool next();
 
-  bool next();
-  void value(SimpleString* dst) const;
-  bool hasNext() const;
+    void value(SimpleString *dst) const;
 
-  SerializableState* getCurrentState() const;
-  void setCurrentState(const SerializableState* state);
-};
+    bool hasNext() const;
 
+    SerializableState *getCurrentState() const;
+
+    void setCurrentState(const SerializableState *state);
+  };
+}
 #endif  // SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_

@@ -19,10 +19,11 @@
 
 #include <librexgen/regex/terminalregex.h>
 
-
-void TerminalRegex::prepend(const TerminalRegex* tre) {
-  for (const wchar_t &i : tre->value) {
-    this->value.insert(this->value.begin(), i);
+namespace rexgen {
+  void TerminalRegex::prepend(const std::shared_ptr<TerminalRegex>& tre) {
+    for (const wchar_t &i : tre->value) {
+      this->value.insert(this->value.begin(), i);
+    }
   }
-}
 
+}

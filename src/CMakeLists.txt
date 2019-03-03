@@ -6,7 +6,7 @@ project(rexgen_root)
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-#include (cmake/testing.cmake)
+include (cmake/testing.cmake)
 #include (cmake/doxygen.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
@@ -26,10 +26,10 @@ ADD_DEFINITIONS("-D_GNU_SOURCE")
 
 if(CMAKE_BUILD_TYPE MATCHES FUZZER)
   ADD_DEFINITIONS("-DUSE_LIBFUZZER")
+  ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
   ADD_COMPILE_OPTIONS("-g")
   ADD_COMPILE_OPTIONS("-O0")
-  ADD_LINK_OPTIONS("-lunwind")
-  ADD_LINK_OPTIONS("-L/usr/lib/x86_64-linux-gnu/")
+  ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
   ADD_LINK_OPTIONS("-g")
 endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
 

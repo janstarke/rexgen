@@ -50,7 +50,7 @@ c_regex_ptr c_regex_cb_mb(
     const char* regex_str,
     callback_fp_mb cb,
     void (*parser_error)(const char* msg)) {
-  RexgenOptions options;
+  rexgen::RexgenOptions options;
   options.stream_callback = cb;
   options.parser_error = parser_error;
 
@@ -61,7 +61,7 @@ EXPORT
 c_regex_ptr c_regex_cb(
         const char* regex_str,
         callback_fp cb) {
-  RexgenOptions options;
+  rexgen::RexgenOptions options;
   CALLBACK_WCWRAPPER = cb;
   options.stream_callback = callback_wc_wrapper;
 
@@ -71,14 +71,14 @@ c_regex_ptr c_regex_cb(
 EXPORT
 void c_regex_delete(c_regex_ptr regex) {
   if (regex != NULL) {
-    Regex* re = static_cast<Regex*>(regex);
+    rexgen::Regex* re = static_cast<rexgen::Regex*>(regex);
     delete re;
   }
 }
 
 EXPORT
 int c_regex_uses_callback(c_regex_ptr i) {
-  return (reinterpret_cast<Regex*>(i))->usesCallback();
+  return (reinterpret_cast<rexgen::Regex*>(i))->usesCallback();
 }
 
 #ifdef __cplusplus

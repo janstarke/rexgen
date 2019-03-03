@@ -17,7 +17,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/..")
 IF(MSVC)
   ADD_DEFINITIONS("-D_UNICODE")
 ELSE()
-  ADD_DEFINITIONS("-std=c++11")
+  ADD_DEFINITIONS("-std=c++14")
   ADD_DEFINITIONS("-Wall")
   ADD_DEFINITIONS("-Wextra")
   ADD_DEFINITIONS("-Wshadow")
@@ -31,7 +31,10 @@ ADD_DEFINITIONS("-DUNICODE")
 if(CMAKE_BUILD_TYPE MATCHES FUZZER)
 	ADD_DEFINITIONS("-DUSE_LIBFUZZER")
 	ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
+	ADD_COMPILE_OPTIONS("-g")
+	ADD_COMPILE_OPTIONS("-O0")
 	ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
+	ADD_LINK_OPTIONS("-g")
 endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
 
 FLEX_TARGET(regexscanner parser/regex_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp COMPILE_FLAGS "")
@@ -74,13 +77,14 @@ set(librexgen_sources
   state/serializablestate.cpp
   string/simplestring.cpp
   parser/rexgenparsercontext.cpp
+		parser/RexgenParser.cpp
   librexgen.cpp
   c/librexgen.cpp
   c/iterator.cpp
   c/simplestring.cpp
 )
 set(parser_sources
-  ${BISON_regexparser_OUTPUTS} )
+  ${BISON_regexparser_OUTPUTS} parser/RexgenParser.cpp parser/RexgenParser.h)
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
 if (CMAKE_BUILD_TYPE MATCHES PROFILE)
