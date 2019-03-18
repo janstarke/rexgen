@@ -18,6 +18,7 @@
 */
 
 #include <librexgen/c/iterator.h>
+#include <librexgen/c/ApiContext.h>
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/librexgen.h>
@@ -32,19 +33,20 @@ extern "C" {
 
 EXPORT
 c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
-  if (regex == NULL) {
-    return NULL;
+  if (regex == c_regex_none) {
+    return c_iterator_none;
   }
-  rexgen::Iterator* iter = new rexgen::TopIterator(static_cast<rexgen::Regex*>(regex));
+  auto iter = std::make_shared<rexgen::TopIterator>(ApiContext::instance().getRegex(regex).get());
   // register regex alternatives
-  iter->updateReferences(NULL);
+  iter->updateReferences(nullptr);
 
   // update references
-  iter->updateReferences(NULL);
+  iter->updateReferences(nullptr);
 
   // update attributes (e.g. case folding )
-  iter->updateAttributes(NULL);
-  return iter;
+  iter->updateAttributes(nullptr);
+
+  return ApiContext::instance().addIterator(std::static_pointer_cast<rexgen::Iterator>(iter));
 }
 
 static callback_fp CALLBACK_WCWRAPPER = NULL;
@@ -72,9 +74,9 @@ c_iterator_ptr c_regex_iterator_cb(
     iter = regex_iterator(regex_str, options);
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
-    return NULL;
+    return c_regex_none;
   }
-  return iter;
+  return ApiContext::instance().addIterator(std::shared_ptr<rexgen::Iterator>(iter));
 }
 
 EXPORT
@@ -92,33 +94,32 @@ c_iterator_ptr c_regex_iterator_cb_mb(
     iter = regex_iterator(regex_str, options);
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
-    return NULL;
+    return c_iterator_none;
   }
-  return iter;
+  return ApiContext::instance().addIterator(std::shared_ptr<rexgen::Iterator>(iter));
 }
 
 EXPORT
 int c_iterator_next(c_iterator_ptr iter) {
-  return (reinterpret_cast<rexgen::Iterator*>(iter))->next();
+  return ApiContext::instance().getIterator(iter)->next();
 }
 
 EXPORT
 void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-  (reinterpret_cast<rexgen::Iterator*>(iter))->value(reinterpret_cast<SimpleString*>
-      (dst));
+  ApiContext::instance().getIterator(iter)->value(reinterpret_cast<SimpleString*>
+                                                  (dst));
 }
 
 
 EXPORT
 void c_iterator_delete(c_iterator_ptr i) {
-  delete (reinterpret_cast<rexgen::Iterator*>(i));
+  ApiContext::instance().deleteIterator(i);
 }
 
 EXPORT
 void c_iterator_get_state(c_iterator_ptr i, char** dstptr) {
   vector<SerializableState::stateword_t> dst;
-  SerializableState* state =
-          (reinterpret_cast<rexgen::Iterator*>(i))->getCurrentState();
+  SerializableState* state = ApiContext::instance().getIterator(i)->getCurrentState();
   state->serialize(&dst);
   std::string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
@@ -163,7 +164,7 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
   }
   SerializableState* state = new SerializableState(
     (SerializableState::stateword_t*)stp, &words);
-  (reinterpret_cast<rexgen::Iterator*>(i))->setCurrentState(state);
+  ApiContext::instance().getIterator(i)->setCurrentState(state);
   delete state;
 }
 

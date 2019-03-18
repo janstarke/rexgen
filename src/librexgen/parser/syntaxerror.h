@@ -21,15 +21,17 @@
 #define SRC_LIBREXGEN_PARSER_SYNTAXERROR_H_
 
 #include <librexgen/genericerror.h>
+#include <string>
 
 class SyntaxError : public GenericError {
  public:
-  explicit SyntaxError(const char* msg, int fl = -1)
-    :GenericError(msg), first_line(fl) {}
+  explicit SyntaxError(const char* msg)
+    : GenericError(msg) {}
 
-  int getFirstLine() const { return first_line; }
+  explicit SyntaxError(const std::string& msg)
+          : GenericError(msg) {}
+
  private:
-  int first_line;
 };
 
 #endif  // SRC_LIBREXGEN_PARSER_SYNTAXERROR_H_

@@ -184,6 +184,7 @@ void parser_error(const char* msg) {
 #endif
 
 #if USE_LIBFUZZER
+/*
 size_t fuzzer_callback(char* dst, const size_t buffer_size) {
     const char* word = "abcdefg1234567890";
     strncpy(dst, word, buffer_size);
@@ -193,7 +194,6 @@ size_t fuzzer_callback(char* dst, const size_t buffer_size) {
         return strlen(word)+1;
     }
 }
-
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     c_simplestring_ptr buffer = NULL;
     c_regex_ptr regex = NULL;
@@ -218,11 +218,12 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     c_regex_delete(regex);
   return 0;
 }
+ */
 #else
 int _tmain(int argc, _TCHAR* argv[]) {
-  c_simplestring_ptr buffer = NULL;
-  c_regex_ptr regex = NULL;
-  c_iterator_ptr iter = NULL;
+  c_simplestring_ptr buffer = 0;
+  c_regex_ptr regex = c_regex_none;
+  c_iterator_ptr iter = c_iterator_none;
   int retval = 0;
   const char* regex_str = NULL;
 #ifdef DEBUG_STATE
@@ -256,7 +257,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
 
   regex = c_regex_cb_mb(regex_str, callback, parser_error);
-  if (regex == NULL) {
+  if (regex == c_regex_none) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
     goto cleanup_and_exit;
@@ -269,7 +270,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
   }
 
   iter = c_regex_iterator(regex);
-  if (iter == NULL) {
+  if (iter == c_iterator_none) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;
     goto cleanup_and_exit;

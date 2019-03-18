@@ -31,14 +31,26 @@
 #include <vector>
 #include <cstdio>
 #include <memory>
+#include <sstream>
+#include <FlexLexer.h>
+
+namespace rexgen {
+  class RexgenParsingDriver;
+  class RexgenFlexLexer;
+  class RexgenParser;
+}
+
+
 namespace rexgen {
   class Regex;
 
-  class RexgenParserContext {
+  class RexgenParsingDriver {
   public:
-    RexgenParserContext(const char *input, const RexgenOptions &__options);
+    RexgenParsingDriver(const RexgenOptions &__options);
 
-    virtual ~RexgenParserContext();
+    int nextGroupId() { return groupId++; }
+
+    std::shared_ptr<rexgen::Regex> parse(const std::string& regex);
 
     void registerGroupReference(std::shared_ptr<GroupReference> gr);
 
@@ -75,13 +87,13 @@ namespace rexgen {
     std::shared_ptr<Regex> &getResult() {
       return result;
     }
+/*
+    inline bool hasNextChar() const { return (next_char != ascii_input.cend()); }
 
-    bool hasNextChar() const { return (next_char != wcinput.cend()); }
+    inline const char& getNextChar() const { ++next_wc_char; return *next_char++; };
 
-    wchar_t getNextChar();
-
-    wchar_t getCurrentChar() const { return current_char; }
-
+    inline wchar_t getCurrentChar() const { return current_char; }
+*/
     /** this is the handling of `\0` - terminals in the regex. the first occurance
      * of `\0` creates a StreamRegex and returns it, all following occurances
      * return a reference to the previously created StreamRegex.
@@ -93,24 +105,8 @@ namespace rexgen {
      */
     std::shared_ptr<Regex> getStreamRegex();
 
-  protected:
-    /**
-     * initialize the scanner. This method is implemented
-     * in regex_lexer.l
-     */
-    void InitScanner();
-
-    /**
-     * destroy the scanner and clean up the allocated memory.
-     * This method is implemented in regex_lexer.l
-     */
-    void DestroyScanner();
-
   private:
-    void *scanner;
-    std::vector<wchar_t> wcinput;
-    std::vector<wchar_t>::const_iterator next_char;
-    wchar_t current_char;
+
     std::shared_ptr<Regex> result;
 
     int groupId;
@@ -118,6 +114,8 @@ namespace rexgen {
     std::map<int, std::shared_ptr<std::set<std::shared_ptr<GroupReference>>>> groupRefs;
     std::map<int, std::weak_ptr<Regex>> groups;
     std::shared_ptr<StreamRegex> streamRegex;
+    std::shared_ptr<RexgenFlexLexer> scanner;
+    std::shared_ptr<RexgenParser> parser;
   };
 }
 #endif  // SRC_LIBREXGEN_PARSER_REXGENPARSERCONTEXT_H_

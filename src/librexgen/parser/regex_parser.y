@@ -1,15 +1,19 @@
-%locations
-%defines
-%error-verbose
-%require "3"
+%skeleton "lalr1.cc"
+%require "3.2"
 %language "c++"
+%defines
+%define parse.error verbose
+%define parse.assert
+%define parse.trace
 %define api.value.type variant
-%parse-param {rexgen::RexgenParserContext& context}
-%lex-param   {rexgen::RexgenParserContext& context}
-%{
+%define api.token.constructor
+%define api.namespace {rexgen}
+%define api.parser.class {RexgenParser}
+
+%code requires {
 /*
     rexgen - a tool to create words based on regular expressions    
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -25,8 +29,6 @@
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
-
-  #include <iostream>
   #include <librexgen/debug.h>
   #include <librexgen/regex/regex.h>
   #include <librexgen/regex/regexalternatives.h>
@@ -36,54 +38,54 @@
   #include <librexgen/regex/quantifier.h>
   #include <librexgen/regex/groupreference.h>
   #include <librexgen/regex/streamregex.h>
-  #include <librexgen/parser/rexgenparsercontext.h>
   #include <librexgen/osdepend.h>
   #include <librexgen/parser/syntaxerror.h>
-  #include "parser.hpp"
   #include <librexgen/parser/group_options.h>
   
   #include <cstdio>
   #include <memory>
-%}
+  #include <iostream>
+  namespace rexgen {
+    class RexgenParsingDriver;
+    class RexgenFlexLexer;
+  }
+}
+
+%parse-param {std::shared_ptr<rexgen::RexgenFlexLexer> scanner}
+%param       {rexgen::RexgenParsingDriver& driver}
+
+%code {
+  #include <librexgen/parser/rexgenparsingdriver.h>
+  #include <librexgen/parser/RexgenFlexLexer.h>
+  #include <librexgen/parser/syntaxerror.h>
+  #undef yylex
+  #define yylex scanner->rexgen_lex
+
+  namespace rexgen{
+    void RexgenParser::error(const std::string& message) {
+      throw SyntaxError(message);
+    }
+  }
+}
 
 %start T_RegexAlternatives
-/*
-%union {
-  wchar_t		character;
-  int 			integer;
-  t_group_options* group_options;
-  Regex* 		regex;
-  RegexAlternatives* regex_alternatives;
-  CompoundRegex* 	    compound_regex;
-  Quantifier* 		    quantifier;
-  ClassRegex* 		    class_regex;
-  TerminalRegex* 	    terminal_regex;
-  GroupReference*     group_reference;
 
-  // stream_regex may store a StreamRegex* or GroupReference*,
-  // see documentation of getStreamRegex for mor information
-  //
-  Regex*              stream_regex;
-
-}
-*/
-
-%token <wchar_t> T_PIPE
+%token           T_PIPE
 %token <wchar_t> T_ANY_CHAR
-%token <wchar_t> T_HYPHEN
-%token <wchar_t> T_BEGIN_QUANTIFIER
-%token <wchar_t> T_END_QUANTIFIER
-%token <wchar_t> T_OPTIONAL_QUANTIFIER
-%token <int>   T_NUMBER
-%token <int>   T_GROUPID
-%token <int>   T_STREAM
-%token <t_group_options> T_BEGIN_GROUP
-%token <wchar_t> T_END_GROUP
-%token <wchar_t> T_BEGIN_CLASS
-%token <wchar_t> T_END_CLASS
-%token <wchar_t> T_COMMA
+%token           T_HYPHEN
+%token           T_BEGIN_QUANTIFIER
+%token           T_END_QUANTIFIER
+%token           T_OPTIONAL_QUANTIFIER
+%token <int>     T_NUMBER
+%token <int>     T_GROUPID
+%token <int>     T_STREAM
+%token           T_END_GROUP
+%token           T_BEGIN_CLASS
+%token           T_END_CLASS
+%token           T_COMMA
 %token <wchar_t> T_CLASS_DIGIT
 %token <wchar_t> T_CLASS_WORD
+%token <std::shared_ptr<rexgen::t_group_options> > T_BEGIN_GROUP
 
 %type <std::shared_ptr<rexgen::RegexAlternatives>> T_RegexAlternatives
 %type <std::shared_ptr<rexgen::Regex>> CompoundRegex
@@ -109,8 +111,8 @@ T_RegexAlternatives:
       std::shared_ptr<rexgen::Regex> re = std::move($1);
       $$->addRegex(re);
       $$->setGroupId(0);
-      context.setResult($$);
-      context.updateAllGroupReferences();
+      driver.setResult($$);
+      driver.updateAllGroupReferences();
   };
 
 T_RegexAlternatives:
@@ -197,9 +199,10 @@ GroupRegex:
   {
     $$ = std::move($2);
     std::weak_ptr<rexgen::Regex> ptr = std::static_pointer_cast<rexgen::Regex>($$);
-    $$->setGroupOptions($1);
-    context.registerGroup(ptr);
-    context.updateGroupReferences(ptr);
+    auto go = $1;
+    $$->setGroupOptions(*(go));
+    driver.registerGroup(ptr);
+    driver.updateGroupReferences(ptr);
   };
 
 Quantifier:
@@ -215,15 +218,15 @@ Quantifier:
 
 GroupReference: T_GROUPID {
   $$ = std::make_shared<rexgen::GroupReference>($1);
-  context.registerGroupReference($$);
+  driver.registerGroupReference($$);
 };
 
 Stream: T_STREAM {
-  if (context.getInFile() == NULL && context.getStreamCallback() == NULL) {
-    throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.", @1.first_column);
+  if (driver.getInFile() == NULL && driver.getStreamCallback() == NULL) {
+    throw SyntaxError("You cannot use a stream reference without specifying a stream source or callback function.");
   }
-  $$ = context.getStreamRegex();
+  $$ = driver.getStreamRegex();
 };
 
 %%
-#include "scanner.cpp"
+

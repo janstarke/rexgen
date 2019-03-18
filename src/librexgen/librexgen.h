@@ -25,7 +25,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsercontext.h>
+#include <librexgen/parser/rexgenparsingdriver.h>
 #include <librexgen/config.h>
 
 EXPORT
@@ -35,8 +35,8 @@ EXPORT
 rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
 
 namespace rexgen {
-  class RexgenParserContext;
+  class RexgenParsingDriver;
 }
-rexgen::Regex* parse_regex(rexgen::RexgenParserContext* context);
+rexgen::Regex* parse_regex(rexgen::RexgenParsingDriver* context);
 
 #endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */

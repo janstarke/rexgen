@@ -21,6 +21,7 @@
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/regex.h>
 #include <librexgen/librexgen.h>
+#include <librexgen/c/ApiContext.h>
 #include <wchar.h>
 
 static const char* c_rexgen_last_error = NULL;
@@ -54,7 +55,7 @@ c_regex_ptr c_regex_cb_mb(
   options.stream_callback = cb;
   options.parser_error = parser_error;
 
-  return parse_regex(regex_str, options);
+  return ApiContext::instance().addRegex(parse_regex(regex_str, options));
 }
 
 EXPORT
@@ -65,20 +66,17 @@ c_regex_ptr c_regex_cb(
   CALLBACK_WCWRAPPER = cb;
   options.stream_callback = callback_wc_wrapper;
 
-  return parse_regex(regex_str, options);
+  return ApiContext::instance().addRegex(parse_regex(regex_str, options));
 }
 
 EXPORT
 void c_regex_delete(c_regex_ptr regex) {
-  if (regex != NULL) {
-    rexgen::Regex* re = static_cast<rexgen::Regex*>(regex);
-    delete re;
-  }
+  ApiContext::instance().deleteRegex(regex);
 }
 
 EXPORT
 int c_regex_uses_callback(c_regex_ptr i) {
-  return (reinterpret_cast<rexgen::Regex*>(i))->usesCallback();
+  return ApiContext::instance().getRegex(i)->usesCallback();
 }
 
 #ifdef __cplusplus

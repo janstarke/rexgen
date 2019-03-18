@@ -27,8 +27,6 @@
 #include <stdint.h>
 #include <wchar.h>
 
-typedef void* c_regex_ptr;
-
 /* callback to read multibyte strings */
 typedef size_t (*callback_fp_mb)(char* dst, const size_t buffer_size);
 

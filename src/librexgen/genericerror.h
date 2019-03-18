@@ -20,14 +20,19 @@
 #ifndef SRC_LIBREXGEN_GENERICERROR_H_
 #define SRC_LIBREXGEN_GENERICERROR_H_
 
+#include <string>
+
 class GenericError {
  public:
   explicit GenericError(const char* msg)
     : message(msg) {}
 
-  const char* getMessage() { return message; }
+  explicit GenericError(const std::string& msg)
+          : message(msg) {}
+
+  const char* getMessage() { return message.c_str(); }
  private:
-  const char* message;
+  const std::string message;
 };
 
 #endif  // SRC_LIBREXGEN_GENERICERROR_H_

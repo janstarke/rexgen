@@ -18,8 +18,7 @@
 */
 
 #include <librexgen/librexgen.h>
-#include <librexgen/parser/rexgenparsercontext.h>
-#include <librexgen/parser/RexgenParser.h>
+#include <librexgen/parser/rexgenparsingdriver.h>
 #include <librexgen/iterator/topiterator.h>
 #include <librexgen/parser/syntaxerror.h>
 #include <sstream>
@@ -28,17 +27,28 @@
 
 EXPORT
 std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options) {
-  std::unique_ptr<rexgen::RexgenParser> parser = std::make_unique<rexgen::RexgenParser>();
-  return parser->parse(regex, options);
+  rexgen::RexgenParsingDriver driver(options);
+
+  try {
+    return driver.parse(regex);
+  } catch (SyntaxError &exc) {
+    driver.handleParserError(exc.getMessage());
+    return nullptr;
+  }
+  if (driver.hasInvalidGroupReferences()) {
+    driver.handleParserError("This regular expression has an invalid back reference");
+    return nullptr;
+  }
+  return nullptr;
 }
 
 EXPORT
 rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
-  rexgen::Regex* re = parse_regex(regex, options);
+  std::shared_ptr<rexgen::Regex> re = parse_regex(regex, options);
   if (re == nullptr) {
     return nullptr;
   }
-  rexgen::Iterator* iter = new rexgen::TopIterator(re);
+  rexgen::Iterator* iter = new rexgen::TopIterator(re.get());
   // register regex alternatives
   iter->updateReferences(nullptr);
 

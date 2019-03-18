@@ -27,12 +27,19 @@
 #define CASE_IGNORE   0
 #define CASE_ITERATE  1
 
-struct t_group_options {
-  t_group_options()
-    : handle_case(CASE_IGNORE), group_id(-1) {}
-  int handle_case;
-  int group_id;
-};
+namespace rexgen {
 
+  struct t_group_options {
+    t_group_options(int gid)
+            : handle_case(CASE_IGNORE), group_id(gid) {}
+
+    t_group_options(int hc, int gid)
+            : handle_case(hc), group_id(gid) {}
+
+    int handle_case;
+    int group_id;
+  };
+
+}
 
 #endif /* SRC_LIBREXGEN_PARSER_GROUP_OPTIONS_H_ */

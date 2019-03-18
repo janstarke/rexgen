@@ -4,13 +4,14 @@ if(CMAKE_MAJOR_VERSION GREATER 2)
 endif(CMAKE_MAJOR_VERSION GREATER 2)
 project(${librexgen} CXX)
 
-find_package(BISON 2.3)
-find_package(FLEX 2.5)
+find_package(BISON 3.3 REQUIRED)
+find_package(FLEX 2.6 REQUIRED)
 include(CheckIncludeFiles)
 
 check_include_files("xlocale.h" HAVE_XLOCALE_H)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+include_directories("/usr/local/Cellar/flex/2.6.4/include/")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/..")
 
@@ -58,33 +59,35 @@ ADD_FLEX_BISON_DEPENDENCY(regexscanner regexparser)
 
 ADD_CUSTOM_TARGET(parser_target DEPENDS ${BISON_regexparser_OUTPUTS} ${FLEX_regexscanner_OUTPUTS})
 
-set(librexgen_sources
-  debug.cpp 
-  "${CMAKE_CURRENT_BINARY_DIR}/${librexgen}/version.cpp"
-  regex/compoundregex.cpp
-  regex/regexalternatives.cpp
-  regex/classregex.cpp
-  regex/regex.cpp
-  regex/terminalregex.cpp
-  regex/groupreference.cpp
-  regex/streamregex.cpp
-  iterator/iteratorpermuter.cpp
-  iterator/regexalternativesiterator.cpp
-  iterator/compoundregexiterator.cpp
-  iterator/groupreferenceiterator.cpp
-  iterator/streamregexiterator.cpp
-  iterator/caseiterator.cpp
-  state/serializablestate.cpp
-  string/simplestring.cpp
-  parser/rexgenparsercontext.cpp
-		parser/RexgenParser.cpp
-  librexgen.cpp
-  c/librexgen.cpp
-  c/iterator.cpp
-  c/simplestring.cpp
-)
+set(
+		librexgen_sources
+		debug.cpp
+		"${CMAKE_CURRENT_BINARY_DIR}/${librexgen}/version.cpp"
+		regex/compoundregex.cpp
+		regex/regexalternatives.cpp
+		regex/classregex.cpp
+		regex/regex.cpp
+		regex/terminalregex.cpp
+		regex/groupreference.cpp
+		regex/streamregex.cpp
+		iterator/iteratorpermuter.cpp
+		iterator/regexalternativesiterator.cpp
+		iterator/compoundregexiterator.cpp
+		iterator/groupreferenceiterator.cpp
+		iterator/streamregexiterator.cpp
+		iterator/caseiterator.cpp
+		state/serializablestate.cpp
+		string/simplestring.cpp
+		parser/rexgenparsingdriver.cpp
+		parser/RexgenFlexLexer.cpp
+		librexgen.cpp
+		c/librexgen.cpp
+		c/iterator.cpp
+		c/simplestring.cpp
+		${CMAKE_CURRENT_BINARY_DIR}/scanner.cpp
+		)
 set(parser_sources
-  ${BISON_regexparser_OUTPUTS} parser/RexgenParser.cpp parser/RexgenParser.h)
+  ${BISON_regexparser_OUTPUTS} )
 set(CPPCHECK_SUPPRESS ${parser_sources})
 
 if (CMAKE_BUILD_TYPE MATCHES PROFILE)

@@ -27,12 +27,11 @@
 #include <librexgen/c/simplestring.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/common/deprecated.h>
+#include <librexgen/c/ApiContext.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef void* c_iterator_ptr;
 
 EXPORT
 c_iterator_ptr c_regex_iterator(c_regex_ptr regex);
