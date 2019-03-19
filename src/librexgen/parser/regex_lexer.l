@@ -77,8 +77,8 @@ MULTIBYTE_CHARACTER  \xFE
 {ESCAPED}                  {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[1]));}
 {LINEFEED}                 {                          return RexgenParser::make_T_ANY_CHAR(btowc('\n')); }
 {CARRIAGERETURN}           {                          return RexgenParser::make_T_ANY_CHAR(btowc('\r')); }
-{CLASS_DIGIT}	           {                          return RexgenParser::make_T_ANY_CHAR(0); }
-{CLASS_WORD}               {                          return RexgenParser::make_T_ANY_CHAR(0); }
+{CLASS_DIGIT}	           {                          return RexgenParser::make_T_CLASS_DIGIT(); }
+{CLASS_WORD}               {                          return RexgenParser::make_T_CLASS_WORD(); }
 "|"                        {                          return RexgenParser::make_T_PIPE(); }
 "["                        { BEGIN(IN_CLASS);         return RexgenParser::make_T_BEGIN_CLASS(); }
 "]"                        { BEGIN(INITIAL);          return RexgenParser::make_T_END_CLASS(); }

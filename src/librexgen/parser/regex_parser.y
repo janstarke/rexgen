@@ -84,8 +84,8 @@
 %token           T_BEGIN_CLASS
 %token           T_END_CLASS
 %token           T_COMMA
-%token <wchar_t> T_CLASS_DIGIT
-%token <wchar_t> T_CLASS_WORD
+%token           T_CLASS_DIGIT
+%token           T_CLASS_WORD
 %token <std::shared_ptr<rexgen::t_group_options> > T_BEGIN_GROUP
 
 %type <std::shared_ptr<rexgen::RegexAlternatives>> T_RegexAlternatives
