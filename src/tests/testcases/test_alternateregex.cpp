@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,25 +17,10 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef SRC_LIBREXGEN_LIBREXGEN_H_
-#define SRC_LIBREXGEN_LIBREXGEN_H_
+#include "gtest/gtest.h"
+#include "../utils.h"
 
-#include <librexgen/c/librexgen.h>
-#include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/osdepend.h>
-#include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsingdriver.h>
 
-EXPORT
-std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
-
-EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
-
-namespace rexgen {
-  class RexgenParsingDriver;
-}
-rexgen::Regex* parse_regex(rexgen::RexgenParsingDriver* context);
-
-#endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */
+TEST(AlternateIteratorTest, TestAlternate1) {validateRegex("a|b",         2); }
+TEST(AlternateIteratorTest, TestAlternate2) {validateRegex("a|b|99",      3); }
+TEST(AlternateIteratorTest, TestAlternate3) {validateRegex("([a-b])test([0-1]|[g-h])", 8); }

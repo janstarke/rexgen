@@ -1,5 +1,0 @@
-simple:test[0-9]:10
-alternatives1:([a-b])test([0-1]|[g-h]):8
-class1:([a-b])test([0-1g-h]):8
-case1:(?i:abc):8
-case2:(?i:[abc])-[pP]:12

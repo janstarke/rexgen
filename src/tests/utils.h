@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,25 +17,21 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef SRC_LIBREXGEN_LIBREXGEN_H_
-#define SRC_LIBREXGEN_LIBREXGEN_H_
+#ifndef TESTS_UTILS_H
 
-#include <librexgen/c/librexgen.h>
-#include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/osdepend.h>
+#include "gtest/gtest.h"
+#include <librexgen/librexgen.h>
 #include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsingdriver.h>
+#include <librexgen/regex/classregex.h>
+#include <librexgen/iterator/classregexiterator.h>
+#include <set>
+#include <pcrecpp.h>
 
-EXPORT
-std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
+#define TESTS_UTILS_H
 
-EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
+void validateRegex(const char* input_regex,
+                   const size_t nValues);
+void validateFailure(const char* input_regex);
+bool matches(const char* value, const char* regex);
 
-namespace rexgen {
-  class RexgenParsingDriver;
-}
-rexgen::Regex* parse_regex(rexgen::RexgenParsingDriver* context);
-
-#endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */
+#endif /* TESTS_UTILS_H */

@@ -6,7 +6,6 @@ project(rexgen_root)
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-include (cmake/testing.cmake)
 #include (cmake/doxygen.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
@@ -36,6 +35,7 @@ endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
   MESSAGE(STATUS "USING DEBUG MODE")
   ADD_DEFINITIONS("-DREXGEN_DEBUG=0" "-DDEBUG"  "-O0" "-g")
+  enable_testing()
 
 elseif(CMAKE_BUILD_TYPE MATCHES PROFILE)
   MESSAGE(STATUS "USING PROFILE MODE")
@@ -68,5 +68,6 @@ endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
+add_subdirectory(tests)
 
 #include (cmake/ctags.cmake)

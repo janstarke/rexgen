@@ -6,9 +6,13 @@ project(${librexgen} CXX)
 
 find_package(BISON 3.3 REQUIRED)
 find_package(FLEX 2.6 REQUIRED)
-include(CheckIncludeFiles)
 
+include(CheckIncludeFiles)
 check_include_files("xlocale.h" HAVE_XLOCALE_H)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(HAVE_XLOCALE_H 1)
+	add_definitions("-DHAVE_XLOCALE_H=1")
+endif()
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 include_directories("/usr/local/Cellar/flex/2.6.4/include/")

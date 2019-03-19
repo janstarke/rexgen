@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,25 +17,12 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef SRC_LIBREXGEN_LIBREXGEN_H_
-#define SRC_LIBREXGEN_LIBREXGEN_H_
+#include "gtest/gtest.h"
+#include "../utils.h"
 
-#include <librexgen/c/librexgen.h>
-#include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iterator.h>
-#include <librexgen/osdepend.h>
-#include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsingdriver.h>
-
-EXPORT
-std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
-
-EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
-
-namespace rexgen {
-  class RexgenParsingDriver;
-}
-rexgen::Regex* parse_regex(rexgen::RexgenParsingDriver* context);
-
-#endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */
+TEST(CaseIteratorTest, TestCases01) {validateRegex("(?i:abc)",         8);}
+TEST(CaseIteratorTest, TestCases02) {validateRegex("(?i:a(?i:bc))",2*2*8);}
+TEST(CaseIteratorTest, TestCases03) {validateRegex("(?i:[abc])-[pP]", 12);}
+TEST(CaseIteratorTest, TestCases04) {validateFailure("(?i:abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde)");}
+TEST(CaseIteratorTest, TestCases05) {validateRegex(  "(?i:a1234567890123456789012345678901234567890123456789012345678901234)", 2);}
+TEST(CaseIteratorTest, TestCases06) {validateRegex("(?i:[123]abc){3}", 3*3*3*8*8*8);}
