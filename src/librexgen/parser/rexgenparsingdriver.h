@@ -84,7 +84,7 @@ namespace rexgen {
       assert(this->result != nullptr);
     }
 
-    std::shared_ptr<Regex> &getResult() {
+    std::shared_ptr<Regex> getResult() {
       return result;
     }
 /*

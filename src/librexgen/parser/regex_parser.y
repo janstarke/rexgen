@@ -5,6 +5,7 @@
 %define parse.error verbose
 %define parse.assert
 %define parse.trace
+%debug
 %define api.value.type variant
 %define api.token.constructor
 %define api.namespace {rexgen}

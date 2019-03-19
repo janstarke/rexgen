@@ -55,7 +55,12 @@ c_regex_ptr c_regex_cb_mb(
   options.stream_callback = cb;
   options.parser_error = parser_error;
 
-  return ApiContext::instance().addRegex(parse_regex(regex_str, options));
+  auto regex = parse_regex(regex_str, options);
+  if (regex == nullptr) {
+    return c_regex_none;
+  }
+
+  return ApiContext::instance().addRegex(regex);
 }
 
 EXPORT
@@ -76,7 +81,9 @@ void c_regex_delete(c_regex_ptr regex) {
 
 EXPORT
 int c_regex_uses_callback(c_regex_ptr i) {
-  return ApiContext::instance().getRegex(i)->usesCallback();
+  auto r = ApiContext::instance().getRegex(i);
+  assert (r != nullptr);
+  return r->usesCallback();
 }
 
 #ifdef __cplusplus

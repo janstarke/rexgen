@@ -42,12 +42,9 @@ namespace rexgen {
   }
 
   int RexgenFlexLexer::LexerInput( char* buf, int max_size ) {
-    int size = 0;
-    while (max_size-- > 0 && content_ptr != content.cend()) {
-      *buf++ = *content_ptr++;
-      ++size;
-    }
-    return size;
+    int res = content.copy(buf, max_size);
+    content.erase(content.begin(), content.begin()+res);
+    return res;
   }
 
   RexgenParser::symbol_type RexgenFlexLexer::beginGroupWithOptions(RexgenParsingDriver& driver) const {

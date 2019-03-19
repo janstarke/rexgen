@@ -30,6 +30,7 @@
 %option c++
 %option noyywrap
 %option nounput
+%option debug
 %option yyclass="rexgen::RexgenFlexLexer"
 
 %{

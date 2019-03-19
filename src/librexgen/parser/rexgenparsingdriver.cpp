@@ -39,8 +39,11 @@ namespace rexgen {
   std::shared_ptr<rexgen::Regex> RexgenParsingDriver::parse(const std::string& regex) {
     scanner = std::make_shared<RexgenFlexLexer>(regex);
     parser = std::make_shared<RexgenParser>(scanner, *this);
-    parser->parse();
-    return nullptr;
+    if (0 == parser->parse()) {
+      return getResult();
+    } else {
+      return nullptr;
+    }
   }
 
 /**
