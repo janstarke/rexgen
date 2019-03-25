@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <map>
 #include <cstddef>
+#include <iostream>
 
 using std::size_t;
 
@@ -53,16 +54,10 @@ SerializableState::SerializableState(const SerializableState::stateword_t* vptr,
   size = *vptr++;
   ++(*words);
   while (size > 0) {
-    addValue(new SerializableState(vptr, &consumed_words));
+    addValue(std::make_shared<SerializableState>(vptr, &consumed_words));
     --size;
     (*words) += consumed_words;
     vptr += consumed_words;
-  }
-}
-
-SerializableState::~SerializableState() {
-  for (auto i : childStates) {
-    delete i.second;
   }
 }
 
@@ -70,7 +65,8 @@ void SerializableState::addValue(SerializableState::stateword_t value) {
   values.push_back(value);
 }
 
-void SerializableState::addValue(const SerializableState* state) {
+void SerializableState::addValue(const std::shared_ptr<SerializableState>& state) {
+  assert(childStates.find(state->getIteratorId()) == childStates.cend());
   childStates[state->getIteratorId()] = state;
 }
 
@@ -78,14 +74,14 @@ SerializableState::stateword_t SerializableState::getValue(int idx) const {
   return values[idx];
 }
 
-const SerializableState* SerializableState::getChildState(int id) const {
+std::shared_ptr<SerializableState> SerializableState::getChildState(int id) const {
   auto iter = childStates.find(id);
   if (iter != childStates.end()) {
     return iter->second;
   }
-  return NULL;
+  return nullptr;
 }
-
+/*
 size_t SerializableState::getValuesCount() const {
   return values.size();
 }
@@ -93,8 +89,8 @@ size_t SerializableState::getValuesCount() const {
 size_t SerializableState::getChildStatesCount() const {
   return childStates.size();
 }
-
-void SerializableState::serialize(vector<stateword_t>* dst) const {
+*/
+void SerializableState::serialize(std::shared_ptr<std::vector<SerializableState::stateword_t>>& dst) const {
   /* iterator id */
   dst->push_back(iterator_id);
   /* state of the iterator (resetted, usable, etc) */
@@ -111,5 +107,6 @@ void SerializableState::serialize(vector<stateword_t>* dst) const {
   for (auto i : childStates) {
     i.second->serialize(dst);
   }
+
 }
 

@@ -65,7 +65,7 @@ namespace rexgen {
       return regexObjects[0]->iterator(state);
     }
 
-    CompoundRegexIterator *cri = new CompoundRegexIterator(getId());
+    CompoundRegexIterator *cri = new CompoundRegexIterator();
     std::for_each(regexObjects.begin(), regexObjects.end(),
             [&cri,&state](const std::shared_ptr<Regex>& r) {cri->addChild(r->iterator(state));});
     return cri;
@@ -77,8 +77,7 @@ namespace rexgen {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         return re->iterator(state);
       } else {
-        return new IteratorPermuter(
-                re->getId(), re.get(), state, getMinOccurs(), getMaxOccurs());
+        return new IteratorPermuter(re.get(), state, getMinOccurs(), getMaxOccurs());
       }
     }
     return RegexContainer::iterator(state);

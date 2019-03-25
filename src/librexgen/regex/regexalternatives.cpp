@@ -27,7 +27,7 @@ namespace rexgen {
       return regexObjects[0]->iterator(state);
     }
 
-    RegexAlternativesIterator *rai = new RegexAlternativesIterator(getId());
+    RegexAlternativesIterator *rai = new RegexAlternativesIterator();
     for (const std::shared_ptr<Regex>& i : regexObjects) {
       rai->addChild(i->iterator(state));
     }
@@ -47,8 +47,7 @@ namespace rexgen {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         iter = re->iterator(state);
       } else {
-        iter = new IteratorPermuter(
-                re->getId(), re.get(), state, getMinOccurs(), getMaxOccurs());
+        iter = new IteratorPermuter(re.get(), state, getMinOccurs(), getMaxOccurs());
       }
     } else {
       iter = RegexContainer::iterator(state);

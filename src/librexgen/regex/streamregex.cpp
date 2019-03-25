@@ -28,15 +28,14 @@ namespace rexgen {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     } else {
-      return new IteratorPermuter(
-              getId(), this, state, getMinOccurs(), getMaxOccurs());
+      return new IteratorPermuter(this, state, getMinOccurs(), getMaxOccurs());
     }
   }
 
   Iterator *StreamRegex::singleIterator(IteratorState *state) const {
     StreamRegexIterator *iter = state->getStreamIterator();
     if (iter == NULL) {
-      iter = new StreamRegexIterator(getId(), callback);
+      iter = new StreamRegexIterator(callback);
       state->setStreamIterator(iter);
     }
     return iter;

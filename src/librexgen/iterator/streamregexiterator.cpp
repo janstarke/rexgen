@@ -29,13 +29,13 @@ namespace rexgen {
     }
   }
 
-  SerializableState *StreamRegexIterator::getCurrentState() const {
-    SerializableState *s = Iterator::getCurrentState();
+  std::shared_ptr<SerializableState> StreamRegexIterator::getCurrentState() const {
+    auto s = Iterator::getCurrentState();
     s->addValue(0);
     return s;
   }
 
-  void StreamRegexIterator::setCurrentState(const SerializableState *s) {
+  void StreamRegexIterator::setCurrentState(const std::shared_ptr<SerializableState>& s) {
     Iterator::setCurrentState(s);
     // fseek(infile, s->getValue(0), SEEK_SET);
   }

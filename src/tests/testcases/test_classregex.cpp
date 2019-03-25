@@ -27,14 +27,16 @@
 #include <pcrecpp.h>
 
 TEST(ClassIteratorTest, TestEmptyIterator) {
-  rexgen::Iterator* iter = new rexgen::ClassRegexIterator(1, (const wchar_t*) L"", 0);
+  std::wstring wstr(L"");
+  rexgen::Iterator* iter = new rexgen::ClassRegexIterator(wstr.cbegin(), wstr.cend());
   ASSERT_FALSE(iter->next());
   ASSERT_FALSE(iter->next());
   delete iter;
 }
 
 TEST(ClassIteratorTest, TestIteratorWithOneElement) {
-  rexgen::Iterator* iter = new rexgen::ClassRegexIterator(1, (const wchar_t*) L"a", 1);
+  std::wstring wstr(L"a");
+  rexgen::Iterator* iter = new rexgen::ClassRegexIterator(wstr.cbegin(), wstr.cend());
   SimpleString str;
   iter->value(&str);
   ASSERT_STREQ(str.c_str(), "");

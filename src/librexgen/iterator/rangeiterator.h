@@ -25,8 +25,8 @@ namespace rexgen {
   template<char __MIN, char __MAX>
   class RangeIterator : public Iterator {
   public:
-    explicit RangeIterator(int _id)
-            : Iterator(_id), current(__MIN - 1), minimum(__MIN), maximum(__MAX) {}
+    explicit RangeIterator()
+            : Iterator(), current(__MIN - 1), minimum(__MIN), maximum(__MAX) {}
 
     void value(SimpleString *dst) const {
       dst->push_back(static_cast<const byte_t>(current));

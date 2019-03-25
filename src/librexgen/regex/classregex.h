@@ -30,6 +30,7 @@
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <vector>
+#include <set>
 #include <memory>
 
 namespace rexgen {
@@ -44,13 +45,12 @@ namespace rexgen {
       SPACES
     } CharacterClassType;
 
-    ClassRegex() : requires_multibyte(false) {}
 
     void addCharacter(const wchar_t &ch);
 
-    void addRange(const wchar_t &a, const wchar_t &b);
+    void addRange(const wchar_t& a, const wchar_t& b);
 
-    void addRange(CharacterClassType ct);
+    void addRange(CharacterClassType ct) { ranges.insert(ct); minimize();}
 
     bool contains(const wchar_t &ch) const;
 
@@ -61,41 +61,12 @@ namespace rexgen {
     Iterator *singleIterator(IteratorState * /* state */) const;
 
   private:
-    void __insert_character(const wchar_t &ch);
+    void removeCharacterInstances(const wchar_t min, const wchar_t max);
+    void removeCharacterInstances(CharacterClassType ct);
+    void minimize();
 
-    void __append_character(const wchar_t &ch);
-
-    void removeCharacterInstances(const wchar_t &ch);
-
-    void removeCharacterInstances(const wchar_t &min, const wchar_t &max);
-
-    void removeCharacterInstances(CharacterClassType ct) {
-      switch (ct) {
-        case DIGITS:
-          removeCharacterInstances(L'0', L'9');
-          break;
-        case UPPERCASE:
-          removeCharacterInstances(L'A', L'Z');
-          break;
-        case LOWERCASE:
-          removeCharacterInstances(L'a', L'z');
-          break;
-        case WORDCHARACTERS:
-          removeCharacterInstances(DIGITS);
-          removeCharacterInstances(UPPERCASE);
-          removeCharacterInstances(LOWERCASE);
-          removeCharacterInstances(L'_');
-          break;
-        case SPACES:
-          removeCharacterInstances(L' ');
-          removeCharacterInstances(L'\t');
-          break;
-      }
-    }
-
-    std::vector<wchar_t> characters;
-    std::vector<CharacterClassType> ranges;
-    bool requires_multibyte;
+    std::set<wchar_t> characters;
+    std::set<CharacterClassType> ranges;
   };
 }
 #endif  // SRC_LIBREXGEN_REGEX_CLASSREGEX_H_

@@ -23,15 +23,24 @@
 namespace rexgen {
 
   void ClassRegex::merge(const std::shared_ptr<ClassRegex>& other) {
-    for (auto i = other->characters.crbegin();
-         i != other->characters.crend();
-         ++i) {
-      addCharacter(*i);
+    characters.insert(other->characters.cbegin(), other->characters.end());
+    ranges.insert(other->ranges.cbegin(), other->ranges.end());
+    minimize();
+  }
+
+  void ClassRegex::minimize() {
+    if (ranges.find(WORDCHARACTERS) != ranges.end()) {
+      ranges.erase(UPPERCASE);
+      ranges.erase(LOWERCASE);
+      ranges.erase(DIGITS);
     }
 
-    for (CharacterClassType ct : other->ranges) {
-      addRange(ct);
-    }
+    /* ranges are faster than single characters, so prefer ranges */
+    if (ranges.find(WORDCHARACTERS) != ranges.end()) { removeCharacterInstances(WORDCHARACTERS); }
+    if (ranges.find(UPPERCASE) != ranges.end())      { removeCharacterInstances(UPPERCASE); }
+    if (ranges.find(LOWERCASE) != ranges.end())      { removeCharacterInstances(LOWERCASE); }
+    if (ranges.find(DIGITS) != ranges.end())         { removeCharacterInstances(DIGITS); }
+    if (ranges.find(SPACES) != ranges.end())         { removeCharacterInstances(SPACES); }
   }
 
   bool ClassRegex::contains(const wchar_t &ch) const {
@@ -39,143 +48,125 @@ namespace rexgen {
                       ch) != characters.end());
   }
 
-  void ClassRegex::__append_character(const wchar_t &ch) {
-    removeCharacterInstances(ch);
-    characters.push_back(ch);
-    if (ch > 0x80) {
-      requires_multibyte = true;
+  void ClassRegex::removeCharacterInstances(const wchar_t min, const wchar_t max) {
+    for (auto iter = characters.begin(); iter != characters.end();) {
+      if ((min <= *iter) && (*iter <= max)) {
+        iter = characters.erase(iter);
+      } else {
+        ++iter;
+      }
     }
   }
 
-  void ClassRegex::__insert_character(const wchar_t &ch) {
-    removeCharacterInstances(ch);
-    characters.insert(characters.begin(), ch);
-  }
-
-  void ClassRegex::removeCharacterInstances(const wchar_t &ch) {
-    auto match_fct = [&ch](const wchar_t &x) {
-      return x == ch;
-    };
-
-    characters.erase(
-            std::remove_if(characters.begin(), characters.end(), match_fct),
-            characters.end());
-  }
-
-  void ClassRegex::removeCharacterInstances(
-          const wchar_t &min, const wchar_t &max) {
-    auto match_fct = [&min, &max](const wchar_t &x) {
-      return (min <= x) && (x <= max);
-    };
-
-    characters.erase(
-            std::remove_if(characters.begin(), characters.end(), match_fct),
-            characters.end());
-  }
-
   void ClassRegex::addCharacter(const wchar_t &ch) {
-    __insert_character(ch);
+    characters.insert(ch);
+    minimize();
   }
 
   void ClassRegex::addRange(const wchar_t &uch_a, const wchar_t &uch_b) {
     if (uch_a == L'0' && uch_b == L'9') {
-      ranges.push_back(DIGITS);
+      ranges.insert(DIGITS);
     } else if (uch_a == L'A' && uch_b == L'Z') {
-      ranges.push_back(UPPERCASE);
+      ranges.insert(UPPERCASE);
     } else if (uch_a == L'a' && uch_b == L'z') {
-      ranges.push_back(LOWERCASE);
+      ranges.insert(LOWERCASE);
     } else {
-      wchar_t a = uch_a;
-      int diff = +1;
-
-      if (a > uch_b) {
-        diff = -1;
-      }
-
-      while (a != uch_b + diff) {
-        __append_character(a);
-        a += diff;
+      for (wchar_t a = uch_a; a<= uch_b; ++a) {
+        addCharacter(a);
       }
     }
+
+    minimize();
   }
 
-  void ClassRegex::addRange(CharacterClassType ct) {
-    for (CharacterClassType classType : ranges) {
-      if (classType == ct) { /* nothing to do*/
-        return;
-      }
-
-      if (classType == WORDCHARACTERS) {
-        if (ct == DIGITS || ct == UPPERCASE || ct == LOWERCASE) {
-          return;
-        }
-      }
+  void ClassRegex::removeCharacterInstances(CharacterClassType ct) {
+    switch (ct) {
+      case DIGITS:
+        removeCharacterInstances(L'0', L'9');
+        break;
+      case UPPERCASE:
+        removeCharacterInstances(L'A', L'Z');
+        break;
+      case LOWERCASE:
+        removeCharacterInstances(L'a', L'z');
+        break;
+      case WORDCHARACTERS:
+        removeCharacterInstances(L'0', L'9');
+        removeCharacterInstances(L'A', L'Z');
+        removeCharacterInstances(L'a', L'z');
+        characters.erase(L'_');
+        break;
+      case SPACES:
+        characters.erase(L' ');
+        characters.erase(L'\t');
+        break;
     }
-    ranges.push_back(ct);
-    removeCharacterInstances(ct);
   }
 
   Iterator *ClassRegex::singleIterator(IteratorState * /* state */) const {
     Iterator *single = NULL;
 
-    if (characters.size() == 1 && ranges.size() == 0) {
-      return new ClassRegexIterator(getId(), &characters[0], characters.size());
-    } else if (characters.size() == 0 && ranges.size() == 1) {
-      switch (ranges[0]) {
+    if (ranges.size() == 0) {
+      return new ClassRegexIterator(characters.begin(), characters.end());
+    }
+
+    assert (ranges.size() > 0);
+
+    if (characters.size() == 0 && ranges.size() == 1) {
+      /* we have exactly one single range */
+      switch (*(ranges.begin())) {
         case DIGITS:
-          return new RangeIterator<'0', '9'>(getId());
+          return new RangeIterator<'0', '9'>();
         case UPPERCASE:
-          return new RangeIterator<'A', 'Z'>(getId());
+          return new RangeIterator<'A', 'Z'>();
         case LOWERCASE:
-          return new RangeIterator<'a', 'z'>(getId());
+          return new RangeIterator<'a', 'z'>();
         case WORDCHARACTERS: {
-          auto child = new RegexAlternativesIterator(getId());
-          child->addChild(new RangeIterator<'0', '9'>(getId()));
-          child->addChild(new RangeIterator<'a', 'z'>(getId()));
-          child->addChild(new RangeIterator<'A', 'Z'>(getId()));
-          child->addChild(new TerminalRegexIterator(getId(), L"_", 1));
+          auto child = new RegexAlternativesIterator();
+          child->addChild(new RangeIterator<'0', '9'>());
+          child->addChild(new RangeIterator<'a', 'z'>());
+          child->addChild(new RangeIterator<'A', 'Z'>());
+          child->addChild(new TerminalRegexIterator(L"_", 1));
           return child;
         }
         case SPACES:
-          return new ClassRegexIterator(getId(), L" \t", 2);
-        default:
-          return NULL;
+          const std::wstring wstr(L" \t");
+          return new ClassRegexIterator(wstr.cbegin(), wstr.cend());
       }
     } else { /* we must combine at least two different iterators */
-      RegexAlternativesIterator *child = new RegexAlternativesIterator(getId());
+      RegexAlternativesIterator *child = new RegexAlternativesIterator();
       single = child;
       if (characters.size() > 0) {
-        child->addChild(new ClassRegexIterator(
-                getId(), &characters[0], characters.size()));
+        child->addChild(new ClassRegexIterator(characters.cbegin(), characters.cend()));
       }
       for (CharacterClassType classType : ranges) {
         switch (classType) {
           case DIGITS:
-            child->addChild(new RangeIterator<'0', '9'>(getId()));
+            child->addChild(new RangeIterator<'0', '9'>());
             break;
 
           case UPPERCASE:
-            child->addChild(new RangeIterator<'A', 'Z'>(getId()));
+            child->addChild(new RangeIterator<'A', 'Z'>());
             break;
 
           case LOWERCASE:
-            child->addChild(new RangeIterator<'a', 'z'>(getId()));
+            child->addChild(new RangeIterator<'a', 'z'>());
             break;
 
           case WORDCHARACTERS: {
-            child->addChild(new RangeIterator<'0', '9'>(getId()));
-            child->addChild(new RangeIterator<'a', 'z'>(getId()));
-            child->addChild(new RangeIterator<'A', 'Z'>(getId()));
-            child->addChild(new TerminalRegexIterator(getId(), L"_", 1));
+            child->addChild(new RangeIterator<'0', '9'>());
+            child->addChild(new RangeIterator<'a', 'z'>());
+            child->addChild(new RangeIterator<'A', 'Z'>());
+            child->addChild(new TerminalRegexIterator(L"_", 1));
             break;
           }
           case SPACES:
-            child->addChild(new ClassRegexIterator(getId(), L" \t", 2));
+            const std::wstring wstr(L" \t");
+            child->addChild(new ClassRegexIterator(wstr.cbegin(), wstr.cend()));
             break;
         }
       }
     }
-
     return single;
   }
 }

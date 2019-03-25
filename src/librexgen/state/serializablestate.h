@@ -26,6 +26,7 @@
 #include <vector>
 #include <map>
 #include <cstddef>
+#include <memory>
 
 using std::map;
 using std::vector;
@@ -36,24 +37,23 @@ class SerializableState {
   typedef int32_t stateword_t;
   explicit SerializableState(stateword_t id, stateword_t state);
   SerializableState(const stateword_t* vptr, size_t* words);
-  ~SerializableState();
-  void serialize(vector<stateword_t>* dst) const;
-  int getIteratorId() const { return iterator_id; }
-  void setIteratorId(stateword_t id) { iterator_id = id; }
+  void serialize(std::shared_ptr<std::vector<SerializableState::stateword_t>>& dst) const;
+  uintptr_t getIteratorId() const { return iterator_id; }
+  //void setIteratorId(stateword_t id) { iterator_id = id; }
   int getStateEnum() const { return stateEnum; }
-  void setStateEnum(stateword_t state) { stateEnum = state; }
+  //void setStateEnum(stateword_t state) { stateEnum = state; }
 
   void addValue(stateword_t value);
-  void addValue(const SerializableState* state);
+  void addValue(const std::shared_ptr<SerializableState>& state);
   stateword_t getValue(int idx) const;
-  const SerializableState* getChildState(int id) const;
-  size_t getValuesCount() const;
-  size_t getChildStatesCount() const;
+  std::shared_ptr<SerializableState> getChildState(int id) const;
+  //size_t getValuesCount() const;
+  //size_t getChildStatesCount() const;
  private:
   stateword_t iterator_id;
   stateword_t stateEnum;
   vector<stateword_t> values;
-  map<int, const SerializableState*> childStates;
+  map<int, std::shared_ptr<SerializableState>> childStates;
 };
 
 #endif /* __cplusplus */

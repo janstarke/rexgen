@@ -26,6 +26,7 @@
 #include <librexgen/osdepend.h>
 #include <librexgen/state/serializablestate.h>
 #include <librexgen/state/invaliditeratoridexception.h>
+#include <memory>
 
 #ifdef __cplusplus
 namespace rexgen {
@@ -33,9 +34,11 @@ namespace rexgen {
 
   class Iterator {
   public:
-    explicit Iterator(int _id) :
+
+    explicit Iterator() :
             state(resetted),
-            id(_id) {}
+            id (reinterpret_cast<uintptr_t>(this)) {
+    }
 
     virtual ~Iterator() {}
 
@@ -47,7 +50,7 @@ namespace rexgen {
 
     virtual bool canUseValue() const { return (state == usable); }
 
-    int getId() const { return id; }
+    uintptr_t getId() const { return id; }
 
     virtual int getState() const { return state; }
 
@@ -67,14 +70,11 @@ namespace rexgen {
 
     virtual bool isSingleton() const { return false; }
 
-    virtual SerializableState *getCurrentState() const {
-      return new SerializableState(getId(), getState());
+    virtual std::shared_ptr<SerializableState> getCurrentState() const {
+      return std::make_shared<SerializableState>(getId(), getState());
     }
 
-    virtual void setCurrentState(const SerializableState *s) {
-      if (getId() != s->getIteratorId()) {
-        throw InvalidIteratorIdException();
-      }
+    virtual void setCurrentState(const std::shared_ptr<SerializableState>& s) {
       setState(s->getStateEnum());
     }
 
@@ -86,7 +86,7 @@ namespace rexgen {
     } state;
 
   private:
-    const int id;
+    const uintptr_t id;
   };
 }
 #endif /* __cplusplus */

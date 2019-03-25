@@ -118,13 +118,13 @@ void c_iterator_delete(c_iterator_ptr i) {
 
 EXPORT
 void c_iterator_get_state(c_iterator_ptr i, char** dstptr) {
-  vector<SerializableState::stateword_t> dst;
-  SerializableState* state = ApiContext::instance().getIterator(i)->getCurrentState();
-  state->serialize(&dst);
+  auto dst = std::make_shared<vector<SerializableState::stateword_t>>();
+  auto state = ApiContext::instance().getIterator(i)->getCurrentState();
+  state->serialize(dst);
   std::string sDst = "RXS" JS_REGEX_RELEASE;
   char cpTmp[18];
-  for (unsigned n = 0; n < dst.size(); ++n) {
-    snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", dst[n]);
+  for (auto d: *dst) {
+    snprintf(cpTmp, sizeof(cpTmp)/sizeof(cpTmp[0]), ",%d", d);
     sDst += cpTmp;
   }
   *dstptr = static_cast<char*>(malloc(sDst.length()+1));
@@ -162,10 +162,9 @@ void c_iterator_set_state(c_iterator_ptr i, char* srcptr) {
     sscanf(cp, ",%d", &stp[count++]);
     cp = strchr(cp+1, ',');
   }
-  SerializableState* state = new SerializableState(
+  auto state = std::make_shared<SerializableState>(
     (SerializableState::stateword_t*)stp, &words);
   ApiContext::instance().getIterator(i)->setCurrentState(state);
-  delete state;
 }
 
 #ifdef __cplusplus

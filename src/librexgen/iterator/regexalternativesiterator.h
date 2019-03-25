@@ -31,7 +31,7 @@
 namespace rexgen {
   class RegexAlternativesIterator : public IteratorContainer {
   public:
-    explicit RegexAlternativesIterator(int id);
+    explicit RegexAlternativesIterator();
 
     bool next();
 
@@ -43,9 +43,9 @@ namespace rexgen {
 
     void addChild(Iterator *re);
 
-    SerializableState *getCurrentState() const;
+    std::shared_ptr<SerializableState> getCurrentState() const;
 
-    void setCurrentState(const SerializableState *state);
+    void setCurrentState(const std::shared_ptr<SerializableState>& state);
 
   private:
     bool canUseValue() const;

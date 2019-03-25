@@ -21,9 +21,9 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <set>
 namespace rexgen {
-  IteratorPermuter::IteratorPermuter(int _id, const Regex *re, IteratorState *is,
+  IteratorPermuter::IteratorPermuter(const Regex *re, IteratorState *is,
                                      unsigned int min, unsigned int max)
-          : IteratorContainer(_id), min_occurs(min), max_occurs(max), regex(re),
+          : IteratorContainer(), min_occurs(min), max_occurs(max), regex(re),
             hasNextElement(true), occurs(min_occurs) {
     for (unsigned int n = 0; n < max_occurs; ++n) {
       addChild(regex->singleIterator(is));

@@ -28,7 +28,7 @@
 namespace rexgen {
   class TopIterator : public Iterator {
   public:
-    explicit TopIterator(Regex *re) : Iterator(re->getId()) {
+    explicit TopIterator(Regex *re) : Iterator() {
       needWord = false;
       state = new IteratorState();
       child = re->iterator(state);
@@ -79,11 +79,11 @@ namespace rexgen {
       }
     }
 
-    SerializableState *getCurrentState() const {
+    std::shared_ptr<SerializableState> getCurrentState() const {
       return child->getCurrentState();
     }
 
-    void setCurrentState(const SerializableState *s) {
+    void setCurrentState(const std::shared_ptr<SerializableState>& s) {
       child->setCurrentState(s);
     }
 

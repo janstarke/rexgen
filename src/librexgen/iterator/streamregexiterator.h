@@ -29,8 +29,8 @@ namespace rexgen {
 
   class StreamRegexIterator : public Iterator {
   public:
-    StreamRegexIterator(int _id, callback_fp_mb cb)
-            : Iterator(_id), callback(cb) {
+    StreamRegexIterator(callback_fp_mb cb)
+            : Iterator(), callback(cb) {
       state = resetted;
       readNextWord();
     }
@@ -58,9 +58,9 @@ namespace rexgen {
 
     bool isSingleton() const { return true; }
 
-    SerializableState *getCurrentState() const;
+    std::shared_ptr<SerializableState> getCurrentState() const;
 
-    void setCurrentState(const SerializableState *state);
+    void setCurrentState(const std::shared_ptr<SerializableState>& state);
 
   private:
     void readNextWord();

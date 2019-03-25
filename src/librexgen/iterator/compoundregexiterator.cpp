@@ -19,8 +19,8 @@
 
 #include <librexgen/iterator/compoundregexiterator.h>
 namespace rexgen {
-  CompoundRegexIterator::CompoundRegexIterator(int _id)
-          : IteratorContainer(_id) {
+  CompoundRegexIterator::CompoundRegexIterator()
+          : IteratorContainer() {
   }
 
   bool CompoundRegexIterator::next() {
@@ -58,15 +58,15 @@ namespace rexgen {
     return has_next;
   }
 
-  SerializableState *CompoundRegexIterator::getCurrentState() const {
-    SerializableState *s = Iterator::getCurrentState();
+  std::shared_ptr<SerializableState> CompoundRegexIterator::getCurrentState() const {
+    auto s = Iterator::getCurrentState();
     for (auto i : iterators) {
       s->addValue(i->getCurrentState());
     }
     return s;
   }
 
-  void CompoundRegexIterator::setCurrentState(const SerializableState *s) {
+  void CompoundRegexIterator::setCurrentState(const std::shared_ptr<SerializableState>& s) {
     Iterator::setCurrentState(s);
 
     for (auto i : iterators) {

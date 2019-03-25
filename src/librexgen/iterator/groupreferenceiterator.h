@@ -29,8 +29,8 @@
 namespace rexgen {
   class GroupReferenceIterator : public IteratorContainer {
   public:
-    GroupReferenceIterator(int _id, int group)
-            : IteratorContainer(_id), groupId(group), groupRef(NULL) {}
+    GroupReferenceIterator(int group)
+            : IteratorContainer(), groupId(group), groupRef(NULL) {}
 
     inline bool hasNext() const { return (state == resetted); }
 

@@ -42,7 +42,7 @@ namespace rexgen {
     RegexType getRegexType() const { return Terminal; }
 
     Iterator *singleIterator(IteratorState * /* state */) const {
-      return new TerminalRegexIterator(getId(), &value[0], value.size());
+      return new TerminalRegexIterator(&value[0], value.size());
     }
 
   private:

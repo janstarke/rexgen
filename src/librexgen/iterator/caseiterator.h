@@ -44,14 +44,12 @@ namespace rexgen {
       dst->append(word);
     }
 
-    virtual SerializableState *getCurrentState() const {
-      return new SerializableState(getId(), getState());
+    virtual std::shared_ptr<SerializableState> getCurrentState() const {
+      return std::make_shared<SerializableState>(getId(), getState());
     }
 
-    virtual void setCurrentState(const SerializableState *s) {
-      if (getId() != s->getIteratorId()) {
-        throw InvalidIteratorIdException();
-      }
+    virtual void setCurrentState(const std::shared_ptr<SerializableState>& s) {
+      IteratorContainer::setCurrentState(s);
     }
 
   private:

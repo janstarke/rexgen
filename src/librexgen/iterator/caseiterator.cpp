@@ -24,7 +24,7 @@
 #include <cassert>
 namespace rexgen {
   CaseIterator::CaseIterator(Iterator *__child, int options)
-          : IteratorContainer(-1), child(__child), handle_case(options) {
+          : IteratorContainer(), child(__child), handle_case(options) {
   }
 
   CaseIterator::~CaseIterator() {
@@ -58,7 +58,6 @@ namespace rexgen {
     if (changeable_characters.size() <= max_fast_character_bytes) {
       k = (1 << changeable_characters.size()) - 1;
     } else {
-      assert(false);
       throw GenericError("cannot handle that much characters");
     }
     parity = 0;

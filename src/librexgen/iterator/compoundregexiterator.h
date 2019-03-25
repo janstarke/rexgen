@@ -31,7 +31,7 @@
 namespace rexgen {
   class CompoundRegexIterator : public IteratorContainer {
   public:
-    explicit CompoundRegexIterator(int id);
+    explicit CompoundRegexIterator();
 
     bool next();
 
@@ -39,9 +39,9 @@ namespace rexgen {
 
     bool hasNext() const;
 
-    SerializableState *getCurrentState() const;
+    std::shared_ptr<SerializableState> getCurrentState() const;
 
-    void setCurrentState(const SerializableState *state);
+    void setCurrentState(const std::shared_ptr<SerializableState>& state);
   };
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_

@@ -31,8 +31,8 @@
 namespace rexgen {
   class TerminalRegexIterator : public Iterator {
   public:
-    TerminalRegexIterator(int _id, const wchar_t *_terminal, size_t elements)
-            : Iterator(_id) {
+    TerminalRegexIterator(const wchar_t *_terminal, size_t elements)
+            : Iterator() {
       for (size_t idx = 0; idx < elements; ++idx) {
         terminal.append_widechar(_terminal[idx]);
       }

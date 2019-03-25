@@ -26,8 +26,8 @@
 #include <vector>
 #include <set>
 namespace rexgen {
-  RegexAlternativesIterator::RegexAlternativesIterator(int _id)
-          : IteratorContainer(_id) {
+  RegexAlternativesIterator::RegexAlternativesIterator()
+          : IteratorContainer() {
     resetPosition();
     state = resetted;
   }
@@ -101,8 +101,8 @@ namespace rexgen {
     return ((*(getPosition()))->canUseValue());
   }
 
-  SerializableState *RegexAlternativesIterator::getCurrentState() const {
-    SerializableState *s = Iterator::getCurrentState();
+  std::shared_ptr<SerializableState> RegexAlternativesIterator::getCurrentState() const {
+    auto s = Iterator::getCurrentState();
     s->addValue(getPosition() - iterators.begin());
 
     for (auto i : iterators) {
@@ -111,7 +111,7 @@ namespace rexgen {
     return s;
   }
 
-  void RegexAlternativesIterator::setCurrentState(const SerializableState *s) {
+  void RegexAlternativesIterator::setCurrentState(const std::shared_ptr<SerializableState>& s) {
     Iterator::setCurrentState(s);
 
     for (auto i : iterators) {

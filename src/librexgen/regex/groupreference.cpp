@@ -26,6 +26,6 @@ namespace rexgen {
   Iterator *GroupReference::singleIterator(IteratorState * /* state */) const {
     auto ref = groupRef.lock();
     assert(ref != nullptr);
-    return new GroupReferenceIterator(getId(), ref->getGroupId());
+    return new GroupReferenceIterator(ref->getGroupId());
   }
 }

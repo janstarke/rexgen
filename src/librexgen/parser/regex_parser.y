@@ -69,7 +69,7 @@
   }
 }
 
-%start T_RegexAlternatives
+%start T_Root
 
 %token           T_PIPE
 %token <wchar_t> T_ANY_CHAR
@@ -86,8 +86,10 @@
 %token           T_COMMA
 %token           T_CLASS_DIGIT
 %token           T_CLASS_WORD
+%token           T_CLASS_SPACE
 %token <std::shared_ptr<rexgen::t_group_options> > T_BEGIN_GROUP
 
+%type <std::shared_ptr<rexgen::RegexAlternatives>> T_Root
 %type <std::shared_ptr<rexgen::RegexAlternatives>> T_RegexAlternatives
 %type <std::shared_ptr<rexgen::Regex>> CompoundRegex
 %type <std::shared_ptr<rexgen::Regex>> Regex
@@ -99,21 +101,24 @@
 %type <std::shared_ptr<rexgen::ClassRegex>> SimpleClassContent
 %type <std::shared_ptr<rexgen::ClassRegex>> CharacterClassDigit
 %type <std::shared_ptr<rexgen::ClassRegex>> CharacterClassWord
+%type <std::shared_ptr<rexgen::ClassRegex>> CharacterClassSpace
 %type <std::shared_ptr<rexgen::RegexAlternatives>> GroupRegex
 %type <std::shared_ptr<rexgen::GroupReference>> GroupReference;
 %type <std::shared_ptr<rexgen::Regex>> Stream;
-
-
 %%
+
+T_Root: T_RegexAlternatives {
+  $$ = std::move($1);
+  $$->setGroupId(0);
+  driver.setResult($$);
+  driver.updateAllGroupReferences();
+}
 
 T_RegexAlternatives:
   CompoundRegex {
       $$ = std::make_shared<rexgen::RegexAlternatives>();
       std::shared_ptr<rexgen::Regex> re = std::move($1);
       $$->addRegex(re);
-      $$->setGroupId(0);
-      driver.setResult($$);
-      driver.updateAllGroupReferences();
   };
 
 T_RegexAlternatives:
@@ -148,7 +153,6 @@ Regex:
 
 PlainRegex:
         SimpleRegex 	    { $$ = std::move($1); }
-    |   CharacterClassDigit { $$ = std::move($1); }
     | 	ClassRegex 	    { $$ = std::move($1); }
     |	GroupRegex	    { $$ = std::move($1); }
     |	GroupReference	    { $$ = std::move($1); }
@@ -159,9 +163,12 @@ SimpleRegex: T_ANY_CHAR {
 };
 
 ClassRegex:
-    CharacterClassWord  { $$ = std::move($1); }
+    CharacterClassDigit { $$ = std::move($1); }
+  | CharacterClassWord  { $$ = std::move($1); }
+  | CharacterClassSpace { $$ = std::move($1); }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = std::move($3); $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = std::move($2); };
+  | T_BEGIN_CLASS                       T_END_CLASS { $$ = std::make_shared<rexgen::ClassRegex>(); }
 ClassContent:
     SimpleClassContent  { $$ = std::move($1); }
   | SimpleClassContent ClassContent {
@@ -170,30 +177,34 @@ ClassContent:
   }
 
 SimpleClassContent:
-	  T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
+    T_ANY_CHAR T_HYPHEN T_ANY_CHAR {
       $$ = std::make_shared<rexgen::ClassRegex>();
       $$->addRange($1, $3);
-	}
-	| T_CLASS_DIGIT {
-      $$ = std::make_shared<rexgen::ClassRegex>();
-      $$->addRange(rexgen::ClassRegex::DIGITS);
-  }
-	| CharacterClassWord  { $$ = std::move($1); }
-	| T_ANY_CHAR {
+    }
+   | CharacterClassDigit  { $$ = std::move($1); }
+   | CharacterClassWord   { $$ = std::move($1); }
+   | CharacterClassSpace  { $$ = std::move($1); }
+   | T_ANY_CHAR {
     $$ = std::make_shared<rexgen::ClassRegex>();
     $$->addCharacter($1);
   }
 
 CharacterClassDigit:
-	T_CLASS_DIGIT {
+    T_CLASS_DIGIT {
     $$ = std::make_shared<rexgen::ClassRegex>();
     $$->addRange(rexgen::ClassRegex::DIGITS);
-	}
+}
 CharacterClassWord:
   T_CLASS_WORD {
     $$ = std::make_shared<rexgen::ClassRegex>();
     $$->addRange(rexgen::ClassRegex::WORDCHARACTERS);
   }
+
+CharacterClassSpace:
+    T_CLASS_SPACE {
+      $$ = std::make_shared<rexgen::ClassRegex>();
+      $$->addRange(rexgen::ClassRegex::SPACES);
+    }
   
 GroupRegex:
   T_BEGIN_GROUP T_RegexAlternatives T_END_GROUP

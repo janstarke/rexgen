@@ -27,10 +27,12 @@ bool matches(const char* value, const char* regex) {
 }
 
 void validateRegex(const char* input_regex,
-                   const size_t nValues) {
+                   const size_t nValues,
+                   bool stateful) {
 
   rexgen::RexgenOptions options;
   auto regex = parse_regex(input_regex, options);
+  ASSERT_NE(regex, nullptr) << input_regex;
 
   auto iter = std::make_shared<rexgen::TopIterator>(regex.get());
 
@@ -52,11 +54,19 @@ void validateRegex(const char* input_regex,
     ASSERT_PRED2(matches, generated_value, input_regex);
     generated_values.push_back(str);
 
-    /* save and restore the iterator state */
-    SerializableState* s = iter->getCurrentState();
-    iter->setCurrentState(s);
+    if (stateful) {
+      /* save and restore the iterator state */
+      auto s = iter->getCurrentState();
+      iter->setCurrentState(s);
+    }
   }
-  ASSERT_EQ(generated_values.size(), nValues);
+  ASSERT_EQ(generated_values.size(), nValues) << input_regex;
+}
+
+void validateRegex(const char* input_regex,
+                   const size_t nValues) {
+  validateRegex(input_regex, nValues, false);
+  validateRegex(input_regex, nValues, true);
 }
 
 void validateFailure(const char* input_regex) {

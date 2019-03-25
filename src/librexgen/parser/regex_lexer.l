@@ -56,6 +56,7 @@ LINEFEED                    \\n
 CARRIAGERETURN              \\r
 CLASS_DIGIT                 \\d
 CLASS_WORD                  \\w
+CLASS_SPACE                 \\s
 SPECIAL                     [ \t\r\n,;:=/%&<>-]
 NORMAL                      [^ \t\r\n.,;:=/%&?<>-]
 GROUPID                     \\[1-9]
@@ -74,11 +75,12 @@ MULTIBYTE_CHARACTER  \xFE
 {ANSICHAR}                 {                          return RexgenParser::make_T_ANY_CHAR(parseAnsiChar(yytext)); }
 {UNICODECHAR}              {                          return RexgenParser::make_T_ANY_CHAR(parseUnicodeChar(yytext)); }
 {MULTIBYTE_CHARACTER}      {                          return RexgenParser::make_T_ANY_CHAR(*wcontent_ptr++); }
-{ESCAPED}                  {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[1]));}
-{LINEFEED}                 {                          return RexgenParser::make_T_ANY_CHAR(btowc('\n')); }
-{CARRIAGERETURN}           {                          return RexgenParser::make_T_ANY_CHAR(btowc('\r')); }
 {CLASS_DIGIT}	           {                          return RexgenParser::make_T_CLASS_DIGIT(); }
 {CLASS_WORD}               {                          return RexgenParser::make_T_CLASS_WORD(); }
+{CLASS_SPACE}              {                          return RexgenParser::make_T_CLASS_SPACE(); }
+{LINEFEED}                 {                          return RexgenParser::make_T_ANY_CHAR(btowc('\n')); }
+{CARRIAGERETURN}           {                          return RexgenParser::make_T_ANY_CHAR(btowc('\r')); }
+{ESCAPED}                  {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[1]));}
 "|"                        {                          return RexgenParser::make_T_PIPE(); }
 "["                        { BEGIN(IN_CLASS);         return RexgenParser::make_T_BEGIN_CLASS(); }
 "]"                        { BEGIN(INITIAL);          return RexgenParser::make_T_END_CLASS(); }

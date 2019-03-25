@@ -32,8 +32,6 @@ namespace rexgen {
   public:
     typedef std::vector<Iterator *> children_list_type;
 
-    explicit IteratorContainer(int _id) : Iterator(_id) {}
-
     virtual ~IteratorContainer() {
       for (auto i : iterators) {
         if (!i->isSingleton()) {
