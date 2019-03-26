@@ -24,6 +24,7 @@
 #include <librexgen/string/unicode.h>
 #include <librexgen/string/simplestring.h>
 #include <librexgen/osdepend.h>
+#include <librexgen/c/librexgen.h>
 
 extern "C" {
 #include <lua.h>
@@ -35,7 +36,7 @@ extern "C" {
   int rexgen_parse_regex(lua_State* L);
 
   EXPORT
-  int rexgen_value(lua_State* L, const Iterator* iter);
+  int rexgen_value(lua_State* L, c_iterator_ptr iter);
 
   EXPORT
   int luaopen_rexgen(lua_State* L);

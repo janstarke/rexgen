@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12)
-if(CMAKE_MAJOR_VERSION GREATER 2)
-#cmake_policy(SET CMP0042 OLD)
-endif(CMAKE_MAJOR_VERSION GREATER 2)
+cmake_minimum_required(VERSION 3.0.2)
+cmake_policy(SET CMP0042 NEW)
 
 OPTION (USE_LUA "create API for lua" OFF)
 
