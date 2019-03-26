@@ -17,14 +17,15 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <list>
 #include <librexgen/iterator/topiterator.h>
+#include <catch2/catch.hpp>
+#include <list>
 #include "utils.h"
-#include <regex>
+#include <boost/regex.hpp>
 
 bool matches(const char* value, const char* regex) {
-  pcrecpp::RE _re(regex);
-  return _re.FullMatch(value);
+  boost::regex _re(regex);
+  return boost::regex_match(value, _re);
 }
 
 void validateRegex(const char* input_regex,
@@ -33,17 +34,17 @@ void validateRegex(const char* input_regex,
 
   rexgen::RexgenOptions options;
   auto regex = parse_regex(input_regex, options);
-  ASSERT_NE(regex, nullptr) << input_regex;
+  REQUIRE(regex != nullptr);
 
   auto iter = std::make_shared<rexgen::TopIterator>(regex);
 
   SimpleString str;
-  std::list<string> generated_values;
+  std::list<std::string> generated_values;
   while (iter->next()) {
     str.clear();
     iter->value(&str);
     const char* generated_value = str.c_str();
-    ASSERT_PRED2(matches, generated_value, input_regex);
+    REQUIRE(matches(generated_value, input_regex));
     generated_values.push_back(str);
 
     if (stateful) {
@@ -52,7 +53,7 @@ void validateRegex(const char* input_regex,
       iter->setCurrentState(s);
     }
   }
-  ASSERT_EQ(generated_values.size(), nValues) << input_regex;
+  REQUIRE(generated_values.size() == nValues);
 }
 
 void validateRegex(const char* input_regex,
@@ -68,5 +69,5 @@ void validateFailure(const char* input_regex) {
   rexgen::IteratorState state;
   auto iter = regex->singleIterator(state);
 
-  ASSERT_ANY_THROW(iter->next());
+  REQUIRE_THROWS(iter->next());
 }

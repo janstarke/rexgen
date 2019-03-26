@@ -17,7 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include "gtest/gtest.h"
+#include <catch2/catch.hpp>
 #include "../utils.h"
 #include <librexgen/librexgen.h>
 #include <librexgen/rexgen_options.h>
@@ -26,15 +26,15 @@
 #include <set>
 #include <pcrecpp.h>
 
-//TEST(CompoundRegexTest, TestEmpty) {validateRegex("",             0);}
-TEST(CompoundRegexTest, TestSingleCharacter1) {validateRegex("h",  1);}
-TEST(CompoundRegexTest, TestSingleCharacter2) {validateRegex("(h)",1);}
-TEST(CompoundRegexTest, TestSingleClass) {validateRegex("[0-9]",  10);}
-TEST(CompoundRegexTest, TestDoubleClasses1) {validateRegex("[0-9][0-9]",  100);}
-TEST(CompoundRegexTest, TestDoubleClasses2) {validateRegex("[0-9]|[0-9]",  20);}
-TEST(CompoundRegexTest, TestDoubleClasses3) {validateRegex("([0-9]|[0-9])",20);}
-TEST(CompoundRegexTest, TestDoubleClasses4) {validateRegex("[0-9]\\d",    100);}
-TEST(CompoundRegexTest, TestQuantifier1) {validateRegex("\\d{2}",         100);}
-TEST(CompoundRegexTest, TestQuantifier2) {validateRegex("\\d{1,2}",       110);}
-TEST(CompoundRegexTest, TestQuantifier3) {validateRegex("\\d{2}abc",      100);}
-TEST(CompoundRegexTest, TestQuantifier4) {validateRegex("\\d{1,2}abc",    110);}
+//TEST("CompoundRegexTest", "TestEmpty") {validateRegex("",             0);}
+TEST_CASE("TestSingleCharacter1", "TestSingleCharacter1") {validateRegex("h",  1);}
+TEST_CASE("TestSingleCharacter2", "TestSingleCharacter2") {validateRegex("(h)",1);}
+TEST_CASE("TestSingleClass", "TestSingleClass") {validateRegex("[0-9]",  10);}
+TEST_CASE("TestDoubleClasses1", "TestDoubleClasses1") {validateRegex("[0-9][0-9]",  100);}
+TEST_CASE("TestDoubleClasses2", "TestDoubleClasses2") {validateRegex("[0-9]|[0-9]",  20);}
+TEST_CASE("TestDoubleClasses3", "TestDoubleClasses3") {validateRegex("([0-9]|[0-9])",20);}
+TEST_CASE("TestDoubleClasses4", "TestDoubleClasses4") {validateRegex("[0-9]\\d",    100);}
+TEST_CASE("TestQuantifier1", "TestQuantifier1") {validateRegex("\\d{2}",         100);}
+TEST_CASE("TestQuantifier2", "TestQuantifier2") {validateRegex("\\d{1,2}",       110);}
+TEST_CASE("TestQuantifier3", "TestQuantifier3") {validateRegex("\\d{2}abc",      100);}
+TEST_CASE("TestQuantifier4", "TestQuantifier4") {validateRegex("\\d{1,2}abc",    110);}

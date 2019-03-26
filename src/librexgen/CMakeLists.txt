@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
 if(CMAKE_MAJOR_VERSION GREATER 2)
 #cmake_policy(SET CMP0042 OLD)
 endif(CMAKE_MAJOR_VERSION GREATER 2)
-project(${librexgen} CXX)
+project(${librexgen} LANGUAGES CXX VERSION ${REXGEN_VERSION})
 
 find_package(BISON 3.3 REQUIRED)
 find_package(FLEX 2.6 REQUIRED)

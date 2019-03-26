@@ -17,12 +17,20 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include "gtest/gtest.h"
-#include "../utils.h"
+#ifndef TESTS_UTILS_H
 
-TEST(CaseIteratorTest, TestCases01) {validateRegex("(?i:abc)",         8);}
-TEST(CaseIteratorTest, TestCases02) {validateRegex("(?i:a(?i:bc))",2*2*8);}
-TEST(CaseIteratorTest, TestCases03) {validateRegex("(?i:[abc])-[pP]", 12);}
-TEST(CaseIteratorTest, TestCases04) {validateFailure("(?i:abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcde)");}
-TEST(CaseIteratorTest, TestCases05) {validateRegex(  "(?i:a1234567890123456789012345678901234567890123456789012345678901234)", 2);}
-TEST(CaseIteratorTest, TestCases06) {validateRegex("(?i:[123]abc){3}", 3*3*3*8*8*8);}
+#include <librexgen/librexgen.h>
+#include <librexgen/rexgen_options.h>
+#include <librexgen/regex/classregex.h>
+#include <librexgen/iterator/classregexiterator.h>
+#include <set>
+#include <pcrecpp.h>
+
+#define TESTS_UTILS_H
+
+void validateRegex(const char* input_regex,
+                   const size_t nValues);
+void validateFailure(const char* input_regex);
+bool matches(const char* value, const char* regex);
+
+#endif /* TESTS_UTILS_H */

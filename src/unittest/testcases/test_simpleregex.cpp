@@ -17,7 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include "gtest/gtest.h"
+#include <catch2/catch.hpp>
 #include "../utils.h"
 #include <librexgen/librexgen.h>
 #include <librexgen/rexgen_options.h>
@@ -26,9 +26,9 @@
 #include <set>
 #include <pcrecpp.h>
 
-TEST(SimpleRegexTest, TestSimple1) {validateRegex("test[0-9]",  10);}
-TEST(SimpleRegexTest, TestSimple2) {validateRegex("test[\\d]",  10);}
-TEST(SimpleRegexTest, TestSimple3) {validateRegex("test[a\\d]", 11);}
-TEST(SimpleRegexTest, TestSimple4) {validateRegex("test[\\da]", 11);}
-TEST(SimpleRegexTest, TestSimple5) {validateRegex("test\\da",   10);}
-TEST(SimpleRegexTest, TestSimple6) {validateRegex("a\\dtest",   10);}
+TEST_CASE("TestSimple1", "TestSimple1") {validateRegex("test[0-9]",  10);}
+TEST_CASE("TestSimple2", "TestSimple2") {validateRegex("test[\\d]",  10);}
+TEST_CASE("TestSimple3", "TestSimple3") {validateRegex("test[a\\d]", 11);}
+TEST_CASE("TestSimple4", "TestSimple4") {validateRegex("test[\\da]", 11);}
+TEST_CASE("TestSimple5", "TestSimple5") {validateRegex("test\\da",   10);}
+TEST_CASE("TestSimple6", "TestSimple6") {validateRegex("a\\dtest",   10);}

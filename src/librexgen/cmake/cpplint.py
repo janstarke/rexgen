@@ -1278,7 +1278,7 @@ def CheckPosixThreading(filename, clean_lines, linenum, error):
   Much code has been originally written without consideration of
   multi-threading. Also, engineers are relying on their old experience;
   they have learned posix before threading extensions were added. These
-  tests guide the engineers to use thread-safe functions (when using
+  test guide the engineers to use thread-safe functions (when using
   posix directly).
 
   Args:
@@ -2789,7 +2789,7 @@ def CheckStyle(filename, clean_lines, linenum, file_extension, nesting_state,
 
   # One or three blank spaces at the beginning of the line is weird; it's
   # hard to reconcile that with 2-space indents.
-  # NOTE: here are the conditions rob pike used for his tests.  Mine aren't
+  # NOTE: here are the conditions rob pike used for his test.  Mine aren't
   # as sophisticated, but it may be worth becoming so:  RLENGTH==initial_spaces
   # if(RLENGTH > 20) complain = 0;
   # if(match($0, " +(error|private|public|protected):")) complain = 0;
@@ -3051,7 +3051,7 @@ def CheckIncludeLine(filename, clean_lines, linenum, include_state, error):
   if match:
     include = match.group(2)
     if Match(r'(f|ind|io|i|o|parse|pf|stdio|str|)?stream$', include):
-      # Many unit tests use cout, so we exempt them.
+      # Many unit test use cout, so we exempt them.
       if not _IsTestFilename(filename):
         error(filename, linenum, 'readability/streams', 3,
               'Streams are highly discouraged.')
@@ -3879,7 +3879,7 @@ def ProcessFile(filename, vlevel, extra_check_functions=[]):
   # Note, if no dot is found, this will give the entire filename as the ext.
   file_extension = filename[filename.rfind('.') + 1:]
 
-  # When reading from stdin, the extension is unknown, so no cpplint tests
+  # When reading from stdin, the extension is unknown, so no cpplint test
   # should rely on the extension.
   if (filename != '-' and file_extension != 'cc' and file_extension != 'h'
       and file_extension != 'cpp'):

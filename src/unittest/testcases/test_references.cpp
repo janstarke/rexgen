@@ -17,9 +17,8 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef TESTS_UTILS_H
-
-#include "gtest/gtest.h"
+#include <catch2/catch.hpp>
+#include "../utils.h"
 #include <librexgen/librexgen.h>
 #include <librexgen/rexgen_options.h>
 #include <librexgen/regex/classregex.h>
@@ -27,11 +26,6 @@
 #include <set>
 #include <pcrecpp.h>
 
-#define TESTS_UTILS_H
-
-void validateRegex(const char* input_regex,
-                   const size_t nValues);
-void validateFailure(const char* input_regex);
-bool matches(const char* value, const char* regex);
-
-#endif /* TESTS_UTILS_H */
+TEST_CASE("TestReference01", "TestReference01") {validateRegex("(a)\\1",  1);}
+TEST_CASE("TestReference02", "TestReference02") {validateRegex("([abc])\\1",  3);}
+TEST_CASE("TestReference03", "TestReference03") {validateRegex("([a-z])\\1",  26);}

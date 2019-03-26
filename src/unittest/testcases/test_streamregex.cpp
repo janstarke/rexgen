@@ -17,9 +17,13 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include "gtest/gtest.h"
+#include <catch2/catch.hpp>
+#include <utils.h>
+#include <librexgen/librexgen.h>
+#include <librexgen/rexgen_options.h>
+#include <librexgen/regex/classregex.h>
+#include <librexgen/iterator/classregexiterator.h>
+#include <set>
+#include <pcrecpp.h>
 
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+//TEST(StreamRegexTest, TestStream01) {validateRegex("\\0",  STREAM_VALUES);}

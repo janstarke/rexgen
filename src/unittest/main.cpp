@@ -17,10 +17,5 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include "gtest/gtest.h"
-#include "../utils.h"
-
-
-TEST(AlternateIteratorTest, TestAlternate1) {validateRegex("a|b",         2); }
-TEST(AlternateIteratorTest, TestAlternate2) {validateRegex("a|b|99",      3); }
-TEST(AlternateIteratorTest, TestAlternate3) {validateRegex("([a-b])test([0-1]|[g-h])", 8); }
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch.hpp>
