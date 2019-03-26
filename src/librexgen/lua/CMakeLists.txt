@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 cmake_policy(SET CMP0042 NEW)
+set(librexgen_lua "librexgen-lua")
 
 OPTION (USE_LUA "create API for lua" OFF)
 
