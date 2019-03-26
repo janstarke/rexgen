@@ -31,11 +31,10 @@ EXPORT
 std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
 
 EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
+std::shared_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
 
 namespace rexgen {
   class RexgenParsingDriver;
 }
-rexgen::Regex* parse_regex(rexgen::RexgenParsingDriver* context);
 
 #endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */

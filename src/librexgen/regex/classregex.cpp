@@ -103,11 +103,11 @@ namespace rexgen {
     }
   }
 
-  Iterator *ClassRegex::singleIterator(IteratorState * /* state */) const {
-    Iterator *single = NULL;
+  std::shared_ptr<Iterator> ClassRegex::singleIterator(IteratorState& /* state */) const {
+    std::shared_ptr<Iterator> single;
 
     if (ranges.size() == 0) {
-      return new ClassRegexIterator(characters.begin(), characters.end());
+      return std::make_shared<ClassRegexIterator>(characters.begin(), characters.end());
     }
 
     assert (ranges.size() > 0);
@@ -116,53 +116,53 @@ namespace rexgen {
       /* we have exactly one single range */
       switch (*(ranges.begin())) {
         case DIGITS:
-          return new RangeIterator<'0', '9'>();
+          return std::make_shared<RangeIterator<'0', '9'>>();
         case UPPERCASE:
-          return new RangeIterator<'A', 'Z'>();
+          return std::make_shared<RangeIterator<'A', 'Z'>>();
         case LOWERCASE:
-          return new RangeIterator<'a', 'z'>();
+          return std::make_shared<RangeIterator<'a', 'z'>>();
         case WORDCHARACTERS: {
-          auto child = new RegexAlternativesIterator();
-          child->addChild(new RangeIterator<'0', '9'>());
-          child->addChild(new RangeIterator<'a', 'z'>());
-          child->addChild(new RangeIterator<'A', 'Z'>());
-          child->addChild(new TerminalRegexIterator(L"_", 1));
+          auto child = std::make_shared<RegexAlternativesIterator>();
+          child->addChild(std::make_shared<RangeIterator<'0', '9'>>());
+          child->addChild(std::make_shared<RangeIterator<'a', 'z'>>());
+          child->addChild(std::make_shared<RangeIterator<'A', 'Z'>>());
+          child->addChild(std::make_shared<TerminalRegexIterator>(L"_", 1));
           return child;
         }
         case SPACES:
           const std::wstring wstr(L" \t");
-          return new ClassRegexIterator(wstr.cbegin(), wstr.cend());
+          return std::make_shared<ClassRegexIterator>(wstr.cbegin(), wstr.cend());
       }
     } else { /* we must combine at least two different iterators */
-      RegexAlternativesIterator *child = new RegexAlternativesIterator();
+      auto child = std::make_shared<RegexAlternativesIterator>();
       single = child;
       if (characters.size() > 0) {
-        child->addChild(new ClassRegexIterator(characters.cbegin(), characters.cend()));
+        child->addChild(std::make_shared<ClassRegexIterator>(characters.cbegin(), characters.cend()));
       }
       for (CharacterClassType classType : ranges) {
         switch (classType) {
           case DIGITS:
-            child->addChild(new RangeIterator<'0', '9'>());
+            child->addChild(std::make_shared<RangeIterator<'0', '9'>>());
             break;
 
           case UPPERCASE:
-            child->addChild(new RangeIterator<'A', 'Z'>());
+            child->addChild(std::make_shared<RangeIterator<'A', 'Z'>>());
             break;
 
           case LOWERCASE:
-            child->addChild(new RangeIterator<'a', 'z'>());
+            child->addChild(std::make_shared<RangeIterator<'a', 'z'>>());
             break;
 
           case WORDCHARACTERS: {
-            child->addChild(new RangeIterator<'0', '9'>());
-            child->addChild(new RangeIterator<'a', 'z'>());
-            child->addChild(new RangeIterator<'A', 'Z'>());
-            child->addChild(new TerminalRegexIterator(L"_", 1));
+            child->addChild(std::make_shared<RangeIterator<'0', '9'>>());
+            child->addChild(std::make_shared<RangeIterator<'a', 'z'>>());
+            child->addChild(std::make_shared<RangeIterator<'A', 'Z'>>());
+            child->addChild(std::make_shared<TerminalRegexIterator>(L"_", 1));
             break;
           }
           case SPACES:
             const std::wstring wstr(L" \t");
-            child->addChild(new ClassRegexIterator(wstr.cbegin(), wstr.cend()));
+            child->addChild(std::make_shared<ClassRegexIterator>(wstr.cbegin(), wstr.cend()));
             break;
         }
       }

@@ -23,14 +23,8 @@
 #include <librexgen/genericerror.h>
 #include <cassert>
 namespace rexgen {
-  CaseIterator::CaseIterator(Iterator *__child, int options)
+  CaseIterator::CaseIterator(std::shared_ptr<Iterator> __child, int options)
           : IteratorContainer(), child(__child), handle_case(options) {
-  }
-
-  CaseIterator::~CaseIterator() {
-    if (child != NULL && (!child->isSingleton())) {
-      delete child;
-    }
   }
 
   bool CaseIterator::readNextFromChild() {

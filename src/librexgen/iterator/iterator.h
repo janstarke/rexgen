@@ -64,9 +64,9 @@ namespace rexgen {
       }
     }
 
-    virtual void updateReferences(IteratorState * /* iterState */) = 0;
+    virtual void updateReferences(IteratorState& /* iterState */) = 0;
 
-    virtual void updateAttributes(IteratorState * /* iterState */) = 0;
+    virtual void updateAttributes(IteratorState& /* iterState */) = 0;
 
     virtual bool isSingleton() const { return false; }
 

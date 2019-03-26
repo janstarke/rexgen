@@ -69,7 +69,6 @@ endif(MSVC)
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
 
-
 OPTION (ENABLE_TEST "enable unit tests" OFF)
 
 if(ENABLE_TEST)

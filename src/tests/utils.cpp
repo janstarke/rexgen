@@ -35,16 +35,7 @@ void validateRegex(const char* input_regex,
   auto regex = parse_regex(input_regex, options);
   ASSERT_NE(regex, nullptr) << input_regex;
 
-  auto iter = std::make_shared<rexgen::TopIterator>(regex.get());
-
-  // register regex alternatives
-  iter->updateReferences(NULL);
-
-  // update references
-  iter->updateReferences(NULL);
-
-  // update attributes (e.g. case folding )
-  iter->updateAttributes(NULL);
+  auto iter = std::make_shared<rexgen::TopIterator>(regex);
 
   SimpleString str;
   std::list<string> generated_values;
@@ -75,9 +66,7 @@ void validateFailure(const char* input_regex) {
   auto regex = parse_regex(input_regex, options);
 
   rexgen::IteratorState state;
-  auto iter = regex->singleIterator(&state);
+  auto iter = regex->singleIterator(state);
 
   ASSERT_ANY_THROW(iter->next());
-
-  delete iter;
 }

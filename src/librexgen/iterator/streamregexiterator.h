@@ -52,9 +52,9 @@ namespace rexgen {
       dst->append(&buffer[0], length);
     }
 
-    void updateReferences(IteratorState * /* iterState */) {}
+    void updateReferences(IteratorState& /* iterState */) {}
 
-    void updateAttributes(IteratorState * /* iterState */) {}
+    void updateAttributes(IteratorState& /* iterState */) {}
 
     bool isSingleton() const { return true; }
 

@@ -21,22 +21,14 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <set>
 namespace rexgen {
-  IteratorPermuter::IteratorPermuter(const Regex *re, IteratorState *is,
+  IteratorPermuter::IteratorPermuter(const Regex& re, IteratorState& is,
                                      unsigned int min, unsigned int max)
-          : IteratorContainer(), min_occurs(min), max_occurs(max), regex(re),
+          : IteratorContainer(), min_occurs(min), max_occurs(max),
             hasNextElement(true), occurs(min_occurs) {
     for (unsigned int n = 0; n < max_occurs; ++n) {
-      addChild(regex->singleIterator(is));
+      addChild(re.singleIterator(is));
     }
     init();
-  }
-
-  IteratorPermuter::~IteratorPermuter() {
-    for (auto i : iterators) {
-      if (i->isSingleton()) {
-        delete i;
-      }
-    }
   }
 
   void IteratorPermuter::value(SimpleString *dst) const {

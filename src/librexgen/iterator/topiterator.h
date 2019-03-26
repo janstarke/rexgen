@@ -28,26 +28,23 @@
 namespace rexgen {
   class TopIterator : public Iterator {
   public:
-    explicit TopIterator(Regex *re) : Iterator() {
+    explicit TopIterator(std::shared_ptr<Regex>& re) : Iterator() {
       needWord = false;
-      state = new IteratorState();
       child = re->iterator(state);
+
+      // register regex alternatives
+      updateReferences();
+
+      // update references
+      updateReferences();
+
+      // update attributes (e.g. case folding )
+      updateAttributes();
     }
 
-    ~TopIterator() {
-      /* StreamIterator is managed by IteratorState; it will be deleted there */
-      if (child != NULL && child != state->getStreamIterator()) {
-        delete child;
-      }
-
-      if (state != NULL) {
-        delete state;
-      }
-    }
-
-    bool next() {
+    bool next() override {
       if (needWord) {
-        bool res = state->getStreamIterator()->forceNext();
+        bool res = state.getStreamIterator()->forceNext();
         if (res) {
           needWord = false;
         }
@@ -56,40 +53,49 @@ namespace rexgen {
       bool res = child->next();
       if (res) { return res; }
 
-      if (state->getStreamIterator() == NULL) { return false; }
-      res = state->getStreamIterator()->forceNext();
+      if (state.getStreamIterator() == NULL) { return false; }
+      res = state.getStreamIterator()->forceNext();
       if (res) { return res; }
       needWord = true;
       return false;
     }
 
-    void value(SimpleString *dst) const { child->value(dst); }
+    void value(SimpleString *dst) const override { child->value(dst); }
 
-    bool hasNext() const { return child->hasNext(); }
+    bool hasNext() const override { return child->hasNext(); }
 
-    void updateReferences(IteratorState * /* ignore */) {
-      if (child != NULL && state != NULL) {
-        child->updateReferences(state);
-      }
+    void updateReferences(IteratorState&/* ignore */) override {
+      updateReferences();
     }
 
-    void updateAttributes(IteratorState * /* ignore */ ) {
-      if (child != NULL && state != NULL) {
-        child->updateAttributes(state);
-      }
+    void updateAttributes(IteratorState& /* ignore */ ) override {
+      updateAttributes();
     }
 
-    std::shared_ptr<SerializableState> getCurrentState() const {
+    std::shared_ptr<SerializableState> getCurrentState() const override {
       return child->getCurrentState();
     }
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& s) {
+    void setCurrentState(const std::shared_ptr<SerializableState>& s) override {
       child->setCurrentState(s);
     }
 
   private:
-    Iterator *child;
-    IteratorState *state;
+
+    void updateReferences() {
+      if (child != nullptr) {
+        child->updateReferences(state);
+      }
+    }
+
+    void updateAttributes() {
+      if (child != nullptr) {
+        child->updateAttributes(state);
+      }
+    }
+
+    std::shared_ptr<Iterator> child;
+    IteratorState state;
     bool needWord;
   };
 }

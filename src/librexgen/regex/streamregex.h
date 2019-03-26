@@ -29,9 +29,9 @@
 namespace rexgen {
   class StreamRegex : public Regex {
   public:
-    Iterator *iterator(IteratorState *state) const;
+    std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
-    Iterator *singleIterator(IteratorState *state) const;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
 
     explicit StreamRegex(callback_fp_mb cb);
 

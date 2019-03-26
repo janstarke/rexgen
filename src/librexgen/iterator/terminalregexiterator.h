@@ -38,21 +38,21 @@ namespace rexgen {
       }
     }
 
-    bool next() {
+    bool next() override {
       const bool res = (state == resetted);
       state = usable;
       return res;
     }
 
-    void value(SimpleString *dst) const {
+    void value(SimpleString *dst) const override {
       dst->append(terminal);
     }
 
-    bool hasNext() const { return state == resetted; }
+    bool hasNext() const override { return state == resetted; }
 
-    virtual void updateReferences(IteratorState * /* iterState */) {}
+    void updateReferences(IteratorState& /* iterState */) override {}
 
-    virtual void updateAttributes(IteratorState * /* iterState */) {}
+    void updateAttributes(IteratorState& /* iterState */) override {}
 
   private:
     SimpleString terminal;

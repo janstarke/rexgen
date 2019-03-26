@@ -60,24 +60,24 @@ namespace rexgen {
     LEAVE_METHOD;
   }
 
-  Iterator *CompoundRegex::singleIterator(IteratorState *state) const {
+  std::shared_ptr<Iterator> CompoundRegex::singleIterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       return regexObjects[0]->iterator(state);
     }
 
-    CompoundRegexIterator *cri = new CompoundRegexIterator();
+    auto cri = std::make_shared<CompoundRegexIterator>();
     std::for_each(regexObjects.begin(), regexObjects.end(),
             [&cri,&state](const std::shared_ptr<Regex>& r) {cri->addChild(r->iterator(state));});
     return cri;
   }
 
-  Iterator *CompoundRegex::iterator(IteratorState *state) const {
+  std::shared_ptr<Iterator> CompoundRegex::iterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       const std::shared_ptr<Regex>& re = regexObjects[0];
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         return re->iterator(state);
       } else {
-        return new IteratorPermuter(re.get(), state, getMinOccurs(), getMaxOccurs());
+        return std::make_shared<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
       }
     }
     return RegexContainer::iterator(state);

@@ -21,7 +21,7 @@
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/debug.h>
 namespace rexgen {
-  void GroupReferenceIterator::updateReferences(IteratorState *iterState) {
-    groupRef = iterState->getIterator(groupId);
+  void GroupReferenceIterator::updateReferences(IteratorState& iterState) {
+    groupRef = iterState[groupId];
   }
 }

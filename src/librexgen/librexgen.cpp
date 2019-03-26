@@ -30,32 +30,24 @@ std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::Rexg
   rexgen::RexgenParsingDriver driver(options);
 
   try {
-    return driver.parse(regex);
+    auto result = driver.parse(regex);
+/*
+    if (driver.hasInvalidGroupReferences()) {
+      driver.handleParserError("This regular expression has an invalid back reference");
+      return nullptr;
+    }
+*/
+    return result;
   } catch (SyntaxError &exc) {
     driver.handleParserError(exc.getMessage());
     return nullptr;
   }
-  if (driver.hasInvalidGroupReferences()) {
-    driver.handleParserError("This regular expression has an invalid back reference");
-    return nullptr;
-  }
-  return nullptr;
 }
 
 EXPORT
-rexgen::Iterator* regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
-  std::shared_ptr<rexgen::Regex> re = parse_regex(regex, options);
-  if (re == nullptr) {
-    return nullptr;
+std::shared_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
+  if (auto re = parse_regex(regex, options)) {
+    return std::make_shared<rexgen::TopIterator>(re);
   }
-  rexgen::Iterator* iter = new rexgen::TopIterator(re.get());
-  // register regex alternatives
-  iter->updateReferences(nullptr);
-
-  // update references
-  iter->updateReferences(nullptr);
-
-  // update attributes (e.g. case folding )
-  iter->updateAttributes(nullptr);
-  return iter;
+  return nullptr;
 }

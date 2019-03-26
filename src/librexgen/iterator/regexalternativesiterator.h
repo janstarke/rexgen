@@ -41,7 +41,7 @@ namespace rexgen {
 
     bool hasNext() const;
 
-    void addChild(Iterator *re);
+    void addChild(std::shared_ptr<Iterator> re);
 
     std::shared_ptr<SerializableState> getCurrentState() const;
 

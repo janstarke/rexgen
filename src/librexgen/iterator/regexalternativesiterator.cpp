@@ -83,7 +83,7 @@ namespace rexgen {
     }
   }
 
-  void RegexAlternativesIterator::addChild(Iterator *i) {
+  void RegexAlternativesIterator::addChild(std::shared_ptr<Iterator> i) {
     ENTER_METHOD;
     iterators.push_back(i);
     resetPosition();

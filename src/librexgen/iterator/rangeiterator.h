@@ -28,19 +28,19 @@ namespace rexgen {
     explicit RangeIterator()
             : Iterator(), current(__MIN - 1), minimum(__MIN), maximum(__MAX) {}
 
-    void value(SimpleString *dst) const {
+    void value(SimpleString *dst) const override {
       dst->push_back(static_cast<const byte_t>(current));
     }
 
-    bool next() {
+    bool next() override {
       const bool has_next = (current < maximum);
       current = has_next ? (current + 1) : minimum;
       return has_next;
     }
 
-    virtual void updateReferences(IteratorState * /* iterState */) {}
+    void updateReferences(IteratorState& /* iterState */) override {}
 
-    virtual void updateAttributes(IteratorState * /* iterState */) {}
+    void updateAttributes(IteratorState& /* iterState */) override {}
 
   private:
     char current;

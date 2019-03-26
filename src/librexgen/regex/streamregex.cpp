@@ -24,19 +24,19 @@ namespace rexgen {
           : callback(cb) {
   }
 
-  Iterator *StreamRegex::iterator(IteratorState *state) const {
+  std::shared_ptr<Iterator> StreamRegex::iterator(IteratorState& state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     } else {
-      return new IteratorPermuter(this, state, getMinOccurs(), getMaxOccurs());
+      return std::make_shared<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
     }
   }
 
-  Iterator *StreamRegex::singleIterator(IteratorState *state) const {
-    StreamRegexIterator *iter = state->getStreamIterator();
-    if (iter == NULL) {
-      iter = new StreamRegexIterator(callback);
-      state->setStreamIterator(iter);
+  std::shared_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
+    auto iter = state.getStreamIterator();
+    if (iter == nullptr) {
+      iter = std::make_shared<StreamRegexIterator>(callback);
+      state.setStreamIterator(iter);
     }
     return iter;
   }

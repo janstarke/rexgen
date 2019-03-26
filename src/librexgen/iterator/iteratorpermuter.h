@@ -33,11 +33,8 @@ namespace rexgen {
 
     bool hasNext() const;
 
-    IteratorPermuter(const Regex *re, IteratorState *is,
+    IteratorPermuter(const Regex& re, IteratorState& is,
                      unsigned int min, unsigned int max);
-
-    ~IteratorPermuter();
-
     bool next();
 
     void init();
@@ -50,7 +47,6 @@ namespace rexgen {
     bool existsIteratorWithNextElement() const;
 
     const unsigned int min_occurs, max_occurs;
-    const Regex *regex;
     bool hasNextElement;
 
     unsigned int current;

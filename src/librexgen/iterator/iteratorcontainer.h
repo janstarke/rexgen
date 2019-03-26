@@ -23,6 +23,7 @@
 
 #include <librexgen/iterator/iterator.h>
 #include <vector>
+#include <memory>
 
 #ifdef __cplusplus
 namespace rexgen {
@@ -30,29 +31,21 @@ namespace rexgen {
 
   class IteratorContainer : public Iterator {
   public:
-    typedef std::vector<Iterator *> children_list_type;
+    typedef std::vector<std::shared_ptr<Iterator>> children_list_type;
 
-    virtual ~IteratorContainer() {
-      for (auto i : iterators) {
-        if (!i->isSingleton()) {
-          delete i;
-        }
-      }
-    }
-
-    virtual void updateAttributes(IteratorState *iterState) {
-      for (Iterator *child : iterators) {
+    virtual void updateAttributes(IteratorState& iterState) {
+      for (auto child : iterators) {
         child->updateAttributes(iterState);
       }
     }
 
-    virtual void updateReferences(IteratorState *iterState) {
-      for (Iterator *child : iterators) {
+    virtual void updateReferences(IteratorState& iterState) {
+      for (auto child : iterators) {
         child->updateReferences(iterState);
       }
     }
 
-    virtual void addChild(Iterator *i) {
+    virtual void addChild(std::shared_ptr<Iterator> i) {
       iterators.push_back(i);
     }
 

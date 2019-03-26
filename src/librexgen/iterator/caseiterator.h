@@ -30,9 +30,7 @@
 namespace rexgen {
   class CaseIterator : public IteratorContainer {
   public:
-    CaseIterator(Iterator *_child, int options);
-
-    virtual ~CaseIterator();
+    CaseIterator(std::shared_ptr<Iterator> _child, int options);
 
     bool hasNext() const;
 
@@ -53,7 +51,7 @@ namespace rexgen {
     }
 
   private:
-    Iterator *child;
+    std::shared_ptr<Iterator> child;
     int handle_case;
 
     bool readNextFromChild();

@@ -22,43 +22,40 @@
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/caseiterator.h>
 namespace rexgen {
-  Iterator *RegexAlternatives::singleIterator(IteratorState *state) const {
+  std::shared_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       return regexObjects[0]->iterator(state);
     }
 
-    RegexAlternativesIterator *rai = new RegexAlternativesIterator();
-    for (const std::shared_ptr<Regex>& i : regexObjects) {
+    auto rai = std::make_shared<RegexAlternativesIterator>();
+    for (auto i : regexObjects) {
       rai->addChild(i->iterator(state));
     }
     return rai;
   }
 
-  Iterator *RegexAlternatives::iterator(IteratorState *state) const {
-    Iterator *iter = NULL;
-
-    iter = state->getIterator(getGroupId());
-    if (iter != NULL) {
-      return iter;
+  std::shared_ptr<Iterator> RegexAlternatives::iterator(IteratorState& state) const {
+    if (state.hasId(getGroupId())) {
+      state[getGroupId()].lock();
     }
 
+    std::shared_ptr<Iterator> iter;
     if (regexObjects.size() == 1) {
-      const std::shared_ptr<Regex>& re = regexObjects[0];
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-        iter = re->iterator(state);
+        iter = regexObjects[0]->iterator(state);
       } else {
-        iter = new IteratorPermuter(re.get(), state, getMinOccurs(), getMaxOccurs());
+        iter = std::make_shared<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
       }
     } else {
       iter = RegexContainer::iterator(state);
     }
 
     if (getGroupId() > 0) {
-      state->registerIterator(getGroupId(), iter);
+      state.registerIterator(getGroupId(), iter);
     }
 
     if (handle_case != CASE_IGNORE) {
-      iter = new CaseIterator(iter, handle_case);
+      iter = std::make_shared<CaseIterator>(iter, handle_case);
     }
 
     return iter;

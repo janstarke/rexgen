@@ -36,16 +36,7 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
   if (regex == c_regex_none) {
     return c_iterator_none;
   }
-  auto iter = std::make_shared<rexgen::TopIterator>(ApiContext::instance().getRegex(regex).get());
-  // register regex alternatives
-  iter->updateReferences(nullptr);
-
-  // update references
-  iter->updateReferences(nullptr);
-
-  // update attributes (e.g. case folding )
-  iter->updateAttributes(nullptr);
-
+  auto iter = std::make_shared<rexgen::TopIterator>(ApiContext::instance().getRegex(regex));
   return ApiContext::instance().addIterator(std::static_pointer_cast<rexgen::Iterator>(iter));
 }
 
@@ -69,14 +60,12 @@ c_iterator_ptr c_regex_iterator_cb(
   CALLBACK_WCWRAPPER = callback;
   options.stream_callback = callback_wc_wrapper;
 
-  rexgen::Iterator* iter = NULL;
   try {
-    iter = regex_iterator(regex_str, options);
+    return ApiContext::instance().addIterator(regex_iterator(regex_str, options));
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
     return c_regex_none;
   }
-  return ApiContext::instance().addIterator(std::shared_ptr<rexgen::Iterator>(iter));
 }
 
 EXPORT
@@ -89,14 +78,12 @@ c_iterator_ptr c_regex_iterator_cb_mb(
   options.infile = NULL;
   options.stream_callback = callback;
 
-  rexgen::Iterator* iter = NULL;
   try {
-    iter = regex_iterator(regex_str, options);
+    return ApiContext::instance().addIterator(regex_iterator(regex_str, options));
   } catch (SyntaxError& error) {
     c_rexgen_set_last_error(error.getMessage());
     return c_iterator_none;
   }
-  return ApiContext::instance().addIterator(std::shared_ptr<rexgen::Iterator>(iter));
 }
 
 EXPORT

@@ -57,9 +57,9 @@ namespace rexgen {
 
     virtual ~ClassRegexIterator() {}
 
-    virtual void updateReferences(IteratorState * /* iterState */) {}
+    virtual void updateReferences(IteratorState& /* iterState */) {}
 
-    virtual void updateAttributes(IteratorState * /* iterState */) {}
+    virtual void updateAttributes(IteratorState& /* iterState */) {}
 
     inline void value(SimpleString *dst) const {
       /**

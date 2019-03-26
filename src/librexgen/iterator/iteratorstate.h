@@ -29,46 +29,47 @@
 namespace rexgen {
   class IteratorState {
   public:
-    IteratorState() : streamIterator(NULL) {
-    }
+    explicit IteratorState() : streamIterator(nullptr) {}
 
-    virtual ~IteratorState() {
-      if (streamIterator != NULL) {
-        delete streamIterator;
-        streamIterator = NULL;
-      }
-    }
+    /* prevent copying of IteratorState */
+    IteratorState(const IteratorState&) = delete;
+    IteratorState(IteratorState&&) = delete;
+    IteratorState& operator=(const IteratorState&) = delete;
+    IteratorState& operator=(IteratorState&&) = delete;
 
-    void registerIterator(int id, Iterator *iterator) {
+    void registerIterator(int id, std::weak_ptr<Iterator> iterator) {
       groupIterators[id] = iterator;
     }
 
-    Iterator *getIterator(int id) const {
+    bool hasId(int id) const {
+      return (groupIterators.find(id) != groupIterators.end());
+    }
+
+    std::weak_ptr<Iterator> operator[](int id) const {
       if (id == -1) {
         return getStreamIterator();
       } else {
-        std::map<int, Iterator *>::const_iterator iter = groupIterators.find(id);
+        auto iter = groupIterators.find(id);
         if (iter != groupIterators.end()) {
           return iter->second;
         } else {
-          return NULL;
+          throw std::runtime_error("invalid iterator reference");
         }
       }
     }
 
-    void setStreamIterator(StreamRegexIterator *iter) {
-      if (streamIterator == NULL) {
-        streamIterator = iter;
-      } else {
+    void setStreamIterator(std::shared_ptr<StreamRegexIterator> iter) {
+      if (streamIterator != nullptr) {
         throw std::runtime_error("multiple stream iterator assignment");
       }
+      streamIterator = iter;
     }
 
-    StreamRegexIterator *getStreamIterator() const { return streamIterator; }
+    std::shared_ptr<StreamRegexIterator> getStreamIterator() const { return streamIterator; }
 
   private:
-    std::map<int, Iterator *> groupIterators;
-    StreamRegexIterator *streamIterator;
+    std::map<int, std::weak_ptr<Iterator> > groupIterators;
+    std::shared_ptr<StreamRegexIterator> streamIterator;
   };
 }
 
