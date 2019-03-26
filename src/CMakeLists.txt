@@ -23,14 +23,14 @@ message("creating ${prj} ${librexgen_version}")
 ADD_DEFINITIONS("-funsigned-char")
 ADD_DEFINITIONS("-D_GNU_SOURCE")
 
-if(CMAKE_BUILD_TYPE MATCHES FUZZER)
+if(CMAKE_BUILD_TYPE MATCHES libFuzzer)
   ADD_DEFINITIONS("-DUSE_LIBFUZZER")
   ADD_COMPILE_OPTIONS("-fsanitize=fuzzer,address")
   ADD_COMPILE_OPTIONS("-g")
   ADD_COMPILE_OPTIONS("-O0")
   ADD_LINK_OPTIONS("-fsanitize=fuzzer,address")
   ADD_LINK_OPTIONS("-g")
-endif(CMAKE_BUILD_TYPE MATCHES FUZZER)
+endif(CMAKE_BUILD_TYPE MATCHES libFuzzer)
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
   MESSAGE(STATUS "USING DEBUG MODE")
@@ -68,6 +68,12 @@ endif(MSVC)
 
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
+
+
+OPTION (ENABLE_TEST "enable unit tests" OFF)
+
+if(ENABLE_TEST)
 add_subdirectory(tests)
+endif()
 
 #include (cmake/ctags.cmake)

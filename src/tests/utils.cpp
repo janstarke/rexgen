@@ -20,6 +20,7 @@
 #include <list>
 #include <librexgen/iterator/topiterator.h>
 #include "utils.h"
+#include <regex>
 
 bool matches(const char* value, const char* regex) {
   pcrecpp::RE _re(regex);
