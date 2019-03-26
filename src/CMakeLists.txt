@@ -1,4 +1,3 @@
-project("rexgen")
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 set(prj rexgen)
 project(rexgen_root)
@@ -6,7 +5,7 @@ project(rexgen_root)
 cmake_minimum_required(VERSION 2.8.12)
 
 include (cmake/packaging.cmake)
-#include (cmake/doxygen.cmake)
+include (cmake/doxygen.cmake)
 
 file(READ ${PROJECT_SOURCE_DIR}/version.txt librexgen_version_line)
 string(REPLACE "\n" "" librexgen_version ${librexgen_version_line})
@@ -35,11 +34,23 @@ endif(CMAKE_BUILD_TYPE MATCHES libFuzzer)
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
   MESSAGE(STATUS "USING DEBUG MODE")
   ADD_DEFINITIONS("-DREXGEN_DEBUG=0" "-DDEBUG"  "-O0" "-g")
+
+  if ("${CMAKE_COMPILER_IS_GNUCXX}" OR "${CMAKE_COMPILER_IS_GNUCC}")
+    MESSAGE(STATUS "adding test coverage instrumentation")
+    SET(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+    SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+    add_definitions(${GCC_COVERAGE_COMPILE_FLAGS})
+    SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
+    SET( CMAKE_SHARED_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
+  endif ("${CMAKE_COMPILER_IS_GNUCXX}" OR "${CMAKE_COMPILER_IS_GNUCC}")
+
   enable_testing()
 
-elseif(CMAKE_BUILD_TYPE MATCHES PROFILE)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Profile")
   MESSAGE(STATUS "USING PROFILE MODE")
   ADD_DEFINITIONS("-DREXGEN_DEBUG=0" "-DREXGEN_PROFILE=1" "-g" "-pg" )
+  SET(CMAKE_EXE_LINKER_FLAGS_PROFILE "${CMAKE_EXE_LINKER_FLAGS_PROFILE} -pg")
+  SET(CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS_PROFILE} -pg")
 
 elseif (CMAKE_BUILD_TYPE MATCHES FUZZER)
     MESSAGE(STATUS "USING FUZZING MODE")
@@ -69,10 +80,8 @@ endif(MSVC)
 add_subdirectory(librexgen)
 add_subdirectory(rexgen)
 
-OPTION (ENABLE_TEST "enable unit tests" OFF)
-
-if(ENABLE_TEST)
-add_subdirectory(tests)
-endif()
+if("${TEST_ENABLED}")
+  add_subdirectory(tests)
+endif("${TEST_ENABLED}")
 
 #include (cmake/ctags.cmake)

@@ -1,3 +1,6 @@
+os:
+  - linux
+  - osx
 dist: trusty
 sudo: false
 
@@ -7,6 +10,8 @@ compiler:
   - clang
   - gcc
 
+python: 3.5
+
 addons:
   apt:
     sources:
@@ -14,16 +19,13 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - cmake
-      - gcc-4.8
-      - g++-4.8
+      - gcc-7
+      - g++-7
       - python-pip
-
-before_install:
-  - pip install cpplint
 
 before_script: mkdir -p build
 script: 
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
-  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-7"; fi
+  - if [ "$CC" = "gcc" ]; then export CC="gcc-7"; fi
   - cpplint --recursive src/librexgen
-  - cd build && cmake ../src && make && make test
+  - cd build && cmake -DTEST_ENABLED=1 -DBUILD_TYPE=Debug ../src && make && make test
