@@ -21,10 +21,9 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <set>
 namespace rexgen {
-  IteratorPermuter::IteratorPermuter(const Regex& re, IteratorState& is,
-                                     unsigned int min, unsigned int max)
-          : IteratorContainer(), min_occurs(min), max_occurs(max),
-            hasNextElement(true), occurs(min_occurs) {
+  IteratorPermuter::IteratorPermuter(const Regex& re, IteratorState& is, unsigned int max)
+          : IteratorContainer(), max_occurs(max),
+            hasNextElement(true), occurs(0) {
     for (unsigned int n = 0; n < max_occurs; ++n) {
       addChild(re.singleIterator(is));
     }
@@ -71,7 +70,7 @@ namespace rexgen {
     unsigned int n = 0;
     for (; n < occurs; ++n) { if (iterators[n]->next()) { break; }}
     if (n == max_occurs) {
-      occurs = min_occurs;
+      occurs = 0;
       RETURN(false);
     }
     if (n == occurs) { ++occurs; }
@@ -88,7 +87,7 @@ namespace rexgen {
     }
     hasNextElement = has_next;
 
-    occurs = min_occurs;
+    occurs = 0;
     current = 0;
     state = resetted;
     LEAVE_METHOD;

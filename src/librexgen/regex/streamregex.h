@@ -29,7 +29,6 @@
 namespace rexgen {
   class StreamRegex : public Regex {
   public:
-    std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
     std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
 

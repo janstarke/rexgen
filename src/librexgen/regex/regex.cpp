@@ -18,6 +18,24 @@
 */
 
 #include <librexgen/regex/regex.h>
+#include <librexgen/iterator/compoundregexiterator.h>
+
 namespace rexgen {
   int Regex::next_id = 0;
+
+  std::shared_ptr<Iterator> Regex::iterator(IteratorState& state) const {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      return singleIterator(state);
+    }
+
+    auto compound = std::make_shared<CompoundRegexIterator>();
+    for (unsigned int n=0; n<getMinOccurs(); ++n) {
+      compound->addChild(singleIterator(state));
+    }
+    assert(getMaxOccurs() >= getMinOccurs());
+    if (getMinOccurs() != getMaxOccurs()) {
+      compound->addChild(std::make_shared<IteratorPermuter>(*this, state, getMaxOccurs() - getMinOccurs()));
+    }
+    return compound;
+  }
 }

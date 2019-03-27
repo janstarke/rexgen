@@ -24,14 +24,6 @@ namespace rexgen {
           : callback(cb) {
   }
 
-  std::shared_ptr<Iterator> StreamRegex::iterator(IteratorState& state) const {
-    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-      return singleIterator(state);
-    } else {
-      return std::make_shared<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
-    }
-  }
-
   std::shared_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
     auto iter = state.getStreamIterator();
     if (iter == nullptr) {

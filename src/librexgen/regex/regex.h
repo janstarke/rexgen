@@ -60,13 +60,7 @@ namespace rexgen {
 
     virtual RegexType getRegexType() const = 0;
 
-    virtual std::shared_ptr<Iterator> iterator(IteratorState& state) const {
-      if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
-        return singleIterator(state);
-      } else {
-        return std::make_shared<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
-      }
-    }
+    virtual std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
     virtual std::shared_ptr<Iterator> singleIterator(IteratorState& state) const = 0;
 

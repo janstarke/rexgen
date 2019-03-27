@@ -76,10 +76,20 @@ namespace rexgen {
       const std::shared_ptr<Regex>& re = regexObjects[0];
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         return re->iterator(state);
-      } else {
-        return std::make_shared<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
       }
+
+      auto compound = std::make_shared<CompoundRegexIterator>();
+      for (unsigned int n=0; n<getMinOccurs(); ++n) {
+        compound->addChild(singleIterator(state));
+      }
+      assert(getMaxOccurs() >= getMinOccurs());
+      if (getMinOccurs() != getMaxOccurs()) {
+        compound->addChild(std::make_shared<IteratorPermuter>(*re, state, getMaxOccurs() - getMinOccurs()));
+      }
+      return compound;
     }
+
+    assert(regexObjects.size() > 1);
     return RegexContainer::iterator(state);
   }
 }
