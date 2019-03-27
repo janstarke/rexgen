@@ -23,8 +23,8 @@
 typedef int c_regex_ptr;
 typedef int c_iterator_ptr;
 
-const c_regex_ptr c_regex_none = -1;
-const c_iterator_ptr c_iterator_none = -1;
+const c_regex_ptr c_regex_none = 0;
+const c_iterator_ptr c_iterator_none = 0;
 
 #ifdef __cplusplus
 #include <librexgen/regex/regex.h>
@@ -61,11 +61,13 @@ private:
 
 c_regex_ptr ApiContext::addRegex(std::shared_ptr<rexgen::Regex> regex) {
   auto id = next_id();
+  assert(id != c_regex_none);
   regex_map.insert(std::make_pair(id, regex));
   return id;
 }
 c_iterator_ptr ApiContext::addIterator(std::shared_ptr<rexgen::Iterator> iter) {
   auto id = next_id();
+  assert(id != c_iterator_none);
   iterator_map.insert(std::make_pair(id, iter));
   return id;
 }
