@@ -37,7 +37,7 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
     return c_iterator_none;
   }
   auto iter = std::make_shared<rexgen::TopIterator>(ApiContext::instance().getRegex(regex));
-  return ApiContext::instance().addIterator(std::static_pointer_cast<rexgen::Iterator>(iter));
+  return ApiContext::instance().addIterator(iter);
 }
 
 static callback_fp CALLBACK_WCWRAPPER = NULL;

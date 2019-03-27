@@ -46,7 +46,11 @@ extern "C" {
 
   EXPORT
   int rexgen_iter(lua_State* L) {
-    c_iterator_ptr iter = lua_tointeger(L, 1);
+    c_iterator_ptr iter = lua_tointeger(L, lua_upvalueindex(1));
+    if (iter == c_iterator_none) {
+      lua_pushliteral(L, "internal error");
+      lua_error(L);
+    }
     if (c_iterator_next(iter)) {
       rexgen_value(L, iter);
       return 1;
@@ -54,6 +58,17 @@ extern "C" {
       return 0;
     }
   }
+
+EXPORT
+int rexgen_value(lua_State* L, c_iterator_ptr iter) {
+  c_simplestring_ptr str = c_simplestring_new();
+
+  c_iterator_value(iter, str);
+  const std::string value = c_simplestring_to_string(str);
+
+  lua_pushlstring(L, value.c_str(), value.size());
+  return 1;
+}
 
   size_t callback(char* dst, const size_t buffer_size) {
     size_t len = 0;
@@ -79,23 +94,21 @@ extern "C" {
 
   EXPORT
   int rexgen_parse_regex(lua_State* L) {
-    SimpleString xml;
-
     auto regex = c_regex_cb_mb(luaL_checklstring(L, 1, NULL), callback, parser_error);
+
+    if (regex == c_regex_none) {
+      lua_pushliteral(L, "parsing error");
+      lua_error(L);
+    }
+
     c_iterator_ptr iter = c_regex_iterator(regex);
+    if (iter == c_iterator_none) {
+      lua_pushliteral(L, "internal error");
+      lua_error(L);
+    }
     lua_pushinteger(L, iter);
+    lua_pushcclosure(L, rexgen_iter, 1);
 
-    return 1;
-  }
-
-  EXPORT
-  int rexgen_value(lua_State* L, c_iterator_ptr iter) {
-    c_simplestring_ptr str = c_simplestring_new();
-
-    c_iterator_value(iter, str);
-    const std::string value = c_simplestring_to_string(str);
-
-    lua_pushlstring(L, value.c_str(), value.size());
     return 1;
   }
 }
