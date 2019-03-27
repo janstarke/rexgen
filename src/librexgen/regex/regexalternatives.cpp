@@ -22,6 +22,7 @@
 #include <librexgen/iterator/regexalternativesiterator.h>
 #include <librexgen/iterator/compoundregexiterator.h>
 #include <librexgen/iterator/caseiterator.h>
+#include <librexgen/iterator/FastIteratorPermuter.h>
 
 namespace rexgen {
   std::shared_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
@@ -46,16 +47,12 @@ namespace rexgen {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         iter = regexObjects[0]->iterator(state);
       } else {
-        auto compound = std::make_shared<CompoundRegexIterator>();
-        for (unsigned int n=0; n<getMinOccurs(); ++n) {
-          compound->addChild(singleIterator(state));
+
+        if (getMinOccurs() == getMaxOccurs()) {
+          iter = std::make_shared<FastIteratorPermuter>(*(regexObjects[0]), state, getMinOccurs());
+        } else {
+          iter = std::make_shared<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
         }
-        assert(getMaxOccurs() >= getMinOccurs());
-        if (getMinOccurs() != getMaxOccurs()) {
-          compound->addChild(
-                  std::make_shared<IteratorPermuter>(*(regexObjects[0]), state, getMaxOccurs() - getMinOccurs()));
-        }
-        iter = std::move(compound);
       }
     } else {
       iter = RegexContainer::iterator(state);

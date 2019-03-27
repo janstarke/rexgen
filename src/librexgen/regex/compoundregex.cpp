@@ -21,6 +21,7 @@
 #include <librexgen/regex/compoundregex.h>
 #include <librexgen/regex/terminalregex.h>
 #include <librexgen/iterator/compoundregexiterator.h>
+#include <librexgen/iterator/FastIteratorPermuter.h>
 #include <librexgen/debug.h>
 #include <deque>
 #include <memory>
@@ -78,15 +79,11 @@ namespace rexgen {
         return re->iterator(state);
       }
 
-      auto compound = std::make_shared<CompoundRegexIterator>();
-      for (unsigned int n=0; n<getMinOccurs(); ++n) {
-        compound->addChild(singleIterator(state));
+      if (getMinOccurs() == getMaxOccurs()) {
+        return std::make_shared<FastIteratorPermuter>(*re, state, getMinOccurs());
+      } else {
+        return std::make_shared<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
       }
-      assert(getMaxOccurs() >= getMinOccurs());
-      if (getMinOccurs() != getMaxOccurs()) {
-        compound->addChild(std::make_shared<IteratorPermuter>(*re, state, getMaxOccurs() - getMinOccurs()));
-      }
-      return compound;
     }
 
     assert(regexObjects.size() > 1);

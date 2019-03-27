@@ -75,6 +75,7 @@ set(
 		regex/groupreference.cpp
 		regex/streamregex.cpp
 		iterator/iteratorpermuter.cpp
+		iterator/FastIteratorPermuter.cpp
 		iterator/regexalternativesiterator.cpp
 		iterator/compoundregexiterator.cpp
 		iterator/groupreferenceiterator.cpp

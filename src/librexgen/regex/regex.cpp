@@ -19,6 +19,7 @@
 
 #include <librexgen/regex/regex.h>
 #include <librexgen/iterator/compoundregexiterator.h>
+#include <librexgen/iterator/FastIteratorPermuter.h>
 
 namespace rexgen {
   int Regex::next_id = 0;
@@ -28,14 +29,10 @@ namespace rexgen {
       return singleIterator(state);
     }
 
-    auto compound = std::make_shared<CompoundRegexIterator>();
-    for (unsigned int n=0; n<getMinOccurs(); ++n) {
-      compound->addChild(singleIterator(state));
+    if (getMinOccurs() == getMaxOccurs()) {
+      return std::make_shared<FastIteratorPermuter>(*this, state, getMinOccurs());
+    } else {
+      return std::make_shared<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
     }
-    assert(getMaxOccurs() >= getMinOccurs());
-    if (getMinOccurs() != getMaxOccurs()) {
-      compound->addChild(std::make_shared<IteratorPermuter>(*this, state, getMaxOccurs() - getMinOccurs()));
-    }
-    return compound;
   }
 }

@@ -18,42 +18,25 @@
 */
 
 #include <librexgen/regex/regex.h>
-#include <librexgen/iterator/iteratorpermuter.h>
+#include <librexgen/iterator/FastIteratorPermuter.h>
 #include <set>
 namespace rexgen {
-  IteratorPermuter::IteratorPermuter(const Regex& re, IteratorState& is,
-                                     unsigned int min, unsigned int max)
-          : IteratorContainer(), min_occurs(min), max_occurs(max),
-            hasNextElement(true), occurs(min_occurs) {
-    for (unsigned int n = 0; n < max_occurs; ++n) {
+  FastIteratorPermuter::FastIteratorPermuter(const Regex& re, IteratorState& is, unsigned int occurs)
+          : IteratorContainer(), hasNextElement(true) {
+    assert(occurs > 0);
+    for (unsigned int n = 0; n < occurs; ++n) {
       addChild(re.singleIterator(is));
     }
     init();
   }
 
-  void IteratorPermuter::value(SimpleString *dst) const {
-    ENTER_METHOD;
-    for (unsigned int n = 0; n < occurs; ++n) {
-      iterators[n]->value(dst);
+  void FastIteratorPermuter::value(SimpleString *dst) const {
+    for (auto i : iterators) {
+      i->value(dst);
     }
-    LEAVE_METHOD;
   }
 
-  bool IteratorPermuter::hasNext() const {
-    ENTER_METHOD;
-
-    if (state == resetted) {
-      RETURN(true);
-    }
-
-    if (occurs < max_occurs) {
-      RETURN(true);
-    }
-
-    RETURN(existsIteratorWithNextElement());
-  }
-
-  bool IteratorPermuter::next() {
+  bool FastIteratorPermuter::next() {
     ENTER_METHOD;
 
     /* special case handling for resetted state */
@@ -62,23 +45,25 @@ namespace rexgen {
       RETURN(true);
     }
 
-    /* special case handling for quantifier which starts with 0, i.e. {0,3} */
-    if (state == usable && occurs == 0) {
-      ++occurs;
+    for (auto i : iterators) {
+      if (i->next()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool FastIteratorPermuter::hasNext() const {
+    ENTER_METHOD;
+
+    if (state == resetted) {
       RETURN(true);
     }
 
-    unsigned int n = 0;
-    for (; n < occurs; ++n) { if (iterators[n]->next()) { break; }}
-    if (n == max_occurs) {
-      occurs = min_occurs;
-      RETURN(false);
-    }
-    if (n == occurs) { ++occurs; }
-    RETURN(true);
+    RETURN(existsIteratorWithNextElement());
   }
 
-  void IteratorPermuter::init() {
+  void FastIteratorPermuter::init() {
     ENTER_METHOD;
 
     bool has_next = false;
@@ -88,13 +73,11 @@ namespace rexgen {
     }
     hasNextElement = has_next;
 
-    occurs = min_occurs;
-    current = 0;
     state = resetted;
     LEAVE_METHOD;
   }
 
-  bool IteratorPermuter::existsIteratorWithNextElement() const {
+  bool FastIteratorPermuter::existsIteratorWithNextElement() const {
     ENTER_METHOD;
     for (auto i : iterators) {
       if (i->hasNext()) {
