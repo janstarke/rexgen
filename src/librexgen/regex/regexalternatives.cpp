@@ -44,12 +44,7 @@ namespace rexgen {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         iter = regexObjects[0]->iterator(state);
       } else {
-
-        if (getMinOccurs() == getMaxOccurs()) {
-          iter = std::make_unique<FastIteratorPermuter>(*(regexObjects[0]), state, getMinOccurs());
-        } else {
-          iter = std::make_unique<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
-        }
+       iter = std::make_unique<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
       }
     } else {
       iter = RegexContainer::iterator(state);

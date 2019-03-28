@@ -79,11 +79,7 @@ namespace rexgen {
         return re->iterator(state);
       }
 
-      if (getMinOccurs() == getMaxOccurs()) {
-        return std::make_unique<FastIteratorPermuter>(*re, state, getMinOccurs());
-      } else {
-        return std::make_unique<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
-      }
+      return std::make_unique<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
     }
 
     assert(regexObjects.size() > 1);

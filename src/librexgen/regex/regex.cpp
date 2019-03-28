@@ -29,10 +29,6 @@ namespace rexgen {
       return singleIterator(state);
     }
 
-    if (getMinOccurs() == getMaxOccurs()) {
-      return std::make_unique<FastIteratorPermuter>(*this, state, getMinOccurs());
-    } else {
-      return std::make_unique<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
-    }
+    return std::make_unique<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
   }
 }

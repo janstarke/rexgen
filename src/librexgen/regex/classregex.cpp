@@ -18,6 +18,7 @@
 */
 
 #include <librexgen/regex/classregex.h>
+#include <librexgen/iterator/FastIteratorPermuter.h>
 #include <algorithm>
 #include <vector>
 namespace rexgen {
@@ -101,6 +102,31 @@ namespace rexgen {
         characters.erase(L'\t');
         break;
     }
+  }
+
+
+  std::unique_ptr<Iterator> ClassRegex::iterator(IteratorState& state) const {
+    if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
+      return singleIterator(state);
+    }
+
+    if (characters.size() == 0 &&
+        ranges.size() == 1 &&
+        getMinOccurs() == getMaxOccurs() &&
+        getMinOccurs() > 0) {
+/* we have exactly one single range */
+      switch (*(ranges.begin())) {
+        case DIGITS:
+          return std::make_unique<FastIteratorPermuter<RangeIterator<'0', '9'>>>(getMinOccurs());
+        case UPPERCASE:
+          return std::make_unique<FastIteratorPermuter<RangeIterator<'A', 'Z'>>>(getMinOccurs());
+        case LOWERCASE:
+          return std::make_unique<FastIteratorPermuter<RangeIterator<'a', 'z'>>>(getMinOccurs());
+        default: break;
+      }
+    }
+
+    return std::make_unique<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs() );
   }
 
   std::unique_ptr<Iterator> ClassRegex::singleIterator(IteratorState& /* state */) const {
