@@ -61,18 +61,18 @@ namespace rexgen {
     LEAVE_METHOD;
   }
 
-  std::shared_ptr<Iterator> CompoundRegex::singleIterator(IteratorState& state) const {
+  std::unique_ptr<Iterator> CompoundRegex::singleIterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       return regexObjects[0]->iterator(state);
     }
 
-    auto cri = std::make_shared<CompoundRegexIterator>();
+    auto cri = std::make_unique<CompoundRegexIterator>();
     std::for_each(regexObjects.begin(), regexObjects.end(),
             [&cri,&state](const std::shared_ptr<Regex>& r) {cri->addChild(r->iterator(state));});
     return cri;
   }
 
-  std::shared_ptr<Iterator> CompoundRegex::iterator(IteratorState& state) const {
+  std::unique_ptr<Iterator> CompoundRegex::iterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       const std::shared_ptr<Regex>& re = regexObjects[0];
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
@@ -80,9 +80,9 @@ namespace rexgen {
       }
 
       if (getMinOccurs() == getMaxOccurs()) {
-        return std::make_shared<FastIteratorPermuter>(*re, state, getMinOccurs());
+        return std::make_unique<FastIteratorPermuter>(*re, state, getMinOccurs());
       } else {
-        return std::make_shared<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
+        return std::make_unique<IteratorPermuter>(*re, state, getMinOccurs(), getMaxOccurs());
       }
     }
 

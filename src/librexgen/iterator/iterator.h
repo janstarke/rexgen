@@ -88,6 +88,12 @@ namespace rexgen {
   private:
     const uintptr_t id;
   };
+
+  class NullIterator : public Iterator {
+    bool next()                                           override { throw std::runtime_error("not implemented");}
+    void updateReferences(IteratorState& /* iterState */) override { throw std::runtime_error("not implemented");}
+    void updateAttributes(IteratorState& /* iterState */) override { throw std::runtime_error("not implemented");}
+  };
 }
 #endif /* __cplusplus */
 

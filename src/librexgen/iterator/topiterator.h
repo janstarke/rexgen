@@ -44,7 +44,7 @@ namespace rexgen {
 
     bool next() override {
       if (needWord) {
-        bool res = state.getStreamIterator()->forceNext();
+        bool res = state.getStreamIterator().get().forceNext();
         if (res) {
           needWord = false;
         }
@@ -53,8 +53,8 @@ namespace rexgen {
       bool res = child->next();
       if (res) { return res; }
 
-      if (state.getStreamIterator() == NULL) { return false; }
-      res = state.getStreamIterator()->forceNext();
+      if (! state.hasStreamIterator()) { return false; }
+      res = state.getStreamIterator().get().forceNext();
       if (res) { return res; }
       needWord = true;
       return false;

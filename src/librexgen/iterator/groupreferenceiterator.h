@@ -30,7 +30,8 @@ namespace rexgen {
   class GroupReferenceIterator : public IteratorContainer {
   public:
     GroupReferenceIterator(int group)
-            : IteratorContainer(), groupId(group) {}
+            : IteratorContainer(), groupId(group), groupRef(std::ref(null_iter)) {
+    }
 
     inline bool hasNext() const override { return (state == resetted); }
 
@@ -40,13 +41,16 @@ namespace rexgen {
       return res;
     }
 
-    inline void value(SimpleString *dst) const override { if (auto r = groupRef.lock()) { r->value(dst); } }
+    inline void value(SimpleString *dst) const override {
+      groupRef.get().value(dst);
+    }
 
     void updateReferences(IteratorState& iterState) override;
 
   private:
+    NullIterator null_iter;
     int groupId;
-    std::weak_ptr<Iterator> groupRef;
+    std::reference_wrapper<Iterator> groupRef;
   };
 }
 

@@ -60,9 +60,9 @@ namespace rexgen {
 
     virtual RegexType getRegexType() const = 0;
 
-    virtual std::shared_ptr<Iterator> iterator(IteratorState& state) const;
+    virtual std::unique_ptr<Iterator> iterator(IteratorState& state) const;
 
-    virtual std::shared_ptr<Iterator> singleIterator(IteratorState& state) const = 0;
+    virtual std::unique_ptr<Iterator> singleIterator(IteratorState& state) const = 0;
 
     int getId() const { return id; }
 

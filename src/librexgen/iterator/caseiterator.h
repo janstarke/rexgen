@@ -30,7 +30,7 @@
 namespace rexgen {
   class CaseIterator : public IteratorContainer {
   public:
-    CaseIterator(std::shared_ptr<Iterator> _child, int options);
+    CaseIterator(std::unique_ptr<Iterator>& _child, int options);
 
     bool next();
 

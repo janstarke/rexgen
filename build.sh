@@ -14,7 +14,8 @@ if [ `uname`=='Darwin' ]; then
   export CMAKE_PREFIX_PATH="/usr/local/opt/bison:/usr/local/opt/flex"
 fi
 echo "running >>> cmake ${CMAKE_OPTIONS} ${BASEDIR}/src <<<"
-cmake ${CMAKE_OPTIONS} ${BASEDIR}/src && make -j `getconf NPROCESSORS_ONLN`
+cmake -E env CFLAGS="${CFLAGS}" CPPFLAGS="${CPPFLAGS}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" \
+    cmake ${CMAKE_OPTIONS} ${BASEDIR}/src && make -j `getconf NPROCESSORS_ONLN`
 
 if test "x${TEST_ENABLED}" = "x1" -a $? -eq "0"; then
 #  lcov --gcov-tool /usr/local/bin/gcov-7 -d . -b . -z

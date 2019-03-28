@@ -25,45 +25,42 @@
 #include <librexgen/iterator/FastIteratorPermuter.h>
 
 namespace rexgen {
-  std::shared_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
+  std::unique_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       return regexObjects[0]->iterator(state);
     }
 
-    auto rai = std::make_shared<RegexAlternativesIterator>();
+    auto rai = std::make_unique<RegexAlternativesIterator>();
     for (auto i : regexObjects) {
       rai->addChild(i->iterator(state));
     }
     return rai;
   }
 
-  std::shared_ptr<Iterator> RegexAlternatives::iterator(IteratorState& state) const {
-    if (state.hasId(getGroupId())) {
-      state[getGroupId()].lock();
-    }
+  std::unique_ptr<Iterator> RegexAlternatives::iterator(IteratorState& state) const {
 
-    std::shared_ptr<Iterator> iter;
+    std::unique_ptr<Iterator> iter;
     if (regexObjects.size() == 1) {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         iter = regexObjects[0]->iterator(state);
       } else {
 
         if (getMinOccurs() == getMaxOccurs()) {
-          iter = std::make_shared<FastIteratorPermuter>(*(regexObjects[0]), state, getMinOccurs());
+          iter = std::make_unique<FastIteratorPermuter>(*(regexObjects[0]), state, getMinOccurs());
         } else {
-          iter = std::make_shared<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
+          iter = std::make_unique<IteratorPermuter>(*(regexObjects[0]), state, getMinOccurs(), getMaxOccurs());
         }
       }
     } else {
       iter = RegexContainer::iterator(state);
     }
 
-    if (getGroupId() > 0) {
-      state.registerIterator(getGroupId(), iter);
+    if (handle_case != CASE_IGNORE) {
+      iter = std::make_unique<CaseIterator>(iter, handle_case);
     }
 
-    if (handle_case != CASE_IGNORE) {
-      iter = std::make_shared<CaseIterator>(iter, handle_case);
+    if (getGroupId() > 0) {
+      state.registerIterator(getGroupId(), std::ref(*iter));
     }
 
     return iter;

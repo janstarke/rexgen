@@ -25,6 +25,7 @@
 #include <librexgen/regex/regex.h>
 #include <map>
 #include <algorithm>
+#include <functional>
 #include <stdexcept>
 namespace rexgen {
   class IteratorState {
@@ -37,17 +38,17 @@ namespace rexgen {
     IteratorState& operator=(const IteratorState&) = delete;
     IteratorState& operator=(IteratorState&&) = delete;
 
-    void registerIterator(int id, std::weak_ptr<Iterator> iterator) {
-      groupIterators[id] = iterator;
+    void registerIterator(int id, std::reference_wrapper<Iterator> iterator) {
+      groupIterators.insert(std::make_pair(id, iterator));
     }
 
     bool hasId(int id) const {
       return (groupIterators.find(id) != groupIterators.end());
     }
 
-    std::weak_ptr<Iterator> operator[](int id) const {
+    std::reference_wrapper<Iterator> operator[](int id) const {
       if (id == -1) {
-        return getStreamIterator();
+        return std::ref(static_cast<Iterator&>(getStreamIterator().get()));
       } else {
         auto iter = groupIterators.find(id);
         if (iter != groupIterators.end()) {
@@ -58,18 +59,22 @@ namespace rexgen {
       }
     }
 
-    void setStreamIterator(std::shared_ptr<StreamRegexIterator> iter) {
+    void setStreamIterator(std::unique_ptr<StreamRegexIterator>& iter) {
       if (streamIterator != nullptr) {
         throw std::runtime_error("multiple stream iterator assignment");
       }
-      streamIterator = iter;
+      streamIterator = std::move(iter);
     }
 
-    std::shared_ptr<StreamRegexIterator> getStreamIterator() const { return streamIterator; }
+    bool hasStreamIterator() const { return streamIterator != nullptr; }
+
+    std::reference_wrapper<StreamRegexIterator> getStreamIterator() const {
+      return std::ref(*streamIterator);
+    }
 
   private:
-    std::map<int, std::weak_ptr<Iterator> > groupIterators;
-    std::shared_ptr<StreamRegexIterator> streamIterator;
+    std::map<int, std::reference_wrapper<Iterator> > groupIterators;
+    mutable std::unique_ptr<StreamRegexIterator> streamIterator;
   };
 }
 

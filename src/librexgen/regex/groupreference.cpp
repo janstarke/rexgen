@@ -23,9 +23,9 @@
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/string/simplestring.h>
 namespace rexgen {
-  std::shared_ptr<Iterator> GroupReference::singleIterator(IteratorState& /* state */) const {
+  std::unique_ptr<Iterator> GroupReference::singleIterator(IteratorState& /* state */) const {
     auto ref = groupRef.lock();
     assert(ref != nullptr);
-    return std::make_shared<GroupReferenceIterator>(ref->getGroupId());
+    return std::make_unique<GroupReferenceIterator>(ref->getGroupId());
   }
 }

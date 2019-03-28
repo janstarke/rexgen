@@ -24,15 +24,15 @@
 namespace rexgen {
   int Regex::next_id = 0;
 
-  std::shared_ptr<Iterator> Regex::iterator(IteratorState& state) const {
+  std::unique_ptr<Iterator> Regex::iterator(IteratorState& state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     }
 
     if (getMinOccurs() == getMaxOccurs()) {
-      return std::make_shared<FastIteratorPermuter>(*this, state, getMinOccurs());
+      return std::make_unique<FastIteratorPermuter>(*this, state, getMinOccurs());
     } else {
-      return std::make_shared<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
+      return std::make_unique<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs());
     }
   }
 }

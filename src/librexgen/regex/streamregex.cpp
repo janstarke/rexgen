@@ -24,11 +24,13 @@ namespace rexgen {
           : callback(cb) {
   }
 
-  std::shared_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
-    auto iter = state.getStreamIterator();
-    if (iter == nullptr) {
-      iter = std::make_shared<StreamRegexIterator>(callback);
+  std::unique_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
+    std::unique_ptr<StreamRegexIterator> iter = nullptr;
+    if (! state.hasStreamIterator()) {
+      iter = std::make_unique<StreamRegexIterator>(callback);
       state.setStreamIterator(iter);
+    } else {
+      throw std::runtime_error("unable to handle multiple stream iterators at the moment");
     }
     return iter;
   }
