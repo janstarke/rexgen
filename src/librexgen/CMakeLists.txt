@@ -15,7 +15,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-include_directories("/usr/local/Cellar/flex/2.6.4/include/")
+include_directories(${FLEX_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/..")
 

@@ -25,16 +25,11 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/rexgen_options.h>
-#include <librexgen/parser/rexgenparsingdriver.h>
 
 EXPORT
 std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
 
 EXPORT
 std::shared_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
-
-namespace rexgen {
-  class RexgenParsingDriver;
-}
 
 #endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */
