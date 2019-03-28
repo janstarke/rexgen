@@ -31,23 +31,14 @@ namespace rexgen {
   public:
     void value(SimpleString *dst) const;
 
-    bool hasNext() const;
-
     IteratorPermuter(const Regex& re, IteratorState& is,
                      unsigned int min, unsigned int max);
     bool next();
 
     void init();
 
-    /**
-     * returns the number of elements created by this iterator
-     */
-    // uint64_t size() const;
   private:
-    bool existsIteratorWithNextElement() const;
-
     const unsigned int min_occurs, max_occurs;
-    bool hasNextElement;
 
     unsigned int current;
     unsigned int occurs;

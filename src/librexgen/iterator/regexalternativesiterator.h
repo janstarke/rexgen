@@ -39,8 +39,6 @@ namespace rexgen {
       (*getPosition())->value(dst);
     }
 
-    bool hasNext() const;
-
     void addChild(std::shared_ptr<Iterator> re);
 
     std::shared_ptr<SerializableState> getCurrentState() const;

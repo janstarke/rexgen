@@ -37,8 +37,6 @@ namespace rexgen {
 
     void value(SimpleString *dst) const;
 
-    bool hasNext() const;
-
     std::shared_ptr<SerializableState> getCurrentState() const;
 
     void setCurrentState(const std::shared_ptr<SerializableState>& state);

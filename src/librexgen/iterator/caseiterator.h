@@ -32,8 +32,6 @@ namespace rexgen {
   public:
     CaseIterator(std::shared_ptr<Iterator> _child, int options);
 
-    bool hasNext() const;
-
     bool next();
 
     void fast_next();

@@ -22,7 +22,7 @@
 #include <set>
 namespace rexgen {
   FastIteratorPermuter::FastIteratorPermuter(const Regex& re, IteratorState& is, unsigned int occurs)
-          : IteratorContainer(), hasNextElement(true) {
+          : IteratorContainer() {
     assert(occurs > 0);
     for (unsigned int n = 0; n < occurs; ++n) {
       addChild(re.singleIterator(is));
@@ -53,38 +53,14 @@ namespace rexgen {
     return false;
   }
 
-  bool FastIteratorPermuter::hasNext() const {
-    ENTER_METHOD;
-
-    if (state == resetted) {
-      RETURN(true);
-    }
-
-    RETURN(existsIteratorWithNextElement());
-  }
-
   void FastIteratorPermuter::init() {
     ENTER_METHOD;
 
-    bool has_next = false;
     for (auto i : iterators) {
       i->next();
-      has_next |= i->hasNext();
     }
-    hasNextElement = has_next;
 
     state = resetted;
     LEAVE_METHOD;
   }
-
-  bool FastIteratorPermuter::existsIteratorWithNextElement() const {
-    ENTER_METHOD;
-    for (auto i : iterators) {
-      if (i->hasNext()) {
-        RETURN(true);
-      }
-    }
-    RETURN(false);
-  }
-
 }

@@ -60,13 +60,6 @@ namespace rexgen {
     return childHadNext;
   }
 
-  bool CaseIterator::hasNext() const {
-    if (word.size() == 0) {
-      return child->hasNext();
-    }
-    return true;
-  }
-
 /* this function is inspired by the algorithm for Grey binary generation
  * of Donald Ervin Knuth, found in TAOCP, 7.2.1.1 */
   bool CaseIterator::next() {

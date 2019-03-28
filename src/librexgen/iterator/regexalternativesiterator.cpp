@@ -56,33 +56,6 @@ namespace rexgen {
     RETURN(true);
   }
 
-  bool RegexAlternativesIterator::hasNext() const {
-    ENTER_METHOD;
-    if (iterators.size() == 0 || state == not_usable) {
-      /* if we don't have any iterator, you cannot call next() */
-      RETURN(false);
-    }
-
-    if (state == resetted) {
-      /* we can return true here,
-       * because we know that we have at least one iterator
-       */
-      RETURN(true);
-    }
-
-    if (getPosition() == iterators.end()) {
-      RETURN(false);
-    }
-
-    if ((*(getPosition()))->hasNext()) {
-      RETURN(true);
-    } else {
-      children_list_type::iterator tmp = getPosition();
-      ++tmp;
-      RETURN(tmp != iterators.end());
-    }
-  }
-
   void RegexAlternativesIterator::addChild(std::shared_ptr<Iterator> i) {
     ENTER_METHOD;
     iterators.push_back(i);

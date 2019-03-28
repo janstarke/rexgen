@@ -17,17 +17,11 @@ namespace rexgen {
   public:
     void value(SimpleString *dst) const;
 
-    bool hasNext() const;
-
     FastIteratorPermuter(const Regex &re, IteratorState &is, unsigned int occurs);
 
     bool next();
 
     void init();
-
-  private:
-    bool existsIteratorWithNextElement() const;
-    bool hasNextElement;
   };
 }
 

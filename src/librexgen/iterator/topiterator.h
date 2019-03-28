@@ -62,8 +62,6 @@ namespace rexgen {
 
     void value(SimpleString *dst) const override { child->value(dst); }
 
-    bool hasNext() const override { return child->hasNext(); }
-
     void updateReferences(IteratorState&/* ignore */) override {
       updateReferences();
     }
