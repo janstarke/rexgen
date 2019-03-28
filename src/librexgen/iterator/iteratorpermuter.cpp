@@ -67,7 +67,7 @@ namespace rexgen {
   void IteratorPermuter::init() {
     ENTER_METHOD;
 
-    for (auto i : iterators) {
+    for (std::unique_ptr<Iterator>& i : iterators) {
       i->next();
     }
 

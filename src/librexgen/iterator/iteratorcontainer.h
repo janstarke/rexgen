@@ -31,22 +31,22 @@ namespace rexgen {
 
   class IteratorContainer : public Iterator {
   public:
-    typedef std::vector<std::shared_ptr<Iterator>> children_list_type;
+    typedef std::vector<std::unique_ptr<Iterator>> children_list_type;
 
     virtual void updateAttributes(IteratorState& iterState) {
-      for (auto child : iterators) {
+      for (std::unique_ptr<Iterator>& child : iterators) {
         child->updateAttributes(iterState);
       }
     }
 
     virtual void updateReferences(IteratorState& iterState) {
-      for (auto child : iterators) {
+      for (std::unique_ptr<Iterator>& child : iterators) {
         child->updateReferences(iterState);
       }
     }
 
-    virtual void addChild(std::shared_ptr<Iterator> i) {
-      iterators.push_back(i);
+    virtual void addChild(std::unique_ptr<Iterator>&& i) {
+      iterators.push_back(std::move(i));
     }
 
   protected:

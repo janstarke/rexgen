@@ -25,13 +25,16 @@ namespace rexgen {
           : IteratorContainer() {
     assert(occurs > 0);
     for (unsigned int n = 0; n < occurs; ++n) {
-      addChild(re.singleIterator(is));
+      auto iter = re.singleIterator(is);
+      iter->next();
+      addChild(std::move(iter));
     }
-    init();
+
+    state = resetted;
   }
 
   void FastIteratorPermuter::value(SimpleString *dst) const {
-    for (auto i : iterators) {
+    for (const std::unique_ptr<Iterator>& i : iterators) {
       i->value(dst);
     }
   }
@@ -45,22 +48,11 @@ namespace rexgen {
       RETURN(true);
     }
 
-    for (auto i : iterators) {
+    for (std::unique_ptr<Iterator>& i : iterators) {
       if (i->next()) {
         return true;
       }
     }
     return false;
-  }
-
-  void FastIteratorPermuter::init() {
-    ENTER_METHOD;
-
-    for (auto i : iterators) {
-      i->next();
-    }
-
-    state = resetted;
-    LEAVE_METHOD;
   }
 }

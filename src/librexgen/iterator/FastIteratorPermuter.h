@@ -20,8 +20,6 @@ namespace rexgen {
     FastIteratorPermuter(const Regex &re, IteratorState &is, unsigned int occurs);
 
     bool next();
-
-    void init();
   };
 }
 

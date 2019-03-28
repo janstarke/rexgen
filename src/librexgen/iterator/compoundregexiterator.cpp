@@ -27,12 +27,12 @@ namespace rexgen {
     if (state == resetted) {
       state = usable;
       bool res = false;
-      for (auto i : iterators) {
+      for (std::unique_ptr<Iterator>& i : iterators) {
         res |= i->next();
       }
       return res;
     }
-    for (auto i : iterators) {
+    for (std::unique_ptr<Iterator>& i : iterators) {
       if (i->next()) {
         return true;
       }
@@ -42,14 +42,14 @@ namespace rexgen {
 
   void CompoundRegexIterator::value(SimpleString *dst) const {
     // assert(canUseValue());
-    for (auto i : iterators) {
+    for (const std::unique_ptr<Iterator>& i : iterators) {
       i->value(dst);
     }
   }
 
   std::shared_ptr<SerializableState> CompoundRegexIterator::getCurrentState() const {
     auto s = Iterator::getCurrentState();
-    for (auto i : iterators) {
+    for (const std::unique_ptr<Iterator>& i : iterators) {
       s->addValue(i->getCurrentState());
     }
     return s;
@@ -58,7 +58,7 @@ namespace rexgen {
   void CompoundRegexIterator::setCurrentState(const std::shared_ptr<SerializableState>& s) {
     Iterator::setCurrentState(s);
 
-    for (auto i : iterators) {
+    for (const std::unique_ptr<Iterator>& i : iterators) {
       i->setCurrentState(s->getChildState(i->getId()));
     }
   }

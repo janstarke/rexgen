@@ -39,7 +39,7 @@ namespace rexgen {
       (*getPosition())->value(dst);
     }
 
-    void addChild(std::shared_ptr<Iterator> re);
+    void addChild(std::unique_ptr<Iterator>&& re);
 
     std::shared_ptr<SerializableState> getCurrentState() const;
 
