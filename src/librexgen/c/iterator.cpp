@@ -36,8 +36,9 @@ c_iterator_ptr c_regex_iterator(c_regex_ptr regex) {
   if (regex == c_regex_none) {
     return c_iterator_none;
   }
-  auto iter = std::make_shared<rexgen::TopIterator>(ApiContext::instance().getRegex(regex));
-  return ApiContext::instance().addIterator(iter);
+  return ApiContext::instance().addIterator(
+          std::make_unique<rexgen::TopIterator>(
+                  ApiContext::instance().getRegex(regex)));
 }
 
 static callback_fp CALLBACK_WCWRAPPER = NULL;

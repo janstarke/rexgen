@@ -98,16 +98,13 @@ namespace rexgen {
 
     std::shared_ptr<SerializableState> getCurrentState() const {
       auto s = Iterator::getCurrentState();
-      s->addValue(canary);
       s->addValue(current);
       return s;
     }
 
     void setCurrentState(const std::shared_ptr<SerializableState>& s) {
       Iterator::setCurrentState(s);
-      auto c = s->getValue(0);
-      assert(c == canary);
-      current = s->getValue(1);
+      current = s->getValue(0);
     }
 
   private:
@@ -122,8 +119,6 @@ namespace rexgen {
     SimpleString characters;
     vector<std::string::size_type> indices;
     vector<std::string::size_type> lengths;
-
-    static constexpr SerializableState::stateword_t canary = 0x73659035;
   };
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_

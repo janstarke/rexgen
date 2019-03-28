@@ -41,13 +41,13 @@ public:
   }
 
   inline c_regex_ptr addRegex(std::shared_ptr<rexgen::Regex> regex);
-  inline c_iterator_ptr addIterator(std::shared_ptr<rexgen::Iterator> iter);
+  inline c_iterator_ptr addIterator(std::unique_ptr<rexgen::Iterator>&& iter);
 
   inline void deleteRegex(const c_regex_ptr& id);
   inline void deleteIterator(const c_iterator_ptr& id);
 
   inline std::shared_ptr<rexgen::Regex>& getRegex(const c_regex_ptr& id);
-  inline std::shared_ptr<rexgen::Iterator>& getIterator(const c_iterator_ptr& id);
+  inline std::unique_ptr<rexgen::Iterator>& getIterator(const c_iterator_ptr& id);
 
 private:
   ApiContext() : _id(0){}
@@ -55,7 +55,7 @@ private:
   inline int next_id() { return (++_id); }
 
   std::map<c_regex_ptr, std::shared_ptr<rexgen::Regex>> regex_map;
-  std::map<c_iterator_ptr, std::shared_ptr<rexgen::Iterator>> iterator_map;
+  std::map<c_iterator_ptr, std::unique_ptr<rexgen::Iterator>> iterator_map;
   int _id;
 };
 
@@ -65,10 +65,10 @@ c_regex_ptr ApiContext::addRegex(std::shared_ptr<rexgen::Regex> regex) {
   regex_map.insert(std::make_pair(id, regex));
   return id;
 }
-c_iterator_ptr ApiContext::addIterator(std::shared_ptr<rexgen::Iterator> iter) {
+c_iterator_ptr ApiContext::addIterator(std::unique_ptr<rexgen::Iterator>&& iter) {
   auto id = next_id();
   assert(id != c_iterator_none);
-  iterator_map.insert(std::make_pair(id, iter));
+  iterator_map.insert(std::make_pair(id, std::move(iter)));
   return id;
 }
 
@@ -82,7 +82,7 @@ void ApiContext::deleteIterator(const c_iterator_ptr& id) {
 std::shared_ptr<rexgen::Regex>& ApiContext::getRegex(const c_regex_ptr& id) {
   return regex_map.at(id);
 }
-std::shared_ptr<rexgen::Iterator>& ApiContext::getIterator(const c_iterator_ptr& id) {
+std::unique_ptr<rexgen::Iterator>& ApiContext::getIterator(const c_iterator_ptr& id) {
   return iterator_map.at(id);
 }
 

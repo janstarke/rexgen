@@ -30,6 +30,6 @@ EXPORT
 std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::RexgenOptions& options);
 
 EXPORT
-std::shared_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
+std::unique_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options);
 
 #endif /* SRC_LIBREXGEN_LIBREXGEN_H_ */

@@ -45,9 +45,9 @@ std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::Rexg
 }
 
 EXPORT
-std::shared_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
+std::unique_ptr<rexgen::Iterator> regex_iterator(const char* regex, const rexgen::RexgenOptions& options) {
   if (auto re = parse_regex(regex, options)) {
-    return std::make_shared<rexgen::TopIterator>(re);
+    return std::make_unique<rexgen::TopIterator>(re);
   }
   return nullptr;
 }
