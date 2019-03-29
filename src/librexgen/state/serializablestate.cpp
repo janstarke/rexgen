@@ -23,6 +23,7 @@
 #include <map>
 #include <cstddef>
 #include <iostream>
+#include <cassert>
 
 using std::size_t;
 
