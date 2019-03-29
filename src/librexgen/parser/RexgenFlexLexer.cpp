@@ -17,6 +17,7 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
+#include <cstring>
 #include <librexgen/parser/RexgenFlexLexer.h>
 #include <librexgen/parser/rexgenparsingdriver.h>
 
