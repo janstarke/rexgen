@@ -24,13 +24,13 @@
 #include <librexgen/regex/classregex.h>
 #include <librexgen/iterator/classregexiterator.h>
 #include <set>
-#include <pcrecpp.h>
+#include <boost/regex.hpp>
 
 #define TESTS_UTILS_H
 
 void validateRegex(const char* input_regex,
                    const size_t nValues);
 void validateFailure(const char* input_regex);
-bool matches(const char* value, const char* regex);
+bool matches(const char* value, const boost::regex& regex);
 
 #endif /* TESTS_UTILS_H */

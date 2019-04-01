@@ -23,14 +23,14 @@
 #include "utils.h"
 #include <boost/regex.hpp>
 
-bool matches(const char* value, const char* regex) {
-  boost::regex _re(regex);
-  return boost::regex_match(value, _re);
+bool matches(const char* value, const boost::regex& regex) {
+  return boost::regex_match(value, regex);
 }
 
 void validateRegex(const char* input_regex,
                    const size_t nValues,
                    bool stateful) {
+  boost::regex _re(input_regex);
 
   rexgen::RexgenOptions options;
   auto regex = parse_regex(input_regex, options);
@@ -44,7 +44,7 @@ void validateRegex(const char* input_regex,
     str.clear();
     iter->value(str);
     const char* generated_value = str.c_str();
-    REQUIRE(matches(generated_value, input_regex));
+    REQUIRE(matches(generated_value, _re));
     generated_values.push_back(str);
 
     if (stateful) {

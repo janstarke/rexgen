@@ -60,7 +60,6 @@ TEST_CASE("TestIteratorWithOneElement", "TestIteratorWithOneElement") {
   delete iter;
 }
 
-TEST_CASE("TestSingle1", "TestSingle1") {validateRegex("[]",                    0);}
 TEST_CASE("TestSingle2", "TestSingle2") {validateRegex("[a]",                   1);}
 TEST_CASE("TestDigits1", "TestDigits1") {validateRegex("\\d",                  10);}
 TEST_CASE("TestDigits2", "TestDigits2") {validateRegex("[\\d]",                10);}
@@ -75,7 +74,6 @@ TEST_CASE("TestClass04", "TestClass04") {validateRegex("[a-z]",                2
 TEST_CASE("TestClass05", "TestClass05") {validateRegex("[A-Z]",                26);}
 TEST_CASE("TestClass06", "TestClass06") {validateRegex("[a-f]",                 6);}
 TEST_CASE("TestClass07", "TestClass07") {validateRegex("[A-F]",                 6);}
-TEST_CASE("TestClass08", "TestClass08") {validateRegex("[c-a]",                 0);}
 TEST_CASE("TestClass09", "TestClass09") {validateRegex("[3-6]",                 4);}
 TEST_CASE("TestClass10", "TestClass10") {validateRegex("[0-9]",                10);}
 TEST_CASE("TestClass15", "TestClass15") {validateRegex("[\\w\\d]",             63);}
