@@ -23,29 +23,19 @@
 #include "utils.h"
 #include <boost/regex.hpp>
 
-bool matches(const char* value, const boost::regex& regex) {
+bool matches(const std::string& value, const boost::regex& regex) {
   return boost::regex_match(value, regex);
 }
 
-void validateRegex(const char* input_regex,
-                   const size_t nValues,
-                   bool stateful) {
-  boost::regex _re(input_regex);
-
-  rexgen::RexgenOptions options;
-  auto regex = parse_regex(input_regex, options);
-  REQUIRE(regex != nullptr);
-
-  auto iter = std::make_shared<rexgen::TopIterator>(regex);
-
+size_t count(std::shared_ptr<rexgen::TopIterator> iter, const boost::regex& regex, bool stateful) {
+  size_t cnt = 0;
   std::string str;
-  std::list<std::string> generated_values;
+
   while (iter->next()) {
     str.clear();
     iter->value(str);
-    const char* generated_value = str.c_str();
-    REQUIRE(matches(generated_value, _re));
-    generated_values.push_back(str);
+    REQUIRE(matches(str, regex));
+    ++cnt;
 
     if (stateful) {
       /* save and restore the iterator state */
@@ -53,13 +43,19 @@ void validateRegex(const char* input_regex,
       iter->setCurrentState(s);
     }
   }
-  REQUIRE(generated_values.size() == nValues);
+  return cnt;
 }
 
 void validateRegex(const char* input_regex,
                    const size_t nValues) {
-  validateRegex(input_regex, nValues, false);
-  validateRegex(input_regex, nValues, true);
+  boost::regex _re(input_regex);
+
+  rexgen::RexgenOptions options;
+  auto regex = parse_regex(input_regex, options);
+  REQUIRE(regex != nullptr);
+
+  REQUIRE(count(std::make_shared<rexgen::TopIterator>(regex), _re, true) == nValues);
+  REQUIRE(count(std::make_shared<rexgen::TopIterator>(regex), _re, false) == nValues);
 }
 
 void validateFailure(const char* input_regex) {
