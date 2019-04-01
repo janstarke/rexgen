@@ -1,6 +1,21 @@
-//
-// Created by Jan Starke on 2019-04-01.
-//
+/*
+    rexgen - a tool to create words based on regular expressions
+    Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
+
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the Free
+    Software Foundation; either version 2 of the License, or (at your option)
+    any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+    more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+*/
 
 #ifndef PROJECT_REXGENGENERATOR_H
 #define PROJECT_REXGENGENERATOR_H
@@ -10,17 +25,48 @@
 #include <string>
 
 namespace rexgen {
-  class RexgenGenerator : public Catch::Generators::IGenerator<std::string>{
-  public:
-    RexgenGenerator(const std::string& regex);
+  namespace catch2 {
+    class RexgenGenerator : public Catch::Generators::IGenerator<std::string> {
+    public:
+      RexgenGenerator(const std::string &regex);
 
-    std::string const& get() const override;
-    bool next() override;
+      std::string const &get() const override;
 
-  private:
-    std::string current_value;
-    std::unique_ptr<Iterator> iterator;
-  };
+      bool next() override;
+
+    private:
+      std::string current_value;
+      std::unique_ptr<Iterator> iterator;
+    };
+
+    Catch::Generators::GeneratorWrapper<std::string> regex(const std::string &regex) {
+      return Catch::Generators::GeneratorWrapper<std::string>(
+              std::unique_ptr<Catch::Generators::IGenerator<std::string>>(new RexgenGenerator(regex)));
+    }
+
+    RexgenGenerator::RexgenGenerator(const std::string &regex) {
+      rexgen::RexgenOptions options;
+      options.ignore_case = false;
+      options.infile = NULL;
+      iterator = regex_iterator(regex.c_str(), options);
+      assert(iterator != nullptr);
+      next();
+    }
+
+    std::string const &RexgenGenerator::get() const {
+      return current_value;
+    }
+
+    bool RexgenGenerator::next() {
+      if (iterator->next()) {
+        current_value.clear();
+        iterator->value(current_value);
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }
 
 #endif //PROJECT_REXGENGENERATOR_H

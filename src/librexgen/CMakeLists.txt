@@ -7,10 +7,6 @@ project(${librexgen} LANGUAGES CXX VERSION ${REXGEN_VERSION})
 find_package(BISON 3.3 REQUIRED)
 find_package(FLEX 2.6 REQUIRED)
 
-if(CATCH2_SUPPORT)
-	set(CATCH2_SRCS "catch2/RexgenGenerator.cpp")
-endif()
-
 include(CheckIncludeFiles)
 check_include_files("xlocale.h" HAVE_XLOCALE_H)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
