@@ -22,11 +22,11 @@
 #define SRC_LIBREXGEN_ITERATOR_ITERATOR_H_
 
 #include <librexgen/string/unicode.h>
-#include <librexgen/string/simplestring.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/state/serializablestate.h>
 #include <librexgen/state/invaliditeratoridexception.h>
 #include <memory>
+#include <string>
 
 #ifdef __cplusplus
 namespace rexgen {
@@ -37,7 +37,7 @@ namespace rexgen {
 
     explicit Iterator() :
             state(resetted),
-            id (reinterpret_cast<uintptr_t>(this)) {
+            id(reinterpret_cast<uintptr_t>(this)) {
     }
 
     virtual ~Iterator() {}
@@ -46,9 +46,8 @@ namespace rexgen {
 
     virtual bool next() = 0;
 
-    virtual void value(SimpleString * /* dst */) const {}
-
-    virtual bool canUseValue() const { return (state == usable); }
+    //virtual void value(SimpleString * /* dst */) const {}
+    virtual void value(std::string & /* dst */) const {}
 
     uintptr_t getId() const { return id; }
 
@@ -64,17 +63,15 @@ namespace rexgen {
       }
     }
 
-    virtual void updateReferences(IteratorState& /* iterState */) = 0;
+    virtual void updateReferences(IteratorState & /* iterState */) = 0;
 
-    virtual void updateAttributes(IteratorState& /* iterState */) = 0;
-
-    virtual bool isSingleton() const { return false; }
+    virtual void updateAttributes(IteratorState & /* iterState */) = 0;
 
     virtual std::shared_ptr<SerializableState> getCurrentState() const {
       return std::make_shared<SerializableState>(getId(), getState());
     }
 
-    virtual void setCurrentState(const std::shared_ptr<SerializableState>& s) {
+    virtual void setCurrentState(const std::shared_ptr<SerializableState> &s) {
       setState(s->getStateEnum());
     }
 
@@ -85,16 +82,59 @@ namespace rexgen {
       not_usable
     } state;
 
+    static inline void append_widechar(std::string &dst, const wchar_t &widechar);
+
+    static inline size_t character_length(std::string &, size_t idx);
+
+    static inline wchar_t widechar_at(const std::string &str, size_t index);
+
   private:
     const uintptr_t id;
   };
 
   class NullIterator : public Iterator {
-    bool next()                                           override { throw std::runtime_error("not implemented");}
-    void updateReferences(IteratorState& /* iterState */) override { throw std::runtime_error("not implemented");}
-    void updateAttributes(IteratorState& /* iterState */) override { throw std::runtime_error("not implemented");}
+    bool next() override { throw std::runtime_error("not implemented"); }
+
+    void updateReferences(IteratorState & /* iterState */) override { throw std::runtime_error("not implemented"); }
+
+    void updateAttributes(IteratorState & /* iterState */) override { throw std::runtime_error("not implemented"); }
   };
+
+  void Iterator::append_widechar(std::string &dst, const wchar_t &widechar) {
+    char buffer[MB_LEN_MAX];
+    int ch_size = std::wctomb(&buffer[0], widechar);
+
+    if (ch_size == -1) {
+      ch_size = 1;
+      buffer[0] = '?';
+    }
+
+    dst.append(&buffer[0], ch_size);
+  }
+
+  size_t Iterator::character_length(std::string &dst, size_t idx) {
+    int ch_size;
+    int pos = 0;
+    for (size_t i = 0; i < idx; ++i) {
+      ch_size = mblen(&(dst.at(pos)), MB_CUR_MAX);
+      assert(ch_size > 0 && ch_size <= 8);
+      pos += ch_size;
+    }
+    ch_size = mblen(&(dst.at(pos)), MB_CUR_MAX);
+    return static_cast<size_t>(ch_size);
+  }
+
+  wchar_t Iterator::widechar_at(const std::string &str, size_t index) {
+    wchar_t widechar = 0;
+    const int ch_size = std::mbtowc(&widechar, &(str.at(index)), MB_LEN_MAX);
+    if (ch_size == -1) {
+      const char questionmark = '?';
+      std::mbtowc(&widechar, &questionmark, sizeof(questionmark));
+    }
+    return widechar;
+  }
 }
+
 #endif /* __cplusplus */
 
 #endif /* SRC_LIBREXGEN_ITERATOR_ITERATOR_H_ */

@@ -22,9 +22,11 @@
 
 typedef int c_regex_ptr;
 typedef int c_iterator_ptr;
+typedef int c_simplestring_ptr;
 
 const c_regex_ptr c_regex_none = 0;
 const c_iterator_ptr c_iterator_none = 0;
+const c_simplestring_ptr c_simplestring_none = 0;
 
 #ifdef __cplusplus
 #include <librexgen/regex/regex.h>
@@ -42,12 +44,17 @@ public:
 
   inline c_regex_ptr addRegex(std::shared_ptr<rexgen::Regex> regex);
   inline c_iterator_ptr addIterator(std::unique_ptr<rexgen::Iterator>&& iter);
+  inline c_simplestring_ptr addString();
 
   inline void deleteRegex(const c_regex_ptr& id);
   inline void deleteIterator(const c_iterator_ptr& id);
+  inline void deleteString(const c_simplestring_ptr& id);
 
   inline std::shared_ptr<rexgen::Regex>& getRegex(const c_regex_ptr& id);
   inline std::unique_ptr<rexgen::Iterator>& getIterator(const c_iterator_ptr& id);
+  inline std::unique_ptr<std::string>& getString(const c_simplestring_ptr& id);
+
+  inline void value(const c_iterator_ptr& iter, c_simplestring_ptr& str);
 
 private:
   ApiContext() : _id(0){}
@@ -56,6 +63,7 @@ private:
 
   std::map<c_regex_ptr, std::shared_ptr<rexgen::Regex>> regex_map;
   std::map<c_iterator_ptr, std::unique_ptr<rexgen::Iterator>> iterator_map;
+  std::map<c_simplestring_ptr, std::unique_ptr<std::string>> string_map;
   int _id;
 };
 
@@ -71,6 +79,12 @@ c_iterator_ptr ApiContext::addIterator(std::unique_ptr<rexgen::Iterator>&& iter)
   iterator_map.insert(std::make_pair(id, std::move(iter)));
   return id;
 }
+c_simplestring_ptr ApiContext::addString() {
+  auto id = next_id();
+  assert(id != c_iterator_none);
+  string_map.insert(std::make_pair(id, std::make_unique<std::string>()));
+  return id;
+}
 
 void ApiContext::deleteRegex(const c_regex_ptr& id) {
   regex_map.erase(id);
@@ -78,12 +92,22 @@ void ApiContext::deleteRegex(const c_regex_ptr& id) {
 void ApiContext::deleteIterator(const c_iterator_ptr& id) {
   iterator_map.erase(id);
 }
+void ApiContext::deleteString(const c_simplestring_ptr& id) {
+  string_map.erase(id);
+}
 
 std::shared_ptr<rexgen::Regex>& ApiContext::getRegex(const c_regex_ptr& id) {
   return regex_map.at(id);
 }
 std::unique_ptr<rexgen::Iterator>& ApiContext::getIterator(const c_iterator_ptr& id) {
   return iterator_map.at(id);
+}
+std::unique_ptr<std::string>& ApiContext::getString(const c_simplestring_ptr& id) {
+  return string_map.at(id);
+}
+
+void ApiContext::value(const c_iterator_ptr& iter, c_simplestring_ptr& str) {
+  getIterator(iter)->value(*getString(str));
 }
 
 #endif

@@ -48,8 +48,8 @@ namespace rexgen {
 
     bool hasNext() const { return state == resetted; }
 
-    void value(SimpleString *dst) const {
-      dst->append(&buffer[0], length);
+    void value(std::string& dst) const {
+      dst.append(&buffer[0], length);
     }
 
     void updateReferences(IteratorState& /* iterState */) {}

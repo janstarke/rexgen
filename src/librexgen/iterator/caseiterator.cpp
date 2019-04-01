@@ -39,15 +39,15 @@ namespace rexgen {
 
     /* read next word */
     childHadNext = child->next();
-    child->value(&word);
+    child->value(word);
 
     /* store the indices of all convertible characters */
     for (unsigned int idx = 0; idx < word.size();) {
-      if (word.can_change_case(idx)) {
+      if (can_change_case(word, idx)) {
         changeable_characters.push_back(idx);
       }
 
-      idx += word.character_length(idx);
+      idx += character_length(word, idx);
     }
 
     if (changeable_characters.size() <= max_fast_character_bytes) {
@@ -101,7 +101,25 @@ namespace rexgen {
     // fprintf(stderr, "inverting at index %d\n", changeable_characters[j]);
 
     // assert(j < changeable_characters.size());
-    word.toggle_case(changeable_characters[j]);
+    toggle_case(changeable_characters[j]);
     --k;
+  }
+
+  inline void CaseIterator::toggle_case(size_t idx) {
+    wint_t (*toggle_fct)(wint_t) =
+    std::islower(word[idx]) ? (std::towupper) : (std::towlower);
+
+    const wchar_t this_widechar = widechar_at(word, idx);
+    if (this_widechar < 0x80) {
+      word.at(idx) = static_cast<char>(toggle_fct(this_widechar));
+    } else {
+      int ch_size = mblen(&(word.at(idx)), MB_CUR_MAX);
+      const std::string lhs = word.substr(0, idx);
+      const std::string rhs = word.substr(idx + ch_size);
+      word.clear();
+      word.append(lhs);
+      append_widechar(word, toggle_fct(this_widechar));
+      word.append(rhs);
+    }
   }
 }

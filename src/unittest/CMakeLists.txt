@@ -27,7 +27,7 @@ target_link_libraries(${testrexgen_exename} Boost::regex)
 if(MSVC)
 	ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 else()
-	ADD_DEFINITIONS("-std=c++11 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
+	ADD_DEFINITIONS("-std=c++14 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
 endif(MSVC)
 
 include(CTest)

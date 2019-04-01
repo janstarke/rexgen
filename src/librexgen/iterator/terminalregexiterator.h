@@ -34,7 +34,7 @@ namespace rexgen {
     TerminalRegexIterator(const wchar_t *_terminal, size_t elements)
             : Iterator() {
       for (size_t idx = 0; idx < elements; ++idx) {
-        terminal.append_widechar(_terminal[idx]);
+        append_widechar(terminal, _terminal[idx]);
       }
     }
 
@@ -44,8 +44,8 @@ namespace rexgen {
       return res;
     }
 
-    void value(SimpleString *dst) const override {
-      dst->append(terminal);
+    void value(std::string& dst) const override {
+      dst.append(terminal);
     }
 
     bool hasNext() const override { return state == resetted; }
@@ -55,7 +55,7 @@ namespace rexgen {
     void updateAttributes(IteratorState& /* iterState */) override {}
 
   private:
-    SimpleString terminal;
+    std::string terminal;
   };
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_TERMINALREGEXITERATOR_H_

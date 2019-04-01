@@ -33,13 +33,13 @@ namespace rexgen {
   public:
     explicit CompoundRegexIterator();
 
-    bool next();
+    bool next() override;
 
-    void value(SimpleString *dst) const;
+    void value(std::string& dst) const override;
 
-    std::shared_ptr<SerializableState> getCurrentState() const;
+    std::shared_ptr<SerializableState> getCurrentState() const override;
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& state);
+    void setCurrentState(const std::shared_ptr<SerializableState>& state) override;
   };
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_COMPOUNDREGEXITERATOR_H_

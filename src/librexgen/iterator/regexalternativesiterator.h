@@ -33,20 +33,19 @@ namespace rexgen {
   public:
     explicit RegexAlternativesIterator();
 
-    bool next();
+    bool next() override;
 
-    void value(SimpleString *dst) const {
+    void value(std::string& dst) const override {
       (*getPosition())->value(dst);
     }
 
-    void addChild(std::unique_ptr<Iterator>&& re);
+    void addChild(std::unique_ptr<Iterator>&& re) override;
 
-    std::shared_ptr<SerializableState> getCurrentState() const;
+    std::shared_ptr<SerializableState> getCurrentState() const override;
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& state);
+    void setCurrentState(const std::shared_ptr<SerializableState>& state) override;
 
   private:
-    bool canUseValue() const;
   };
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_REGEXALTERNATIVESITERATOR_H_

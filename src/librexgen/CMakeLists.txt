@@ -86,7 +86,6 @@ set(
 		iterator/streamregexiterator.cpp
 		iterator/caseiterator.cpp
 		state/serializablestate.cpp
-		string/simplestring.cpp
 		parser/rexgenparsingdriver.cpp
 		parser/RexgenFlexLexer.cpp
 		librexgen.cpp

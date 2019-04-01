@@ -38,11 +38,11 @@ void validateRegex(const char* input_regex,
 
   auto iter = std::make_shared<rexgen::TopIterator>(regex);
 
-  SimpleString str;
+  std::string str;
   std::list<std::string> generated_values;
   while (iter->next()) {
     str.clear();
-    iter->value(&str);
+    iter->value(str);
     const char* generated_value = str.c_str();
     REQUIRE(matches(generated_value, input_regex));
     generated_values.push_back(str);

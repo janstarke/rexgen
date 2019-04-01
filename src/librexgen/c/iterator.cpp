@@ -94,8 +94,7 @@ int c_iterator_next(c_iterator_ptr iter) {
 
 EXPORT
 void c_iterator_value(c_iterator_ptr iter, c_simplestring_ptr dst) {
-  ApiContext::instance().getIterator(iter)->value(reinterpret_cast<SimpleString*>
-                                                  (dst));
+  ApiContext::instance().value(iter, dst);
 }
 
 

@@ -38,7 +38,7 @@ namespace rexgen {
       for(size_t n=1; n<count; ++n) {iterators[n].next();}
     }
 
-    void value(SimpleString *dst) const override {
+    void value(std::string& dst) const override {
       for (const auto& i : iterators) { i.value(dst);}
     }
 

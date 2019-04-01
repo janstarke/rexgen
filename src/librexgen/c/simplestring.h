@@ -21,6 +21,7 @@
 #ifndef SRC_LIBREXGEN_C_SIMPLESTRING_H_
 #define SRC_LIBREXGEN_C_SIMPLESTRING_H_
 
+#include <librexgen/c/ApiContext.h>
 #include <librexgen/string/unicode.h>
 #include <librexgen/osdepend.h>
 #include <librexgen/common/deprecated.h>
@@ -32,8 +33,6 @@
 extern "C" {
 #endif
 
-typedef void* c_simplestring_ptr;
-
 EXPORT
 c_simplestring_ptr c_simplestring_new();
 
@@ -44,14 +43,10 @@ EXPORT
 const char* c_simplestring_to_string(c_simplestring_ptr s);
 
 EXPORT
-DEPRECATED(int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
-                                             size_t buffer_size));
+void c_simplestring_print(c_simplestring_ptr s);
 
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s);
-
-EXPORT
-void c_simplestring_truncate_bytes(c_simplestring_ptr s, size_t length);
 
 #ifdef __cplusplus
 }

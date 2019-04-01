@@ -19,72 +19,37 @@
 
 #include <librexgen/c/simplestring.h>
 #include <librexgen/string/simplestring.h>
+#include <librexgen/c/ApiContext.h>
 #include <stdexcept>
 #include <cstdlib>
 #include <clocale>
+#include <iostream>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 EXPORT
-c_simplestring_ptr c_simplestring_new() { return new SimpleString(); }
+c_simplestring_ptr c_simplestring_new() { return ApiContext::instance().addString(); }
 
 EXPORT
 void c_simplestring_delete(c_simplestring_ptr s) {
-  delete (reinterpret_cast<SimpleString*>(s));
+  ApiContext::instance().deleteString(s);
 }
 
 EXPORT
 const char* c_simplestring_to_string(c_simplestring_ptr s) {
-  return (static_cast<SimpleString*>(s))->c_str();
+  return ApiContext::instance().getString(s)->c_str();
 }
 
 EXPORT
-int c_simplestring_to_utf8_string(c_simplestring_ptr s, char* buffer,
-                                  size_t buffer_size) {
-  const SimpleString* str = static_cast<SimpleString*>(s);
-  char tmp_buffer[8];
-  wchar_t wc;
-  int result = 0;
-  char* current_locale = std::setlocale(LC_ALL, NULL);
-  std::setlocale(LC_ALL, "en_US.UTF-8");
-
-  const char* ptr = str->data();
-  const char* end = ptr + str->size();
-  while (ptr < end) {
-    int next = std::mblen(ptr, end-ptr);
-    if (next == -1) {
-      throw std::runtime_error("mblen(): conversion error");
-    }
-
-    std::mbtowc(&wc, ptr, end-ptr);
-    const int size = std::wctomb(&tmp_buffer[0], wc);
-    if (size < 1) {
-      throw std::runtime_error("wctomb(): conversion error");
-    }
-    if (size < (static_cast<int>(buffer_size)-result)) {
-      memcpy(buffer+result, tmp_buffer, size);
-      result += size;
-    } else {
-      *buffer = 0;
-      break;
-    }
-    ptr += next;
-  }
-  std::setlocale(LC_ALL, current_locale);
-
-  return result;
+void c_simplestring_print(c_simplestring_ptr s) {
+  puts(ApiContext::instance().getString(s)->c_str());
 }
 
 EXPORT
 void c_simplestring_clear(c_simplestring_ptr s) {
-  (reinterpret_cast<SimpleString*>(s))->clear();
-}
-
-EXPORT
-void c_simplestring_truncate_bytes(c_simplestring_ptr s, size_t length) {
-  (static_cast<SimpleString*>(s))->truncate_bytes(length);
+  ApiContext::instance().getString(s)->clear();
 }
 
 #ifdef __cplusplus

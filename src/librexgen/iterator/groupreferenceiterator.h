@@ -41,7 +41,7 @@ namespace rexgen {
       return res;
     }
 
-    inline void value(SimpleString *dst) const override {
+    inline void value(std::string& dst) const override {
       groupRef.get().value(dst);
     }
 
