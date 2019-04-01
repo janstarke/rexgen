@@ -28,8 +28,8 @@ namespace rexgen {
     explicit RangeIterator()
             : Iterator(), current(__MIN - 1), minimum(__MIN), maximum(__MAX) {}
 
-    void value(SimpleString *dst) const override {
-      dst->push_back(static_cast<const byte_t>(current));
+    void value(std::string& dst) const override {
+      dst.push_back(static_cast<const byte_t>(current));
     }
 
     bool next() override {

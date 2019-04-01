@@ -64,16 +64,6 @@ namespace rexgen {
     LEAVE_METHOD;
   }
 
-  bool RegexAlternativesIterator::canUseValue() const {
-    if (!Iterator::canUseValue()) {
-      return false;
-    }
-    if (getPosition() == iterators.end()) {
-      return false;
-    }
-    return ((*(getPosition()))->canUseValue());
-  }
-
   std::shared_ptr<SerializableState> RegexAlternativesIterator::getCurrentState() const {
     auto s = Iterator::getCurrentState();
     s->addValue(getPosition() - iterators.begin());

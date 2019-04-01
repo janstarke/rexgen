@@ -38,7 +38,7 @@ namespace rexgen {
     template <class Iter>
     ClassRegexIterator(Iter begin, Iter end)
             : Iterator(), current(-1), characters() {
-      std::for_each(begin, end, [this](const wchar_t& ch) {characters.append_widechar(ch);});
+      std::for_each(begin, end, [this](const wchar_t& ch) {append_widechar(characters, ch);});
       std::string::size_type index = 0;
       for (size_t n = 0; n < characters.length(); ++n) {
 
@@ -46,10 +46,10 @@ namespace rexgen {
          * TODO(jasa):
          * the call to character_length is very slow and should be removed
          */
-        lengths.push_back(characters.character_length(n));
+        lengths.push_back(character_length(characters, n));
 
         indices.push_back(index);
-        index += characters.character_length(n);
+        index += character_length(characters, n);
       }
       characters_count = static_cast<size_t>(characters.length());
       state = usable;
@@ -57,11 +57,11 @@ namespace rexgen {
 
     virtual ~ClassRegexIterator() {}
 
-    virtual void updateReferences(IteratorState& /* iterState */) {}
+    void updateReferences(IteratorState& /* iterState */) override {}
 
-    virtual void updateAttributes(IteratorState& /* iterState */) {}
+    void updateAttributes(IteratorState& /* iterState */) override {}
 
-    inline void value(SimpleString *dst) const {
+    inline void value(std::string& dst) const override {
       /**
         * FIXME(jasa):
         * this condition may be expensive and should be unnecessary
@@ -71,12 +71,12 @@ namespace rexgen {
         const std::string::size_type &index = indices[current];
 
         for (std::string::size_type n = 0; n < length; ++n) {
-          dst->push_back(characters[index + n]);
+          dst.push_back(characters[index + n]);
         }
       }
     }
 
-    bool next() {
+    bool next() override {
       ++current;
 
       if (current >= static_cast<int>(characters_count)) {
@@ -88,21 +88,13 @@ namespace rexgen {
 
     size_t size() const { return characters_count; }
 
-    inline bool hasNext() const {
-      return (current < (static_cast<int>(characters_count) - 1));
-    }
-
-    inline bool canUseValue() const {
-      return (current < static_cast<int>(characters_count));
-    }
-
-    std::shared_ptr<SerializableState> getCurrentState() const {
+    std::shared_ptr<SerializableState> getCurrentState() const override {
       auto s = Iterator::getCurrentState();
       s->addValue(current);
       return s;
     }
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& s) {
+    void setCurrentState(const std::shared_ptr<SerializableState>& s) override {
       Iterator::setCurrentState(s);
       current = s->getValue(0);
     }
@@ -116,7 +108,7 @@ namespace rexgen {
      * cannot be counted effectively
      */
     int characters_count;
-    SimpleString characters;
+    std::string characters;
     vector<std::string::size_type> indices;
     vector<std::string::size_type> lengths;
   };

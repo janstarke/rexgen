@@ -33,14 +33,14 @@ namespace rexgen {
   public:
     typedef std::vector<std::unique_ptr<Iterator>> children_list_type;
 
-    virtual void updateAttributes(IteratorState& iterState) {
-      for (std::unique_ptr<Iterator>& child : iterators) {
+    virtual void updateAttributes(IteratorState& iterState) override {
+      for (auto& child : iterators) {
         child->updateAttributes(iterState);
       }
     }
 
-    virtual void updateReferences(IteratorState& iterState) {
-      for (std::unique_ptr<Iterator>& child : iterators) {
+    virtual void updateReferences(IteratorState& iterState) override {
+      for (auto& child : iterators) {
         child->updateReferences(iterState);
       }
     }

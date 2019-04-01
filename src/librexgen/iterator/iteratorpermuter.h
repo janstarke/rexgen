@@ -29,11 +29,11 @@ namespace rexgen {
 
   class IteratorPermuter : public IteratorContainer {
   public:
-    void value(SimpleString *dst) const;
+    void value(std::string& dst) const override;
 
     IteratorPermuter(const Regex& re, IteratorState& is,
                      unsigned int min, unsigned int max);
-    bool next();
+    bool next() override;
 
     void init();
 

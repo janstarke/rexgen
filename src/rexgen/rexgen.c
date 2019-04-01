@@ -288,7 +288,8 @@ int _tmain(int argc, _TCHAR* argv[]) {
   buffer = c_simplestring_new();
   while (c_iterator_next(iter)) {
     c_iterator_value(iter, buffer);
-    printf("%s\n", c_simplestring_to_string(buffer));
+    c_simplestring_print(buffer);
+
 
 #ifdef DEBUG_STATE
     /* These show how to save-restore state */

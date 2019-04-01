@@ -60,7 +60,7 @@ namespace rexgen {
       return false;
     }
 
-    void value(SimpleString *dst) const override { child->value(dst); }
+    void value(std::string& dst) const override { child->value(dst); }
 
     void updateReferences(IteratorState&/* ignore */) override {
       updateReferences();

@@ -25,6 +25,7 @@
 #include <librexgen/iterator/classregexiterator.h>
 #include <set>
 #include <pcrecpp.h>
+#include <string>
 
 using Catch::Matchers::Equals;
 
@@ -39,22 +40,22 @@ TEST_CASE("TestEmptyIterator", "TestEmptyIterator") {
 TEST_CASE("TestIteratorWithOneElement", "TestIteratorWithOneElement") {
   std::wstring wstr(L"a");
   rexgen::Iterator* iter = new rexgen::ClassRegexIterator(wstr.cbegin(), wstr.cend());
-  SimpleString str;
-  iter->value(&str);
+  std::string str;
+  iter->value(str);
   REQUIRE_THAT(str, Equals(""));
   str.clear();
   REQUIRE(iter->next());
-  iter->value(&str);
+  iter->value(str);
   REQUIRE_THAT(str, Equals("a"));
   str.clear();
 
   REQUIRE_FALSE(iter->next());
-  iter->value(&str);
+  iter->value(str);
   REQUIRE_THAT(str, Equals("a"));
   str.clear();
 
   REQUIRE_FALSE(iter->next());
-  iter->value(&str);
+  iter->value(str);
   REQUIRE_THAT(str, Equals("a"));
   delete iter;
 }

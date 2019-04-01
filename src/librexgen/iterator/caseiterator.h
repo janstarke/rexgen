@@ -36,8 +36,8 @@ namespace rexgen {
 
     void fast_next();
 
-    void value(SimpleString *dst) const {
-      dst->append(word);
+    void value(std::string& dst) const {
+      dst.append(word);
     }
 
     virtual std::shared_ptr<SerializableState> getCurrentState() const {
@@ -51,6 +51,12 @@ namespace rexgen {
   private:
     std::shared_ptr<Iterator> child;
     int handle_case;
+
+    static bool can_change_case(std::string& str, size_t idx) {
+      const auto& wc = widechar_at(str, idx);
+      return (std::towupper(wc) != std::towlower(wc));
+    }
+    void toggle_case(size_t idx);
 
     bool readNextFromChild();
 
@@ -66,7 +72,7 @@ namespace rexgen {
     unsigned int j;
     unsigned int parity;
     std::vector<unsigned int> changeable_characters;
-    SimpleString word;
+    std::string word;
   };
 }
 #endif /* __cplusplus */
