@@ -34,7 +34,7 @@ namespace rexgen {
   void IteratorPermuter::value(std::string& dst) const {
     ENTER_METHOD;
     for (unsigned int n = 0; n < occurs; ++n) {
-      iterators[n]->value(dst);
+      at(n)->value(dst);
     }
     LEAVE_METHOD;
   }
@@ -55,7 +55,7 @@ namespace rexgen {
     }
 
     unsigned int n = 0;
-    for (; n < occurs; ++n) { if (iterators[n]->next()) { break; }}
+    for (; n < occurs; ++n) { if (at(n)->next()) { break; }}
     if (n == max_occurs) {
       occurs = min_occurs;
       RETURN(false);
@@ -67,7 +67,7 @@ namespace rexgen {
   void IteratorPermuter::init() {
     ENTER_METHOD;
 
-    for (std::unique_ptr<Iterator>& i : iterators) {
+    for (auto& i: *this) {
       i->next();
     }
 

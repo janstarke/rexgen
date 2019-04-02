@@ -38,7 +38,7 @@ namespace rexgen {
     if (state == resetted) {
       state = usable;
       bool res = false;
-      for (std::unique_ptr<Iterator>& i : iterators) {
+      for (auto& i: *this) {
         res |= (i->next());
       }
       RETURN(res);
@@ -48,7 +48,7 @@ namespace rexgen {
       RETURN(true);
     }
     incrementPosition();
-    if (getPosition() == iterators.end()) {
+    if (getPosition() == cend()) {
       resetPosition();
       RETURN(false);
     }
@@ -66,9 +66,8 @@ namespace rexgen {
 
   std::shared_ptr<SerializableState> RegexAlternativesIterator::getCurrentState() const {
     auto s = Iterator::getCurrentState();
-    s->addValue(getPosition() - iterators.begin());
-
-    for (const std::unique_ptr<Iterator>& i : iterators) {
+    s->addValue(getPosition() - cbegin());
+    for (const auto& i: *this) {
       s->addValue(i->getCurrentState());
     }
     return s;
@@ -77,10 +76,10 @@ namespace rexgen {
   void RegexAlternativesIterator::setCurrentState(const std::shared_ptr<SerializableState>& s) {
     Iterator::setCurrentState(s);
 
-    for (std::unique_ptr<Iterator>& i : iterators) {
+    for (auto& i: *this) {
       i->setCurrentState(s->getChildState(i->getId()));
     }
 
-    setPosition(iterators.begin() + s->getValue(0));
+    setPosition(begin() + s->getValue(0));
   }
 }

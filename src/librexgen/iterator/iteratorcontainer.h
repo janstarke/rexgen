@@ -49,6 +49,29 @@ namespace rexgen {
       iterators.push_back(std::move(i));
     }
 
+    virtual void addChild(Iterator&& iter) {
+      iterators.push_back(iter);
+    }
+
+    inline children_list_type::value_type&
+    operator[](size_t idx) { return iterators[idx]; }
+
+    inline const children_list_type::value_type&
+    operator[](size_t idx) const { return iterators[idx]; }
+
+    inline children_list_type::value_type&
+    at(size_t idx) { return iterators.at(idx); }
+
+    inline const children_list_type::value_type&
+    at(size_t idx) const { return iterators.at(idx); }
+
+    children_list_type::iterator        begin()       {return iterators.begin(); }
+    children_list_type::const_iterator  begin() const {return iterators.cbegin(); }
+    children_list_type::const_iterator cbegin() const {return iterators.cbegin(); }
+    children_list_type::iterator        end()         {return iterators.end(); }
+    children_list_type::const_iterator  end()   const {return iterators.cend(); }
+    children_list_type::const_iterator cend()   const {return iterators.cend(); }
+
   protected:
     void setPosition(children_list_type::iterator i) { iter = i; }
 
@@ -56,11 +79,11 @@ namespace rexgen {
 
     void resetPosition() { iter = iterators.begin(); }
 
-    children_list_type::iterator getPosition() const { return iter; }
-
-    children_list_type iterators;
+    children_list_type::iterator       getPosition()       { return iter; }
+    children_list_type::const_iterator getPosition() const { return iter; }
 
   private:
+    children_list_type iterators;
     children_list_type::iterator iter;
   };
 }
