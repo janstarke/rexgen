@@ -48,7 +48,7 @@ If you are not interested in active participation of this project, but you want 
 
 # License
 
-Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
