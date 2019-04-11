@@ -49,10 +49,6 @@ namespace rexgen {
       iterators.push_back(std::move(i));
     }
 
-    virtual void addChild(Iterator&& iter) {
-      iterators.push_back(iter);
-    }
-
     inline children_list_type::value_type&
     operator[](size_t idx) { return iterators[idx]; }
 
