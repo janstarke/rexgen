@@ -17,5 +17,25 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-//#define CATCH_CONFIG_RUNNER
-//#include <catch2/catch.hpp>
+#include <catch2/catch.hpp>
+#include <utils.h>
+#include <FuzzerGenerator.h>
+#include <librexgen/librexgen.h>
+#include <librexgen/rexgen_options.h>
+#include <librexgen/iterator/topiterator.h>
+#include <set>
+#include <pcrecpp.h>
+
+TEST_CASE("testing with libFuzzer", "libFuzzerTest") {
+
+  rexgen::RexgenOptions options;
+
+  SECTION("Nice UX") {
+    auto FUZZY_VALUE = GENERATE(take(10000, rexgen::catch2::fuzzer()));
+    auto regex = parse_regex(FUZZY_VALUE.c_str(), options);
+    if (regex != nullptr) {
+      auto iter = std::make_unique<rexgen::TopIterator>(regex);
+      REQUIRE(iter != nullptr);
+    }
+  }
+}
