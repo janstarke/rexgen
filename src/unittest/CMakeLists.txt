@@ -19,7 +19,9 @@ endif()
 
 file(GLOB_RECURSE testrexgen_sources "testcases/test*.cpp")
 
-add_executable(${testrexgen_exename} "main.cpp" ${testrexgen_sources} utils.cpp FuzzerGenerator.cpp)
+set(unittest_sources "main.cpp" ${testrexgen_sources} utils.cpp FuzzerGenerator.cpp)
+set_source_files_properties(${unittest_sources} "-fno-sanitize=fuzzer")
+add_executable(${testrexgen_exename} ${unittest_sources})
 
 target_link_libraries(${testrexgen_exename} ${librexgen})
 target_link_libraries(${testrexgen_exename} Boost::regex)

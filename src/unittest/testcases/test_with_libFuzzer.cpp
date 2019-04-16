@@ -31,8 +31,9 @@ TEST_CASE("testing with libFuzzer", "libFuzzerTest") {
   rexgen::RexgenOptions options;
 
   SECTION("Nice UX") {
-    auto FUZZY_VALUE = GENERATE(take(10000, rexgen::catch2::fuzzer()));
-    auto regex = parse_regex(FUZZY_VALUE.c_str(), options);
+    auto FUZZY_VALUE = GENERATE(take(100000, rexgen::catch2::fuzzer()));
+    const char* re = FUZZY_VALUE.c_str();
+    auto regex = parse_regex(re, options);
     if (regex != nullptr) {
       auto iter = std::make_unique<rexgen::TopIterator>(regex);
       REQUIRE(iter != nullptr);
