@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -18,25 +18,9 @@
 */
 
 #include <catch2/catch.hpp>
-#include <utils.h>
-#include <FuzzerGenerator.h>
-#include <librexgen/librexgen.h>
-#include <librexgen/rexgen_options.h>
-#include <librexgen/iterator/topiterator.h>
-#include <set>
-#include <pcrecpp.h>
+#include "../utils.h"
 
-TEST_CASE("testing with libFuzzer", HIDDEN_FUZZER_TAG) {
 
-  rexgen::RexgenOptions options;
-
-  SECTION("libFuzzer POC") {
-    auto FUZZY_VALUE = GENERATE(rexgen::catch2::fuzzer());
-    const char* re = FUZZY_VALUE.c_str();
-    auto regex = parse_regex(re, options);
-    if (regex != nullptr) {
-      auto iter = std::make_unique<rexgen::TopIterator>(regex);
-      REQUIRE(iter != nullptr);
-    }
-  }
-}
+TEST_CASE("GroupReference1", "GroupReference1")  {validateRegex("(a)\\1",         1);}
+TEST_CASE("GroupReference2", "GroupReference2")  {validateRegex("(a|b)\\1",       2);}
+TEST_CASE("GroupReference3", "GroupReference3")  {validateRegex("(\\d)\\1",      10);}

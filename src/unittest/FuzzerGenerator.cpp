@@ -17,28 +17,17 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <FuzzerGenerator.h>
-#include <catch2/catch.hpp>
-#include <cstddef>
-#include <cstdint>
+#include "FuzzerGenerator.h"
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <cstddef>
+#include <cstdint>
+#include <catch2/catch.hpp>
 
-static std::thread catch2_worker;
-
-static void run_session(std::shared_ptr<rexgen::catch2::FuzzerQueue> queue, int catch2_argc, char** catch2_argv) {
-  static Catch::Session session;
-  /* keep shared ptr of queue */
-  auto q = queue;
-  session.run(catch2_argc, catch2_argv);
-  q = nullptr;
-}
-
-extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
-  std::thread t(run_session, rexgen::catch2::FuzzerQueue::sharedInstance(), *argc, *argv);
-  catch2_worker = std::move(t);
-  return 0;
+typedef int (*UserCallback)(const uint8_t *Data, size_t Size);
+namespace fuzzer {
+  int FuzzerDriver(int *argc, char ***argv, UserCallback Callback);
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
@@ -48,6 +37,70 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     raise(SIGTERM);
   }
   return 0;
+}
+
+static int run_session(
+        std::shared_ptr<rexgen::catch2::FuzzerQueue> queue,
+        int argc,
+        char** argv) {
+  static Catch::Session session;
+
+  /* keep shared ptr of queue */
+  auto q = queue;
+  return session.run(argc, argv);
+}
+
+extern "C"
+int main(int argc, char** argv) {
+  std::vector<std::string> params(&argv[0], &argv[argc]);
+  auto pos = std::find(params.begin(), params.end(), "--");
+  /*
+   * running only catch2 test cases
+   */
+  if (pos == params.cend()) {
+    Catch::Session session;
+    return session.run(argc, argv);
+  }
+
+
+  /*
+   * splitting command line parameters
+   *
+   * little performance tweak: we overwrite the delimiter with argv[0]
+   * so that libFuzzer also has the name of the program available
+   */
+  *pos = argv[0];
+  std::vector<char*> catch2_params(pos-params.begin());
+  std::vector<char*> fuzzer_params(params.end()-pos);
+  auto string_to_cstring = []
+          (const std::string& s){return const_cast<char*>(s.c_str());};
+  std::transform(
+          params.begin(),
+          pos,
+          catch2_params.begin(),
+          string_to_cstring);
+
+  std::transform(
+          pos,
+          params.end(),
+          fuzzer_params.begin(),
+          string_to_cstring);
+
+  /*
+   * invoke libFuzzer and catch2
+   */
+  auto queue = rexgen::catch2::FuzzerQueue::sharedInstance();
+  catch2_params.push_back(const_cast<char*>(&FUZZER_TAG[0]));
+
+  std::thread fuzzer([](int c, char** v)
+                    {fuzzer::FuzzerDriver(&c, &v, LLVMFuzzerTestOneInput);},
+                     fuzzer_params.size(),
+                     fuzzer_params.data());
+
+  static Catch::Session session;
+  int result = session.run(catch2_params.size(), catch2_params.data());
+  fuzzer.join();
+  return result;
 }
 
 namespace Catch {

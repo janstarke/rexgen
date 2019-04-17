@@ -30,6 +30,9 @@
 #define CATCH_CONFIG_NOSTDOUT
 #include <catch2/catch.hpp>
 
+constexpr char FUZZER_TAG[] = "[fuzzer]";
+constexpr char HIDDEN_FUZZER_TAG[] = "[!hide][fuzzer]";
+
 namespace rexgen {
   namespace catch2 {
 
