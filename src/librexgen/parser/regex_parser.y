@@ -168,7 +168,6 @@ ClassRegex:
   | CharacterClassSpace { $$ = std::move($1); }
   | T_BEGIN_CLASS T_HYPHEN ClassContent T_END_CLASS { $$ = std::move($3); $$->addCharacter(btowc('-')); }
   | T_BEGIN_CLASS          ClassContent T_END_CLASS { $$ = std::move($2); };
-  | T_BEGIN_CLASS                       T_END_CLASS { $$ = std::make_shared<rexgen::ClassRegex>(); }
 ClassContent:
     SimpleClassContent  { $$ = std::move($1); }
   | SimpleClassContent ClassContent {

@@ -50,8 +50,11 @@ namespace rexgen {
   }
 
   void ClassRegex::removeCharacterInstances(const wchar_t min, const wchar_t max) {
+    // TODO replace this with std::set::replace_if, when C++20 is final
+    auto predicate = [min, max](const wchar_t& c)
+            { return (min<=c) && (c<=max);};
     for (auto iter = characters.begin(); iter != characters.end();) {
-      if ((min <= *iter) && (*iter <= max)) {
+      if (predicate(*iter)) {
         iter = characters.erase(iter);
       } else {
         ++iter;
@@ -132,8 +135,10 @@ namespace rexgen {
   std::unique_ptr<Iterator> ClassRegex::singleIterator(IteratorState& /* state */) const {
     std::unique_ptr<Iterator> single;
 
+    assert((ranges.size() + characters.size()) > 0);
+
     if (ranges.size() == 0) {
-      return std::make_unique<ClassRegexIterator>(characters.begin(), characters.end());
+      return std::make_unique<ClassRegexIterator>(characters.cbegin(), characters.cend());
     }
 
     assert (ranges.size() > 0);

@@ -82,7 +82,7 @@ namespace rexgen {
       not_usable
     } state;
 
-    static inline void append_widechar(std::string &dst, const wchar_t &widechar);
+    static inline size_t append_widechar(std::string &dst, const wchar_t &widechar);
 
     static inline size_t character_length(std::string &, size_t idx);
 
@@ -100,7 +100,7 @@ namespace rexgen {
     void updateAttributes(IteratorState & /* iterState */) override { throw std::runtime_error("not implemented"); }
   };
 
-  void Iterator::append_widechar(std::string &dst, const wchar_t &widechar) {
+  size_t Iterator::append_widechar(std::string &dst, const wchar_t &widechar) {
     char buffer[MB_LEN_MAX];
     int ch_size = std::wctomb(&buffer[0], widechar);
 
@@ -110,6 +110,7 @@ namespace rexgen {
     }
 
     dst.append(&buffer[0], ch_size);
+    return static_cast<size_t>(ch_size);
   }
 
   size_t Iterator::character_length(std::string &dst, size_t idx) {

@@ -18,21 +18,18 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 file(GLOB_RECURSE testrexgen_sources "testcases/test*.cpp")
-
 set(unittest_sources "main.cpp" ${testrexgen_sources} utils.cpp FuzzerGenerator.cpp)
-set_source_files_properties(${unittest_sources} "-fno-sanitize=fuzzer")
-add_executable(${testrexgen_exename} ${unittest_sources})
 
-target_link_libraries(${testrexgen_exename} ${librexgen})
-target_link_libraries(${testrexgen_exename} Boost::regex)
-target_link_libraries(${testrexgen_exename} "-fsanitize=fuzzer")
+add_executable(${testrexgen_exename} ${unittest_sources})
+target_link_libraries(${testrexgen_exename} ${librexgen} Boost::regex)
+target_enable_coverage(${testrexgen_exename} ${unittest_sources})
+target_enable_fuzzing(${testrexgen_exename} ${unittest_sources})
 
 # set compiler flags
 if(MSVC)
 	ADD_DEFINITIONS("-DUNICODE -D_UNICODE")
 else()
 	ADD_DEFINITIONS("-std=c++17 -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Winline")
-	add_definitions("-fsanitize=fuzzer")
 endif(MSVC)
 
 include(CTest)

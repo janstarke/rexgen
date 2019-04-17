@@ -35,56 +35,18 @@ namespace rexgen {
   class ClassRegexIterator : public Iterator {
   public:
 
-    template <class Iter>
-    ClassRegexIterator(Iter begin, Iter end)
-            : Iterator(), current(-1), characters() {
-      std::for_each(begin, end, [this](const wchar_t& ch) {append_widechar(characters, ch);});
-      std::string::size_type index = 0;
-      for (size_t n = 0; n < characters.length(); ++n) {
-
-        /*
-         * TODO(jasa):
-         * the call to character_length is very slow and should be removed
-         */
-        lengths.push_back(character_length(characters, n));
-
-        indices.push_back(index);
-        index += character_length(characters, n);
-      }
-      characters_count = static_cast<size_t>(characters.length());
-      state = usable;
-    }
+    template<class Iter>
+    inline ClassRegexIterator(Iter begin, Iter end);
 
     virtual ~ClassRegexIterator() {}
 
-    void updateReferences(IteratorState& /* iterState */) override {}
+    void updateReferences(IteratorState & /* iterState */) override {}
 
-    void updateAttributes(IteratorState& /* iterState */) override {}
+    void updateAttributes(IteratorState & /* iterState */) override {}
 
-    inline void value(std::string& dst) const override {
-      /**
-        * FIXME(jasa):
-        * this condition may be expensive and should be unnecessary
-        */
-      if (current >= 0) {
-        const std::string::size_type &length = lengths[current];
-        const std::string::size_type &index = indices[current];
+    inline void value(std::string &dst) const override;
 
-        for (std::string::size_type n = 0; n < length; ++n) {
-          dst.push_back(characters[index + n]);
-        }
-      }
-    }
-
-    bool next() override {
-      ++current;
-
-      if (current >= static_cast<int>(characters_count)) {
-        current = 0;
-        return false;
-      }
-      return true;
-    }
+    inline bool next() override;
 
     size_t size() const { return characters_count; }
 
@@ -94,7 +56,7 @@ namespace rexgen {
       return s;
     }
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& s) override {
+    void setCurrentState(const std::shared_ptr<SerializableState> &s) override {
       Iterator::setCurrentState(s);
       current = s->getValue(0);
     }
@@ -112,5 +74,49 @@ namespace rexgen {
     vector<std::string::size_type> indices;
     vector<std::string::size_type> lengths;
   };
+
+  template<class Iter>
+  ClassRegexIterator::ClassRegexIterator(Iter begin, Iter end)
+          : Iterator(), current(-1), characters() {
+    size_t index = 0;
+    const auto char_count = std::count_if(begin, end,
+            [](typename Iter::value_type){return true;});
+    indices.resize(char_count);
+    lengths.resize(char_count);
+
+    for (auto i = begin; i != end; ++i) {
+      const size_t length = append_widechar(characters, *i);
+      lengths.push_back(length);
+      indices.push_back(index);
+      index += length;
+    }
+    characters_count = static_cast<size_t>(characters.length());
+    state = usable;
+  }
+
+  void ClassRegexIterator::value(std::string &dst) const {
+    /**
+      * FIXME(jasa):
+      * this condition may be expensive and should be unnecessary
+      */
+    if (current >= 0) {
+      const std::string::size_type &length = lengths[current];
+      const std::string::size_type &index = indices[current];
+
+      for (std::string::size_type n = 0; n < length; ++n) {
+        dst.push_back(characters[index + n]);
+      }
+    }
+  }
+
+  bool ClassRegexIterator::next() {
+    ++current;
+
+    if (current >= static_cast<int>(characters_count)) {
+      current = 0;
+      return false;
+    }
+    return true;
+  }
 }
 #endif  // SRC_LIBREXGEN_ITERATOR_CLASSREGEXITERATOR_H_
