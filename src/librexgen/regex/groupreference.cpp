@@ -22,10 +22,12 @@
 #include <librexgen/iterator/iteratorpermuter.h>
 #include <librexgen/iterator/groupreferenceiterator.h>
 #include <librexgen/string/simplestring.h>
+#include <librexgen/parser/syntaxerror.h>
+
 namespace rexgen {
   std::unique_ptr<Iterator> GroupReference::singleIterator(IteratorState& /* state */) const {
     auto ref = groupRef.lock();
-    assert(ref != nullptr);
+    assert (ref != nullptr);
     return std::make_unique<GroupReferenceIterator>(ref->getGroupId());
   }
 }

@@ -24,11 +24,13 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/iteratorstate.h>
 #include <librexgen/string/simplestring.h>
+#include <memory>
+#include <string>
 
 namespace rexgen {
   class TopIterator : public Iterator {
   public:
-    explicit TopIterator(std::shared_ptr<Regex>& re) : Iterator() {
+    explicit TopIterator(std::shared_ptr<Regex> &re) : Iterator() {
       needWord = false;
       child = re->iterator(state);
 
@@ -53,20 +55,20 @@ namespace rexgen {
       bool res = child->next();
       if (res) { return res; }
 
-      if (! state.hasStreamIterator()) { return false; }
+      if (!state.hasStreamIterator()) { return false; }
       res = state.getStreamIterator().get().forceNext();
       if (res) { return res; }
       needWord = true;
       return false;
     }
 
-    void value(std::string& dst) const override { child->value(dst); }
+    void value(std::string &dst) const override { child->value(dst); }
 
-    void updateReferences(IteratorState&/* ignore */) override {
+    void updateReferences(IteratorState &/* ignore */) override {
       updateReferences();
     }
 
-    void updateAttributes(IteratorState& /* ignore */ ) override {
+    void updateAttributes(IteratorState & /* ignore */) override {
       updateAttributes();
     }
 
@@ -74,12 +76,11 @@ namespace rexgen {
       return child->getCurrentState();
     }
 
-    void setCurrentState(const std::shared_ptr<SerializableState>& s) override {
+    void setCurrentState(const std::shared_ptr<SerializableState> &s) override {
       child->setCurrentState(s);
     }
 
   private:
-
     void updateReferences() {
       if (child != nullptr) {
         child->updateReferences(state);

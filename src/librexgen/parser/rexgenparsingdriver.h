@@ -40,7 +40,6 @@ namespace rexgen {
   class RexgenParser;
 }
 
-
 namespace rexgen {
   class Regex;
 
@@ -49,6 +48,8 @@ namespace rexgen {
     RexgenParsingDriver(const RexgenOptions &__options);
 
     int nextGroupId() { return groupId++; }
+
+    bool hasGroupId(int id) const { return (groups.find(id) != groups.end()); }
 
     std::shared_ptr<rexgen::Regex> parse(const std::string& regex);
 

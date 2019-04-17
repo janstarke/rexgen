@@ -20,6 +20,7 @@
 
 #include <librexgen/parser/rexgenparsingdriver.h>
 #include <librexgen/parser/RexgenFlexLexer.h>
+#include <librexgen/parser/syntaxerror.h>
 #include <algorithm>
 #include <utility>
 #include <cstring>
@@ -81,6 +82,10 @@ namespace rexgen {
   }
 
   void RexgenParsingDriver::registerGroupReference(std::shared_ptr<GroupReference> gr) {
+    if (! hasGroupId(gr->getGroupId())) {
+      throw SyntaxError("invalid group reference");
+    }
+
     /* this is needed to later set the refered Regex */
     decltype(groupRefs)::iterator references = groupRefs.find(gr->getGroupId());
     if (references == groupRefs.end()) {
