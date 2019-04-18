@@ -85,13 +85,15 @@ namespace catch2 {
   namespace fuzzer {
     class FuzzerQueue {
     public:
+      typedef std::vector<uint8_t> value_type;
+
       static std::weak_ptr<FuzzerQueue> weakInstance() { return instance; }
 
       static std::shared_ptr<FuzzerQueue> sharedInstance();
 
       void set(const uint8_t *data, size_t size);
 
-      std::string const &get() const;
+      value_type const &get() const;
 
       bool next();
 
@@ -102,16 +104,17 @@ namespace catch2 {
       mutable std::mutex value_mutex;
       mutable std::condition_variable proxy;
       mutable std::condition_variable writer;
-      mutable std::string input_buffer;
-      mutable std::string current_value;
+      mutable value_type input_buffer;
+      mutable value_type current_value;
       mutable std::atomic_bool has_input = false;
     };
 
-    class FuzzerGenerator : public Catch::Generators::IGenerator<std::string> {
+  class FuzzerGenerator : public Catch::Generators::IGenerator<FuzzerQueue::value_type> {
     public:
+      typedef FuzzerQueue::value_type value_type;
       FuzzerGenerator(std::shared_ptr<FuzzerQueue> queue) : queue(queue) {}
 
-      inline std::string const &get() const override { return queue->get(); }
+      inline value_type const &get() const override { return queue->get(); }
 
       inline bool next() override { return queue->next(); }
 
@@ -120,9 +123,9 @@ namespace catch2 {
     };
 
     inline
-    Catch::Generators::GeneratorWrapper<std::string>
+    Catch::Generators::GeneratorWrapper<FuzzerGenerator::value_type>
     fuzzer() {
-      return Catch::Generators::GeneratorWrapper<std::string>(
+      return Catch::Generators::GeneratorWrapper<FuzzerGenerator::value_type>(
               std::make_unique<FuzzerGenerator>(FuzzerQueue::sharedInstance())
       );
     }
@@ -157,14 +160,14 @@ namespace catch2 {
       proxy.notify_all();
     }
 
-    std::string const &FuzzerQueue::get() const {
+    FuzzerQueue::value_type const &FuzzerQueue::get() const {
       std::lock_guard<std::mutex> lock(value_mutex);
       return current_value;
     }
 
     bool FuzzerQueue::next() {
       auto predicate = [this] { return (finish_worker || has_input); };
-      std::string tmp;
+      FuzzerQueue::value_type tmp;
       {
         std::unique_lock<std::mutex> lock(input_mutex);
         proxy.wait(lock, predicate);

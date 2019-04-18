@@ -31,7 +31,8 @@ TEST_CASE("testing with libFuzzer", HIDDEN_FUZZER_TAG) {
 
   SECTION("libFuzzer POC") {
     auto FUZZY_VALUE = GENERATE(catch2::fuzzer::fuzzer());
-    const char* re = FUZZY_VALUE.c_str();
+    std::string fuzzy_string(FUZZY_VALUE.cbegin(),FUZZY_VALUE.cend());
+    const char* re = fuzzy_string.c_str();
     auto regex = parse_regex(re, options);
     if (regex != nullptr) {
       auto iter = std::make_unique<rexgen::TopIterator>(regex);
