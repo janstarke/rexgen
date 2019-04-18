@@ -18,7 +18,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 file(GLOB_RECURSE testrexgen_sources "testcases/test*.cpp")
-set(unittest_sources "main.cpp" ${testrexgen_sources} utils.cpp FuzzerGenerator.cpp)
+set(unittest_sources "main.cpp" ${testrexgen_sources} utils.cpp)
 
 add_executable(${testrexgen_exename} ${unittest_sources})
 target_link_libraries(${testrexgen_exename} ${librexgen} Boost::regex)

@@ -17,7 +17,6 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <catch2/catch.hpp>
 #include <utils.h>
 #include <FuzzerGenerator.h>
 #include <librexgen/librexgen.h>
@@ -31,7 +30,7 @@ TEST_CASE("testing with libFuzzer", HIDDEN_FUZZER_TAG) {
   rexgen::RexgenOptions options;
 
   SECTION("libFuzzer POC") {
-    auto FUZZY_VALUE = GENERATE(rexgen::catch2::fuzzer());
+    auto FUZZY_VALUE = GENERATE(catch2::fuzzer::fuzzer());
     const char* re = FUZZY_VALUE.c_str();
     auto regex = parse_regex(re, options);
     if (regex != nullptr) {

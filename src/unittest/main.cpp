@@ -17,5 +17,5 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-//#define CATCH_CONFIG_RUNNER
-//#include <catch2/catch.hpp>
+#define CATCH_CONFIG_RUNNER
+#include "FuzzerGenerator.h"
