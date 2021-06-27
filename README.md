@@ -11,6 +11,13 @@ To build rexgen, you'll need the following tools and libs:
 | flex | Generator for lexical analysis of regular expressions |
 | bison | Generator of parser for regular expressions |
 | cmake | Creation of Makefiles |
+| clang | Compiling the code |
+
+On Ubuntu, you can install these via e.g.
+
+```
+sudo apt install flex libbison-dev cmake clang
+```
 
 # Building rexgen
 
