@@ -23,7 +23,7 @@ sudo apt install flex libbison-dev cmake clang
 
 Clone the git repository to include the required FindICU:
 ```
-git clone https://github.com/teeshop/rexgen.git
+git clone https://github.com/janstarke/rexgen.git
 ```
 
 Build and install:
