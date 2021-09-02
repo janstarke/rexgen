@@ -23,8 +23,8 @@
 typedef int c_regex_ptr;
 typedef int c_iterator_ptr;
 
-const c_regex_ptr c_regex_none = 0;
-const c_iterator_ptr c_iterator_none = 0;
+static const c_regex_ptr c_regex_none = 0;
+static const c_iterator_ptr c_iterator_none = 0;
 
 #ifdef __cplusplus
 #include <librexgen/regex/regex.h>
