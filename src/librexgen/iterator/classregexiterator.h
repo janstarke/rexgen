@@ -44,8 +44,8 @@ namespace rexgen {
         lengths.push_back(mb_length);
         indices.push_back(index);
         index += mb_length;
+        ++characters_count;
       });
-      characters_count = static_cast<size_t>(characters.length());
       state = usable;
     }
 
