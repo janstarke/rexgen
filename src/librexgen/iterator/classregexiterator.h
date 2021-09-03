@@ -37,7 +37,7 @@ namespace rexgen {
 
     template <class Iter>
     ClassRegexIterator(Iter begin, Iter end)
-            : Iterator(), current(-1), characters() {
+            : Iterator(), current(-1), characters_count(0), characters() {
       std::string::size_type index = 0;
       std::for_each(begin, end, [this, &index](const wchar_t& ch) {
         size_t mb_length = characters.append_widechar(ch);
