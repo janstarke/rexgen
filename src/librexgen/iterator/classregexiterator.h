@@ -56,16 +56,18 @@ namespace rexgen {
     virtual void updateAttributes(IteratorState& /* iterState */) {}
 
     inline void value(SimpleString *dst) const {
-      /**
-        * FIXME(jasa):
-        * this condition may be expensive and should be unnecessary
-        */
-      if (current >= 0) {
-        const std::string::size_type &length = lengths[current];
-        const std::string::size_type &index = indices[current];
+      if (characters_count > 0) {
+        /**
+          * FIXME(jasa):
+          * this condition may be expensive and should be unnecessary
+          */
+        if (current >= 0) {
+          const std::string::size_type &length = lengths[current];
+          const std::string::size_type &index = indices[current];
 
-        for (std::string::size_type n = 0; n < length; ++n) {
-          dst->push_back(characters[index + n]);
+          for (std::string::size_type n = 0; n < length; ++n) {
+            dst->push_back(characters[index + n]);
+          }
         }
       }
     }

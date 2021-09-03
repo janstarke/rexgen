@@ -59,8 +59,7 @@ TEST_CASE("TestIteratorWithOneElement", "TestIteratorWithOneElement") {
   delete iter;
 }
 
-/* not supported anymore since #65 */
-// TEST_CASE("TestSingle1", "TestSingle1") {validateRegex("[]",                    0);}
+TEST_CASE("TestSingle1", "TestSingle1") {validateRegex("[]",                    0);}
 TEST_CASE("TestSingle2", "TestSingle2") {validateRegex("[a]",                   1);}
 TEST_CASE("TestDigits1", "TestDigits1") {validateRegex("\\d",                  10);}
 TEST_CASE("TestDigits2", "TestDigits2") {validateRegex("[\\d]",                10);}
