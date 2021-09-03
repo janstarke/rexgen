@@ -57,8 +57,6 @@ CARRIAGERETURN              \\r
 CLASS_DIGIT                 \\d
 CLASS_WORD                  \\w
 CLASS_SPACE                 \\s
-SPECIAL                     [ \t\r\n.,;:=/%&?<>-]
-NORMAL                      [^ \t\r\n.,;:=/%&?<>-]
 GROUPID                     \\[1-9]
 STREAM                      \\0
 ESCAPED                     \\[^xnurdw0-9]
@@ -75,7 +73,7 @@ MULTIBYTE_CHARACTER  \xFE
 {ANSICHAR}                 {                          return RexgenParser::make_T_ANY_CHAR(parseAnsiChar(yytext)); }
 {UNICODECHAR}              {                          return RexgenParser::make_T_ANY_CHAR(parseUnicodeChar(yytext)); }
 {MULTIBYTE_CHARACTER}      {                          return RexgenParser::make_T_ANY_CHAR(*wcontent_ptr++); }
-{CLASS_DIGIT}	           {                          return RexgenParser::make_T_CLASS_DIGIT(); }
+{CLASS_DIGIT}	             {                          return RexgenParser::make_T_CLASS_DIGIT(); }
 {CLASS_WORD}               {                          return RexgenParser::make_T_CLASS_WORD(); }
 {CLASS_SPACE}              {                          return RexgenParser::make_T_CLASS_SPACE(); }
 {LINEFEED}                 {                          return RexgenParser::make_T_ANY_CHAR(btowc('\n')); }
@@ -87,6 +85,7 @@ MULTIBYTE_CHARACTER  \xFE
 {BEGIN_GROUP_WITH_OPTIONS} {                          return beginGroupWithOptions(driver); }
 {BEGIN_GROUP}              {                          return beginGroup(driver); }
 {END_GROUP}                {                          return RexgenParser::make_T_END_GROUP(); }
+<IN_CLASS>"?"              {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[0])); }
 "?"                        {                          return RexgenParser::make_T_OPTIONAL_QUANTIFIER(); }
 "{"                        { BEGIN(IN_QUANTIFIER);    return RexgenParser::make_T_BEGIN_QUANTIFIER(); }
 "}"                        { BEGIN(INITIAL);          return RexgenParser::make_T_END_QUANTIFIER(); }
@@ -95,8 +94,6 @@ MULTIBYTE_CHARACTER  \xFE
 <IN_QUANTIFIER>","         {                          return RexgenParser::make_T_COMMA(); }
 <IN_CLASS>"-"              {                          return RexgenParser::make_T_HYPHEN(); }
 <IN_QUANTIFIER>{DIGIT}+    {                          return RexgenParser::make_T_NUMBER(atoi(yytext)); }
-{NORMAL}                   {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[0])); }
-{SPECIAL}                  {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[0])); }
-.                          { }
+.                          {                          return RexgenParser::make_T_ANY_CHAR(btowc(yytext[0])); }
 
 %%
