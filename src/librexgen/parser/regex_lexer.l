@@ -57,7 +57,7 @@ CARRIAGERETURN              \\r
 CLASS_DIGIT                 \\d
 CLASS_WORD                  \\w
 CLASS_SPACE                 \\s
-SPECIAL                     [ \t\r\n,;:=/%&<>-]
+SPECIAL                     [ \t\r\n.,;:=/%&<>-]
 NORMAL                      [^ \t\r\n.,;:=/%&?<>-]
 GROUPID                     \\[1-9]
 STREAM                      \\0

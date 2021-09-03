@@ -32,3 +32,4 @@ TEST_CASE("TestSimple3", "TestSimple3") {validateRegex("test[a\\d]", 11);}
 TEST_CASE("TestSimple4", "TestSimple4") {validateRegex("test[\\da]", 11);}
 TEST_CASE("TestSimple5", "TestSimple5") {validateRegex("test\\da",   10);}
 TEST_CASE("TestSimple6", "TestSimple6") {validateRegex("a\\dtest",   10);}
+TEST_CASE("TestSimple7", "TestSimple7") {validateRegex("index\\.php_id=[1-5]", 5);}

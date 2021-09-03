@@ -38,19 +38,13 @@ namespace rexgen {
     template <class Iter>
     ClassRegexIterator(Iter begin, Iter end)
             : Iterator(), current(-1), characters() {
-      std::for_each(begin, end, [this](const wchar_t& ch) {characters.append_widechar(ch);});
       std::string::size_type index = 0;
-      for (size_t n = 0; n < characters.length(); ++n) {
-
-        /*
-         * TODO(jasa):
-         * the call to character_length is very slow and should be removed
-         */
-        lengths.push_back(characters.character_length(n));
-
+      std::for_each(begin, end, [this, &index](const wchar_t& ch) {
+        size_t mb_length = characters.append_widechar(ch);
+        lengths.push_back(mb_length);
         indices.push_back(index);
-        index += characters.character_length(n);
-      }
+        index += mb_length;
+      });
       characters_count = static_cast<size_t>(characters.length());
       state = usable;
     }
@@ -113,7 +107,7 @@ namespace rexgen {
 
     /*
      * we must use this because multibyte characters
-     * cannot be counted effectively
+     * cannot be counted efficiently
      */
     int characters_count;
     SimpleString characters;
