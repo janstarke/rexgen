@@ -74,7 +74,7 @@ namespace rexgen {
     bool invalids = false;
     for (auto ref : groupRefs) {
       for (auto gr : *(ref.second)) {
-        invalids |= (gr->getRegex().expired() == false);
+        invalids |= (gr->getRegex().expired() == true);
       }
     }
     return invalids;
