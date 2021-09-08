@@ -256,7 +256,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
   }
 
-  regex = c_regex_cb_mb(regex_str, callback, parser_error);
+  regex = c_regex_cb_mb2(regex_str, callback, parser_error);
   if (regex == c_regex_none) {
     fprintf(stderr, "Syntax Error:\n%s\n", c_rexgen_get_last_error());
     retval = 1;

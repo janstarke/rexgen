@@ -49,6 +49,13 @@ static size_t callback_wc_wrapper(char* dst, const size_t buffer_size) {
 EXPORT
 c_regex_ptr c_regex_cb_mb(
     const char* regex_str,
+    callback_fp_mb cb) {
+  return c_regex_cb_mb2(regex_str, cb, NULL);
+}
+
+EXPORT
+c_regex_ptr c_regex_cb_mb2(
+    const char* regex_str,
     callback_fp_mb cb,
     void (*parser_error)(const char* msg)) {
   rexgen::RexgenOptions options;
