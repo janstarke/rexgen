@@ -16,7 +16,7 @@ To build rexgen, you'll need the following tools and libs:
 
 Clone the git repository to include the required FindICU:
 ```
-git clone https://github.com/teeshop/rexgen.git
+git clone https://github.com/janstarke/rexgen.git
 ```
 
 Build and install:
@@ -42,9 +42,6 @@ Currently supported options for rexgen's CMakefile are:
 # Support
 
 If you want to contribute ideas, bug reports or improvements to this project, feel free to contact me via github. 
-
-If you are not interested in active participation of this project, but you want to support it anyway, you can 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jan.starke&url=https://github.com/teeshop/rexgen&title=rexgen&language=en&tags=github&category=software)
 
 # License
 
