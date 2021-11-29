@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install xmllint
+      run: sudo apt-get install -y flex bison
+  
     - uses: actions/checkout@v2
 
     - name: Configure CMake
