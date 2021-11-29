@@ -35,7 +35,10 @@ cd rexgen
 
 # Architecture
 
-If you are interested in contributing, please have a look at the [Architecture Documentation](doc/architecture.md)
+If you are interested in contributing, please have a look at
+ - [Architecture Documentation](doc/architecture.md)
+ - [API documentation](doc/api.md)
+ - [Developer documentation](doc/development.md)
 
 ## Problems
 
