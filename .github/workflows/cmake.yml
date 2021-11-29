@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - name: Install xmllint
-      run: sudo apt-get install -y flex bison libfl-dev libbison-dev
+      run: sudo apt-get install -y flex bison libfl-dev libbison-dev libboost-regex-dev
   
     - uses: actions/checkout@v2
 
