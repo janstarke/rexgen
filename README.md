@@ -1,3 +1,5 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/janstarke/rexgen/CMake)
+
 # rexgen
 
 A tool to create words based on regular expressions.
