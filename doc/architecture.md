@@ -2,7 +2,7 @@
 
 The whole project consist of two main parts: `librexgen`, which does most of the work, and `rexgen`, which is a command line tool that provides most of the functionality two the user. In addition, `rexgen` is used to demonstrate how to use the `librexgen` API and to see if the API is sufficient and working.
 
-![Context diagram](context.png)
+![Context diagram](context.drawio.svg)
 
 # Regex and Iterators
 
