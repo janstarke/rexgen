@@ -35,6 +35,7 @@ SimpleString value;
 Iterator my_iter = my_regex.iterator();
 
 while (my_iter.next()) {
+    value.clear();
     my_iter.value(&value);
     printf("%s\n", value.c_str());
 }
@@ -61,19 +62,18 @@ The `\1` is a reference to the regular expression `([abc])`. The generated `Iter
 What does the `GroupReferenceIterator` really do? Nothing. When `value()` was called, it simply forwards the call to the references `Iterator`, and when `next()` was called, it only checks if was resetted if it where e real `Iterator` and returns that result. Take a look at the implementation:
 
 ```C++
-    inline bool hasNext() const override { return (state == resetted); }
+inline bool hasNext() const override { return (state == resetted); }
 
-    inline bool next() override {
-      bool res = (state == resetted);
-      state = usable;
-      return res;
-    }
+inline bool next() override {
+    bool res = (state == resetted);
+    state = usable;
+    return res;
+}
 
-    inline void value(SimpleString *dst) const override {
-      groupRef.get().value(dst);
-    }
+inline void value(SimpleString *dst) const override {
+    groupRef.get().value(dst);
+}
 ```
-
 
 # Working with Unicode
 
