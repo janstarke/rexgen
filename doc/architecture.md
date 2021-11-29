@@ -4,6 +4,10 @@ The whole project consist of two main parts: `librexgen`, which does most of the
 
 ![Context diagram](context.png)
 
+# Regex and Iterators
+
+Each regular expression is parsed into a Abstract Syntax Tree (AST) which uses the classes in the `regex` subfolder for data representation. All those classes are derived from `Regex`. Every `Regex` class provides a `iterator()` method which generates an `Iterator` (classes in the `iterator` subfolder). The `Iterator`s are responsible for generating values. There is one `Iterator`  class for every `Regex` class. For example, the `ClassRegex` generates a `ClassRegexIterator` instance.
+
 # Working with Unicode
 
 Internally, `librexgen` is working with multi byte characters for performance reasons. We use the exact same character encoding which is used for the output, so that no additional encoding must be done when generating the result strings.
