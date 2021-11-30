@@ -54,7 +54,7 @@ void SimpleString::toggle_case(size_t idx) {
   }
 }
 
-SimpleString& SimpleString::append_widechar(const wchar_t &widechar) {
+size_t SimpleString::append_widechar(const wchar_t &widechar) {
   char buffer[MB_LEN_MAX];
   int ch_size = std::wctomb(&buffer[0], widechar);
 
@@ -64,7 +64,7 @@ SimpleString& SimpleString::append_widechar(const wchar_t &widechar) {
   }
 
   this->append(&buffer[0], ch_size);
-  return *this;
+  return static_cast<size_t>(ch_size);
 }
 
 wchar_t SimpleString::widechar_at(size_t index) const {

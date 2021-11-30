@@ -44,6 +44,11 @@ c_regex_ptr c_regex_cb(
   callback_fp cb));
 
 EXPORT
+c_regex_ptr __c_regex_cb_mb(
+        const char* regex_str,
+        callback_fp_mb cb);
+
+EXPORT
 c_regex_ptr c_regex_cb_mb(
         const char* regex_str,
         callback_fp_mb cb,

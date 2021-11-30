@@ -62,7 +62,7 @@ class SimpleString : public std::string {
   bool isupper(unsigned int n) const;
 
   wchar_t widechar_at(size_t index) const;
-  SimpleString& append_widechar(const wchar_t& codepoint);
+  size_t append_widechar(const wchar_t& codepoint);
 };
 
 #endif /* __cplusplus */

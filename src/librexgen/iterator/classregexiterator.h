@@ -37,21 +37,15 @@ namespace rexgen {
 
     template <class Iter>
     ClassRegexIterator(Iter begin, Iter end)
-            : Iterator(), current(-1), characters() {
-      std::for_each(begin, end, [this](const wchar_t& ch) {characters.append_widechar(ch);});
+            : Iterator(), current(-1), characters_count(0), characters() {
       std::string::size_type index = 0;
-      for (size_t n = 0; n < characters.length(); ++n) {
-
-        /*
-         * TODO(jasa):
-         * the call to character_length is very slow and should be removed
-         */
-        lengths.push_back(characters.character_length(n));
-
+      std::for_each(begin, end, [this, &index](const wchar_t& ch) {
+        size_t mb_length = characters.append_widechar(ch);
+        lengths.push_back(mb_length);
         indices.push_back(index);
-        index += characters.character_length(n);
-      }
-      characters_count = static_cast<size_t>(characters.length());
+        index += mb_length;
+        ++characters_count;
+      });
       state = usable;
     }
 
@@ -62,16 +56,18 @@ namespace rexgen {
     virtual void updateAttributes(IteratorState& /* iterState */) {}
 
     inline void value(SimpleString *dst) const {
-      /**
-        * FIXME(jasa):
-        * this condition may be expensive and should be unnecessary
-        */
-      if (current >= 0) {
-        const std::string::size_type &length = lengths[current];
-        const std::string::size_type &index = indices[current];
+      if (characters_count > 0) {
+        /**
+          * FIXME(jasa):
+          * this condition may be expensive and should be unnecessary
+          */
+        if (current >= 0) {
+          const std::string::size_type &length = lengths[current];
+          const std::string::size_type &index = indices[current];
 
-        for (std::string::size_type n = 0; n < length; ++n) {
-          dst->push_back(characters[index + n]);
+          for (std::string::size_type n = 0; n < length; ++n) {
+            dst->push_back(characters[index + n]);
+          }
         }
       }
     }
@@ -113,7 +109,7 @@ namespace rexgen {
 
     /*
      * we must use this because multibyte characters
-     * cannot be counted effectively
+     * cannot be counted efficiently
      */
     int characters_count;
     SimpleString characters;

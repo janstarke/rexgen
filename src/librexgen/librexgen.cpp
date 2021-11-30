@@ -31,12 +31,12 @@ std::shared_ptr<rexgen::Regex> parse_regex(const char* regex, const rexgen::Rexg
 
   try {
     auto result = driver.parse(regex);
-/*
+
     if (driver.hasInvalidGroupReferences()) {
       driver.handleParserError("This regular expression has an invalid back reference");
       return nullptr;
     }
-*/
+
     return result;
   } catch (SyntaxError &exc) {
     driver.handleParserError(exc.getMessage());

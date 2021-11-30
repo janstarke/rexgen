@@ -94,7 +94,7 @@ int rexgen_value(lua_State* L, c_iterator_ptr iter) {
 
   EXPORT
   int rexgen_parse_regex(lua_State* L) {
-    auto regex = c_regex_cb_mb(luaL_checklstring(L, 1, NULL), callback, parser_error);
+    auto regex = c_regex_cb_mb2(luaL_checklstring(L, 1, NULL), callback, parser_error);
 
     if (regex == c_regex_none) {
       lua_pushliteral(L, "parsing error");
