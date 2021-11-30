@@ -1,3 +1,5 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/janstarke/rexgen/CMake)
+
 # rexgen
 
 A tool to create words based on regular expressions.
@@ -16,7 +18,7 @@ To build rexgen, you'll need the following tools and libs:
 On Ubuntu, you can install these via e.g.
 
 ```
-sudo apt install flex libbison-dev cmake clang
+sudo apt install flex libfl-dev libbison-dev cmake clang
 ```
 
 # Building rexgen
@@ -35,7 +37,10 @@ cd rexgen
 
 # Architecture
 
-If you are interested in contributing, please have a look at the (Architecture Documentation)[doc/architecture.md]
+If you are interested in contributing, please have a look at
+ - [Architecture Documentation](doc/architecture.md)
+ - [API documentation](doc/api.md)
+ - [Developer documentation](doc/development.md)
 
 ## Problems
 
@@ -46,16 +51,26 @@ Currently supported options for rexgen's CMakefile are:
 * `-DUSE_PYTHON=On` tells cmake to include the python interface
 * `-DUSE_LUA=On` tells cmake to include the lua python interface
 
-# Support
+## Using the C++ API
 
-If you want to contribute ideas, bug reports or improvements to this project, feel free to contact me via github. 
+```C++
+rexgen::RexgenOptions options;
+auto regex = parse_regex("Test[0-9]", options);
+assert(regex != nullptr);
 
-If you are not interested in active participation of this project, but you want to support it anyway, you can 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=jan.starke&url=https://github.com/teeshop/rexgen&title=rexgen&language=en&tags=github&category=software)
+auto iter = std::make_shared<rexgen::TopIterator>(regex);
+
+SimpleString str;
+while (iter->next()) {
+    str.clear();
+    iter->value(&str);
+    std::cout << str.c_str() << std::endl;
+}
+```
 
 # License
 
-Copyright (C) 2012-2019  Jan Starke <jan.starke@outofbed.org>
+Copyright (C) 2012-2021  Jan Starke <jan.starke@outofbed.org>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

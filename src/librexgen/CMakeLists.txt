@@ -7,6 +7,16 @@ project(${librexgen} LANGUAGES CXX VERSION ${REXGEN_VERSION})
 find_package(BISON 3.3 REQUIRED)
 find_package(FLEX 2.6 REQUIRED)
 
+# find the header location for flex
+get_filename_component(FLEX_BINDIR ${FLEX_EXECUTABLE} DIRECTORY)
+get_filename_component(FLEX_PREFIX ${FLEX_BINDIR} DIRECTORY)
+
+#message(STATUS "FLEX_PREFIX=${FLEX_PREFIX}")
+find_path(FLEX_INCLUDE_DIRS FlexLexer.h
+	HINTS ${FLEX_PREFIX}/include )
+set(FLEX_INCLUDE_DIR ${FLEX_INCLUDE_DIRS})
+#message(STATUS "FLEX_INCLUDE_DIR=${FLEX_INCLUDE_DIR}")
+
 include(CheckIncludeFiles)
 check_include_files("xlocale.h" HAVE_XLOCALE_H)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -15,7 +25,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-include_directories(${FLEX_INCLUDE_DIRS})
+set(FLEX_INCLUDE_DIR ${FLEX_INCLUDE_DIRS})
+#message(STATUS "FLEX_INCLUDE_DIR=${FLEX_INCLUDE_DIR}")
+include_directories(${FLEX_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/..")
 
