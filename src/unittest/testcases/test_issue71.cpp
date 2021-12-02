@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017 Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,23 +17,16 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#ifndef TESTS_UTILS_H
+#include <catch2/catch.hpp>
+#include <cstring>
+#include <algorithm>
+#include "../utils.h"
 
-#include <librexgen/librexgen.h>
-#include <librexgen/rexgen_options.h>
-#include <librexgen/regex/classregex.h>
-#include <librexgen/iterator/classregexiterator.h>
-#include <set>
-#include <pcrecpp.h>
+size_t issue71_stream_cb(char* dst, const size_t buffer_size) {
+  const char* word = "test";
+  size_t bytes = std::min(buffer_size, std::strlen(word));
+  std::strncpy(dst, "test", buffer_size);
+  return bytes;
+}
 
-#define TESTS_UTILS_H
-
-void validateRegex(const char* input_regex,
-                   const size_t nValues);
-void validateRegex(const char* input_regex,
-                   const size_t nValues,
-                   callback_fp_mb callback);
-void validateFailure(const char* input_regex);
-bool matches(const char* value, const char* regex);
-
-#endif /* TESTS_UTILS_H */
+TEST_CASE("Issue71", "StreamRegex")  {validateRegex("\\0",         10, issue71_stream_cb);}

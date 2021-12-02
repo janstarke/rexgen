@@ -30,9 +30,13 @@ bool matches(const char* value, const char* regex) {
 
 void validateRegex(const char* input_regex,
                    const size_t nValues,
-                   bool stateful) {
+                   bool stateful,
+                   callback_fp_mb callback = nullptr) {
 
   rexgen::RexgenOptions options;
+  if (callback != nullptr) {
+    options.stream_callback = callback;
+  }
   auto regex = parse_regex(input_regex, options);
   REQUIRE(regex != nullptr);
 
@@ -60,6 +64,13 @@ void validateRegex(const char* input_regex,
                    const size_t nValues) {
   validateRegex(input_regex, nValues, false);
   validateRegex(input_regex, nValues, true);
+}
+
+void validateRegex(const char* input_regex,
+                   const size_t nValues,
+                   callback_fp_mb callback) {
+  validateRegex(input_regex, nValues, false, callback);
+  validateRegex(input_regex, nValues, true, callback);
 }
 
 void validateFailure(const char* input_regex) {
