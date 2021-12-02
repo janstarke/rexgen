@@ -28,17 +28,40 @@ bool matches(const char* value, const char* regex) {
   return boost::regex_match(value, _re);
 }
 
+static std::deque<std::string> stream_content_list;
+
+size_t stream_callback(char* dst, const size_t buffer_size){
+  if (stream_content_list.empty()) {
+    return 0;
+  }
+
+  auto word = stream_content_list.back();
+  stream_content_list.pop_back();
+  size_t bytes = std::min(buffer_size, word.length());
+  std::strncpy(dst, word.c_str(), buffer_size);
+  return bytes;
+};
+
 void validateRegex(const char* input_regex,
                    const size_t nValues,
                    bool stateful,
-                   callback_fp_mb callback = nullptr) {
-
+                   const char* stream_content = nullptr) {
   rexgen::RexgenOptions options;
-  if (callback != nullptr) {
-    options.stream_callback = callback;
+  if (stream_content != nullptr) {
+    stream_content_list.clear();
+    stream_content_list.push_front(stream_content);
+    options.stream_callback = stream_callback;
   }
   auto regex = parse_regex(input_regex, options);
   REQUIRE(regex != nullptr);
+
+  std::string control_regex(input_regex);
+  if (stream_content != nullptr) {
+    std::string::size_type pos;
+    while ((pos = control_regex.find("\\0")) != std::string::npos) {
+      control_regex.replace(pos, 2, stream_content);
+    }
+  }
 
   auto iter = std::make_shared<rexgen::TopIterator>(regex);
 
@@ -48,7 +71,8 @@ void validateRegex(const char* input_regex,
     str.clear();
     iter->value(&str);
     const char* generated_value = str.c_str();
-    REQUIRE(matches(generated_value, input_regex));
+    const char* ctl_regex = control_regex.c_str();
+    REQUIRE(matches(generated_value, ctl_regex));
     generated_values.push_back(str);
 
     if (stateful) {
@@ -68,9 +92,9 @@ void validateRegex(const char* input_regex,
 
 void validateRegex(const char* input_regex,
                    const size_t nValues,
-                   callback_fp_mb callback) {
-  validateRegex(input_regex, nValues, false, callback);
-  validateRegex(input_regex, nValues, true, callback);
+                   const char* stream_content) {
+  validateRegex(input_regex, nValues, false, stream_content);
+  validateRegex(input_regex, nValues, true, stream_content);
 }
 
 void validateFailure(const char* input_regex) {

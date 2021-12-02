@@ -22,11 +22,7 @@
 #include <algorithm>
 #include "../utils.h"
 
-size_t issue71_stream_cb(char* dst, const size_t buffer_size) {
-  const char* word = "test";
-  size_t bytes = std::min(buffer_size, std::strlen(word));
-  std::strncpy(dst, "test", buffer_size);
-  return bytes;
-}
-
-TEST_CASE("Issue71", "StreamRegex")  {validateRegex("\\0",         10, issue71_stream_cb);}
+TEST_CASE("Issue71_1", "StreamRegex")  {validateRegex("\\0",         1, "test1");}
+TEST_CASE("Issue71_2", "StreamRegex")  {validateRegex("\\0\\0",         1, "test1");}
+TEST_CASE("Issue71_3", "StreamRegex")  {validateRegex("\\d\\0",         10, "test3");}
+TEST_CASE("Issue71_4", "StreamRegex")  {validateRegex("\\0\\d",         10, "test4");}
