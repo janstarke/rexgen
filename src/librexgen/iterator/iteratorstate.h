@@ -23,6 +23,7 @@
 #include <librexgen/iterator/iterator.h>
 #include <librexgen/iterator/streamregexiterator.h>
 #include <librexgen/regex/regex.h>
+#include <librexgen/common/memory.h>
 #include <map>
 #include <algorithm>
 #include <functional>
@@ -30,7 +31,7 @@
 namespace rexgen {
   class IteratorState {
   public:
-    explicit IteratorState() : streamIterator(nullptr) {}
+    explicit IteratorState() = default;
 
     /* prevent copying of IteratorState */
     IteratorState(const IteratorState&) = delete;
@@ -38,17 +39,13 @@ namespace rexgen {
     IteratorState& operator=(const IteratorState&) = delete;
     IteratorState& operator=(IteratorState&&) = delete;
 
-    void registerIterator(int id, std::reference_wrapper<Iterator> iterator) {
+    void registerIterator(int id, std::weak_ptr<Iterator> iterator) {
       groupIterators.insert(std::make_pair(id, iterator));
     }
 
-    bool hasId(int id) const {
-      return (groupIterators.find(id) != groupIterators.end());
-    }
-
-    std::reference_wrapper<Iterator> operator[](int id) const {
+    std::weak_ptr<Iterator> operator[](int id) const {
       if (id == -1) {
-        return std::ref(static_cast<Iterator&>(getStreamIterator().get()));
+        return getStreamIterator();
       } else {
         auto iter = groupIterators.find(id);
         if (iter != groupIterators.end()) {
@@ -59,22 +56,29 @@ namespace rexgen {
       }
     }
 
-    void setStreamIterator(std::unique_ptr<StreamRegexIterator>& iter) {
-      if (streamIterator != nullptr) {
+    void setStreamIterator(std::weak_ptr<StreamRegexIterator>& iter) {
+      if (hasStreamIterator()) {
         throw std::runtime_error("multiple stream iterator assignment");
       }
       streamIterator = std::move(iter);
     }
 
-    bool hasStreamIterator() const { return streamIterator != nullptr; }
+    bool hasStreamIterator() const {
+      if (!is_uninitialized(streamIterator)) {
+        if (!streamIterator.expired()) {
+          return true;
+        }
+      }
+      return false;
+    }
 
-    std::reference_wrapper<StreamRegexIterator> getStreamIterator() const {
-      return std::ref(*streamIterator);
+    std::weak_ptr<StreamRegexIterator> getStreamIterator() const {
+      return streamIterator;
     }
 
   private:
-    std::map<int, std::reference_wrapper<Iterator> > groupIterators;
-    mutable std::unique_ptr<StreamRegexIterator> streamIterator;
+    std::map<int, std::weak_ptr<Iterator> > groupIterators;
+    mutable std::weak_ptr<StreamRegexIterator> streamIterator;
   };
 }
 

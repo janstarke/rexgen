@@ -37,9 +37,9 @@ namespace rexgen {
 
     RegexType getRegexType() const { return Compound; }
 
-    std::unique_ptr<Iterator> iterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
   };
 }
 #endif  // SRC_LIBREXGEN_REGEX_COMPOUNDREGEX_H_

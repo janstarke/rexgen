@@ -40,9 +40,9 @@ namespace rexgen {
 
     RegexType getRegexType() const { return Alternative; }
 
-    std::unique_ptr<Iterator> iterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
 
     int getGroupId() const { return groupId; }
 

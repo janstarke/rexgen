@@ -30,7 +30,7 @@ namespace rexgen {
   class StreamRegex : public Regex {
   public:
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
 
     explicit StreamRegex(callback_fp_mb cb);
 
