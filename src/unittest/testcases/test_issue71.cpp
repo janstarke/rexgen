@@ -1,6 +1,6 @@
 /*
     rexgen - a tool to create words based on regular expressions
-    Copyright (C) 2012-2017  Jan Starke <jan.starke@outofbed.org>
+    Copyright (C) 2012-2019 Jan Starke <jan.starke@outofbed.org>
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -17,23 +17,12 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/regex/streamregex.h>
+#include <catch2/catch.hpp>
+#include <cstring>
+#include <algorithm>
+#include "../utils.h"
 
-namespace rexgen {
-  StreamRegex::StreamRegex(callback_fp_mb cb)
-          : callback(cb) {
-  }
-
-  std::shared_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
-    std::shared_ptr<StreamRegexIterator> iter = nullptr;
-    if (! state.hasStreamIterator()) {
-      iter = std::make_shared<StreamRegexIterator>(callback);
-      std::weak_ptr<StreamRegexIterator> weak_iter = iter;
-      state.setStreamIterator(weak_iter);
-    } else {
-      throw std::runtime_error("unable to handle multiple stream iterators at the moment");
-    }
-    assert(iter != nullptr);
-    return iter;
-  }
-}
+TEST_CASE("Issue71_1", "StreamRegex")  {validateRegex("\\0",         1, "test1");}
+TEST_CASE("Issue71_2", "StreamRegex")  {validateRegex("\\0\\0",         1, "test1");}
+TEST_CASE("Issue71_3", "StreamRegex")  {validateRegex("\\d\\0",         10, "test3");}
+TEST_CASE("Issue71_4", "StreamRegex")  {validateRegex("\\0\\d",         10, "test4");}

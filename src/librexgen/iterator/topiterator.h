@@ -31,6 +31,7 @@ namespace rexgen {
     explicit TopIterator(std::shared_ptr<Regex>& re) : Iterator() {
       needWord = false;
       child = re->iterator(state);
+      assert(child != nullptr);
 
       // register regex alternatives
       updateReferences();
@@ -44,7 +45,7 @@ namespace rexgen {
 
     bool next() override {
       if (needWord) {
-        bool res = state.getStreamIterator().get().forceNext();
+        bool res = state.getStreamIterator().lock()->forceNext();
         if (res) {
           needWord = false;
         }
@@ -54,7 +55,7 @@ namespace rexgen {
       if (res) { return res; }
 
       if (! state.hasStreamIterator()) { return false; }
-      res = state.getStreamIterator().get().forceNext();
+      res = state.getStreamIterator().lock()->forceNext();
       if (res) { return res; }
       needWord = true;
       return false;

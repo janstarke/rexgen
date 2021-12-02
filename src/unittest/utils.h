@@ -30,6 +30,9 @@
 
 void validateRegex(const char* input_regex,
                    const size_t nValues);
+void validateRegex(const char* input_regex,
+                   const size_t nValues,
+                   const char* callback);
 void validateFailure(const char* input_regex);
 bool matches(const char* value, const char* regex);
 

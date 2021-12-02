@@ -60,9 +60,19 @@ namespace rexgen {
 
     virtual RegexType getRegexType() const = 0;
 
-    virtual std::unique_ptr<Iterator> iterator(IteratorState& state) const;
+    /**
+     * creates a single Iterator (single means without min and max occurs)
+     * @param state
+     * @return a shared_ptr, because this method bay store a weak_ptr to its return value in `state`
+     */
+    virtual std::shared_ptr<Iterator> iterator(IteratorState& state) const;
 
-    virtual std::unique_ptr<Iterator> singleIterator(IteratorState& state) const = 0;
+    /**
+     * creates a Iterator (maybe with min and max occurs)
+     * @param state
+     * @return a shared_ptr, because this method bay store a weak_ptr to its return value in `state`
+     */
+    virtual std::shared_ptr<Iterator> singleIterator(IteratorState& state) const = 0;
 
     int getId() const { return id; }
 

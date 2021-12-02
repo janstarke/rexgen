@@ -25,7 +25,7 @@
 #include <librexgen/iterator/FastIteratorPermuter.h>
 
 namespace rexgen {
-  std::unique_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
+  std::shared_ptr<Iterator> RegexAlternatives::singleIterator(IteratorState& state) const {
     if (regexObjects.size() == 1) {
       return regexObjects[0]->iterator(state);
     }
@@ -37,9 +37,9 @@ namespace rexgen {
     return rai;
   }
 
-  std::unique_ptr<Iterator> RegexAlternatives::iterator(IteratorState& state) const {
+  std::shared_ptr<Iterator> RegexAlternatives::iterator(IteratorState& state) const {
 
-    std::unique_ptr<Iterator> iter;
+    std::shared_ptr<Iterator> iter;
     if (regexObjects.size() == 1) {
       if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
         iter = regexObjects[0]->iterator(state);
@@ -51,13 +51,14 @@ namespace rexgen {
     }
 
     if (handle_case != CASE_IGNORE) {
-      iter = std::make_unique<CaseIterator>(iter, handle_case);
+      iter = std::make_shared<CaseIterator>(iter, handle_case);
     }
 
     if (getGroupId() > 0) {
-      state.registerIterator(getGroupId(), std::ref(*iter));
+      state.registerIterator(getGroupId(), iter);
     }
 
+    assert(iter != nullptr);
     return iter;
   }
 }

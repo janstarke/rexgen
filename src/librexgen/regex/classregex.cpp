@@ -105,7 +105,7 @@ namespace rexgen {
   }
 
 
-  std::unique_ptr<Iterator> ClassRegex::iterator(IteratorState& state) const {
+  std::shared_ptr<Iterator> ClassRegex::iterator(IteratorState& state) const {
     if (getMinOccurs() == 1 && getMaxOccurs() == 1) {
       return singleIterator(state);
     }
@@ -129,8 +129,8 @@ namespace rexgen {
     return std::make_unique<IteratorPermuter>(*this, state, getMinOccurs(), getMaxOccurs() );
   }
 
-  std::unique_ptr<Iterator> ClassRegex::singleIterator(IteratorState& /* state */) const {
-    std::unique_ptr<Iterator> single;
+  std::shared_ptr<Iterator> ClassRegex::singleIterator(IteratorState& /* state */) const {
+    std::shared_ptr<Iterator> single;
 
     if (ranges.size() == 0) {
       return std::make_unique<ClassRegexIterator>(characters.begin(), characters.end());

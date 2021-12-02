@@ -31,7 +31,7 @@ namespace rexgen {
   public:
     explicit GroupReference(int _groupId) : groupId(_groupId){}
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& state) const;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& state) const;
 
     RegexType getRegexType() const { return Reference; }
 

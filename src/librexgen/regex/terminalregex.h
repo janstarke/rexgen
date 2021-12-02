@@ -41,8 +41,8 @@ namespace rexgen {
 
     RegexType getRegexType() const { return Terminal; }
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& /* state */) const {
-      return std::make_unique<TerminalRegexIterator>(&value[0], value.size());
+    std::shared_ptr<Iterator> singleIterator(IteratorState& /* state */) const {
+      return std::make_shared<TerminalRegexIterator>(&value[0], value.size());
     }
 
   private:

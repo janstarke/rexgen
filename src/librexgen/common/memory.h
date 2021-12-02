@@ -17,23 +17,15 @@
     51 Franklin St, Fifth Floor, Boston, MA 02110, USA
 */
 
-#include <librexgen/regex/streamregex.h>
+#ifndef REXGEN_MEMORY_H
+#define REXGEN_MEMORY_H
 
-namespace rexgen {
-  StreamRegex::StreamRegex(callback_fp_mb cb)
-          : callback(cb) {
-  }
+#include <memory>
 
-  std::shared_ptr<Iterator> StreamRegex::singleIterator(IteratorState& state) const {
-    std::shared_ptr<StreamRegexIterator> iter = nullptr;
-    if (! state.hasStreamIterator()) {
-      iter = std::make_shared<StreamRegexIterator>(callback);
-      std::weak_ptr<StreamRegexIterator> weak_iter = iter;
-      state.setStreamIterator(weak_iter);
-    } else {
-      throw std::runtime_error("unable to handle multiple stream iterators at the moment");
-    }
-    assert(iter != nullptr);
-    return iter;
-  }
+template <typename T>
+bool is_uninitialized(std::weak_ptr<T> const& weak) {
+  using wt = std::weak_ptr<T>;
+  return !weak.owner_before(wt{}) && !wt{}.owner_before(weak);
 }
+
+#endif //REXGEN_MEMORY_H

@@ -58,9 +58,9 @@ namespace rexgen {
 
     void merge(const std::shared_ptr<ClassRegex>& other);
 
-    std::unique_ptr<Iterator> iterator(IteratorState& /* state*/ ) const override;
+    std::shared_ptr<Iterator> iterator(IteratorState& /* state*/ ) const override;
 
-    std::unique_ptr<Iterator> singleIterator(IteratorState& /* state */) const override ;
+    std::shared_ptr<Iterator> singleIterator(IteratorState& /* state */) const override ;
 
   private:
     void removeCharacterInstances(const wchar_t min, const wchar_t max);
