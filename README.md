@@ -18,7 +18,7 @@ To build rexgen, you'll need the following tools and libs:
 On Ubuntu, you can install these via e.g.
 
 ```
-sudo apt install flex libfl-dev libbison-dev cmake clang
+sudo apt install flex libfl-dev libbison-dev cmake clang bison
 ```
 
 # Building rexgen
